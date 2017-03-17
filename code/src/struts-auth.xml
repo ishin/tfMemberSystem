@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<!-- ssl-default -->
+	<!-- struts-default -->
+
+	<constant name="struts.action.excludePattern" value="/admlogo, /admimp"/>
+
+    <package name="com.organ.action.auth" extends="all">
+        <action name="auth" class="com.organ.action.auth.AppSecretAction">
+        	<!--  服务器做重定向 -->
+        	<!--
+        	<result name="redirectLogin" type="redirectAction">
+        	  	<param name="actionName">auth!redirectLogin</param>  
+				<param name="unAuthToken">${unAuthToken}</param>  
+        	</result>-->
+        	<result name="oaLogin">/page/web/deng.jsp</result>
+        	<result name="login">/page/web/authorizePage.jsp</result>
+        	<result name="text" type="stream">
+        		<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+        	</result>
+        </action>
+    </package>
+   
+</struts>
+
