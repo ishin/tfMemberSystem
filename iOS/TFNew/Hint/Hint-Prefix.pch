@@ -1,0 +1,152 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_3_0
+#warning "This project uses features only available in iOS SDK 3.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+    #import "Utls.h"
+    #import "Configure.h"
+    #import "AppDelegate.h"
+    #import "BaseViewController.h"
+    #import "UIImageView+WebCache.h"
+    #import "User.h"
+#endif
+
+
+#define kDeviceToken   @"apns_DeviceToken"
+#define EXPO_APP_KEY   @"1467721092"
+#define EXPO_APP_SEC   @"446d5ea46e04b1261d47f116d236f4ec"
+
+
+#define EXPOID_ZHH  @"291"
+#define _ZH_APP_ID_ @"CREXPO"
+
+
+#define COLOR_TEXT_A          [UIColor colorWithRed:0x44/255.0f green:0x44/255.0f blue:0x44/255.0f alpha:1.0f]
+#define COLOR_TEXT_B          [UIColor colorWithRed:169/255.0f green:169/255.0f blue:169/255.0f alpha:1.0f]
+#define COLOR_TEXT_2B         [UIColor colorWithRed:130/255.0f green:130/255.0f blue:130/255.0f alpha:1.0f]
+#define COLOR_TEXT_C          [UIColor colorWithRed:150.0f/255.0f green:150.0f/255.0f blue:150.0f/255.0f alpha:1.0f]
+
+#define COLOR_WHITE [UIColor whiteColor]
+
+#define SCREEN_HEIGHT   ([[UIScreen mainScreen] bounds].size.height)
+#define SCREEN_WIDTH    ([[UIScreen mainScreen] bounds].size.width)
+
+
+#define DATE_COMPANYNAME  @"DATE_COMPANYNAME"
+#define DATE_POSITION     @"DATE_POSITION"
+#define DATE_AREA         @"DATE_AREA"
+#define DATE_INDUSTRY     @"DATE_INDUSTRY"  //行业
+#define DATE_TRUENAME     @"DATE_TRUENAME"
+#define DATE_EMAIL        @"DATE_EMAIL"
+
+#define URL_QR_HOST      @"http://wx.cr-expo.com/qr/"
+#define WX_URL_HOST      @"http://wx.cr-expo.com"
+
+#define UMENG_APP_KEY     @"54ad348cfd98c5e2f7000a4f"
+
+
+#define kApplicationWidth    ([UIScreen mainScreen].applicationFrame).size.width //应用程序的宽度
+#define kApplicationHeight   ([UIScreen mainScreen].applicationFrame).size.height //应用程序的高度
+#define kDScreenWidth         ([UIScreen mainScreen].bounds).size.width //屏幕的宽度
+#define kDScreenHeight        ([UIScreen mainScreen].bounds).size.height //屏幕的高度
+
+#define USER_DEFAULT [NSUserDefaults standardUserDefaults]
+#define SysFont(f) [UIFont systemFontOfSize:f]
+#define BoldFont(f) [UIFont boldSystemFontOfSize:f]
+
+/////
+#define PropertyString(p) @property (nonatomic, copy) NSString *p;
+#define PropertyInt(p) @property (nonatomic, assign) NSInteger p;
+#define PropertyBool(p) @property (nonatomic, assign) BOOL p;
+#define PropertyUILabel(p) @property (nonatomic, retain) UILabel *p
+/////
+
+#define iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
+
+#define iPhone6 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) : NO)
+
+#define iPhone6Plus ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1242, 2208), [[UIScreen mainScreen] currentMode].size) : NO)
+
+#define IOS7_OR_LATER   ( [[[UIDevice currentDevice] systemVersion] compare:@"7.0"] != NSOrderedAscending )
+#define IOS8_OR_LATER   ( [[[UIDevice currentDevice] systemVersion] compare:@"8.0"] != NSOrderedAscending )
+
+#define IOS7 [[UIDevice currentDevice] systemVersion].floatValue>=7
+
+
+
+#define RGBA(r, g, b,a)     [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a]
+#define RGB(r, g, b)        [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1]
+
+#define kUIColorFromRGB(rgbValue) [UIColor \
+colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+green:((float)((rgbValue & 0xFF00) >> 8))/255.0 \
+blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
+
+
+#define DEFAUL_GRAY_COLOR       RGB(0xf0, 0xf0, 0xf0)
+#define DEFAUL_BORDER_COLOR     RGB(0xc8, 0xc8, 0xc8)
+#define LINE_COLOR              RGBA(217, 217, 217, 0.4)//RGBA(200, 200, 200,0.5)
+#define T_LINE_COLOR            RGB(206, 206, 206)
+#define LINE_COLOR_SETTING      RGB(52,52,52)
+
+#define KEYWORD_COLOR           RGB(227,97,166)
+
+#define YELLOW_THEME_COLOR      RGB(0xff, 0x90, 0)
+#define GREEN_THEME_COLOR       RGB(116,182,49)
+
+
+
+#define THEME_COLOR [UIColor colorWithRed:72/255.0 green:72/255.0 blue:72/255.0 alpha:1.0]
+#define THEME_COLOR_A(a) [UIColor colorWithRed:19/255.0 green:13/255.0 blue:0/255.0 alpha:a]
+#define THEME_COLOR_BACKVIEW  [UIColor colorWithRed:41/255.0 green:41/255.0 blue:41/255.0 alpha:1.0]
+#define THEME_COLOR_SHALLOW   RGB(55,55,55)
+
+
+#define THEME_RED_COLOR     RGB(83, 204, 221)//RGB(0x46, 0x71, 0xdf)
+
+#define theApp ((AppDelegate *)[[UIApplication sharedApplication] delegate])
+
+
+#if __has_feature(objc_arc)
+#define IMP_BLOCK_SELF(type) __weak type *block_self=self;
+#else
+#define IMP_BLOCK_SELF(type) __block type *block_self=self;
+#endif
+
+
+#pragma mark - Logging
+
+#ifdef DEBUG
+#   define NNLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#   define NNError(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#   define NNDebug(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#   define NNCont(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#else
+#   define NNLog(...)
+#   define NNError(...)
+#   define NNDebug(...)
+#   define NNCont(...)
+#endif
+
+
+
+#define ImageFromResource(x) [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:x ofType:nil]]
+
+
+#define XY_ORG_HEIGHT  568
+
+
+#define INTSIZE_RECT(rc) CGRectMake((int)rc.origin.x, (int)rc.origin.y, (int)rc.size.width, (int)rc.size.height)
+
+

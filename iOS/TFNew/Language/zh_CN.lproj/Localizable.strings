@@ -1,0 +1,331 @@
+
+
+
+"_LocaleLanguage" = "zh";
+//-----------------------------------------------
+
+
+"QR Scanner" = "拍码收藏";
+"Categories" = "分类浏览";
+"Innovations" = "新品推荐";
+"Friends" = "商友";
+"Registration" = "签到注册";
+"Exhibitors" = "参展商";
+"Map" = "展位图";
+"News" = "新闻";
+"Home" = "首页";
+
+
+"More" = "更多服务";
+"Account" = "个人信息";
+"Log off" = "注销用户";
+"Hotline" = "客服电话";
+
+"Back" = "  返回";
+"Take Card" = "拍名片";
+"To modify the personal info, please scan your business card or call the hotline: %@" = "修改以上联系信息，请通过拍摄本人名片完成或联系客服中心%@";
+
+"Alert" = "警告";
+"Do you want to log off?" = "确定要注销当前登录的用户？";
+"Yes" = "确定";
+"No" = "取消";
+
+"Working Hours: 9:00-18:00" = "工作时间：每天9:00-18:00";
+"Call %@" = "呼叫 %@";
+"Cancel" = "取消";
+
+"Search" = "搜索";
+"Product" = "产品";
+"Exhibitor" = "企业";
+
+"Please enter keywords" = "请输入搜索关键词";
+"No search results" = "没有搜索到相关结果";
+
+"Favorites" = "收藏";
+"Booth No" = "展位号";
+"Booth" = "展位";
+
+"Favorite Seminars" = "会议";
+"Forum & Seminar" = "会议活动";
+"Event" = "Event";
+"Session Details" = "会议详细";
+"Session Info" = "会议简介";
+"Favorite" = "加入收藏";
+"Speaker" = "主讲人";
+"Room" = "会议室";
+"Chairman" = "主持人";
+
+
+"Forgot Password" = "找回密码";
+"Sign In" = "用户登录";
+"Login" = "登录";
+"Username/Mobile/Email" = "用户名/手机号/邮箱";
+"Password" = "密码";
+
+"UserName:" = "用户名：";
+"Email:" = "邮箱：";
+"Password:" = "密码：";
+
+"More Details" = "专业用户注册";
+"Quick Registration (Business Card)" = "名片注册";
+"Sign Up" = "注册";
+"Get your badge registered or picture your business card to save your time." = "登录\"GMIC\"App，可通过扫码交换名片信息。 并全面了解掌握GMIC移动互联网大会的精彩展示和论坛会议内容。";
+
+"BT:Get your badge registered or picture your business card to save your time." = "如您参观中国道路运输车辆展，请用名片注册功能拍摄本人名片，展会现场用签到注册功能快速换取入场胸卡，省去排队时间。";
+
+"CIBAS:Get your badge registered or picture your business card to save your time." = "如您参观北京国际商务航空展，请用名片注册功能拍摄本人名片，展会现场用签到注册功能快速换取入场胸卡，省去排队时间。";
+
+"Registration" = "用户注册";
+"Enter Email" = "填写电子邮箱";
+"Next" = "下一步";
+
+"Error" = "错误";
+"You’ve been registered, please login by retrieve the password." = "帐号已存在，你可能曾经注册过本展会，请用密码找回功能。";
+
+"BT:You’ve been registered, please login by retrieve the password." = "手机号已存在，你可能曾经注册过中国道路运输车辆展，请用密码找回功能。";
+
+"CIBAS:You’ve been registered, please login by retrieve the password." = "手机号已存在，你可能曾经注册过北京国际商务航空展，请用密码找回功能。";
+
+"OK" = "确定";
+"Name" = "姓名";
+
+"Email" = "电子邮件";
+
+"Photo" = "头像";
+"Title" = "职务";
+"Company" = "公司";
+
+"Country" = "地区";
+"Finish" = "完成";
+
+"Please take a photo." = "请拍摄本人头像，用于制做观众胸卡。";
+
+"Successful register" = "注册成功";
+
+"Your information has been saved." = "您的注册信息已经成功提交";
+"Please find your password in your mailbox." = "请输入您的注册邮箱或者注册手机号，我们会为您找回密码";
+
+"Efficient Registration" = "已成功 名片注册已成功";
+"Scan Your Name Card" = "拍名片";
+"Show the two-dimension code to get the badge or other info."= "请凭此二维码在展会现场换取入场胸卡，也可通过互扫二维码交换名片信息";
+
+"Commit Success" = "提交成功";
+
+"Scan & Save" = "展会扫描";
+"Save & Scan" = "实现收藏";
+"Exhibitor Code" = "企业二维码";
+"Product Code" = "产品二维码";
+"Seminar Code" = "会议二维码";
+"Badge" = "参展胸卡条码";
+
+"Manual Input" = "手动输入";
+"On" = "打开";
+"Off" = "关闭";
+
+"Scan & Save" = "拍码收藏";
+"Success Add to Favourites" = "产品收藏成功";
+"Continue" = "继续拍码";
+
+"Hall %@" = "%@馆";
+"Booth Info." = "展位信息";
+
+"News Details" = "新闻内容";
+"Scan & friends" = "扫码交友";
+
+"Friends" = "商务会友";
+"Cancel favorite" = "取消收藏";
+
+"Please enter the keywords" = "请输入展商关键词";
+
+"Products list" = "展品列表";
+"Add to Favourites" = "加入收藏";
+"Contact" = "介绍";
+
+"Zip Code" = "邮编";
+"Mobile" = "手机号";
+"Tel" = "电话";
+"Fax" = "传真";
+"Web" = "网址";
+"Information" = "介绍";
+"Brand" = "品牌";
+"Model" = "规格";
+
+"Loading..." = "加载中...";
+"Product Intro." = "产品介绍";
+
+"Close" = "关闭";
+
+
+"Company Information" = "公司信息";
+"No products" = "  暂无展品";
+"Enter mobile" = "填写手机号";
+"Business Card" = "（拍名片快速注册）";
+"User name" = "用户名";
+"Please enter company keyworks" = "请输入企业名称关键字";
+"Address" = "地址";
+"Email" = "邮箱";
+"Registration No." = "注册号";
+"    Open" = "    打开";
+"    Close" = "    关闭";
+
+"No Internet" = "没有网络";
+"Cannot connect to Internet, please check your network connection." = "请检查您的网络设置。";
+"No Information" = "没有获取相应信息";
+"New password" = "新密码";
+"Password again" = "重新输入新密码";
+"Save password" = "保存密码";
+"Verification code" = "验证码";
+"Send" = "发送";
+"Please enter a valid phone number" = "请输入有效的手机号";
+"Success" = "成功";
+"Failed" = "失败";
+"Please find SMS" = "请查收短信";
+"Loading map data" = "正在下载展位图数据...";
+"Loading exhibitors data" = "正在下载展商数据...";
+"Please input your login name or password" = "用户名或密码不能为空";
+"No results!" = "没有找到正确的展位图！";
+
+"Email Address" = "电子邮箱";
+"Password is empty" = "请输入密码";
+"Focus product" = "亮点产品";
+"Company Name" = "公司名称";
+"Email (Note:...)" = "电子邮件（注：如果是国外，则填手机）";
+"Click to input" = "点击输入";
+"Commit" = "完成";
+"Please enter your name" = "请输入姓名";
+"Please enter company name" = "请输入公司名称";
+"Rank" = "职位";
+"Region" = "地区";
+"Up to show more" = "上拉显示更多";
+"No Results" = "没有结果";
+
+"Confirm favorite" = "确认收藏";
+
+"I forgot"  = "找回密码";
+"Try again" = "重试";
+"Please enter a valid email address" = "请输入有效的邮箱地址";
+"Please enter a name" = "请输入姓名。";
+"Added to your favorite successfully." = "收藏成功。";
+"Remove from you favorite successfully." = "取消收藏成功";
+"You can exchange contact information by scan visitor QR code." = "您可以通过拍摄胸卡的条码，\n交换客户信息。";
+
+"Update New Data" = "更新数据";
+
+
+"Home" = "首页";
+"Products" = "展品";
+"Shopping" = "商城";
+"Agenda" = "会议";
+"Guests" = "嘉宾";
+"Guest Information" = "嘉宾信息";
+"Speakers" = "演讲嘉宾";
+"Invited Guests" = "特邀嘉宾";
+"Commentator" = "点评嘉宾";
+"Ticket" = "购票";
+"Settings" = "设置";
+
+"CheckIn" = "签到";
+
+"Booth Location" = "展位定位";
+
+"Speakers list" = "演讲嘉宾";
+"Attendees" = "参会嘉宾";
+"Attendee list" = "参会嘉宾";
+
+"My Favourites" = "我的收藏";
+"Floorplan" = "会场地图";
+"Sign Out" = "退出登录";
+
+"Forgot password?" = "忘记密码？";
+"View Login" = "注册";
+"Please enter your email address." = "请输入邮箱!";
+"Edit" = "编辑";
+"Continue" = "继续";
+"Save" = "保存";
+"Profile" = "个人中心";
+"Sign up" = "注册";
+"MessageNews" = "新闻";
+
+"Favorite Exhibitor" = "公司";
+"Favorite Friends" = "我的好友";
+
+"Please find Password" = "密码已发送，请查收!";
+"Sent" = "已发送";
+
+"Title" = "职位";
+
+"Select country" = "选择国家";
+"Search by name" = "请输入要搜索的姓名";
+"Search by keyword or country code" = "请输入关键字或者国家代码";
+"Details" = "展开";
+
+"Location" = "地点";
+"Time" = "时间";
+
+"Inbox" = "消息中心";
+"Message Received" = "收到的消息";
+"Sent Messages" = "发送的消息";
+
+"Ignore" = "忽略";
+"Accept" = "接受";
+"Add friend" = "好友申请";
+"Request to add XXX as a friend" = "申请添加%@为好友";
+
+"Verify" = "验证信息";
+"Please enter your request message" = "请输入您的验证信息";
+"Your request has sent." = "您的请求已发送！";
+"Load More" = "加载更多";
+
+"Add Friend" = "添加好友";
+
+"Keep badge barcode on the region" = "请将胸卡条码放在该区域.";
+
+"Can not add yourself as a friend." = "不能添加自己为好友！";
+"Username or password is incorrect, please try again" = "用户名或密码错误，请重试";
+
+"The password is already sent to your email, please check." = "密码已发到您的注册邮箱，请查收。";
+"The password is already sent to you by SMS, please check." = "密码已发到您的手机，请查收。";
+
+"Top sponsor" = "顶级赞助商";
+"Photo Album" = "相册";
+"Camera" = "相机";
+
+"Use the email address and password you registered with for GMIC Beijing" = "请用您在GMIC 北京上注册时的邮箱和密码登陆";
+
+"Successful Add Friend" = "成功添加为好友！";
+"Add to favorite" = "加入收藏";
+"Register" = "注册";
+
+"Contact Us" = "联系我们";
+
+"Scan Code" = "扫一扫";
+
+"China National Conference Center" = "国家会议中心";
+
+"Event" = "活动";
+
+
+"My Order" = "我的订单";
+
+"No Products" = "该目录下无展品";
+"Please sign in" = "您还没有登录，请先登录！";
+"Please scan your business card for sign up" = "立即拍一张名片，快速完成注册！";
+"Your password was invalid." = "您的用户名或密码不正确。";
+
+"Delete Contact"    = "取消好友";
+"Send Message"      = "消息";
+
+"Hold to Talk"      = "按住 说话";
+"Release to Send"   = "松开 结束";
+"Release to cancel" = "松开手指，取消发送";
+"Slide up to cancel" = "手指上滑，取消发送";
+"Message too short"  = "录音时间太短";
+"Delete contact?"    = "您确定要取消好友关系？";
+"Delete"             = "删除";
+"Call"               = "呼叫";
+
+"Messages"           = "消息";
+"Me"                 = "我的";
+"Explore"            = "发现";
+
+"You can't send an email since you don't have any email accounts set up on this phone." = "请先在iPhone的设置中设置您的email账户。";

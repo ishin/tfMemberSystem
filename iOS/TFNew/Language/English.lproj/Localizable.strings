@@ -1,0 +1,326 @@
+
+
+"_LocaleLanguage" = "en";
+//-----------------------------------------------
+
+"QR Scanner" = "QR Scanner";
+"Categories" = "Categories";
+"Innovations" = "Innovations";
+"Friends" = "Friends";
+"Registration" = "Attendee Registration";
+"Exhibitors" = "Exhibitors";
+"Map" = "Map";
+"News" = "News";
+"Home" = "Home";
+
+"CheckIn" = "CheckIn";
+
+"More" = "More";
+"Account" = "Account";
+"Log off" = "Log off";
+"Hotline" = "Hotline";
+
+"Back" = "  Back";
+"Take Card" = "Take Card";
+"To modify the personal info, please scan your business card or call the hotline: %@" = "To modify the personal info, pls scan your business card or call the hotline: %@";
+
+"Alert" = "Alert";
+"Do you want to log off?" = "Do you want to log off?";
+"Yes" = "Yes";
+"No" = "No";
+
+"Working Hours: 9:00-18:00" = "Working Hours: 9:00-18:00";
+"Call %@" = "Call %@";
+"Cancel" = "Cancel";
+
+"Search" = "Search";
+"Product" = "Product";
+"Exhibitor" = "Exhibitor";
+
+"Please enter keywords" = "Please enter keywords";
+"No search results" = "No search results";
+
+"Favorites" = "Favorites";
+"Products Fav" = "Products";
+"Exhibitors Fav" = "Exhibitors";
+"Seminars Fav" = "Agenda";
+"Booth No" = "Booth No";
+"Booth" = "Booth";
+
+"Forum & Seminar" = "Forum & Seminar";
+"Event" = "Event";
+"Session Details" = "Session Details";
+"Session Info" = "Session Detail";
+"Favorite" = "Favorite";
+"Speaker" = "Speaker";
+"Room" = "Room";
+
+"Forgot Password" = "Forgot Password";
+"Sign In" = "Sign In";
+"Login" = "Login";
+"Username/Mobile/Email" = "Username/Mobile/Email";
+
+"UserName:" = "UserName:";
+"Email:" = "Email:";
+"Password:" = "Password:";
+
+"Password" = "Password";
+"More Details" = "Visitor Registration";
+"Quick Registration (Business Card)" = "Registration";
+"Sign Up" = "Sign Up";
+"Get your badge registered or picture your business card to save your time." = "Get your badge registered or picture your business card to save your time.";
+
+"BT:Get your badge registered or picture your business card to save your time." = "Get your badge registered or picture your business card to save your time.";
+
+"CIBAS:Get your badge registered or picture your business card to save your time." = "Get your badge registered or picture your business card to save your time.";
+
+
+"Enter Email" = "Email";
+"Next" = "Next";
+
+"Error" = "Error";
+"You’ve been registered, please login by retrieve the password." = "Looks like you already created an account or visiter GMIC before.";
+"BT:You’ve been registered, please login by retrieve the password." = "Looks like you already created an account or visiter BTEXPO before.";
+
+"CIBAS:You’ve been registered, please login by retrieve the password." = "Looks like you already created an account or visiter CIBAS before.";
+
+"OK" = "OK";
+"Name" = "Name";
+
+"Email" = "Email";
+
+"Photo" = "Photo";
+"Title" = "Title";
+"Company" = "Company";
+
+"Country" = "Country";
+"Finish" = "Finish";
+
+"Please take a photo." = "Please take a photo in order to make the visitor badge.";
+
+"Successful register" = "Successful";
+
+"Your information has been saved." = "Your information has been saved.";
+"Please find your password in your mailbox." = "To find your password, please enter your Email Address.";
+
+"Efficient Registration" = "Efficient Registration";
+"Scan Your Name Card" = "Scan Your Name Card";
+"Show the two-dimension code to get the badge or other info."= "Show the QR Code to get the visitor badge on the expo site.";
+
+"Commit Success" = "Success";
+
+"Scan & Save" = "Scan & Save";
+"Exhibitor Code" = "Exhibitor Code";
+"Product Code" = "Product Code";
+"Seminar Code" = "Seminar Code";
+"Badge" = "Badge Code";
+
+"Manual Input" = "Manual";
+"On" = "On";
+"Off" = "Off";
+
+"Scan & Save" = "Scan";
+"Save & Scan" = "to favorite";
+"Success Add to Favourites" = "Successfull";
+"Continue" = "Continue";
+
+"Hall %@" = "Hall %@";
+"Booth Info." = "Booth Info.";
+
+"News Details" = "Detail";
+"Scan & friends" = "Scan QR";
+
+"Friends" = "Friends";
+"Cancel favorite" = "Remove from Favourites";
+
+"Please enter the keywords" = "Please enter the keywords";
+
+"Products list" = "Products";
+"Add to Favourites" = "Add to Favourites";
+
+"Zip Code" = "Zip Code";
+"Mobile" = "Mobile";
+"Tel" = "Tel";
+"Fax" = "Fax";
+"Web" = "Web";
+"Information" = "Information";
+"Brand" = "Brand";
+"Model" = "Model";
+
+"Loading..." = "Loading...";
+"Product Intro." = "Description";
+
+"Close" = "Close";
+
+
+"Contact" = "Contact";
+"No products" = "  No products";
+"Enter mobile" = "Mobile";
+"Business Card" = "(Business Card)";
+"User name" = "Name";
+"Please enter company keyworks" = "Search company";
+"Address" = "Address";
+"Email" = "Email";
+"Registration No." = "Registration No.";
+"    Open" = "    Open";
+"    Close" = "    Close";
+
+"No Internet" = "No Internet";
+"Cannot connect to Internet, please check your network connection." = "Cannot connect to Internet, please check your network connection.";
+"No Information" = "No Information";
+"New password" = "New password";
+"Password again" = "Password again";
+"Save password" = "Save";
+"Verification code" = "Verification code";
+"Send" = "Send";
+"Please enter a valid phone number" = "Please enter a valid phone number";
+"Success" = "Success";
+"Failed" = "Failed";
+"Please find SMS" = "Please find SMS";
+"Loading map data" = "Loading map data...";
+"Loading exhibitors data" = "Loading exhibitors data...";
+"Please input your login name or password" = "Please input your login name or password";
+"No results!" = "No results!";
+
+"Email Address" = "Email Address";
+"Password is empty" = "Password is empty";
+"Focus product" = "Focus product";
+"Company Name" = "Company Name";
+"Email (Note:...)" = "Email";
+"Click to input" = "Click to input";
+"Commit" = "Commit";
+"Please enter your name" = "Please enter your name";
+"Please enter company name" = "Please enter company name";
+"Rank" = "Title";
+"Region" = "Region";
+"Up to show more" = "Up to show more";
+"No Results" = "  No Results";
+
+
+"Confirm favorite" = "Confirm";
+"I forgot"  = "Send Password";
+"Try again" = "Try again";
+"Please enter a valid email address" = "Please enter a valid email address";
+"Please enter a name" = "Please enter a name";
+"Added to your favorite successfully." = "Added to your favorite successfully.";
+"Remove from you favorite successfully." = "Remove from you favorite successfully.";
+"You can exchange contact information by scan visitor QR code." = "You can exchange contact information by scan visitor QR code.";
+
+"Update New Data" = "Update data";
+
+"Home" = "Home";
+"Products" = "Products";
+"Shopping" = "Shopping";
+"Agenda" = "Agenda";
+"Guests" = "Speakers";
+"Guest Information" = "Guest Information";
+"Speakers" = "Speakers";
+"Invited Guests" = "Invited Speakers";
+"Commentator" = "Commentator";
+"Ticket" = "Ticket";
+"Settings" = "Settings";
+
+"Booth Location" = "Booth Location";
+
+"Speakers list" = "Speakers";
+"Attendee list" = "Attendees";
+
+"My Favourites" = "Favorites";
+"Floorplan" = "Floorplan";
+"Sign Out" = "Sign Out";
+
+"Forgot password?" = "Forgot password";
+"View Login" = "Register";
+"Please enter your email address." = "Please enter your email address.";
+"Edit" = "Edit";
+"Continue" = "Continue";
+"Save" = "Save";
+"Profile" = "Profile";
+"Sign up" = "Sign up";
+"MessageNews" = "News";
+
+"Favorite Seminars" = "Agenda";
+"Favorite Exhibitor" = "Exhibitor";
+"Favorite Friends" = "Friends";
+
+"Please find Password" = "Password send!";
+"Sent" = "Sent";
+
+"Title" = "Title";
+
+
+"Select country" = "Select country";
+"Search by name" = "Search by name";
+
+"Search by keyword or country code" = "Search by keyword or country code";
+"Details" = "Details";
+
+"Location" = "Location";
+"Time" = "Time";
+
+"Inbox" = "Inbox";
+"Message Received" = "Message Received";
+"Sent Messages" = "Sent Messages";
+
+"Ignore" = "Ignore";
+"Accept" = "Accept";
+"Add friend" = "Add friend";
+"Request to add XXX as a friend" = "Request to add %@ as a friend";
+
+"Verify" = "Verify";
+"Please enter your request message" = "Please enter your request message";
+"Your request has sent." = "Your request has sent.";
+
+"Load More" = "Load More";
+
+
+"Add Friend" = "Add Friend";
+"Keep badge barcode on the region" = "Keep badge barcode on the region";
+
+"Chairman" = "Host";
+
+"Can not add yourself as a friend." = "Can not add yourself as a friend.";
+"Username or password is incorrect, please try again" = "Username or password is incorrect, please try again";
+
+"The password is already sent to your email, please check." = "The password is already sent to your email, please check.";
+"The password is already sent to you by SMS, please check." = "The password is already sent to you by SMS, please check.";
+
+"Top sponsor" = "Top Sponsor";
+
+"Photo Album" = "Photo Album";
+"Camera" = "Camera";
+
+"Use the email address and password you registered with for GMIC Beijing" = "Use the email address and password you registered with for GMIC Beijing";
+
+"Successful Add Friend" = "Friend added successfully.";
+
+"Contact Us" = "Contact Us";
+
+"Scan Code" = "Scan";
+
+"China National Conference Center" = "China National Conference Center";
+
+
+"My Order" = "My Order";
+
+"No Products" = "No Products";
+"Please sign in" = "Please sign in";
+"Please scan your business card for sign up" = "Please scan your business card for sign up";
+"Your password was invalid." = "Your password was invalid.";
+
+"Delete Contact"    = "Delete Contact";
+"Send Message"      = "Send Message";
+
+"Hold to Talk"      = "Hold to Talk";
+"Release to Send"   = "Release to Send";
+"Release to cancel" = "Release to cancel";
+"Slide up to cancel" = "Slide up to cancel";
+"Message too short"  = "Message too short";
+"Delete contact?" = "Delete contact?";
+"Delete" = "Delete";
+"Call" = "Call";
+
+"Messages"          = "Messages";
+"Me"                = "Me";
+"Explore"           = "Explore";
+
