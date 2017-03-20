@@ -40,7 +40,9 @@
         
         creator.userId = [[data objectForKey:@"mid"] intValue];
         creator.fullname       = [data objectForKey:@"fullname"];
-        creator.avatarurl      = [NSString stringWithFormat:@"%@/upload/images/%@", WEB_API_URL, [data objectForKey:@"logo"]];
+        creator.avatarurl      = [NSString stringWithFormat:@"%@/upload/images/%@",
+                                  WEB_API_URL,
+                                  [data objectForKey:@"logo"]];
         creator.cellphone = [data objectForKey:@"mobile"];
         creator.account = [data objectForKey:@"account"];
         creator.email  = [data objectForKey:@"email"];

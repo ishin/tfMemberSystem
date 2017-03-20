@@ -16,13 +16,12 @@
 
 
 @interface CMNavigationController : UINavigationController <UIGestureRecognizerDelegate> {
-    UIBarButtonItem *_backBarButtonItem;
     
-    NSMutableArray  *_captureArray; //io5->ios6做返回动画使用
     
     UIView          *_backgroundView;
     UIImageView     *_topImageView;
     UIImageView     *_bottomImageView;
 }
-
+@property (nonatomic, strong) UIBarButtonItem *_backBarButtonItem;
+@property (nonatomic, strong) NSMutableArray  *_captureArray;
 @end

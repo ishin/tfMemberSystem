@@ -11,16 +11,21 @@
 
 
 @implementation CMNavigationController
+@synthesize _backBarButtonItem;
+@synthesize _captureArray;
 
 - (id)initWithRootViewController:(UIViewController *)rootViewController{
     if (self = [super initWithRootViewController:rootViewController]) {
         self.view.backgroundColor = [UIColor whiteColor];
         if ([UIDevice currentDevice].systemVersion.floatValue >= 7.0) {
-            _backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style: UIBarButtonItemStyleBordered target: nil action: nil];
-            _backBarButtonItem.title = @"";
-            rootViewController.navigationItem.backBarButtonItem = _backBarButtonItem;
+            self._backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@""
+                                                                       style: UIBarButtonItemStylePlain
+                                                                      target: nil
+                                                                      action: nil];
+            self._backBarButtonItem.title = @"";
+            rootViewController.navigationItem.backBarButtonItem = self._backBarButtonItem;
         }
-        _captureArray = [[NSMutableArray alloc] initWithCapacity:0];
+        self._captureArray = [[NSMutableArray alloc] initWithCapacity:0];
     }
     return self;
 }
