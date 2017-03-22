@@ -27,7 +27,7 @@
 	if((self = [super init]))
 	{
 		// Store reference to delegate
-		delegate = aDelegate;
+		//delegate = aDelegate;
 		
 		_httpAdmin = [[iHttpAdmin alloc] init];
 		_httpAdmin.delegate_ = self;
@@ -286,9 +286,13 @@
 }
 
 - (void)dealloc {
+    
+    self._failBlock = nil;
+    self._successBlock = nil;
 	
 	delegate = nil;
 	_httpAdmin.delegate_ = nil;
+    _httpAdmin = nil;
 	
 }
 @end

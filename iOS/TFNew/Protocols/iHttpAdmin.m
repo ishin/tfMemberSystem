@@ -21,7 +21,8 @@
 
 @synthesize errorCode_;
 @synthesize error_;
-@synthesize characterBuffer, connection;
+@synthesize characterBuffer;
+@synthesize connection;
 @synthesize delegate_;
 
 
@@ -45,12 +46,11 @@
 	if((self = [super init]))
 	{
 		delegate_ = nil;
-		//archiveParser_ = [[ArchiveParser alloc] init];
 		curPage = 1;
 		curCommentPage_ = 1;
 		curPublicPage = 1;
 		curMyCommentPage = 1;
-		//[self loadInformation];
+		
 	}
 	return self;
 }
@@ -102,16 +102,15 @@
     [theRequest setValue:@"IPHONE" forHTTPHeaderField:@"BrowserType"];
  
     
-	if(connection){
-		self.connection = nil;
-	}
+	self.connection = nil;
+    
 	[characterBuffer setLength:0];
 	
     received_ = 0;
 	total_ = 1;
     
 	self.error_ = nil;
-	connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+	self.connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
 	[self performSelectorOnMainThread:@selector(httpConnectStart) withObject:nil waitUntilDone:NO];
 }
 
@@ -155,7 +154,7 @@
     total_ = 1;
     
     self.error_ = nil;
-    connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+    self.connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
     [self performSelectorOnMainThread:@selector(httpConnectStart) withObject:nil waitUntilDone:NO];
 }
 
@@ -189,7 +188,7 @@
     total_ = 1;
     
     self.error_ = nil;
-    connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+    self.connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
     [self performSelectorOnMainThread:@selector(httpConnectStart) withObject:nil waitUntilDone:NO];
     
     
@@ -218,6 +217,8 @@
 	if(delegate_ && [delegate_ respondsToSelector:@selector(didReceiveStringData:)]){
 		[delegate_ didReceiveStringData:stringData];
 	}
+    
+    self.characterBuffer = nil;
 	[characterBuffer setLength:0];
 	
 	
@@ -233,6 +234,7 @@
 	received_ = 0;
 	total_ = 1;
     
+    self.characterBuffer = nil;
 	[characterBuffer setLength:0];
 	
 	
@@ -278,7 +280,7 @@
 	total_ = 1;
     
 	self.error_ = nil;
-	connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+	self.connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
 	[self performSelectorOnMainThread:@selector(httpConnectStart) withObject:nil waitUntilDone:NO];
 	
 }
@@ -408,7 +410,7 @@
     //[theRequest setValue:@"IPHONE" forHTTPHeaderField:@"BrowserType"];
     
     
-    connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+    self.connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
     [self performSelectorOnMainThread:@selector(httpConnectStart) withObject:nil waitUntilDone:NO];
     
 }

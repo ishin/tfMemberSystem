@@ -124,6 +124,8 @@ RealTimeLocationStatusView *_realTimeLocationStatusView;
 
     [self.chatSessionInputBarControl.pluginBoardView removeItemAtIndex:3];
     
+
+    
     _content = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-50)];
     [self.view insertSubview:_content atIndex:0];
     _content.bounces = NO;
@@ -247,29 +249,7 @@ RealTimeLocationStatusView *_realTimeLocationStatusView;
     [_tab1 addTarget:self action:@selector(tabButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [_tab2 addTarget:self action:@selector(tabButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    /*******************实时地理位置共享***************/
-    
-    /*
-    [self registerClass:[RealTimeLocationStartCell class]
-        forMessageClass:[RCRealTimeLocationStartMessage class]];
-    [self registerClass:[RealTimeLocationEndCell class]
-        forMessageClass:[RCRealTimeLocationEndMessage class]];
-    
-    __weak typeof(&*self) weakSelf = self;
-    [[RCRealTimeLocationManager sharedManager]
-     getRealTimeLocationProxy:self.conversationType
-     targetId:self.targetId
-     success:^(id<RCRealTimeLocationProxy> realTimeLocation) {
-         weakSelf._realTimeLocation = realTimeLocation;
-         [weakSelf._realTimeLocation addRealTimeLocationObserver:self];
-         [weakSelf updateRealTimeLocationStatus];
-     }
-     error:^(RCRealTimeLocationErrorCode status) {
-         NSLog(@"get location share failure with code %d", (int)status);
-     }];
-    */
-    /******************实时地理位置共享**************/
-
+   
     
     if(self.conversationType == ConversationType_PRIVATE)
     {
@@ -289,6 +269,7 @@ RealTimeLocationStatusView *_realTimeLocationStatusView;
         
         [_realtimeTalkView startRCPTT];
     }
+    
     
 }
 
@@ -610,10 +591,8 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 
 - (void) loadGroupInfo{
     
-    if(_httpGroup == nil)
-    {
-        _httpGroup = [[WebClient alloc] initWithDelegate:self];
-    }
+    _httpGroup = nil;
+    _httpGroup = [[WebClient alloc] initWithDelegate:self];
     
     _httpGroup._method = API_GROUP_INFO;
     _httpGroup._httpMethod = @"GET";
@@ -628,6 +607,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
     
     
     IMP_BLOCK_SELF(ChatViewController);
+    
     
     [_httpGroup requestWithSusessBlock:^(id lParam, id rParam) {
         
@@ -668,6 +648,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
         
         id data = [response dataUsingEncoding:NSUTF8StringEncoding];
         [parser parse:data];
+     
         
         
     } FailBlock:^(id lParam, id rParam) {
@@ -677,6 +658,8 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
         
         
     }];
+     
+    
 }
 
 - (void) loadGroupMembers{

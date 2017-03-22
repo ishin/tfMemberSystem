@@ -118,12 +118,13 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 #define theApp ((AppDelegate *)[[UIApplication sharedApplication] delegate])
 
 
-#if __has_feature(objc_arc)
-#define IMP_BLOCK_SELF(type) __weak type *block_self=self;
-#else
-#define IMP_BLOCK_SELF(type) __block type *block_self=self;
-#endif
+//#if __has_feature(objc_arc)
+//#define IMP_BLOCK_SELF(type) __weak type *block_self=self;
+//#else
+//#define IMP_BLOCK_SELF(type) __block type *block_self=self;
+//#endif
 
+#define IMP_BLOCK_SELF(type) __weak typeof(&*self) block_self = self;
 
 #pragma mark - Logging
 
