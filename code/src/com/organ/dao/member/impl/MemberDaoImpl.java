@@ -10,7 +10,6 @@ import org.hibernate.criterion.Restrictions;
 import com.organ.common.BaseDao;
 import com.organ.dao.member.MemberDao;
 import com.organ.model.TMember;
-import com.organ.utils.PasswordGenerator;
 import com.organ.utils.StringUtils;
 import com.organ.utils.TimeGenerator;
 
@@ -150,7 +149,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 				"left join t_position P on BM.position_id=P.id " +
 				"inner join t_organ O on M.organ_id=O.id " +
 				"where M.id=" + id + " and BM.is_master=1";
-			
+			System.out.println(hql);
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 			
 			System.out.println("getOneOfMember->hql :" + hql);
@@ -402,11 +401,11 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		
 		if (!StringUtils.getInstance().isBlank(email)) {
 			bl = true;
-			sbSql.append(",T.email='").append(email).append("'");
+			sbSql.append("T.email='").append(email).append("'");
 		}
 		if (!StringUtils.getInstance().isBlank(mobile)) {
 			bl = true;
-			sbSql.append("T.sex='").append(mobile).append("'");
+			sbSql.append(",T.mobile='").append(mobile).append("'");
 		}
 		if (!StringUtils.getInstance().isBlank(phone)) {
 			bl = true;
@@ -414,9 +413,9 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		}
 		if (!StringUtils.getInstance().isBlank(address)) {
 			bl = true;
-			sbSql.append(",T.intro='").append(address).append("'");
+			sbSql.append(",T.address='").append(address).append("'");
 		}
-		
+
 		sbSql.append(" where id=").append(userId);
 		
 		if (bl) {
@@ -567,4 +566,13 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		return null;
 	}
 
+	@Override
+	public int getMemberCount() {
+		try {
+			count("from TMember");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 }

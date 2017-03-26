@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<!-- ssl-default -->
+	<!-- struts-default -->
+   <package name="com.organ.action.test" extends="all">
+        <action name="test" class="com.organ.action.test.TestAction">
+        	<result name="test">/page/web/test.jsp</result>
+        </action>
+    </package>
+   
+</struts>
+

@@ -86,6 +86,7 @@
 				<value>com/organ/model/TSex.hbm.xml</value>
 				<value>com/organ/model/TextCode.hbm.xml</value>
 				<value>com/organ/model/AppSecret.hbm.xml</value>
+				<value>com/organ/model/UserValid.hbm.xml</value>
 			</list>
 		</property>
 		

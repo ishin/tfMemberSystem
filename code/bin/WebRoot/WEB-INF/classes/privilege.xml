@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+
+	<!-- dao -->
+	<bean id="privilegeDao" class="com.organ.dao.privilege.impl.PrivilegeDaoImpl" autowire="byName" />
+	<bean id="rolePrivilegeDao" class="com.organ.dao.privilege.impl.RolePrivilegeDaoImpl" autowire="byName" />
+	<bean id="memberRoleDao" class="com.organ.dao.privilege.impl.MemberRoleDaoImpl" autowire="byName" />
+	
+	<!-- service -->
+	<bean id="privilegeService" class="com.organ.service.privilege.impl.PrivilegeServiceImpl" autowire="byName" >
+		<property name="privilegeDao" ref="privilegeDao" />
+		<property name="rolePrivilegeDao" ref="rolePrivilegeDao" />
+		<property name="memberRoleDao" ref="memberRoleDao" />
+	</bean>
+	
+	<!-- action -->
+	<bean id="privilegeAction" class="com.organ.action.privilege.PrivilegeAction" scope="prototype" autowire="byName" >
+		<property name="privilegeService" ref="privilegeService" />
+	</bean>
+	
+</beans>

@@ -19,8 +19,8 @@
 <div class="signin-bg">
     <div class="signin-logo">
         <div class="main clearfix">
-            <a href=""><span>O</span>rgan</a>
-            <a class="pull-left ng-binding" onclick="jumpToAuth()">组织管理系统</a>
+            <a href=""><span></span></a>
+            <a class="pull-left ng-binding" onclick="jumpToAuth()">统一认证平台</a>
         </div>
     </div>
     <div class="signin-form">

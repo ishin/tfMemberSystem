@@ -41,10 +41,10 @@ public class Example {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		String appKey = "e5t4ouvpe564a";//替换成您的appkey
-		String appSecret = "mE8DaEjCSs0";//替换成匹配上面key的secret
-		//String appKey = "m7ua80guyso7u";
-		//String appSecret = "agD7awpwx6w";
+		//String appKey = "e5t4ouvpe564a";//替换成您的appkey
+		//String appSecret = "mE8DaEjCSs0";//替换成匹配上面key的secret
+		String appKey = "m7ua80guyso7u";
+		String appSecret = "agD7awpwx6w";
 		
 		Reader reader = null ;
 		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);
@@ -52,8 +52,7 @@ public class Example {
 		
 		System.out.println("************************User********************");
 		// 获取 Token 方法 
-		//TokenReslut userGetTokenResult = rongCloud.user.getToken("userId1", "username", "http://www.rongcloud.cn/images/logo.png");
-		TokenReslut userGetTokenResult = rongCloud.user.getToken("10001", "superman", "http://127.0.0.1:8080/sealtalk?//update/images/??PersonImg.png");
+		TokenReslut userGetTokenResult = rongCloud.user.getToken("10001", "admin", "http://www.rongcloud.cn/images/logo.png");
 		System.out.println("getToken:  " + userGetTokenResult.toString());
 		
 		// 刷新用户信息方法 
