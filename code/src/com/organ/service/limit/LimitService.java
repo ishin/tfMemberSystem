@@ -12,7 +12,7 @@ public interface LimitService {
 	 * 
 	 * @return
 	 */
-	public String AddLimit(int parentId, String name, String category,
+	public String AddLimit(int parentId, String name,
 			String app);
 
 	/**
@@ -21,7 +21,7 @@ public interface LimitService {
 	 * @return
 	 */
 	public String EditLimit(int priv_id, String pid, String name,
-			String category, String app);
+			 String app);
 
 	/**
 	 * 删除权限
@@ -36,6 +36,6 @@ public interface LimitService {
 	 * @param Name
 	 * @return
 	 */
-	public String searchPriv(String Name);
+	public String searchPriv(String Name,int pagesize,int pageindex);
 
 }

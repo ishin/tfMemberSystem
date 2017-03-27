@@ -1,13 +1,10 @@
 package com.organ.action.limit;
 
-
 import javax.servlet.ServletException;
-
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import com.organ.action.member.MemberAction;
 import com.organ.common.BaseAction;
@@ -55,11 +52,10 @@ public class LiMitAction extends BaseAction {
 		String name = this.request.getParameter("name");
 		String pid = this.request.getParameter("parentId");
 		String app = this.request.getParameter("app");
-		String category = this.request.getParameter("category");
 		Integer intPid = pid == null ? null : Integer.parseInt(pid);
 		boolean falg = false;
 		try {
-			String resString = limitService.AddLimit(intPid, name, category,
+			String resString = limitService.AddLimit(intPid, name,
 					app);
 			if ("".equals(resString) && null == resString) {
 				falg = false;
@@ -130,12 +126,11 @@ public class LiMitAction extends BaseAction {
 		String id = this.request.getParameter("privId");
 		String pid = this.request.getParameter("parentId");
 		String name = this.request.getParameter("name");
-		String category = this.request.getParameter("category");
 		String app = this.request.getParameter("app");
 		Integer intid = id == null ? null : Integer.parseInt(id);
 		boolean flag = false;
 		try {
-			String result = limitService.EditLimit(intid, pid, name, category,
+			String result = limitService.EditLimit(intid, pid, name,
 					app);
 			if ("".equals(result) && null == result) {
 				flag = false;
@@ -171,6 +166,12 @@ public class LiMitAction extends BaseAction {
 
 	public String SearchPriv() throws ServletException, JSONException {
 		String name = this.request.getParameter("name");
+		String pagesize = this.request.getParameter("pagesize");
+		String pageindex = this.request.getParameter("pageindex");
+		Integer intpagesize = pagesize == null ? null : Integer
+				.parseInt(pagesize);
+		Integer intpageindex = pageindex == null ? null : Integer
+				.parseInt(pageindex);
 		String result = null;
 		try {
 			if (name == null || "".equals(name)) {
@@ -178,7 +179,7 @@ public class LiMitAction extends BaseAction {
 				jo.put("code", 0);
 				jo.put("text", "权限名称为空");
 			} else {
-				result = limitService.searchPriv(name);
+				result = limitService.searchPriv(name, intpagesize,intpageindex);
 			}
 			logger.info(result);
 		} catch (Exception e) {

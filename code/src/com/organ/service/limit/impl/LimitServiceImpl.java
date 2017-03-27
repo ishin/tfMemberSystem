@@ -27,10 +27,10 @@ public class LimitServiceImpl implements LimitService {
 	}
 
 	@Override
-	public String AddLimit(int parentId, String name, String category,
+	public String AddLimit(int parentId, String name,
 			String app) {
 		// TODO Auto-generated method stub
-		return limitDao.updatePriv(parentId, name, category, app) + "";
+		return limitDao.updatePriv(parentId, name, app) + "";
 	}
 
 	@Override
@@ -40,23 +40,23 @@ public class LimitServiceImpl implements LimitService {
 	}
 
 	@Override
-	public String EditLimit(int priv_id, String pid, String name,
-			String category, String app) {
+	public String EditLimit(int priv_id, String pid, String name, String app) {
 		// TODO Auto-generated method stub
-		return limitDao.editPriv(priv_id, pid, name, category, app) + "";
+		return limitDao.editPriv(priv_id, pid, name, app) + "";
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String searchPriv(String Name) {
+	public String searchPriv(String Name, int pagesize, int pageindex) {
 		JSONArray ja = new JSONArray();
 		try {
 
-			List privlist = limitDao.searchPriv(Name);
+			List privlist = limitDao
+					.searchPriv(Name, pagesize, pageindex);
 
 			if (privlist == null) {
 				JSONObject jo = new JSONObject();
-				
+
 				jo.put("code", 0);
 				jo.put("text", "权限名称为空");
 			} else {
