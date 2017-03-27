@@ -27,7 +27,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 		ServletResponseAware {
 	private static final long serialVersionUID = 1L;
 
-	public BaseAction() {}
+	public BaseAction() {
+	}
 
 	public InputStream inputStream;
 	public HttpServletRequest request;
@@ -114,8 +115,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 			response.setHeader("Cache-Control",
 					"no-cache, no-store, must-revalidate"); // 支持HTTP 1.1.
 			response.setHeader("Pragma", "no-cache"); // 支持HTTP 1.0.
-														// response.setHeader("Expires",
-														// "0");
+			// response.setHeader("Expires",
+			// "0");
 			setInputStream(new ByteArrayInputStream(jsonString
 					.getBytes("utf-8")));
 		} catch (IOException e) {
@@ -128,6 +129,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 		try {
 			HttpServletResponse response = ServletActionContext.getResponse();
 			response.setContentType(type + ";charset=UTF-8");
+			request.setCharacterEncoding("utf-8");
 			response.setHeader("Pragma", "No-cache");
 			response.setHeader("Cache-Control", "no-cache");
 			response.setDateHeader("Expires", 0);

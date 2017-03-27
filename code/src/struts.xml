@@ -24,6 +24,7 @@
 	<include file="struts-auth.xml" />
 	<include file="struts-abutment.xml" />
 	<include file="struts-limit.xml" />
+	<include file="struts-appinfoconfig.xml" />
 </struts>
 
 

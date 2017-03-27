@@ -32,7 +32,7 @@ public class AppSecretAction extends BaseAction {
 		String result = appSecretService.getAppIDAndSecret();
 		returnToClient(result);
 		return "text";
-	}
+	} 
 	
 	/**
 	 * 设置auth2登陆基本信息

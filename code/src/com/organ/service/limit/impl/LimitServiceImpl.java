@@ -3,8 +3,7 @@ package com.organ.service.limit.impl;
 import java.util.List;
 
 import net.sf.json.JSONArray;
-
-import org.json.JSONObject;
+import net.sf.json.JSONObject;
 
 import com.organ.dao.limit.LimitDao;
 import com.organ.service.limit.LimitService;
@@ -47,17 +46,20 @@ public class LimitServiceImpl implements LimitService {
 		return limitDao.editPriv(priv_id, pid, name, category, app) + "";
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String searchPriv(String Name) {
-		// TODO Auto-generated method stub
-		JSONArray jsonObject = new JSONArray();
+		JSONArray ja = new JSONArray();
 		try {
+
 			List privlist = limitDao.searchPriv(Name);
-			if(privlist == null){
+
+			if (privlist == null) {
 				JSONObject jo = new JSONObject();
+				
 				jo.put("code", 0);
 				jo.put("text", "权限名称为空");
-			}else {
+			} else {
 				for (int i = 0; i < privlist.size(); i++) {
 					Object[] priv = (Object[]) privlist.get(i);
 					JSONObject jo = new JSONObject();
@@ -67,19 +69,17 @@ public class LimitServiceImpl implements LimitService {
 					jo.put("category", isBlank(priv[3]));
 					jo.put("url", isBlank(priv[4]));
 					jo.put("app", isBlank(priv[5]));
-					jsonObject.add(jo);
+					ja.add(jo);
 				}
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
-		return jsonObject.toString();
+		return ja.toString();
 	}
-	
+
 	private String isBlank(Object o) {
 		return o == null ? "" : o + "";
 	}
-	
 
 }

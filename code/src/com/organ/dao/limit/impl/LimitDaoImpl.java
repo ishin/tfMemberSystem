@@ -79,12 +79,13 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List searchPriv(String Name) {
-		// TODO Auto-generated method stub
 		try {
 			String hql = "select " + "tp.id," + "tp.parent_id," + "tp.NAME,"
 					+ "tp.category," + "tp.url," + "tp.app "
-					+ "from t_priv tp where tp.id like '%" + Name + "%'";
+					+ "from t_priv tp where tp.name like '%" + Name + "%'"
+					+ "or tp.url like '%" + Name + "%'";
 			SQLQuery query = this.getSession().createSQLQuery(hql);
+
 			List list = query.list();
 
 			if (list.size() > 0) {

@@ -1,16 +1,13 @@
 package com.organ.action.limit;
 
-import java.util.List;
 
 import javax.servlet.ServletException;
 
-import net.sf.json.JSONArray;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import sun.util.logging.resources.logging;
 
 import com.organ.action.member.MemberAction;
 import com.organ.common.BaseAction;
@@ -30,7 +27,7 @@ public class LiMitAction extends BaseAction {
 	private static final Logger logger = Logger.getLogger(LiMitAction.class);
 	private LimitService limitService;
 	private LimitDao limitDao;
-	
+
 	public LimitDao getLimitDao() {
 		return limitDao;
 	}
@@ -55,8 +52,6 @@ public class LiMitAction extends BaseAction {
 	 * @throws JSONException
 	 */
 	public String AddPriv() throws ServletException, JSONException {
-		// System.out.println("------------------ " +
-		// getSessionUser().getAccount());
 		String name = this.request.getParameter("name");
 		String pid = this.request.getParameter("parentId");
 		String app = this.request.getParameter("app");
@@ -126,6 +121,7 @@ public class LiMitAction extends BaseAction {
 
 	/**
 	 * 编辑权限
+	 * 
 	 * @return
 	 * @throws ServletException
 	 * @throws JSONException
@@ -137,9 +133,10 @@ public class LiMitAction extends BaseAction {
 		String category = this.request.getParameter("category");
 		String app = this.request.getParameter("app");
 		Integer intid = id == null ? null : Integer.parseInt(id);
-		boolean flag =false;
+		boolean flag = false;
 		try {
-			String result = limitService.EditLimit(intid, pid, name, category, app);
+			String result = limitService.EditLimit(intid, pid, name, category,
+					app);
 			if ("".equals(result) && null == result) {
 				flag = false;
 			} else {
@@ -161,8 +158,9 @@ public class LiMitAction extends BaseAction {
 		returnToClient(jsonObject.toString());
 		return "text";
 	}
+
 	private String name;
-	
+
 	public String getName() {
 		return name;
 	}
@@ -171,7 +169,7 @@ public class LiMitAction extends BaseAction {
 		this.name = name;
 	}
 
-	public String SearchPriv() throws ServletException,JSONException {
+	public String SearchPriv() throws ServletException, JSONException {
 		String name = this.request.getParameter("name");
 		String result = null;
 		try {
@@ -179,7 +177,7 @@ public class LiMitAction extends BaseAction {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
 				jo.put("text", "权限名称为空");
-			}else {
+			} else {
 				result = limitService.searchPriv(name);
 			}
 			logger.info(result);

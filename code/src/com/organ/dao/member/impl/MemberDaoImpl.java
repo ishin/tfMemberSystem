@@ -295,7 +295,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 				"left join t_position P on BM.position_id=P.id " +
 				"inner join t_organ O on M.organ_id=O.id " +
 				"where account like '%" + account + "%' or fullname like '%" + account + "%' or pinyin like '%" + account + "%' or allpinyin like '%" + account + "%'";
-			
+			 
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 			
 			List list = query.list();

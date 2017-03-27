@@ -3,7 +3,6 @@ package com.organ.action.member;
 import java.io.IOException;
 
 import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import net.sf.json.JSONObject;
