@@ -20,7 +20,7 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 	 * 这个实现添加全选的接口，这儿的逻辑
 	 */
 	@Override
-	public int updatePriv(int parentId, String name, String category, String app) {
+	public int updatePriv(int parentId, String name, String app) {
 		// TODO Auto-generated method stub
 		TPriv tPriv = new TPriv();
 		tPriv.setParentId(parentId);
@@ -28,7 +28,7 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 		tPriv.setApp(app);
 		tPriv.setUrl(PrivUrlNameUtil.initUrlName(name));
 		tPriv.setListorder(0); // 这个不能为空
-		tPriv.setCategory(category);
+		tPriv.setCategory(parentId+"");
 		tPriv.setGrouping("0");
 
 		try {
@@ -56,12 +56,12 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 	}
 
 	@Override
-	public int editPriv(int priv_id, String pid, String name, String category,
+	public int editPriv(int priv_id, String pid, String name,
 			String app) {
 		// TODO Auto-generated method stub
 		try {
 			String hql = "update TPriv tp set tp.name= '" + name
-					+ "',tp.parentId='" + pid + "',tp.category='" + category
+					+ "',tp.parentId='" + pid + "',tp.category='" + pid
 					+ "',tp.app='" + app + "',tp.url='"
 					+ PrivUrlNameUtil.initUrlName(name) + "' where tp.id="
 					+ priv_id;
@@ -78,14 +78,20 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List searchPriv(String Name) {
+	public List searchPriv(String Name, int pagesize, int pageindex) {
 		try {
+			// String str = " SELECT COUNT(*) FROM t_priv";
+			// int totalCount = Integer.parseInt(str);// 总条目
+			// int pages = (totalCount % pagesize) == 0 ? (totalCount /
+			// pagesize)
+			// : ((totalCount / pagesize)) + 1;//共有多少页
+			int start = pageindex * pagesize;
 			String hql = "select " + "tp.id," + "tp.parent_id," + "tp.NAME,"
 					+ "tp.category," + "tp.url," + "tp.app "
 					+ "from t_priv tp where tp.name like '%" + Name + "%'"
-					+ "or tp.url like '%" + Name + "%'";
+					+ "or tp.url like '%" + Name + "%' limit " + start + ","
+					+ pagesize;
 			SQLQuery query = this.getSession().createSQLQuery(hql);
-
 			List list = query.list();
 
 			if (list.size() > 0) {

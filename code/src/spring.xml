@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
@@ -13,9 +12,11 @@
 			<value>classpath:sealtalk.properties</value>
 		</property>
 	</bean>
-	<!-- ==============================================  数据库数据源  ================================================================== -->
-	<bean id="dataSource"
-		class="org.apache.commons.dbcp.BasicDataSource"
+	<!--
+		============================================== 数据库数据源
+		==================================================================
+	-->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${db.driver}"></property>
 		<property name="url" value="${db.url}" />
@@ -29,12 +30,14 @@
 		<property name="testWhileIdle" value="${db.testWhileIdle}" />
 		<property name="validationQuery" value="${db.validationQuery}" />
 		<property name="removeAbandoned" value="${db.removeAbandoned}" />
-		<property name="removeAbandonedTimeout"
-			value="${db.removeAbandonedTimeout}" />
+		<property name="removeAbandonedTimeout" value="${db.removeAbandonedTimeout}" />
 		<property name="logAbandoned" value="${db.logAbandoned}" />
 	</bean>
 
-	<!-- ========================================    Spring-Hibernate SessionFactory   =================================================== -->
+	<!--
+		======================================== Spring-Hibernate
+		SessionFactory ===================================================
+	-->
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="dataSource">
@@ -54,10 +57,11 @@
 				</prop>
 				<prop key="hibernate.jdbc.batch_size">20</prop>
 				<prop key="hibernate.jdbc.fetch_size">20</prop>
-				<!-- 配置Ehcache二级缓存
-					<prop key="hibernate.cache.use_second_level_cache">true</prop>
-					<prop key="hibernate.cache.use_query_cache">true</prop>
-					<prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+				<!--
+					配置Ehcache二级缓存 <prop
+					key="hibernate.cache.use_second_level_cache">true</prop> <prop
+					key="hibernate.cache.use_query_cache">true</prop> <prop
+					key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
 				-->
 				<!-- 配置调试参数 -->
 				<prop key="hibernate.show_sql">true</prop>
@@ -87,9 +91,10 @@
 				<value>com/organ/model/TextCode.hbm.xml</value>
 				<value>com/organ/model/AppSecret.hbm.xml</value>
 				<value>com/organ/model/UserValid.hbm.xml</value>
+				<value>com/organ/model/UserSysRelation.hbm.xml</value>
 			</list>
 		</property>
-		
+
 	</bean>
 
 	<bean id="transactionManager"
@@ -98,7 +103,7 @@
 			<ref local="sessionFactory" />
 		</property>
 	</bean>
-	
+
 	<!-- 事务控制 -->
 	<bean id="transactionProxy"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
@@ -111,23 +116,20 @@
 		</property>
 	</bean>
 
-	<!--<bean id="baseDao" class="com.organ.common.BaseDao">
-		<property name="sessionFactory">
-			<ref local="sessionFactory" />
-		</property>
-	</bean>
+	<!--
+		<bean id="baseDao" class="com.organ.common.BaseDao"> <property
+		name="sessionFactory"> <ref local="sessionFactory" /> </property>
+		</bean>
 	--><!-- 定义切面，对com.organ.service包下的所有类的所有方法 都应用事务规则 -->
 	<aop:config>
-		<aop:advisor
-			pointcut="execution(* com.organ.service..*(..))"
+		<aop:advisor pointcut="execution(* com.organ.service..*(..))"
 			advice-ref="txAdvice" />
 	</aop:config>
 	<!-- 事务 控制 -->
 	<tx:advice id="txAdvice">
 		<tx:attributes>
 			<tx:method name="get*" read-only="true" />
-			<tx:method name="*" propagation="REQUIRED"
-				rollback-for="Exception" />
+			<tx:method name="*" propagation="REQUIRED" rollback-for="Exception" />
 		</tx:attributes>
 	</tx:advice>
 
