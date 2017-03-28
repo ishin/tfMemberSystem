@@ -2,13 +2,10 @@ package com.organ.action.limit;
 
 import javax.servlet.ServletException;
 
-import net.sf.json.JSONArray;
-
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.hp.hpl.sparta.Text;
 import com.organ.action.member.MemberAction;
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
@@ -176,35 +173,20 @@ public class LiMitAction extends BaseAction {
 		Integer intpageindex = pageindex == null ? null : Integer
 				.parseInt(pageindex);
 		String result = null;
-		result = limitService.searchPriv(name, intpagesize,intpageindex);
-
-		returnToClient(result);
-		return "text";
-	}
-	
-	public String getCount() throws ServletException,JSONException{
-		boolean falg = false;
-		String result = "";
 		try {
-			result = limitService.getCount()+"";
-			if ("".equals(result) && null == result) {
-				falg = false;
+			if (name == null || "".equals(name)) {
+				JSONObject jo = new JSONObject();
+				jo.put("code", 0);
+				jo.put("text", "权限名称为空");
 			} else {
-				falg = true;
+				result = limitService.searchPriv(name, intpagesize,intpageindex);
 			}
+			logger.info(result);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			falg = false;
 		}
-		JSONObject jsonObject = new JSONObject();
-		if (falg) {
-			jsonObject.put("id", result);
-		} else {
-			jsonObject.put("code", 0 + "");
-			jsonObject.put("text", "请求失败");
-		}
-		returnToClient(jsonObject.toString());
+		returnToClient(result);
 		return "text";
 	}
 

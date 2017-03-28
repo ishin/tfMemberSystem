@@ -17,7 +17,6 @@ public class AppInfoConfigAction extends BaseAction {
 	 * 
 	 */
 	private static final long serialVersionUID = 3357825063940018758L;
-
 	private AppInfoConfigService appInfoConfigService;
 
 	public AppInfoConfigService getAppInfoConfigService() {
@@ -29,28 +28,8 @@ public class AppInfoConfigAction extends BaseAction {
 		this.appInfoConfigService = appInfoConfigService;
 	}
 
-	public String getAppInfo() {
-		String pagesize = this.request.getParameter("pagesize");
-		String pageindex = this.request.getParameter("pageindex");
-		Integer intpagesize = pagesize == null ? null : Integer
-				.parseInt(pagesize);
-		Integer intpageindex = pageindex == null ? null : Integer
-				.parseInt(pageindex);
-		boolean flag = false;
-		String result = null;
-		try {
-			result = appInfoConfigService.getAppInfo(intpagesize,
-					intpageindex);
-			if ("".equals(result) && null == result) {
-				flag = false;
-			} else {
-				flag = true;
-			}
-		} catch (Exception e) {
-			flag = false;
-			e.printStackTrace();
-		}
-		returnToClient(result);
+	public String test() {
+		returnToClient("11111111");
 		return "text";
 	}
 
