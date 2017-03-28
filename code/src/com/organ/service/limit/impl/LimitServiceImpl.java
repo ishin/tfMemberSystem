@@ -27,7 +27,8 @@ public class LimitServiceImpl implements LimitService {
 	}
 
 	@Override
-	public String AddLimit(int parentId, String name, String app) {
+	public String AddLimit(int parentId, String name,
+			String app) {
 		// TODO Auto-generated method stub
 		return limitDao.updatePriv(parentId, name, app) + "";
 	}
@@ -50,7 +51,8 @@ public class LimitServiceImpl implements LimitService {
 		JSONArray ja = new JSONArray();
 		try {
 
-			List privlist = limitDao.searchPriv(Name, pagesize, pageindex);
+			List privlist = limitDao
+					.searchPriv(Name, pagesize, pageindex);
 
 			if (privlist == null) {
 				JSONObject jo = new JSONObject();
@@ -78,18 +80,6 @@ public class LimitServiceImpl implements LimitService {
 
 	private String isBlank(Object o) {
 		return o == null ? "" : o + "";
-	}
-
-	@Override
-	public int getCount() {
-		try {
-			int count =limitDao.getCount();
-			return count;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return 0;
 	}
 
 }

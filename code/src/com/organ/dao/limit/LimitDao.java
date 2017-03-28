@@ -12,6 +12,4 @@ public interface LimitDao {
 	public int editPriv(int priv_id,String pid,String name,String app);//编辑权限
 	
 	public List searchPriv(String Name,int pagesize,int pageindex);
-	
-	public int getCount();
 }

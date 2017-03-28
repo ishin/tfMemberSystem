@@ -2,18 +2,19 @@ package com.organ.dao.limit.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.SQLQuery;
 
 import com.organ.common.BaseDao;
 import com.organ.dao.limit.LimitDao;
+import com.organ.dao.privilege.impl.PrivilegeDaoImpl;
 import com.organ.model.TPriv;
 import com.organ.utils.PrivUrlNameUtil;
 
 public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 
-	private static final Logger logger = Logger.getLogger(LimitDaoImpl.class);
+	private static final Logger logger = Logger
+			.getLogger(PrivilegeDaoImpl.class);
 
 	/**
 	 * 这个实现添加全选的接口，这儿的逻辑
@@ -27,7 +28,7 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 		tPriv.setApp(app);
 		tPriv.setUrl(PrivUrlNameUtil.initUrlName(name));
 		tPriv.setListorder(0); // 这个不能为空
-		tPriv.setCategory(parentId + "");
+		tPriv.setCategory(parentId+"");
 		tPriv.setGrouping("0");
 
 		try {
@@ -55,7 +56,8 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 	}
 
 	@Override
-	public int editPriv(int priv_id, String pid, String name, String app) {
+	public int editPriv(int priv_id, String pid, String name,
+			String app) {
 		// TODO Auto-generated method stub
 		try {
 			String hql = "update TPriv tp set tp.name= '" + name
@@ -84,20 +86,11 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 			// pagesize)
 			// : ((totalCount / pagesize)) + 1;//共有多少页
 			int start = pageindex * pagesize;
-			String hql;
-			if (!StringUtils.isBlank(Name)) {
-				hql = "select " + "tp.id," + "tp.parent_id," + "tp.NAME,"
-						+ "tp.category," + "tp.url," + "tp.app "
-						+ "from t_priv tp where tp.name like '%" + Name + "%'"
-						+ "or tp.url like '%" + Name + "%' limit " + start
-						+ "," + pagesize;
-			} else {
-				hql = "select " + "tp.id," + "tp.parent_id," + "tp.NAME,"
-						+ "tp.category," + "tp.url," + "tp.app "
-						+ "from t_priv tp limit " + start
-						+ "," + pagesize;
-			}
-			System.out.println(hql);
+			String hql = "select " + "tp.id," + "tp.parent_id," + "tp.NAME,"
+					+ "tp.category," + "tp.url," + "tp.app "
+					+ "from t_priv tp where tp.name like '%" + Name + "%'"
+					+ "or tp.url like '%" + Name + "%' limit " + start + ","
+					+ pagesize;
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 			List list = query.list();
 
@@ -110,18 +103,6 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 		}
 
 		return null;
-	}
-
-	@Override
-	public int getCount() {
-		try {
-			int result = count("from TPriv");
-			return result;
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		return 0;
 	}
 
 }
