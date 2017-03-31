@@ -17,7 +17,7 @@
 	<div>
 		<div class='dialogtitle searchbox'>
 			<img src='images/boxsearch.png' class='searchimg' />
-			<input type='text' id='search11move' class='searchinput' style='width:270px' placeholder='查找联系人...'>
+			<input type='text' id='search11move' class='searchinput' style='width:270px' placeholder='查找部门...'>
 		</div>
 	</div>
 	<div>

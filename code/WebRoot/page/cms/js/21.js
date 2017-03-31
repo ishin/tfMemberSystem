@@ -516,7 +516,7 @@ function showpage(cp) {
 function stripicon(data) {
 	var i = data.length;
 	while (i--) {
-		data[i].name = data[i].name.substr(55);
+		data[i].name = data[i].name.substr(iconlenth);
 	}
 	return data;
 }

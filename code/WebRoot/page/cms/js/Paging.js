@@ -10,6 +10,7 @@ function Paging(className,cfg){
         pageTotle:5
     }
     this.args = $.extend(defaultCfg,cfg);
+    this.init();
 }
 
 
@@ -17,41 +18,47 @@ function Paging(className,cfg){
 Paging.prototype.init = function(){
     this.fillHtml(this.obj,this.args);
     this.bindEvent(this.obj,this.args);
-    this.args.backFn();
+    //this.args.backFn();
 }
 Paging.prototype.fillHtml = function(obj,args){
     obj.empty();
-    //上一页
-    var prevPage = "<div class='' id='prevPage'><</div>"
-    //中间五页
 
-    var start = args.current-2;var end = args.current+2;
-    if(args.current<3&&args.pageCount>=5){
-        start = 1;end = 5;
-    }else if(args.current<3&&args.pageCount<5){
-        start = 1;end = args.pageCount;
-    }else if(args.current>args.pageCount-3){
-        start = args.pageCount-4;end = args.pageCount;
-    }
-    var middlePage = '';
-    for(var i = start;i<=end;i++){
-        if(i==args.current){
-            middlePage+="<div class='pageNum current' id=''>"+i+"</div>";
-        }else{
-            middlePage+="<div class='pageNum' id=''>"+i+"</div>";
+    if(args.pageCount){
+        obj.show();
+        //上一页
+        var prevPage = "<div class='' id='prevPage'><</div>"
+        //中间五页
+        var start = args.current-2;var end = args.current+2;
+        if(args.current<3&&args.pageCount>=5){
+            start = 1;end = 5;
+        }else if(args.current<3&&args.pageCount<5){
+            start = 1;end = args.pageCount;
+        }else if(args.current>args.pageCount-3){
+            start = args.pageCount-4;end = args.pageCount;
         }
+        var middlePage = '';
+        for(var i = start;i<=end;i++){
+            if(i==args.current){
+                middlePage+="<div class='pageNum current' id=''>"+i+"</div>";
+            }else{
+                middlePage+="<div class='pageNum' id=''>"+i+"</div>";
+            }
+        }
+
+        //下一页
+        var nextPage = "<div class='' id='nextPage'>></div>"
+
+        //搜索
+        var searchPage = '<input class="" id="pagingJumpNum"/> <button class="pagingJump">跳转</button>'
+
+
+        var sHTML = prevPage+middlePage+nextPage+searchPage;
+        obj.html(sHTML);
+    }else{
+        obj.hide();
     }
 
-    //下一页
-    var nextPage = "<div class='' id='nextPage'>></div>"
-
-    //搜索
-    var searchPage = '<input class="" id="pagingJumpNum"/> <button class="pagingJump">跳转</button>'
-
-
-    var sHTML = prevPage+middlePage+nextPage+searchPage;
-    obj.html(sHTML);
-    }
+}
 
 
 Paging.prototype.bindEvent = function(obj,args){

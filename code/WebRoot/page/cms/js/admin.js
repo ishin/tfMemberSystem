@@ -2,6 +2,9 @@
 var privs = '';
 //应用根目录
 var path = '';
+
+var iconlenth = 69;
+
 $(document).ready(function(){
 	
 	// 取权限

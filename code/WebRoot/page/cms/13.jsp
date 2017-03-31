@@ -35,10 +35,10 @@
 				<thead>
 					<tr">
 						<th width="15%">群号</th>
-						<th width="20%">群名称</th>
+						<th width="25%">群名称</th>
 						<th width="20%">创建者</th>
 						<th width="15%">创建日期</th>
-						<th width="30%">操作</th>
+						<th width="25%">操作</th>
 					</tr>
 				</thead>
 				<tbody id='grouplist'>

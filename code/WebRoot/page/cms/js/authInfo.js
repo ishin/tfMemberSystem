@@ -7,15 +7,33 @@ var itemtemplate='<tr id="traid">'
 	+'<td>classify</td>'
 	+'<td>belong</td>'
 	+'<td>'
-		+'<button class="unifiedBTN" onclick="editAuth(aid)" style="margin-right: 20px"><img src="images/edit.png" /></button>'
-		+'<button onclick="disAuth(aid)" class="unifiedBTN"><img src="images/delete.png" /></button>'
+		+'<button class="unifiedBTN" onclick="editAuth(aid,this)" style="margin-right: 20px"><img src="images/edit.png" /></button>'
+		+'<button onclick="disAuth(aid,this)" class="unifiedBTN"><img src="images/delete.png" /></button>'
 	+'</td></tr>';
 var grpid = 0;
 $(document).ready(function() {
 
+	$('.certainAdd').click(function(){
+		var name = $('#name').val();
+		var parentId = $('#parentId').val();
+		var app = $('#app').val();
+		var text = $(this).parents('.dialogAuth').find('.diaTitle').text();
+		if(text=='新增权限'){
+			var data = {name:name,app:app,parentId:parentId}
+			callajax('limit!AddPriv', data, afterAddPriv);
+		}else if(text=='编辑权限'){
+			var privId = $(this).parents('.dialogAuth').attr('bindid');
+			var data = {name:name,app:app,parentId:parentId,privId:privId}
+			callajax('limit!EditPriv', data, afterEditPriv);
+		}
+		$('.dialogMask').hide();
+		$('.dialogAuth').hide();
+	})
+
 	$('.plusAuth').click(function(){
 		$('.dialogMask').show();
 		$('.dialogAuth').show();
+		$('.dialogAuth').find('.diaTitle').html('新增权限');
 	})
 
 
@@ -26,58 +44,101 @@ $(document).ready(function() {
 
 
 	$('.searchBTN').click(function(){
-
+		loadpage();
 	})
-
-	callajax('grp!getCount', '', fGroupCount);
+	loadpage();
+	//callajax('grp!getCount', '', loadpage);
 
 });
-function fGroupCount(data) {
-	pagenumber = Math.ceil(data.id/itemsperpage);
-	if (pagenumber > 0) {
 
-		var newPaging = new Paging('.paging',
-			{
-				pageCount : pagenumber,
-				current : 1,
-				backFn : function(){
-					loadpage(newPaging);
-				}
-			}
-		)
-		newPaging.init();
-	}
-	else {
-		$('#grouplist').empty();
-	}
+function afterAddPriv(data){
+	console.log(data);
+	loadpage(newPaging.args.current)
 }
+function afterEditPriv(data){
+	loadpage(newPaging.args.current)
+}
+//function fGroupCount(data) {
+//	loadpage();
+//}
 
-function loadpage(newPaging) {
+function loadpage(pagenumber) {
 	$('#grouplist').empty();
 	var authName = $('.searchInput').val();
-	var data = {name:authName,pageindex: newPaging.args.current-1, pagesize: itemsperpage};
-	callajax('limit!SearchPriv', data, fShowTable);
-}
-function fShowTable(data) {
-	var i = data.length;
+	if(pagenumber){
+		var data = {name:authName,pageindex: pagenumber-1, pagesize: itemsperpage};
 
-	for(var i = 0;i<data.length;i++){
+		callajax('limit!SearchPriv', data, fShowTableNew);
+	}else{
+		var data = {name:authName,pageindex: 0, pagesize: itemsperpage};
+
+		callajax('limit!SearchPriv', data, fShowTable);
+	}
+}
+function fShowTableNew(data){
+	var datas = data.content;
+	var LocalData = JSON.stringify(datas);
+	window.localStorage.tableData = LocalData;
+	for(var i = 0;i<datas.length;i++){
 		$('#grouplist').append(itemtemplate
-				.replace('code', data[i].id)
-				.replace('name', data[i].name)
-				.replace('classify', data[i].category)
-				.replace('belong', data[i].app)
-				.replace(/aid/g, data[i].id)
+				.replace('code', datas[i].id)
+				.replace('name', datas[i].name)
+				.replace('classify', datas[i].category)
+				.replace('belong', datas[i].app)
+				.replace(/aid/g, datas[i].id)
 		);
 	}
-	//while(i--) {
-    //
-    //
-	//}
 }
-function editAuth(id){
+function fShowTable(data) {
+
+	var i = data.length;
+	var count = data.count;
+	pagenumber = Math.ceil(count/itemsperpage);
+	window.newPaging = new Paging('.paging',
+		{
+			pageCount : pagenumber,
+			current : 1,
+			backFn : function(){
+				loadpage(newPaging.args.current);
+			}
+		}
+	)
+	var datas = data.content;
+	var localData = JSON.stringify(datas);
+	window.localStorage.tableData = localData
+	for(var i = 0;i<datas.length;i++){
+		$('#grouplist').append(itemtemplate
+				.replace('code', datas[i].id)
+				.replace('name', datas[i].name)
+				.replace('classify', datas[i].category)
+				.replace('belong', datas[i].app)
+				.replace(/aid/g, datas[i].id)
+		);
+	}
+}
+function findInList(id){
+	var tableData = localStorage.getItem('tableData');
+	var finalData = '';
+	var tableDatas = JSON.parse(tableData);
+	for(var i = 0;i<tableDatas.length;i++){
+		if(tableDatas[i].id == id){
+			finalData = tableDatas[i];
+		}
+	}
+	return finalData;
+}
+function editAuth(id,curDom){
+	//var targetList = $(curDom).closest('tr');
+	var curList = findInList(id)
+	var dialogAuth = $('.dialogAuth');
+
 	$('.dialogMask').show();
-	$('.dialogAuth').show();
+	dialogAuth.show();
+	dialogAuth.find('#name').val(curList.name);
+	dialogAuth.find('#parentId').val(curList.category);
+	dialogAuth.find('#app').val(curList.app);
+	dialogAuth.attr('bindid',id);
+	dialogAuth.find('.diaTitle').html('编辑权限');
 }
 function disAuth(id){
 	new Window().alert({
@@ -90,7 +151,17 @@ function disAuth(id){
 		handlerForCancle : null,
 		handlerForSure : function(){
 			//删除权限
-			cancleRelation(account,memShip);
+			cancleRelation(id,function(){
+				loadpage(newPaging.args.current)
+			});
 		}
 	});
+}
+function cancleRelation(id,callback){
+	callajax('limit!DelPriv', {privId:id}, function(){
+		var authName = $('.searchInput').val();
+		var data = {name:authName,pageindex: newPaging.args.current, pagesize: itemsperpage};
+		callback&&callback()
+	});
+
 }

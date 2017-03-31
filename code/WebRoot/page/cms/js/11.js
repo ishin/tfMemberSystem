@@ -28,7 +28,7 @@ $(document).ready(function(){
 
 	$('#move').on('shown.bs.modal', function(e) {
 		callajax("branch!getOrganOnlyTree", "", cb_11_move);
-		$('#title11move').text('移动 ' + movnode.name.substr(55) +' 到');
+		$('#title11move').text('移动 ' + movnode.name.substr(iconlenth) +' 到');
 		var o = $.fn.zTree.getZTreeObj('tree11move');
 		o.selectNode(o.getNodeByParam('id', movnode.pid));
 	});
@@ -122,6 +122,12 @@ $(document).ready(function(){
 	});
 	
 	$('#search11').keyup(function(e) {
+		if ($(this).val() == '') {
+				$(this).addClass('organsearchnone');
+		}
+		else {
+			$(this).removeClass('organsearchnone');
+		}
 		if (e.keyCode == 13) {
 			searchnodes11 = dosearch('search11', 'tree11', searchnodes11);
 			handletree11open();
@@ -184,8 +190,8 @@ function cb_11_tree(data) {
 	var ns = t.getNodesByParam('id', 1, null);
 	t.expandNode(ns[0], true);
 	$('#tree11 a').each(function(i, a) {
-		if (a.title.length > 55) {
-			a.title = a.title.substr(55);
+			if (a.title.length > iconlenth) {
+			a.title = a.title.substr(iconlenth);
 		}
 	});
 //	$('#tree11 li').find('a:first').after('<div class="toright" style="height:30px"><img src="images/down.png" style="width:14px;margin:10px 5px 0 0" /></div>');
@@ -193,7 +199,7 @@ function cb_11_tree(data) {
 function stripicon(data) {
 	var i = data.length;
 	while (i--) {
-		data[i].name = data[i].name.substr(55);
+		data[i].name = data[i].name.substr(iconlenth);
 	}
 	return data;
 }
@@ -241,18 +247,21 @@ function loadmember(data) {
 
 	$('#membertitle').empty();
 	$('#membertitle2').empty();
+	var w;
 	if (data.roleId == '1') {
 		$('#membertitle').append('超级管理员信息');
 		$('#membertitle2').append('超级管理员信息');
 		$('#memberroleid').attr('disabled', 'disabled');
+		var w = ((document.body.clientWidth * 0.61 * 0.92 - 68 * 2) / 2 - 142);
 	}
 	else {
 		$('#membertitle').append('员工信息');
 		$('#membertitle2').append('员工信息');
 		$('#memberroleid').removeAttr('disabled');
+		var w = ((document.body.clientWidth * 0.61 * 0.92 - 68 * 2) / 2 - 94);
 	}
 	
-	var w = ((document.body.clientWidth * 0.61 * 0.92 - 68 * 2) / 2 - $('#membertitle').css('width').replace('px',''));
+//	var w = ((document.body.clientWidth * 0.61 * 0.92 - 68 * 2) / 2 - $('#membertitle').css('width').replace('px',''));
 	$('.infotab').css('padding-left',  w + 'px');
 
 	loadbranchmember(data.branchmember);
@@ -533,8 +542,8 @@ var setting11_move = {
 }
 function handletree11open() {
 	$('#tree11 a').each(function(i, a) {
-		if (a.title.length > 55) {
-			a.title = a.title.substr(55);
+		if (a.title.length > iconlenth) {
+			a.title = a.title.substr(iconlenth);
 		}
 	});
 	$('#tree11 li').hover(function(){
@@ -632,7 +641,7 @@ function del(tId) {
 	
 	bootbox.confirm({
 		title:'提示',
-		message:'确定删除 ' + ns[0].name.substr(55) + ' ?',
+		message:'确定删除 ' + ns[0].name.substr(iconlenth) + ' ?',
 		callback: function(result) {
 			alert(result);
 			if (result == false) return;

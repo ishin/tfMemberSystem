@@ -39,6 +39,7 @@ function cb_23_save(data) {
 		});
 	}
 	else {
+		$('#posname').val('');
 		$('#positionlist').append('<div class="pos" id="p' + data.id + '" title="' + data.name + '">' + subbyte(data.name, 10) + '&nbsp;&nbsp;<a href="#" onclick="del(' + data.id + ')">x</a></div>');
 		star();
 	}

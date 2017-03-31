@@ -52,13 +52,13 @@ $(document).ready(function(){
 		if ($( "#branch" ).triggerHandler( "submitForm" ) == false) return;
 
 		var data = {
-				branchparentid: branchparentid,
-				branchname: branchname,
-				branchmanagerid: branchmanagerid,
+				branchparentid: $('#11branchbranchid').val(),
+				branchname: $('#11branchname').val(),
+				branchmanagerid: $('#11branchmanagerid').val(), 
 				branchaddress: $('#11branchaddress').val(), 
 				branchtelephone: $('#11branchtelephone').val(),
 				branchwebsite: $('#11branchwebsite').val(),
-				branchintro: $('#11branchintro').val()
+				branchintro: $('#11branchintro').val(),
 			};
 		callajax('branch!saveBranch', data, cb_11_save_branch);
 	});

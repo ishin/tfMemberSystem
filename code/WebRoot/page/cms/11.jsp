@@ -44,7 +44,7 @@
 			
 		</div>
 		<div class="organline" >
-			<input type="text" class='organsearch' placeholder="搜索人员" id="search11" />
+			<input type="text" class='organsearch organsearchnone' placeholder="搜索人员" id="search11" />
 		</div>
 		<div class="organline ztree" id="tree11"></div>
 	</div>

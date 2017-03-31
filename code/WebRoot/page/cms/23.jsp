@@ -10,8 +10,8 @@
 
 <div class="admheader">
 	<ul class="admheadermenu">
-		<li>统一认证平台</li>
-		<%--<li class="active">高级设置</li>--%>
+		<li><a href="11.jsp">基本设置</a></li>
+		<li class="active">高级设置</li>
 	</ul>
     <ul class="admHeaderOper">
         <li class="admLeftIcon" id='idlogout'></li>
@@ -20,18 +20,16 @@
 </div>
 <div class="menupanel12">
 	<div id="jb" class="sidebar12">
-		<div class="menu" onclick='window.location.href="12.jsp";'><img src='images/organinfo.png' class='menuicon'>公司信息配置</div>
-		<div class="menu" onclick='window.location.href="11.jsp";'><img src='images/struct.png' class='menuicon'>组织结构配置</div>
-		<div class="menu" onclick='window.location.href="authInfo.jsp";'><img src='images/group.png' class='menuicon'>权限信息配置</div>
-		<div class="menu menuactive"><img src='images/group.png' class='menuicon'>授权管理配置</div>
-		<div class="menu" onclick='window.location.href="appInfo.jsp";'><img src='images/group.png' class='menuicon'>应用信息配置</div>
+		<div class="menu" onclick='window.location.href="21.jsp";'><img src='images/role.png' class='menuicon'>成员身份权限</div>
+		<div class="menu" onclick='window.location.href="#";'><img src='images/advanced.png' class='menuicon'>高级功能</div>
+		<div class="menu menuactive"><img src='images/position.png' class='menuicon'>职务职位</div>
 	</div>
 </div>
 
 <div class="infopanel23">
 	<div class="info" style="height: 110%" id="star">
 		<div class="infotitle">
-			<div class="title">成员身份权限</div>
+			<div class="title">职务职位</div>
 		</div>
 		<div class="line23">
 			职务职位：

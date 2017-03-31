@@ -1,8 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %> 
-<!doctype html>
-<html>
+<%@ page language="java" contentType="text/html; charset=utf-8"    pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/html">
 <head>
-<jsp:include page="0.jsp" flush="true" />
+	<%--<meta charset="UTF-8">--%>
+	<jsp:include page="0.jsp" flush="true" />
 	<link rel="stylesheet" href="css/window.css"/>
 	<script src="js/authInfo.js"></script>
 	<script src="js/Paging.js"></script>
@@ -91,12 +94,12 @@
 		<ul>
 			<li>
 				<span>权限名称：</span><span class="necc">*</span>
-				<input type="text"/>
+				<input type="text" id="name"/>
 			</li>
 			<li>
 				<span>权限类别：</span><span class="necc">*</span>
 				<!--<input type="text"/>-->
-				<select name="category" class="category" id="">
+				<select name="category" class="category" id="parentId">
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
@@ -106,12 +109,12 @@
 			</li>
 			<li>
 				<span>所属应用：</span><span class="necc">*</span>
-				<input type="text"/>
+				<input type="text" id="app"/>
 			</li>
 		</ul>
 	</div>
 	<div class="dialogFooter">
-		<button class="">确定</button>
+		<button class="certainAdd">确定</button>
 		<button class="canclaDia">取消</button>
 	</div>
 </div>

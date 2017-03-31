@@ -1,6 +1,6 @@
 var pagecnumber = 0;
 var curpagec = 0;
-var itemsperpagec = 2;
+var itemsperpagec = 7;
 var itemtemplatec='<tr id="tgmid">'
 	+ '<td class="ftd">creator</td>'
 	+ '<td>name</td>'
@@ -84,5 +84,5 @@ function change(gmid) {
 }
 function cb_13_change(data) {
 	$('.ftd').html('');
-	$('#t' + data.id).find('td:first').html('创建人');
+	$('#t' + data.id).find('td:first').html('<input class=mainpos value=创建人 readonly />');
 }

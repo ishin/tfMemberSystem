@@ -7,13 +7,9 @@ var fields = ['email', 'telephone', 'position', 'manager', 'branch', 'sex', 'wor
 var groups = ['good', 'well', 'bad'];
 $(document).ready(function() {
 
-	//console.log(1111111111111);
-	//var _fnDown = function(){
-	//	console.log(1111111111111);
-	//	return false;
-	//}
-	$('.downloadDemo').click(function(){
-		if(window.Electron){
+	$('.downloadDemo').click(function() {
+		//console.log('11111');
+		if (window.Electron) {
 			var url = $(this).attr('href');
 			var localPath = window.Electron.chkFileExists(url);
 			if(localPath){//本地有这个文件
@@ -21,8 +17,7 @@ $(document).ready(function() {
 				return false;
 			}
 		}
-	});
-	
+	})
 	$('#imp2').on('dblclick', '.errimp', function() {
 		$(this).removeClass('errimp');
 		$(this).prop('title', '');
