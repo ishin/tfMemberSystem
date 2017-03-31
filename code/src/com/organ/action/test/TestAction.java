@@ -1,16 +1,27 @@
 package com.organ.action.test;
 
+
 import javax.servlet.ServletException;
 
-import com.googlecode.sslplugin.annotation.Secured;
+import com.opensymphony.xwork2.Action;
 import com.organ.common.BaseAction;
 
 public class TestAction extends BaseAction {
-
 	private static final long serialVersionUID = -3827421291421868917L;
-
-	public String test() throws ServletException {
-		System.out.println("------------------ " + getSessionUser().getAccount());
-		return "test";
+	private String name;
+	
+	public String getName() {
+		return name;
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String test() throws ServletException {
+		String result ="q111111111";
+		returnToClient(result);
+		return "text";
+	}
+	
 }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<!-- ssl-default -->
+	<!-- struts-default -->
+
+	<constant name="struts.action.excludePattern" value="/admlogo, /admimp"/>
+
+    <package name="com.organ.action.adm" extends="all">
+        <!-- 组织机构 -->
+        <action name="branch" class="com.organ.action.adm.BranchAction">
+        	<result name="text" type="stream">
+        		<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+        	</result>
+        </action>
+        <action name="priv" class="com.organ.action.adm.PrivAction">
+        	<result name="text" type="stream">
+        		<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+        	</result>
+        </action>
+        <action name="pos" class="com.organ.action.adm.PosAction">
+        	<result name="text" type="stream">
+        		<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+        	</result>
+        </action>
+        <action name="grp" class="com.organ.action.adm.GrpAction">
+        	<result name="text" type="stream">
+        		<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+        	</result>
+        </action>
+        <action name="org" class="com.organ.action.adm.OrgAction">
+        	<result name="text" type="stream">
+        		<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+        	</result>
+        </action>
+        <action name="adm" class="com.organ.action.adm.AdmAction">
+        	<result name="text" type="stream">
+        		<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+        	</result>
+        </action>
+    </package>
+   
+</struts>
+

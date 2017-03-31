@@ -35,7 +35,9 @@
 	    	classpath:system.xml,
 	    	classpath:group.xml,
 	    	classpath:auth.xml,
-	    	classpath:abutment.xml
+	    	classpath:limit.xml,
+	    	classpath:abutment.xml,
+	    	classpath:appinfoconfig.xml
 	    </param-value>
 	</context-param>
 	

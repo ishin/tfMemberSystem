@@ -12,7 +12,7 @@
 	<!-- <constant name="struts2.sslplugin.httpsPort" value="8443" />-->
 	<!-- constant name="struts.multipart.maxSize" value="1000000000"/-->
 
-	
+
 	<include file="struts-default.xml" />
 	<include file="struts-filter.xml" />
 	<include file="struts-system.xml" />
@@ -23,7 +23,8 @@
 	<include file="struts-privilege.xml" />
 	<include file="struts-auth.xml" />
 	<include file="struts-abutment.xml" />
-
+	<include file="struts-limit.xml" />
+	<include file="struts-appinfoconfig.xml" />
 </struts>
 
 

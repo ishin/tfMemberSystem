@@ -1,0 +1,194 @@
+.window_mask{width:100%; height:100%; position:fixed; top:0; left:0; background:#000000;
+    background: rgba(0,0,0,0.5);
+    z-index: 10000;
+}
+.window_boundingBox {
+    width: 500px;
+    height: 300px;
+    background: #ffffff;
+    position: fixed;
+    z-index: 1;
+    /* box-shadow: 0 0 5px rgba(0,0,0,.5); */
+    border-radius: 10px;
+}
+.window_header{
+    font-size: 16px;
+    color: #000000;
+    /* background: #333333; */
+    /* text-align: center; */
+    height: 40px;
+    text-indent: 42px;
+    line-height: 56px;
+}
+
+/*.window_chooseArea{*/
+    /*background: #ff0000;*/
+    /*height: 64px;*/
+    /*width: 100%;*/
+/*}*/
+.window_alertBtn{
+    /*width: 100px;*/
+    /*position: relative;*/
+    /*left: 7%;*/
+    /*margin-left: -50px;*/
+    /*bottom: 10px;*/
+    /*top: 0px;*/
+    background: #30c0da;
+    border: 1px solid #30c0da !important;
+    color: white;
+}
+.window_cancleBtn{
+    /*width: 100px;*/
+    /*position: relative;*/
+    /*left: 0%;*/
+    /*margin-left: -50px;*/
+    /*bottom: 10px;*/
+    /*top: 0px;*/
+    background: white;
+    border: 1px solid #30c0da !important;
+    color: #30c0da;
+}
+.window_closeBtn{
+    display: inline-block;
+    padding: 2px 10px 3px;
+    position: absolute;
+    top: 0;
+    right: 15px;
+    font-size: 24px;
+    color: #a5a5a5;
+     /*background: #ff3300;*/
+    cursor: pointer;
+}
+
+
+/*定制皮肤a*/
+.winSkin_a.window_boundingBox{
+    /*height: auto; */
+    /* border: 5px solid rgba(59,168,248,0.45); */
+    border-radius: 5px;
+    /* width: 500px; */
+    /* height: 340px; */
+    position: absolute;
+    /* left: 50%; */
+    /* top: 50%; */
+    /* margin: -250px 0px 0px -250px; */
+    box-shadow: 0px 0px 6px #22252b;
+}
+.success .window_body .showImg{
+    background: url(../img/windowAlert.png) no-repeat 0px 0px;
+}
+.fail .window_body .showImg{
+    background: url(../img/msgBox_fail.png) no-repeat 0px 0px;
+}
+.warning .window_body .showImg{
+    background: url(../img/msgBox_warning.png) no-repeat 0px 0px;
+}
+.winSkin_a .window_header{
+    width: 100%;
+    background: #514e57;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    text-align: center;
+    line-height: 60px;
+    color: white;
+    font-weight: bold;
+
+}
+#window_Categorys{
+    height: 30px;
+    width: 130px;
+}
+.window_input{
+    height: 30px;
+}
+
+.winSkin_a .window_body{
+    padding: 25px;
+    line-height: 30px;
+    font-size: 14px;
+    /* position: absolute; */
+    /* top: 50px; */
+    width: 80%;
+    text-align: center;
+    /* background-color: #eee; */
+    margin: 30px auto 0px;
+    padding-top: 20px;
+}
+.winSkin_a .window_footer{
+    /*position: absolute;*/
+    /* left: 0px; */
+    /* right: 0px; */
+    bottom: 0px;
+    height: 80px;
+    line-height: 60px;
+}
+
+.winSkin_a .window_closeBtn{
+    /* display: inline-block; */
+    width: 35px;
+    height: 35px;
+    /* padding: 0; */
+    font-size: 24px;
+    /* color: #666666; */
+    line-height: 53px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: none;
+}
+/*.winSkin_a .window_closeBtn:hover{}.window_chooseArea*/
+
+.winSkin_a .window_alertBtn,.winSkin_a .window_cancleBtn{
+    margin-left: 110px;
+    display: inline-block;
+    height: 30px;
+    width: 75px;
+    background: #ebebeb;
+    line-height: 30px;
+    text-align: center;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+}
+
+.winSkin_a .window_alertBtn:hover,.winSkin_a .window_cancleBtn:hover{
+    background:#20a2f6;
+    /*background:-webkit-gradient(linear, left top, left bottom, from(#67a5f8), to(#08aff0));*/
+    /*background:-moz-gradient(linear, left top, left bottom, from(#67a5f8), to(#08aff0));*/
+    color:#ffffff;
+}
+
+
+.showImg{
+    width: 60px;
+    height: 60px;
+    margin: 50px 20px 0px 50px;
+    background: url("img/windowAlert.png") no-repeat;
+    float: left;
+}
+.inputText{
+    display: inline-block;
+    width: 100px;
+}
+.window_body {
+    height: 166px;
+    line-height: 166px;
+}
+.window_footer {
+    height: 100px;
+    /*background: palegoldenrod;*/
+    text-align: right;
+    padding-right: 42px;
+}
+.window_footer input[type='button']{
+    width: 108px;
+    height: 32px;
+    outline: none;
+    border: none;
+    /* background: white; */
+    border-radius: 4px;
+    margin-left: 20px;
+}
