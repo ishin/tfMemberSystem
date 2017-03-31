@@ -7,12 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.log4j.Logger;
 
 import com.organ.common.Tips;
 import com.organ.dao.adm.MemberRoleDao;
@@ -35,7 +33,7 @@ import com.organ.utils.TimeGenerator;
 
 public class GroupServiceImpl implements GroupService {
 
-	private static final Logger logger = LogManager.getLogger(GroupServiceImpl.class);
+	private static final Logger logger = Logger.getLogger(GroupServiceImpl.class);
 	
 	@Override
 	public String createGroup(String userId, String groupIds){

@@ -10,5 +10,11 @@ public interface PrivilegeService {
 	 * @return
 	 */
 	public SessionPrivilege setPrivilege(int id);
+
+	/**
+	 * 获取权限类别
+	 * @return
+	 */
+	public String getPrivilegeCatary();
 	
 }

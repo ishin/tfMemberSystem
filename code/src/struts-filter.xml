@@ -11,39 +11,32 @@
 	<!-- <constant name="struts2.sslplugin.httpPort" value="8085" />-->
 	<!-- <constant name="struts2.sslplugin.httpsPort" value="8443" />-->
 	<!-- constant name="struts.multipart.maxSize" value="1000000000"/-->
+	<!-- ssl-default -->
+	<!-- struts-default -->
+
 
 	<package name="all" extends="struts-default">
-		<interceptors>
+		<!--
+			<interceptors> 先定义拦截器 <interceptor name="myInterceptor"
+			class="com.organ.action.filter.ValideFilter"> 指定系统初始化给拦截器的参数 <param
+			name="init">init</param> </interceptor> 加到自己设置的拦截器栈里边去
 
-			<!-- 先定义拦截器 -->
+			<interceptor-stack name="myStack"> <interceptor-ref
+			name="myInterceptor"> <param
+			name="excludeMethods">login,afterLogin</param> </interceptor-ref>
 
-			<interceptor name="myInterceptor" class="com.organ.action.filter.ValideFilter">
+			<interceptor-ref name="defaultStack"></interceptor-ref>
 
-				<!-- 指定系统初始化给拦截器的参数 -->
-
-				<param name="init">init</param>
-
-			</interceptor>
-
-			<!-- 加到自己设置的拦截器栈里边去 -->
-
-			<interceptor-stack name="myStack">
-
-				<interceptor-ref name="myInterceptor"></interceptor-ref>
-
-				<interceptor-ref name="defaultStack"></interceptor-ref>
-
-			</interceptor-stack>
-
-		</interceptors>
-
+			</interceptor-stack> </interceptors>
+		-->
 		<!--
 			改变系统默认的拦截器,改成自己的默认拦截器,并且一个系统只能有一个默认的拦截器,这样这个拦截器栈会默认应用到所有的Action上去
 		-->
 
-		<default-interceptor-ref name="myStack">
-
-		</default-interceptor-ref>
+		<!--
+			<default-interceptor-ref name="myStack"></default-interceptor-ref>
+		-->
+		<default-interceptor-ref name="defaultStack"></default-interceptor-ref>
 
 	</package>
 

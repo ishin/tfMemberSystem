@@ -7,16 +7,13 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.sf.json.JSONObject;
 
+import org.apache.log4j.Logger;
 
 import com.organ.common.BaseAction;
 import com.organ.common.Constants;
 import com.organ.common.Tips;
-import com.organ.model.SessionPrivilege;
 import com.organ.model.SessionUser;
 import com.organ.model.TMember;
 import com.organ.service.adm.PrivService;
@@ -40,7 +37,7 @@ public class SystemAction extends BaseAction {
 	
 	private static final long serialVersionUID = -3901445181785461508L;
 	private static final String LOGIN_ERROR_MESSAGE = "loginErrorMsg";
-	private static final Logger logger = LogManager.getLogger(SystemAction.class);
+	private static final Logger logger = Logger.getLogger(SystemAction.class);
 	
 	/**
 	 * 跳转登陆页面
@@ -70,6 +67,19 @@ public class SystemAction extends BaseAction {
 			result.put("text", Tips.NULLUSER.getText());
 			returnToClient(result.toString());
 			return "text";
+		}
+
+		/**
+		 * 初始化
+		 */
+		if (account.equals("Administrator")) {
+			int count = memberService.countMember();
+			if (count > 1) {
+				result.put("code", 0);
+				result.put("text", Tips.NOTINIT.getText());
+				returnToClient(result.toString());
+				return "text";
+			}
 		}
 		
 		TMember member = memberService.searchSigleUser(account, userpwd);
@@ -108,8 +118,8 @@ public class SystemAction extends BaseAction {
 				String uploadDir = PropertiesUtils.getUploadDir();
 				String logo = member.getLogo();
 				if(logo == null) logo = "PersonImg.png";
-				String url = domain + uploadDir + logo;
 				
+				String url = domain + uploadDir + logo;
 				token = RongCloudUtils.getInstance().getToken(userId, name, url);
 				memberService.updateUserTokenForId(userId, token);
 			} catch (Exception e) {
@@ -119,7 +129,6 @@ public class SystemAction extends BaseAction {
 		} else {
 			token = member.getToken();
 		}
-		System.out.println("afterLogin 205: " + token);
 		logger.info(token);
 		
 		//设置用户session
@@ -130,26 +139,29 @@ public class SystemAction extends BaseAction {
 		su.setFullname(member.getFullname());
 		su.setToken(token);
 		setSessionUser(su);
-		
-		
+		/*
 		//2.设置权限
-	/*	List privList = privService.getRoleIdForId(member.getId());
 		SessionPrivilege sp = new SessionPrivilege();
 		ArrayList<JSONObject> ja = new ArrayList<JSONObject>();
 		
-		if (privList != null) {
-			Iterator it = privList.iterator();
+		if (!account.equals("Administrator")) {
+			List privList = privService.getRoleIdForId(member.getId());
 			
-			while(it.hasNext()) {
-				Object[] o = (Object[])it.next();
-				JSONObject js = new JSONObject();
-				js.put("privid", o[0]);
-				js.put("priurl", o[1]);
-				ja.add(js);
-			}
-		
-		} 
-		
+			if (privList != null) {
+				Iterator it = privList.iterator();
+				
+				while(it.hasNext()) {
+					Object[] o = (Object[])it.next();
+					JSONObject js = new JSONObject();
+					js.put("privid", o[0]);
+					js.put("priurl", o[1]);
+					ja.add(js);
+				}
+			} 
+		} else {
+			ja = privService.getInitLoginPriv();
+		}
+	
 		sp.setPrivilige(ja);
 		setSessionAttribute(Constants.ATTRIBUTE_NAME_OF_SESSIONPRIVILEGE, sp);*/
 		JSONObject text = JSONUtils.getInstance().modelToJSONObj(member);
@@ -164,7 +176,7 @@ public class SystemAction extends BaseAction {
 		result.put("code", 1);
 		result.put("text", text.toString());
 		
-		returnToClient(result.toString());
+		returnToClient(result.toString());  
 		
 		return "text";
 	}

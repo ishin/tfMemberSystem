@@ -38,6 +38,7 @@ public enum  Tips {
 	WRONGTOKEN("Token无效","00032"),
 	NULLGROUP("没有群组", "00033"),
 	SEARCHFAIL("查询失败", "00034"),
+	NOTINIT("请使用正确的账号登陆", "00035"),
 	OK("OK", "10000"),
 	FAIL("fail", "20000");
 	

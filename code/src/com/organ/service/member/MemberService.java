@@ -131,4 +131,18 @@ public interface MemberService {
 	public String getAllMemberOnLineStatus(String userids);
 
 
+	/**
+	 * 使用初始化用户登陆
+	 * @param account
+	 * @param userpwd
+	 * @return
+	 */
+	public int countMember();
+
+	/**
+	 * 多账号查询成员
+	 * @param mulMemberStr
+	 * @return
+	 */
+	public String getMultipleMemberForAccounts(String mulMemberStr);
 }

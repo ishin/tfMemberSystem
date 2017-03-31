@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import com.organ.model.SessionUser;
 
+
 public interface AppSecretService {
 	/**
 	 * 获取生成的appid和secret
@@ -52,12 +53,20 @@ public interface AppSecretService {
 	public String getAuthResource(String visitiToken);
 
 	/**
-	 * 场景二授权
+	 * 场景二授权,web端
 	 * @param sessionUser 
 	 * @param appId
 	 * @return
 	 */
-	public String reqAuthorizeTwo(SessionUser sessionUser, String appId, String unAuthToken);
+	public JSONObject reqAuthorizeTwo(SessionUser sessionUser, String appId, String unAuthToken);
 
+	/**
+	 * 场景二授权,手机端
+	 * @param appId
+	 * @param unAuthToken
+	 * @param unAuthToken2 
+	 * @return
+	 */
+	public JSONObject reqAuthorizeTwoForApp(String userName, String appId, String unAuthToken);
 
 }

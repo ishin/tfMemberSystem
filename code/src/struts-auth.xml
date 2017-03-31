@@ -7,8 +7,6 @@
 	<!-- ssl-default -->
 	<!-- struts-default -->
 
-	<constant name="struts.action.excludePattern" value="/admlogo, /admimp"/>
-
     <package name="com.organ.action.auth" extends="all">
         <action name="auth" class="com.organ.action.auth.AppSecretAction">
         	<!--  服务器做重定向 -->

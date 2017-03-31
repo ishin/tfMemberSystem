@@ -1,14 +1,15 @@
 package com.organ.action.member;
 
+import java.io.IOException;
+
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import net.sf.json.JSONObject;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 
-import com.googlecode.sslplugin.annotation.Secured;
-import com.organ.action.group.GroupAction;
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
 import com.organ.service.member.MemberService;
@@ -23,14 +24,15 @@ import com.organ.service.member.MemberService;
 public class MemberAction extends BaseAction {
 
 	private static final long serialVersionUID = -9024506148523628104L;
-	private static final Logger logger = LogManager.getLogger(MemberAction.class);
+	private static final Logger logger = Logger.getLogger(MemberAction.class);
 	
 	/**
 	 * 获取单个成员信息
 	 * @return
 	 * @throws ServletException
+	 * @throws IOException 
 	 */
-	public String getOneOfMember() throws ServletException {
+	public String getOneOfMember() throws ServletException, IOException {
 		String result = null;
 		
 		try {
