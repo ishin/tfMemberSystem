@@ -1,7 +1,9 @@
 package com.organ.dao.auth;
 
-import com.organ.model.UserValid;
+import java.util.List;
+
 import com.organ.common.IBaseDao;
+import com.organ.model.UserValid;
 
 public interface UserValidDao extends IBaseDao<UserValid, Integer> {
 
@@ -12,4 +14,10 @@ public interface UserValidDao extends IBaseDao<UserValid, Integer> {
 	public UserValid getUserValidByAuthToken(String authToken);
 
 	public UserValid getUserValidByRealToken(String visitToken);
+
+	public List<UserValid> getUserValidByAsId(int asId);
+
+	public void delUserValid(int id);
+
+	public int deleteRelationByIds(String userids);
 }

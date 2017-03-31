@@ -1,7 +1,8 @@
 package com.organ.dao.auth;
 
-import com.organ.model.AppSecret;
 import com.organ.common.IBaseDao;
+import com.organ.model.AppSecret;
+
 
 public interface AppSecretDao extends IBaseDao<AppSecret, Integer> {
 	/**
@@ -29,5 +30,13 @@ public interface AppSecretDao extends IBaseDao<AppSecret, Integer> {
 	 * @return
 	 */
 	public AppSecret getAppSecretBySecret(String secret);
+
+	/**
+	 * 根据appId及secret获取appsecret
+	 * @param appId
+	 * @param secret
+	 * @return
+	 */
+	public AppSecret getAppSecretByAppIdAndSecret(String appId, String secret);
 
 }

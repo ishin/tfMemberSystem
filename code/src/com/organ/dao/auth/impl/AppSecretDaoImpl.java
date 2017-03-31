@@ -19,7 +19,8 @@ import com.organ.utils.LogUtils;
  * @since jdk1.7
  */
 public class AppSecretDaoImpl extends BaseDao<AppSecret, Integer> implements AppSecretDao {
-	private static final Logger logger = Logger.getLogger(AppSecretDaoImpl.class);
+	private static final Logger logger = Logger
+			.getLogger(AppSecretDaoImpl.class);
 
 	@Override
 	public void setAppIDAndSecretAndUrl(AppSecret as) {
@@ -68,6 +69,26 @@ public class AppSecretDaoImpl extends BaseDao<AppSecret, Integer> implements App
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("secert", secret));
+
+			List<AppSecret> list = ctr.list();
+
+			if (list.size() > 0) {
+				return (AppSecret) list.get(0);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public AppSecret getAppSecretByAppIdAndSecret(String appId, String secret) {
+		try {
+			Criteria ctr = getCriteria();
+			ctr.add(Restrictions.and(Restrictions.eq("secert", secret), Restrictions.eq("appId", appId)));
 
 			List<AppSecret> list = ctr.list();
 
