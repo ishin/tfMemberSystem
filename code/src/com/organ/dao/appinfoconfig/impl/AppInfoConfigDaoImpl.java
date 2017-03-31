@@ -37,7 +37,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 	}
 
 	/**
-	 * 鑾峰彇褰撳墠鏃ユ湡
+	 * 获取当前日期
 	 */
 	public Long getDate() {
 		Date d = new Date();
@@ -45,7 +45,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 	}
 
 	/**
-	 * 娣诲姞搴旂敤
+	 * 添加应用
 	 */
 	@Override
 	public int updatePriv(int appId, String secert, String callbackurl,

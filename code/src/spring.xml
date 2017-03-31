@@ -12,26 +12,42 @@
 			<value>classpath:sealtalk.properties</value>
 		</property>
 	</bean>
-	<!--
-		============================================== 数据库数据源
-		==================================================================
+	<!-- ==============================================  数据库数据源  ================================================================== -->
+	<!--原生mysql连接池
+		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close"> <property name="driverClassName"
+		value="${db.driver}"></property> <property name="url"
+		value="${db.url}" /> <property name="username" value="${db.username}"
+		/> <property name="password" value="${db.password}" /> <property
+		name="maxActive" value="${db.maxActive}" /> <property name="maxIdle"
+		value="${db.maxIdle}" /> <property name="maxWait"
+		value="${db.maxWait}" /> <property name="testOnBorrow"
+		value="${db.testOnBorrow}" /> <property name="testOnReturn"
+		value="${db.testOnReturn}" /> <property name="testWhileIdle"
+		value="${db.testWhileIdle}" /> <property name="validationQuery"
+		value="${db.validationQuery}" /> <property name="removeAbandoned"
+		value="${db.removeAbandoned}" /> <property
+		name="removeAbandonedTimeout" value="${db.removeAbandonedTimeout}" />
+		<property name="logAbandoned" value="${db.logAbandoned}" /> </bean>
 	-->
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+	<!-- c3p0连接池 -->
+	<bean id="dataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
-		<property name="driverClassName" value="${db.driver}"></property>
-		<property name="url" value="${db.url}" />
-		<property name="username" value="${db.username}" />
+		<property name="driverClass" value="${db.driver}"></property>
+		<property name="jdbcUrl" value="${db.url}" />
+		<property name="user" value="${db.username}" />
 		<property name="password" value="${db.password}" />
-		<property name="maxActive" value="${db.maxActive}" />
-		<property name="maxIdle" value="${db.maxIdle}" />
-		<property name="maxWait" value="${db.maxWait}" />
-		<property name="testOnBorrow" value="${db.testOnBorrow}" />
-		<property name="testOnReturn" value="${db.testOnReturn}" />
-		<property name="testWhileIdle" value="${db.testWhileIdle}" />
-		<property name="validationQuery" value="${db.validationQuery}" />
-		<property name="removeAbandoned" value="${db.removeAbandoned}" />
-		<property name="removeAbandonedTimeout" value="${db.removeAbandonedTimeout}" />
-		<property name="logAbandoned" value="${db.logAbandoned}" />
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />  
+        <property name="maxPoolSize" value="${c3p0.maxPoolSize}" />  
+        <property name="maxIdleTime" value="${c3p0.maxIdleTime}" />  
+        <property name="acquireIncrement" value="${c3p0.acquireIncrement}" />  
+        <property name="maxStatements" value="${c3p0.maxStatements}" />  
+        <property name="initialPoolSize" value="${c3p0.initialPoolSize}" />  
+        <property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />  
+        <property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}" />  
+        <property name="breakAfterAcquireFailure" value="${c3p0.breakAfterAcquireFailure}" />  
+        <property name="testConnectionOnCheckout" value="${c3p0.testConnectionOnCheckout}" />  
 	</bean>
 
 	<!--

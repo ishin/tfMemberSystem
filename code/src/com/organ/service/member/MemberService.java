@@ -138,4 +138,11 @@ public interface MemberService {
 	 * @return
 	 */
 	public int countMember();
+
+	/**
+	 * 多账号查询成员
+	 * @param mulMemberStr
+	 * @return
+	 */
+	public String getMultipleMemberForAccounts(String mulMemberStr);
 }

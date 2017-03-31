@@ -217,45 +217,54 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 			return request.getSession().getAttribute(key);
 		}
 	}
-
-	// 获取HTTP请求的输入流,适用于http客户端后台请求数据
+	
+	//获取HTTP请求的输入流,适用于http客户端后台请求数据
 	protected String getRequestDataByStream() throws IOException {
-		// 已HTTP请求输入流建立一个BufferedReader对象
-		BufferedReader br = request.getReader();
-		String buffer = null;
-		StringBuffer buff = new StringBuffer();
-
-		while ((buffer = br.readLine()) != null) {
-			buff.append(buffer + "\n");
-		}
-
-		br.close();
-
-		return buff.toString().trim();
+        //已HTTP请求输入流建立一个BufferedReader对象
+        BufferedReader br =  request.getReader();
+        String buffer = null;
+        StringBuffer buff = new StringBuffer();
+        
+        while ((buffer = br.readLine()) != null) {
+              buff.append(buffer+"\n");
+        }
+        
+        br.close();
+        
+       return buff.toString().trim();
 	}
-
-	/*
-	 * protected String getApplicaitonQueryFilter() {
-	 * 
-	 * String condition = ""; SessionUser su = getSessionUser(); if (su == null
-	 * || su.isSuperAdmin()) return condition;
-	 * 
-	 * List<String> applicaitonP = su.getApplicationIds(); if (applicaitonP ==
-	 * null || applicaitonP.isEmpty()) return condition; return "('" +
-	 * StringUtils.collectionToDelimitedString(applicaitonP, "','") + "')"; }
-	 */
-
-	/*
-	 * protected String getOrganizationQueryFilter() {
-	 * 
-	 * String condition = ""; SessionUser su = getSessionUser(); if (su == null
-	 * || su.isSuperAdmin()) return condition;
-	 * 
-	 * List<String> organizationP = su.getOrganizationIds(); if (organizationP
-	 * == null || organizationP.isEmpty()) return condition; return "('" +
-	 * StringUtils.collectionToDelimitedString(organizationP, "','") + "')"; }
-	 */
-
+	
+/*	
+	protected String getApplicaitonQueryFilter()
+	{
+		
+		String condition = "";
+		SessionUser su = getSessionUser();
+		if (su == null || su.isSuperAdmin())
+			return condition;
+		
+		List<String> applicaitonP = su.getApplicationIds();
+		if (applicaitonP == null || applicaitonP.isEmpty())
+			return condition;
+		return "('" + StringUtils.collectionToDelimitedString(applicaitonP, "','") + "')";
+	}
+	*/
+	
+	/*protected String getOrganizationQueryFilter()
+	{
+		
+		String condition = "";
+		SessionUser su = getSessionUser();
+		if (su == null || su.isSuperAdmin())
+			return condition;
+		
+		List<String> organizationP = su.getOrganizationIds();
+		if (organizationP == null || organizationP.isEmpty())
+			return condition;
+		return "('" + StringUtils.collectionToDelimitedString(organizationP, "','") + "')";
+	}*/
+	
+	
 	/** 获得当前登录管理员的accountID */
 	/*
 	 * protected String obtainLoginAccountId() { SessionUser userInfo =
@@ -269,6 +278,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 	 * userInfo.getAccountName(); }
 	 */
 
+	
+	
 	protected Integer getOrganId() {
 
 		Object o = this.getSessionAttribute("member");

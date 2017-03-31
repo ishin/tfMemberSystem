@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="com.organ.model.UserValid" table="t_uservalid" catalog="tfdb">
+    <class name="com.sealtalk.auth.model.UserValid" table="t_uservalid" catalog="tfdb">
         <id name="id" type="java.lang.Integer">
             <column name="id" />
             <generator class="identity" />

@@ -29,6 +29,7 @@
 
 #import "ChatViewController.h"
 
+
 #define RONG_CLOUD_KEY  @"m7ua80guyso7u"//@"k51hidw10345e"//@"e5t4ouvpe564a"//m7ua80guyso7u
 
 
@@ -52,6 +53,8 @@
     
  
     GlobalTouchButtonView *_globalButton;
+    
+    UIView *_membsChoosedPannel;
 }
 @property (strong, nonatomic) NSMutableDictionary *_rcUserInfoMap;
 @property (strong, nonatomic) NSMutableDictionary *_rcGroupInfoMap;
@@ -83,9 +86,14 @@
     //[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
-        UIUserNotificationType myTypes = UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound;
+        
+        UIUserNotificationType myTypes = UIRemoteNotificationTypeBadge
+        | UIRemoteNotificationTypeAlert
+        | UIRemoteNotificationTypeSound;
+        
         UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:myTypes categories:nil];
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+        
     }else
     {
         UIRemoteNotificationType myTypes = UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeSound;
@@ -113,6 +121,9 @@
     [GoGoDB sharedDBInstance];
     
    
+    _membsChoosedPannel = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 125)];
+    UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"group_membs_pannel.png"]];
+    [_membsChoosedPannel addSubview:bg];
     
     
     User *u = [UserDefaultsKV getUser];
@@ -138,6 +149,11 @@
                                                object:nil];
     
     return YES;
+}
+
+- (UIView*) userMembsPannel{
+    
+    return _membsChoosedPannel;
 }
 
 - (void) checkXFQ{

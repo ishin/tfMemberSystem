@@ -1,18 +1,14 @@
 package com.organ.action.auth;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.Locale;
 
 import javax.servlet.ServletException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.organ.service.auth.AppSecretService;
 import com.organ.common.BaseAction;
-import com.organ.common.Tips;
+import com.organ.service.auth.AppSecretService;
 
 /**
  * appid, secret action
@@ -32,12 +28,12 @@ public class AppSecretAction extends BaseAction {
 		String result = appSecretService.getAppIDAndSecret();
 		returnToClient(result);
 		return "text";
-	} 
+	}
 	
 	/**
 	 * 设置auth2登陆基本信息
 	 * @return
-	 * @throws ServletException 
+	 * @throws ServletException
 	 */
 	public String setAppIDAndSecretAndUrl() throws ServletException {
 		String result = appSecretService.setAppIDAndSecretAndUrl(appName, appId, secret, url, isOpen);
@@ -68,7 +64,7 @@ public class AppSecretAction extends BaseAction {
 	}
 	
 	/**
-	 * 场景二取临时令牌
+	 * 场景二取临时令牌,场景一服务器不主动做转发的话，就和场景二是一样的。
 	 * @return
 	 * @throws ServletException
 	 */
@@ -88,7 +84,7 @@ public class AppSecretAction extends BaseAction {
 	}
 	
 	/**
-	 * 场景一登陆并授权，返回授权临时令牌
+	 * 场景一登陆并授权，返回授权临时令牌,并跳转
 	 * @return
 	 * @throws ServletException
 	 * @throws JSONException 
@@ -96,32 +92,62 @@ public class AppSecretAction extends BaseAction {
 	 */
 	public String reqAuthorizeOne() throws ServletException, JSONException, IOException {
 		JSONObject result = appSecretService.reqAuthorizeOne(unAuthToken, userName, userPwd, appId, info);
-		String code = result.getString("code");
-		
-		if (code.equals("500")) {
-			String url = getUrl();
-			response.sendRedirect(url + "auth!redirectLogin?unAuthToken=" + unAuthToken + "&err=1");
-			//return "login";
-			//returnToClient(result.toString());
-			//return "text";
-		} else {
-			String url = result.getString("url") + "?authToken=" + result.getString("text");
-			response.sendRedirect(url);
-		}
-		return null;
+		//handleRedirect(result);
+		returnToClient(result.toString());
+		return "text";
 	} 
 	
 	/**
-	 * 场景二授权
+	 * 场景二授权，web端专用
 	 * @return
 	 * @throws ServletException
 	 * @throws JSONException 
 	 * @throws IOException 
+	 * @throws JSONException 
 	 */
-	public String reqAuthorizeTwo() throws ServletException, IOException {
-		String result = appSecretService.reqAuthorizeTwo(getSessionUser(), appId, unAuthToken);
-		returnToClient(result);
+	public String reqAuthorizeTwo() throws ServletException, IOException, JSONException {
+		JSONObject result = appSecretService.reqAuthorizeTwo(getSessionUser(), appId, unAuthToken);
+		//handleRedirect(result);
+		
+		returnToClient(result.toString());
 		return "text";
+	}
+	
+	/**
+	 * 场景二授权，手机端专用
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	public String reqAuthorizeTwoForApp() throws ServletException, IOException, JSONException {
+		JSONObject result = appSecretService.reqAuthorizeTwoForApp(userId, appId, unAuthToken);
+		
+		returnToClient(result.toString());
+		return "text";
+	}
+	
+	private void handleRedirect(JSONObject result) throws JSONException, IOException {
+		String code = result.getString("code");
+		
+		if (code.equals("500")) {//如果失败，转回登陆页面
+			String callBackUrl = getUrl();
+			response.sendRedirect(callBackUrl + "auth!redirectLogin?unAuthToken=" + unAuthToken + "&err=1");
+			//return "login";
+			//returnToClient(result.toString());
+			//return "text";
+		} else {	//否则跳转指定页面
+			String partUrl = (url == null) ? "" : url;
+			String hostUrl = result.getString("url");
+			
+			if (!hostUrl.endsWith("/") && !partUrl.equals("")) {
+				hostUrl += "/";
+			}
+			
+			hostUrl += partUrl;
+			String url = hostUrl + "?authToken=" + result.getString("text")+"&appname=" + result.getString("name");
+			response.sendRedirect(url);
+		}
 	}
 	
 	
@@ -153,7 +179,6 @@ public class AppSecretAction extends BaseAction {
 		return "oaLogin";
 	}
 	
-	
 	public String visitToken;	//访问令牌
 	public String authToken;	//授权令牌
 	public String unAuthToken;	//未授权令牌
@@ -165,7 +190,13 @@ public class AppSecretAction extends BaseAction {
 	private String url;			//回调url
 	private String userName;	//用户名
 	private String userPwd;		//用户密码
+	private String userId;		//成员id
 	
+	
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
 	public void setIsOpen(String isOpen) {
 		this.isOpen = isOpen;
 	}

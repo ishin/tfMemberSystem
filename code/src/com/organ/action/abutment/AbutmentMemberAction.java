@@ -218,6 +218,36 @@ public class AbutmentMemberAction extends BaseAction {
 		return "text";
 	}
 
+	/**
+	 * 多账号查询成员
+	 * @return
+	 * @throws ServletException
+	 */
+	public String getMultipleMemberForAccounts() throws ServletException {
+		String result = null;
+		JSONObject jo = null;
+		
+		try {
+			String params = getRequestDataByStream();
+			
+			if (params != null) {
+				String mulMemberStr = null;
+				jo = JSONUtils.getInstance().stringToObj(params);
+				mulMemberStr = jo.getString("mulMemberStr");
+				result = memberService.getMultipleMemberForAccounts(mulMemberStr);
+			} else {
+				jo = new JSONObject();
+				jo.put("code", -1);
+				jo.put("text", Tips.WRONGPARAMS.getText());
+				result = jo.toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		returnToClient(result);
+		return "text";
+	}
 	private MemberService memberService;
 
 	public void setMemberService(MemberService ms) {

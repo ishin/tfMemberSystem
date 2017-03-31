@@ -3,7 +3,7 @@ package com.organ.service.appinfoconfig;
 public interface AppInfoConfigService {
 	public String getAppInfo(int pagesize, int pageindex);
 	
-	public String updatePriv(int appId,String secert,String callbackurl,String appname,int isopen);//娣诲姞鏉冮檺鎺ュ彛
+	public String updatePriv(int appId,String secert,String callbackurl,String appname,int isopen);//添加权限接口
 	
 	
 	public String DelApp(int id);
