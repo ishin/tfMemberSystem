@@ -110,7 +110,6 @@ public class PrivAction extends BaseAction {
 			js.put("roleid", o[4] == null ? "" : o[4]);
 			ja.add(js);
 		}
-		
 		returnToClient(ja.toString());
 		return "text";
 	}
@@ -140,7 +139,7 @@ public class PrivAction extends BaseAction {
 		String privs = this.request.getParameter("privs");
 
 		roleId = privService.saveRole(roleId, roleName, privs);
-		
+
 		return returnajaxid(roleId);
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import com.google.gson.JsonObject;
 import com.organ.dao.limit.LimitDao;
 import com.organ.service.limit.LimitService;
 
@@ -48,10 +49,11 @@ public class LimitServiceImpl implements LimitService {
 	@Override
 	public String searchPriv(String Name, int pagesize, int pageindex) {
 		JSONArray ja = new JSONArray();
+		JSONObject jsonObject = new JSONObject();
 		try {
 
 			List privlist = limitDao.searchPriv(Name, pagesize, pageindex);
-
+			int count =limitDao.getSearchCount(Name);
 			if (privlist == null) {
 				JSONObject jo = new JSONObject();
 
@@ -68,12 +70,15 @@ public class LimitServiceImpl implements LimitService {
 					jo.put("url", isBlank(priv[4]));
 					jo.put("app", isBlank(priv[5]));
 					ja.add(jo);
+					jsonObject.put("count", count+"");
+					jsonObject.put("content", ja);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return ja.toString();
+		
+		return jsonObject.toString();
 	}
 
 	private String isBlank(Object o) {

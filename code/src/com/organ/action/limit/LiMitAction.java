@@ -1,5 +1,7 @@
 package com.organ.action.limit;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.servlet.ServletException;
 
 import net.sf.json.JSONArray;
@@ -50,10 +52,15 @@ public class LiMitAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 * @throws JSONException
+	 * @throws UnsupportedEncodingException 
 	 */
-	public String AddPriv() throws ServletException, JSONException {
-		String name = this.request.getParameter("name");
+	public String AddPriv() throws ServletException, JSONException, UnsupportedEncodingException {
+/*		byte bufname[] = request.getParameter("name").getBytes("iso8859-1");
+		byte bufapp[] = request.getParameter("app").getBytes("iso8859-1");*/
 		String pid = this.request.getParameter("parentId");
+/*		String name = new String(bufname,"utf-8");
+		String app = new String(bufapp,"utf-8");*/
+		String name = this.request.getParameter("name");
 		String app = this.request.getParameter("app");
 		Integer intPid = pid == null ? null : Integer.parseInt(pid);
 		boolean falg = false;
@@ -124,12 +131,17 @@ public class LiMitAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 * @throws JSONException
+	 * @throws UnsupportedEncodingException 
 	 */
-	public String EditPriv() throws ServletException, JSONException {
+	public String EditPriv() throws ServletException, JSONException, UnsupportedEncodingException {
+/*		byte bufname[] = request.getParameter("name").getBytes("iso8859-1");
+		byte bufapp[] = request.getParameter("app").getBytes("iso8859-1");*/
 		String id = this.request.getParameter("privId");
 		String pid = this.request.getParameter("parentId");
 		String name = this.request.getParameter("name");
 		String app = this.request.getParameter("app");
+/*		String name = new String(bufname,"utf-8");
+		String app = new String(bufapp,"utf-8");*/
 		Integer intid = id == null ? null : Integer.parseInt(id);
 		boolean flag = false;
 		try {
@@ -167,17 +179,17 @@ public class LiMitAction extends BaseAction {
 		this.name = name;
 	}
 
-	public String SearchPriv() throws ServletException, JSONException {
-		String name = this.request.getParameter("name");
+	public String SearchPriv() throws ServletException, JSONException, UnsupportedEncodingException {
+/*		byte buf[] = request.getParameter("name").getBytes("iso8859-1");
+		String name = new String(buf,"utf-8");*/
 		String pagesize = this.request.getParameter("pagesize");
 		String pageindex = this.request.getParameter("pageindex");
+		String name = this.request.getParameter("name");
 		Integer intpagesize = pagesize == null ? null : Integer
 				.parseInt(pagesize);
 		Integer intpageindex = pageindex == null ? null : Integer
 				.parseInt(pageindex);
-		String result = null;
-		result = limitService.searchPriv(name, intpagesize,intpageindex);
-
+		String result= limitService.searchPriv(name, intpagesize,intpageindex);
 		returnToClient(result);
 		return "text";
 	}

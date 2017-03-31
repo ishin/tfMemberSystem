@@ -54,7 +54,6 @@ public class GrpDaoImpl extends BaseDao<TGroup, Integer> implements GrpDao {
 
 	@Override
 	public void changeCreator(Integer groupId, Integer groupMemberId) {
-		
 		executeUpdate("update TGroupMember set isCreator = '0' where groupId = " + groupId);
 		executeUpdate("update TGroupMember set isCreator = '1' where id = " + groupMemberId);
 	}

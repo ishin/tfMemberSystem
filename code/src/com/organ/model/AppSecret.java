@@ -25,59 +25,45 @@ public class AppSecret {
 		this.appName = appName;
 		this.appTime = appTime;
 	}
-
 	public int getId() {
 		return id;
 	}
-
 	public void setId(int id) {
 		this.id = id;
 	}
-
 	public int getIsOpen() {
 		return isOpen;
 	}
-
 	public void setIsOpen(int isOpen) {
 		this.isOpen = isOpen;
 	}
-
 	public String getAppId() {
 		return appId;
 	}
-
 	public void setAppId(String appId) {
 		this.appId = appId;
 	}
-
 	public String getSecert() {
 		return secert;
 	}
-
 	public void setSecert(String secert) {
 		this.secert = secert;
 	}
-
 	public String getCallBackUrl() {
 		return callBackUrl;
 	}
-
 	public void setCallBackUrl(String callBackUrl) {
 		this.callBackUrl = callBackUrl;
 	}
-
 	public String getAppName() {
 		return appName;
 	}
-
 	public void setAppName(String appName) {
 		this.appName = appName;
 	}
-
 	public long getAppTime() {
 		return appTime;
 	}
-
 	public void setAppTime(long appTime) {
 		this.appTime = appTime;
 	}

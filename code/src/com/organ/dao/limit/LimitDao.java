@@ -14,4 +14,7 @@ public interface LimitDao {
 	public List searchPriv(String Name,int pagesize,int pageindex);
 	
 	public int getCount();
+	
+	public int getSearchCount(String name);//获取查询结构的个数
 }
+

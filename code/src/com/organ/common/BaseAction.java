@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,9 +55,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 	 * 获取url参数。android请求用url方式传参
 	 * 
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
 	@SuppressWarnings("unchecked")
-	public Map getRequestParams() {
+	public Map getRequestParams(){
 		Map<String, String[]> map = request.getParameterMap();
 
 		for (Map.Entry<String, String[]> m : map.entrySet()) {
@@ -75,8 +77,9 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 	 * 参数长度
 	 * 
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
-	public int getRequestParamsLength() {
+	public int getRequestParamsLength() throws UnsupportedEncodingException {
 		return this.getRequestParams().size();
 	}
 
@@ -85,9 +88,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 	 * 
 	 * @param key
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
 	@SuppressWarnings("unchecked")
-	public String[] getRequestParamsValue(String key) {
+	public String[] getRequestParamsValue(String key){
 		Map<String, String[]> map = request.getParameterMap();
 		String[] values = (String[]) map.get(key);
 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<constant name="struts.custom.i18n.resources" value="global" />
+	<!-- @Secured -->
+	<!-- <constant name="struts2.sslplugin.httpPort" value="8085" />-->
+	<!-- <constant name="struts2.sslplugin.httpsPort" value="8443" />-->
+	<!-- constant name="struts.multipart.maxSize" value="1000000000"/-->
+
+
+	<include file="struts-default.xml" />
+	<include file="struts-filter.xml" />
+	<include file="struts-system.xml" />
+	<include file="struts-member.xml" />
+	<include file="struts-branch.xml" />
+	<include file="struts-group.xml" />
+	<include file="struts-test.xml" />
+	<include file="struts-privilege.xml" />
+	<include file="struts-auth.xml" />
+	<include file="struts-abutment.xml" />
+	<include file="struts-limit.xml" />
+	<include file="struts-appinfoconfig.xml" />
+</struts>
+
+

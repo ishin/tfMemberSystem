@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>classpath:sealtalk.properties</value>
+		</property>
+	</bean>
+	<!--
+		============================================== 数据库数据源
+		==================================================================
+	-->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${db.driver}"></property>
+		<property name="url" value="${db.url}" />
+		<property name="username" value="${db.username}" />
+		<property name="password" value="${db.password}" />
+		<property name="maxActive" value="${db.maxActive}" />
+		<property name="maxIdle" value="${db.maxIdle}" />
+		<property name="maxWait" value="${db.maxWait}" />
+		<property name="testOnBorrow" value="${db.testOnBorrow}" />
+		<property name="testOnReturn" value="${db.testOnReturn}" />
+		<property name="testWhileIdle" value="${db.testWhileIdle}" />
+		<property name="validationQuery" value="${db.validationQuery}" />
+		<property name="removeAbandoned" value="${db.removeAbandoned}" />
+		<property name="removeAbandonedTimeout" value="${db.removeAbandonedTimeout}" />
+		<property name="logAbandoned" value="${db.logAbandoned}" />
+	</bean>
+
+	<!--
+		======================================== Spring-Hibernate
+		SessionFactory ===================================================
+	-->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.current_session_context_class">
+					thread
+				</prop>
+				<!-- 配置JDBC参数 -->
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+				<prop key="hibernate.cglib.use_reflection_optimizer">
+					false
+				</prop>
+				<prop key="hibernate.jdbc.batch_size">20</prop>
+				<prop key="hibernate.jdbc.fetch_size">20</prop>
+				<!--
+					配置Ehcache二级缓存 <prop
+					key="hibernate.cache.use_second_level_cache">true</prop> <prop
+					key="hibernate.cache.use_query_cache">true</prop> <prop
+					key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+				-->
+				<!-- 配置调试参数 -->
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">false</prop>
+			</props>
+		</property>
+		<!-- 访问控制 -->
+		<property name="mappingResources">
+			<list>
+				<value>com/organ/model/TBranch.hbm.xml</value>
+				<value>com/organ/model/TBranchMember.hbm.xml</value>
+				<value>com/organ/model/TCity.hbm.xml</value>
+				<value>com/organ/model/TDistrict.hbm.xml</value>
+				<value>com/organ/model/TGroup.hbm.xml</value>
+				<value>com/organ/model/TGroupMember.hbm.xml</value>
+				<value>com/organ/model/TIndustry.hbm.xml</value>
+				<value>com/organ/model/TInward.hbm.xml</value>
+				<value>com/organ/model/TMember.hbm.xml</value>
+				<value>com/organ/model/TMemberRole.hbm.xml</value>
+				<value>com/organ/model/TOrgan.hbm.xml</value>
+				<value>com/organ/model/TPosition.hbm.xml</value>
+				<value>com/organ/model/TPriv.hbm.xml</value>
+				<value>com/organ/model/TProvince.hbm.xml</value>
+				<value>com/organ/model/TRole.hbm.xml</value>
+				<value>com/organ/model/TRolePriv.hbm.xml</value>
+				<value>com/organ/model/TSex.hbm.xml</value>
+				<value>com/organ/model/TextCode.hbm.xml</value>
+				<value>com/organ/model/AppSecret.hbm.xml</value>
+				<value>com/organ/model/UserValid.hbm.xml</value>
+				<value>com/organ/model/UserSysRelation.hbm.xml</value>
+			</list>
+		</property>
+
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+
+	<!-- 事务控制 -->
+	<bean id="transactionProxy"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		autowire="byName" abstract="true">
+		<property name="proxyTargetClass" value="true" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!--
+		<bean id="baseDao" class="com.organ.common.BaseDao"> <property
+		name="sessionFactory"> <ref local="sessionFactory" /> </property>
+		</bean>
+	--><!-- 定义切面，对com.organ.service包下的所有类的所有方法 都应用事务规则 -->
+	<aop:config>
+		<aop:advisor pointcut="execution(* com.organ.service..*(..))"
+			advice-ref="txAdvice" />
+	</aop:config>
+	<!-- 事务 控制 -->
+	<tx:advice id="txAdvice">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="*" propagation="REQUIRED" rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
+
+</beans>

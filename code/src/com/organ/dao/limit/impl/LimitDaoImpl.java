@@ -13,10 +13,11 @@ import com.organ.utils.PrivUrlNameUtil;
 
 public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 
+	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(LimitDaoImpl.class);
 
 	/**
-	 * 这个实现添加全选的接口，这儿的逻辑
+	 * 实现添的接口
 	 */
 	@Override
 	public int updatePriv(int parentId, String name, String app) {
@@ -27,16 +28,14 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 		tPriv.setApp(app);
 		tPriv.setUrl(PrivUrlNameUtil.initUrlName(name));
 		tPriv.setListorder(0); // 这个不能为空
-		tPriv.setCategory(parentId + "");
+		//tPriv.setCategory("0");
 		tPriv.setGrouping("0");
-
 		try {
 			save(tPriv);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return tPriv.getId();
-
 	}
 
 	@Override
@@ -78,11 +77,6 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 	@Override
 	public List searchPriv(String Name, int pagesize, int pageindex) {
 		try {
-			// String str = " SELECT COUNT(*) FROM t_priv";
-			// int totalCount = Integer.parseInt(str);// 总条目
-			// int pages = (totalCount % pagesize) == 0 ? (totalCount /
-			// pagesize)
-			// : ((totalCount / pagesize)) + 1;//共有多少页
 			int start = pageindex * pagesize;
 			String hql;
 			if (!StringUtils.isBlank(Name)) {
@@ -94,10 +88,8 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 			} else {
 				hql = "select " + "tp.id," + "tp.parent_id," + "tp.NAME,"
 						+ "tp.category," + "tp.url," + "tp.app "
-						+ "from t_priv tp limit " + start
-						+ "," + pagesize;
+						+ "from t_priv tp limit " + start + "," + pagesize;
 			}
-			System.out.println(hql);
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 			List list = query.list();
 
@@ -117,6 +109,30 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 		try {
 			int result = count("from TPriv");
 			return result;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	@Override
+	public int getSearchCount(String name) {
+		// TODO Auto-generated method stub
+		String sql;
+		try {
+			if (!StringUtils.isBlank(name)) {
+				sql = "select count(*) from (" + "select " + "tp.id," + "tp.parent_id,"
+						+ "tp.NAME," + "tp.category," + "tp.url," + "tp.app "
+						+ "from t_priv tp where tp.name like '%" + name + "%'"
+						+ "or tp.url like '%" + name + "%') as tt";
+			} else {
+				sql = "select count(*) from (" + "select " + "tp.id," + "tp.parent_id,"
+						+ "tp.NAME," + "tp.category," + "tp.url," + "tp.app "
+						+ "from t_priv tp) as tt";
+			}
+			int SearchCount =Integer.parseInt(this.getSession().createSQLQuery(sql).list().get(0).toString());
+			return SearchCount;
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
