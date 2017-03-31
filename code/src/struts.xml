@@ -22,6 +22,7 @@
 	<include file="struts-test.xml" />
 	<include file="struts-privilege.xml" />
 	<include file="struts-auth.xml" />
+	<include file="struts-abutment.xml" />
 
 </struts>
 

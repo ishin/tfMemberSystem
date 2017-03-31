@@ -1,5 +1,6 @@
 package com.organ.common;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -216,6 +217,22 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		}
 	}
 	
+	//获取HTTP请求的输入流,适用于http客户端后台请求数据
+	protected String getRequestDataByStream() throws IOException {
+        //已HTTP请求输入流建立一个BufferedReader对象
+        BufferedReader br =  request.getReader();
+        String buffer = null;
+        StringBuffer buff = new StringBuffer();
+        
+        while ((buffer = br.readLine()) != null) {
+              buff.append(buffer+"\n");
+        }
+        
+        br.close();
+        
+       return buff.toString().trim();
+	}
+	
 /*	
 	protected String getApplicaitonQueryFilter()
 	{
@@ -247,7 +264,6 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	}*/
 	
 	
-	
 	/** 获得当前登录管理员的accountID */
 	/*protected String obtainLoginAccountId()
 	{
@@ -261,6 +277,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		SessionUser userInfo = getSessionUser();
 		return userInfo == null ? null : userInfo.getAccountName();
 	}*/
+	
+	
 	protected Integer getOrganId() {
 		
 		Object o = this.getSessionAttribute("member");

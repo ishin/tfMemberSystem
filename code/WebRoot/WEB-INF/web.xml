@@ -34,7 +34,8 @@
 		    classpath:privilege.xml,
 	    	classpath:system.xml,
 	    	classpath:group.xml,
-	    	classpath:auth.xml
+	    	classpath:auth.xml,
+	    	classpath:abutment.xml
 	    </param-value>
 	</context-param>
 	

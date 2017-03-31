@@ -3,19 +3,18 @@ package com.organ.service.auth.impl;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
+import com.organ.common.AuthTips;
 import com.organ.dao.auth.AppSecretDao;
 import com.organ.dao.auth.UserValidDao;
-import com.organ.model.AppSecret;
-import com.organ.model.UserValid;
-import com.organ.service.auth.AppSecretService;
-import com.organ.common.AuthTips;
 import com.organ.dao.member.MemberDao;
+import com.organ.model.AppSecret;
 import com.organ.model.SessionUser;
 import com.organ.model.TMember;
+import com.organ.model.UserValid;
+import com.organ.service.auth.AppSecretService;
 import com.organ.utils.LogUtils;
 import com.organ.utils.PropertiesUtils;
 import com.organ.utils.SecretUtils;
@@ -23,7 +22,7 @@ import com.organ.utils.StringUtils;
 import com.organ.utils.TimeGenerator;
 
 public class AppSecretServiceImpl implements AppSecretService {
-	private static final Logger logger = LogManager.getLogger(AppSecretServiceImpl.class);
+	private static final Logger logger = Logger.getLogger(AppSecretServiceImpl.class);
 
 	@Override
 	public String getAppIDAndSecret() {

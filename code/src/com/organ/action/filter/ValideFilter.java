@@ -2,7 +2,6 @@ package com.organ.action.filter;
 
 import java.util.Map;
 
-import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.organ.common.Constants;
@@ -16,15 +15,15 @@ public class ValideFilter extends AbstractInterceptor {
 	public String intercept(ActionInvocation invocation) throws Exception {
 		Map session = invocation.getInvocationContext().getSession();
 
-		SessionUser su = (SessionUser) session
-				.get(Constants.ATTRIBUTE_NAME_OF_SESSIONUSER);
-		if (su != null) {
-			
+		SessionUser su = (SessionUser) session.get(Constants.ATTRIBUTE_NAME_OF_SESSIONUSER);
+		/*if (su != null) {
+			return invocation.invoke();
 		} else {
 			return Action.LOGIN;
-		}
-		//return null;
+		}*/
+		System.out.println(invocation.invoke());
 		return invocation.invoke();
+	
 	}
 
 }

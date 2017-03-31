@@ -2,10 +2,9 @@ package com.organ.action.group;
 
 import javax.servlet.ServletException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.sf.json.JSONObject;
+
+import org.apache.log4j.Logger;
 
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
@@ -21,7 +20,7 @@ import com.organ.service.group.GroupService;
 public class GroupAction extends BaseAction {
 
 	private static final long serialVersionUID = 5512359170256277370L;
-	private static final Logger logger = LogManager.getLogger(GroupAction.class);
+	private static final Logger logger = Logger.getLogger(GroupAction.class);
 	
 	/**
 	 * 创建群组

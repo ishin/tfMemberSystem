@@ -403,7 +403,23 @@ public class MemberServiceImpl implements MemberService {
 		return jo.toString();
 	}
 	
-
+	@Override
+	public int countMember() {
+		try{
+			int count = memberDao.getMemberCount();
+			return count;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return 0;
+	}
+	
+	@Override
+	public String getMultipleMemberForAccounts(String mulMemberStr) {
+		List<TMember> memberList = memberDao.getMultipleMemberForAccounts(mulMemberStr);
+		return null;
+	}
 	private String isBlank(Object o) {
 		return o == null ? "" : o + "";
 	}
