@@ -418,6 +418,7 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public String getMultipleMemberForAccounts(String mulMemberStr) {
+		int i = 0;
 		//List<TMember> memberList = memberDao.getMultipleMemberForAccounts(mulMemberStr);
 		return null;
 	}
