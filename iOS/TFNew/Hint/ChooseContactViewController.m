@@ -160,11 +160,10 @@
     self._mapSelect = [NSMutableDictionary dictionary];
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    _membsChoosedPannel = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 125)];
-    UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"group_membs_pannel.png"]];
-    [_membsChoosedPannel addSubview:bg];
+    _membsChoosedPannel = [app userMembsPannel];
     [app.window addSubview:_membsChoosedPannel];
     
+    [[_membsChoosedPannel subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     _membsScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 50, SCREEN_WIDTH, 70)];
     _membsScroll.backgroundColor = [UIColor clearColor];
@@ -279,6 +278,14 @@
     
     [self showMembs];
     
+    if(![_membsChoosedPannel superview])
+    {
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        [app.window addSubview:_membsChoosedPannel];
+        
+    }
+    
+    
     [UIView animateWithDuration:0.25
                      animations:^{
                          
@@ -298,6 +305,7 @@
                          
                      } completion:^(BOOL finished) {
                          
+                         //[_membsChoosedPannel removeFromSuperview];
                      }];
 }
 

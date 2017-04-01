@@ -575,4 +575,29 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		}
 		return 0;
 	}
+	
+	@Override
+	public List getMemberIdsByAccount(String[] targetNames) {
+		try {
+			StringBuilder sql = new StringBuilder("select id from t_member where account in(");
+			int len = targetNames.length;
+			
+			for(int i = 0; i < len; i++) {
+				sql.append("\"").append(targetNames[i]).append("\"");
+				if (i < len - 1) {
+					sql.append(",");
+				}
+			}
+			sql.append(")");
+			SQLQuery query = this.getSession().createSQLQuery(sql.toString());
+			List list = query.list();
+
+			if (list != null && list.size() > 0) {
+				return list;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

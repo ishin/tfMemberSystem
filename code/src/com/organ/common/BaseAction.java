@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,9 +55,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 	 * 获取url参数。android请求用url方式传参
 	 * 
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
 	@SuppressWarnings("unchecked")
-	public Map getRequestParams() {
+	public Map getRequestParams(){
 		Map<String, String[]> map = request.getParameterMap();
 
 		for (Map.Entry<String, String[]> m : map.entrySet()) {
@@ -75,8 +77,9 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 	 * 参数长度
 	 * 
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
-	public int getRequestParamsLength() {
+	public int getRequestParamsLength() throws UnsupportedEncodingException {
 		return this.getRequestParams().size();
 	}
 
@@ -85,9 +88,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 	 * 
 	 * @param key
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
 	@SuppressWarnings("unchecked")
-	public String[] getRequestParamsValue(String key) {
+	public String[] getRequestParamsValue(String key){
 		Map<String, String[]> map = request.getParameterMap();
 		String[] values = (String[]) map.get(key);
 
@@ -213,45 +217,54 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 			return request.getSession().getAttribute(key);
 		}
 	}
-
-	// 获取HTTP请求的输入流,适用于http客户端后台请求数据
+	
+	//获取HTTP请求的输入流,适用于http客户端后台请求数据
 	protected String getRequestDataByStream() throws IOException {
-		// 已HTTP请求输入流建立一个BufferedReader对象
-		BufferedReader br = request.getReader();
-		String buffer = null;
-		StringBuffer buff = new StringBuffer();
-
-		while ((buffer = br.readLine()) != null) {
-			buff.append(buffer + "\n");
-		}
-
-		br.close();
-
-		return buff.toString().trim();
+        //已HTTP请求输入流建立一个BufferedReader对象
+        BufferedReader br =  request.getReader();
+        String buffer = null;
+        StringBuffer buff = new StringBuffer();
+        
+        while ((buffer = br.readLine()) != null) {
+              buff.append(buffer+"\n");
+        }
+        
+        br.close();
+        
+       return buff.toString().trim();
 	}
-
-	/*
-	 * protected String getApplicaitonQueryFilter() {
-	 * 
-	 * String condition = ""; SessionUser su = getSessionUser(); if (su == null
-	 * || su.isSuperAdmin()) return condition;
-	 * 
-	 * List<String> applicaitonP = su.getApplicationIds(); if (applicaitonP ==
-	 * null || applicaitonP.isEmpty()) return condition; return "('" +
-	 * StringUtils.collectionToDelimitedString(applicaitonP, "','") + "')"; }
-	 */
-
-	/*
-	 * protected String getOrganizationQueryFilter() {
-	 * 
-	 * String condition = ""; SessionUser su = getSessionUser(); if (su == null
-	 * || su.isSuperAdmin()) return condition;
-	 * 
-	 * List<String> organizationP = su.getOrganizationIds(); if (organizationP
-	 * == null || organizationP.isEmpty()) return condition; return "('" +
-	 * StringUtils.collectionToDelimitedString(organizationP, "','") + "')"; }
-	 */
-
+	
+/*	
+	protected String getApplicaitonQueryFilter()
+	{
+		
+		String condition = "";
+		SessionUser su = getSessionUser();
+		if (su == null || su.isSuperAdmin())
+			return condition;
+		
+		List<String> applicaitonP = su.getApplicationIds();
+		if (applicaitonP == null || applicaitonP.isEmpty())
+			return condition;
+		return "('" + StringUtils.collectionToDelimitedString(applicaitonP, "','") + "')";
+	}
+	*/
+	
+	/*protected String getOrganizationQueryFilter()
+	{
+		
+		String condition = "";
+		SessionUser su = getSessionUser();
+		if (su == null || su.isSuperAdmin())
+			return condition;
+		
+		List<String> organizationP = su.getOrganizationIds();
+		if (organizationP == null || organizationP.isEmpty())
+			return condition;
+		return "('" + StringUtils.collectionToDelimitedString(organizationP, "','") + "')";
+	}*/
+	
+	
 	/** 获得当前登录管理员的accountID */
 	/*
 	 * protected String obtainLoginAccountId() { SessionUser userInfo =
@@ -265,6 +278,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 	 * userInfo.getAccountName(); }
 	 */
 
+	
+	
 	protected Integer getOrganId() {
 
 		Object o = this.getSessionAttribute("member");

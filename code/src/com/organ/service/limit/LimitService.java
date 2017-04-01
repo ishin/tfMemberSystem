@@ -37,5 +37,7 @@ public interface LimitService {
 	 * @return
 	 */
 	public String searchPriv(String Name,int pagesize,int pageindex);
+	
+	public int getCount();
 
 }

@@ -13,7 +13,18 @@ public class AppSecret {
 	private String callBackUrl;				//第三方系统回调地址
 	private String appName;					//应用名称
 	private long appTime;					//appid,secret生成时间
-	
+	public AppSecret() {}
+	public AppSecret(int id, int isOpen, String appId, String secert,
+			String callBackUrl, String appName, long appTime) {
+		super();
+		this.id = id;
+		this.isOpen = isOpen;
+		this.appId = appId;
+		this.secert = secert;
+		this.callBackUrl = callBackUrl;
+		this.appName = appName;
+		this.appTime = appTime;
+	}
 	public int getId() {
 		return id;
 	}

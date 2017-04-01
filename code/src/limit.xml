@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
@@ -9,16 +8,19 @@
 
 
 	<!-- dao -->
-	<bean id="limitDao" class="com.organ.dao.limit.impl.LimitDaoImpl" autowire="byName" />
-	
+	<bean id="limitDao" class="com.organ.dao.limit.impl.LimitDaoImpl"
+		autowire="byName" />
+
 	<!-- service -->
-	<bean id="limitService" class="com.organ.service.limit.impl.LimitServiceImpl" autowire="byName" >
+	<bean id="limitService" class="com.organ.service.limit.impl.LimitServiceImpl"
+		autowire="byName">
 		<property name="limitDao" ref="limitDao" />
-		
 	</bean>
-	
+
 	<!-- action -->
-	<bean id="limitAction" class="com.organ.action.limit.LiMitAction" scope="prototype" autowire="byName" >
+	<bean id="limitAction" class="com.organ.action.limit.LiMitAction"
+		scope="prototype" autowire="byName">
 		<property name="limitService" ref="limitService" />
 	</bean>
+		
 </beans>

@@ -15,8 +15,8 @@
 
 - (void) didLogin;
 - (void) didLogout;
-- (void)getUserInfoWithUserId:(NSString *)userId completion:(void (^)(RCUserInfo *userInfo))completion;
-- (void)getGroupInfoWithUserId:(NSString *)targetId completion:(void (^)(RCUserInfo *userInfo))completion;
+- (void) getUserInfoWithUserId:(NSString *)userId completion:(void (^)(RCUserInfo *userInfo))completion;
+- (void) getGroupInfoWithUserId:(NSString *)targetId completion:(void (^)(RCUserInfo *userInfo))completion;
 
 - (void) loginRongCloud;
 
@@ -28,5 +28,8 @@
 - (void) checkXFQ;
 - (void) pushToChat:(NSString*)targetId type:(int)type;
 - (void) switchAtTabIndex:(int)index;
+
+- (UIView*) userMembsPannel;
+
 @end
 
