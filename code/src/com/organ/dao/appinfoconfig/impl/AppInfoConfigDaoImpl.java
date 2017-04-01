@@ -15,15 +15,21 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List getAppInfo(int userId,int pagesize, int pageindex) {
+	public List getAppInfo(int userId, int pagesize, int pageindex) {
 		// TODO Auto-generated method stub
 		try {
 			int start = pageindex * pagesize;
-			String hql = "select " + "ta.id" + ",ta.appId" + ",ta.secert"
-					+ ",ta.callbackurl" + ",ta.apptime" + ",ta.appname"
-					+ ",ta.isopen" + " from t_appsecret ta limit " + start
-					+ "," + pagesize;
-			System.out.println(hql);
+			String hql = "select "
+					+ "ta.id"
+					+ ",ta.appId"
+					+ ",ta.secert"
+					+ ",ta.callbackurl"
+					+ ",ta.apptime"
+					+ ",ta.appname"
+					+ ",ta.isopen"
+					+ " from t_appsecret ta limit "
+					+ start + "," + pagesize;
+			System.out.println("----------------------"+hql);
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 			List list = query.list();
 			if (list.size() > 0) {
