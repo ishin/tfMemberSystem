@@ -437,6 +437,10 @@ th {
 }
 .t112 th, .t112 td {
 	padding: 0 0 0 20px;
+	max-width: 100px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .t210 th, .t210 td {
 	padding: 0 0 0 20px;
@@ -928,7 +932,7 @@ button.pagingJump {
 	background: white;
 	left: 50%;
 	top: 50%;
-	margin: -188px 0px 0px -311px;
+	margin: -260px 0px 0px -311px;
 	border-radius: 10px;
 	z-index:2;
 }
@@ -998,7 +1002,7 @@ button.canclaDia {
 	color: #30c0da;
 	margin-left: 20px;
 }
-span.plusAuth {
+span.plusAuth,span.plusApp {
 	display: inline-block;
 	height: 30px;
 	width: 30px;

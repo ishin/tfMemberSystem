@@ -14,9 +14,49 @@ var grpid = 0;
 $(document).ready(function() {
 
 	$('.certainAdd').click(function(){
+
+
+		var neccName = $('#name').attr('necc')
 		var name = $('#name').val();
+
+		var neccParentId = $('#name').attr('necc')
 		var parentId = $('#parentId').val();
+
+		var neccApp = $('#name').attr('necc')
 		var app = $('#app').val();
+
+
+		//获取到所有必填项
+		var allNecc = $(this).parents('.dialogAuth').find('[necc=true]');
+		if(allNecc.length!=0){
+			for(var i = 0;i<allNecc.length;i++){
+				if(allNecc[i].val()==''){
+					new Window().alert({
+						title   : '',
+						content : '有必填项未填写！',
+						hasCloseBtn : false,
+						hasImg : true,
+						textForSureBtn : false,
+						textForcancleBtn : false,
+						autoHide:true
+					});
+					break;
+				}
+			}
+		}
+
+		//if((neccName&&name)&&(neccParentId&&parentId)&&(neccApp&&app)){
+		//	new Window().alert({
+		//		title   : '',
+		//		content : '有必填项未填写！',
+		//		hasCloseBtn : false,
+		//		hasImg : true,
+		//		textForSureBtn : false,
+		//		textForcancleBtn : false,
+		//		autoHide:true
+		//	});
+		//}
+
 		var text = $(this).parents('.dialogAuth').find('.diaTitle').text();
 		if(text=='新增权限'){
 			var data = {name:name,app:app,parentId:parentId}
@@ -26,6 +66,7 @@ $(document).ready(function() {
 			var data = {name:name,app:app,parentId:parentId,privId:privId}
 			callajax('limit!EditPriv', data, afterEditPriv);
 		}
+
 		$('.dialogMask').hide();
 		$('.dialogAuth').hide();
 	})
