@@ -1,6 +1,5 @@
 package com.organ.dao.appinfoconfig.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List getAppInfo(int pagesize, int pageindex) {
+	public List getAppInfo(int userId,int pagesize, int pageindex) {
 		// TODO Auto-generated method stub
 		try {
 			int start = pageindex * pagesize;
@@ -37,7 +36,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 	}
 
 	/**
-	 * »ñÈ¡µ±Ç°ÈÕÆÚ
+	 * ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½
 	 */
 	public Long getDate() {
 		Date d = new Date();
@@ -45,7 +44,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 	}
 
 	/**
-	 * Ìí¼ÓÓ¦ÓÃ
+	 * ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½
 	 */
 	@Override
 	public int updatePriv(int appId, String secert, String callbackurl,

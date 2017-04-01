@@ -26,6 +26,7 @@ import com.organ.service.limit.LimitService;
 public class LiMitAction extends BaseAction {
 
 	private static final long serialVersionUID = -8882273369530974698L;
+	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(LiMitAction.class);
 	private LimitService limitService;
 	private LimitDao limitDao;

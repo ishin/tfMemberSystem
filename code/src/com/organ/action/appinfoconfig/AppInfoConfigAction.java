@@ -46,15 +46,17 @@ public class AppInfoConfigAction extends BaseAction {
 	public String getAppInfo() throws ServletException, JSONException {
 		String pagesize = this.request.getParameter("pagesize");
 		String pageindex = this.request.getParameter("pageindex");
-
+		String userid = this.request.getParameter("userid");
 		Integer intpagesize = pagesize == null ? null : Integer
 				.parseInt(pagesize);
 		Integer intpageindex = pageindex == null ? null : Integer
 				.parseInt(pageindex);
+		Integer intuserid = userid == null ? null : Integer
+				.parseInt(userid);
 		boolean flag = false;
 		String result = null;
 		try {
-			result = appInfoConfigService.getAppInfo(intpagesize, intpageindex);
+			result = appInfoConfigService.getAppInfo(intuserid,intpagesize, intpageindex);
 
 		} catch (Exception e) {
 			e.printStackTrace();
