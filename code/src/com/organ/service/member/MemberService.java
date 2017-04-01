@@ -132,7 +132,7 @@ public interface MemberService {
 
 
 	/**
-	 * 使用初始化用户登陆
+	 * 统计成员账号个数
 	 * @param account
 	 * @param userpwd
 	 * @return

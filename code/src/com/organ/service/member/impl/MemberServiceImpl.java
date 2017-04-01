@@ -418,9 +418,37 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public String getMultipleMemberForAccounts(String mulMemberStr) {
-		int i = 0;
-		//List<TMember> memberList = memberDao.getMultipleMemberForAccounts(mulMemberStr);
-		return null;
+		String[] mulMemberStrs = null;
+		String ret = null;
+		JSONObject jo = new JSONObject();
+		
+		if (!StringUtils.getInstance().isBlank(mulMemberStr)) {
+			mulMemberStr = StringUtils.getInstance().replaceChar(mulMemberStr, "]", "");
+			mulMemberStr = StringUtils.getInstance().replaceChar(mulMemberStr, "[", "");
+			mulMemberStr = StringUtils.getInstance().replaceChar(mulMemberStr, "\"", "");
+			mulMemberStrs = mulMemberStr.split(",");
+			List<TMember> memberList = memberDao.getMultipleMemberForAccounts(mulMemberStrs);
+			int[] ids = null;
+			
+			if (memberList != null) {
+				int len = memberList.size();
+				ids = new int[len];
+				for (int i = 0; i < len; i++) {
+					TMember t = memberList.get(i);
+					ids[i] = t.getId();
+				}
+				jo.put("code", 1);
+				jo.put("text", ids);
+			} else {
+				jo.put("code", 0);
+				jo.put("text", Tips.NULLGROUPMEMBER.getText());
+			}
+		} else {
+			jo.put("code", 0);
+			jo.put("text", Tips.NULLUSER.getText());
+		}
+		ret = jo.toString();
+		return ret;
 	}
 	
 	@Override

@@ -38,7 +38,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 			if (appList == null) {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
-				jo.put("text", "Ã»ÓÐ²éÑ¯µ½Ó¦ÓÃ");
+				jo.put("text", "Ã»ï¿½Ð²ï¿½Ñ¯ï¿½ï¿½Ó¦ï¿½ï¿½");
 			} else {
 				for (int i = 0; i < appList.size(); i++) {
 					Object[] app = (Object[]) appList.get(i);
@@ -106,7 +106,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 			if (appinfos == null) {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
-				jo.put("text", "Ó¦ÓÃÃû³ÆÎª¿Õ");
+				jo.put("text", "Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½");
 			} else {
 				for (int i = 0; i < appinfos.size(); i++) {  
 					Object[] appinfo = (Object[]) appinfos.get(i);
