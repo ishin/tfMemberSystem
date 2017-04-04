@@ -31,7 +31,7 @@ input, select, option {
 input, select, option, textarea {
 	border: 1px solid #ccc;
 	background-color: white;
-	padding: 0 0 0 5px;
+	padding: 0 0 0 10px;
 }
 input:focus {
 	outline: none;
@@ -423,6 +423,7 @@ th {
 	width: 120px;
 	height: 30px;
 	text-align: center;
+	outline: none;
 }
 .makemain {
 	color: #fff;
@@ -587,7 +588,7 @@ th {
 	color: rgb(48,192,218);
 	background-color: rgb(229,252,255);
 }
-div#list211,div#list213,div#list214 {
+div#list211,div#list213,div#list214,div#list211edit,div#list213edit,div#list214edit {
 	overflow-y: scroll;
 	width: 100%;
 	height: calc(100% - 64px);
