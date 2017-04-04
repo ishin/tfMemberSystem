@@ -248,6 +248,29 @@ public class AbutmentMemberAction extends BaseAction {
 		returnToClient(result);
 		return "text";
 	}
+	
+	/**
+	 * 统计成员数量
+	 * @return
+	 * @throws ServletException
+	 */
+	public String getMemberCount() throws ServletException {
+		String result = null;
+		JSONObject jo = null;
+		
+		try {
+			int count = memberService.countMember();
+			jo.put("code", 1);
+			jo.put("text", count);
+			result = jo.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		
+		returnToClient(result);
+		return "text";
+	}
 	private MemberService memberService;
 
 	public void setMemberService(MemberService ms) {
