@@ -16,10 +16,20 @@ var itemtemplate='<tr id="traid">'
 var grpid = 0;
 $(document).ready(function() {
 
+	$('.searchInput').off('focus');
+	$('.searchInput').focus(function(){
+		$(this).off('keypress');
+		$(this).keypress(function(event) {
+			if (event.which == 13) {
+				$('.searchBTN').click();
+			}
+		})
+	})
 
 	$('.dialogCheckBox').click(function(){
 		$(this).parent().find('.dialogCheckBox').removeClass('CheckBoxChecked');
 		$(this).addClass('CheckBoxChecked');
+		//$(this).attr('necc','true')
 	})
 
 
@@ -29,15 +39,37 @@ $(document).ready(function() {
 		var appsecret = $('#appsecret').val();
 		var backurl = $('#backurl').val();
 		var isOpen = $('#isOpen').find('.CheckBoxChecked').attr('value');
+
+		//获取到所有必填项
+		var allNecc = $(this).parents('.dialogApp').find('[necc=true]');
+		if(allNecc.length!=0){
+			for(var i = 0;i<allNecc.length;i++){
+				if($(allNecc[i]).val()==''){
+					new Window().alert({
+						title   : '',
+						content : '有必填项未填写！',
+						hasCloseBtn : false,
+						hasImg : true,
+						textForSureBtn : false,
+						textForcancleBtn : false,
+						autoHide:true
+					});
+					return false;
+					break;
+
+				}
+			}
+		}
+
 		var text = $(this).parents('.dialogApp').find('.diaTitle').text();
 		var apptime = new Date().getTime();
 		if(text=='新增应用'){
-			var data = {appname:name,appId:appid,secert:appsecret,callbackurl:backurl,isopen:isOpen,apptime:apptime}
+			var data = {appname:name,appId:appid,secert:appsecret,callbackurl:backurl,isopen:isOpen}
 			callajax('appinfoconfig!updateAppInfo', data, afterAddPriv);
 		}else if(text=='编辑应用'){
 			var id = $(this).parents('.dialogApp').attr('bindid');
-			var data = {id:id,appname:name,appId:appid,secert:appsecret,callbackurl:backurl,isopen:isOpen,apptime:apptime}
-			callajax('appinfoconfig!updateAppInfo', data, afterEditPriv);
+			var data = {id:id,appname:name,appId:appid,secert:appsecret,callbackurl:backurl,isopen:isOpen}
+			callajax('appinfoconfig!EditApp', data, afterEditPriv);
 		}
 		$('.dialogMask').hide();
 		$('.dialogApp').hide();
@@ -45,7 +77,14 @@ $(document).ready(function() {
 
 	$('.plusApp').click(function(){
 		$('.dialogMask').show();
-		$('.dialogApp').show();
+		var dialogApp = $('.dialogApp');
+		dialogApp.show();
+		dialogApp.find('#name').val('');
+		dialogApp.find('#appid').val('');
+		dialogApp.find('#appsecret').val('');
+		dialogApp.find('#backurl').val('');
+
+		dialogApp.find('#isOpen .dialogCheckBox[value='+1+']').click();
 		$('.dialogApp').find('.diaTitle').html('新增应用');
 	})
 
@@ -75,12 +114,15 @@ function afterEditPriv(data){
 function loadpage(pagenumber) {
 	$('#grouplist').empty();
 	var appName = $('.searchInput').val();
+	var accounts = localStorage.getItem('account');
+	var oAccount = JSON.parse(accounts);
+	var userId = oAccount.id;
 	if(pagenumber){
-		var data = {AppName:appName,pageindex: pagenumber-1, pagesize: itemsperpage};
+		var data = {AppName:appName,pageindex: pagenumber-1, pagesize: itemsperpage,userId:userId};
 
 		callajax('appinfoconfig!SearchAppName', data, fShowTableNew);
 	}else{
-		var data = {AppName:appName,pageindex: 0, pagesize: itemsperpage};
+		var data = {AppName:appName,pageindex: 0, pagesize: itemsperpage,userId:userId};
 
 		callajax('appinfoconfig!SearchAppName', data, fShowTable);
 	}
@@ -178,7 +220,7 @@ function disApp(id){
 	});
 }
 function cancleRelation(id,callback){
-	callajax('appinfoconfig!SearchAppName', {privId:id}, function(){
+	callajax('appinfoconfig!DelApp', {AppId:id}, function(){
 		var appName = $('.searchInput').val();
 		var data = {name:appName,pageindex: newPaging.args.current, pagesize: itemsperpage};
 		callback&&callback()

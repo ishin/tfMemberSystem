@@ -13,24 +13,27 @@ var itemtemplate='<tr id="traid">'
 var grpid = 0;
 $(document).ready(function() {
 
+
+	$('.searchInput').off('focus');
+	$('.searchInput').focus(function(){
+		$(this).off('keypress');
+		$(this).keypress(function(event) {
+			if (event.which == 13) {
+				$('.searchBTN').click();
+			}
+		})
+	})
+
+
 	$('.certainAdd').click(function(){
-
-
-		var neccName = $('#name').attr('necc')
 		var name = $('#name').val();
-
-		var neccParentId = $('#name').attr('necc')
 		var parentId = $('#parentId').val();
-
-		var neccApp = $('#name').attr('necc')
 		var app = $('#app').val();
-
-
 		//获取到所有必填项
 		var allNecc = $(this).parents('.dialogAuth').find('[necc=true]');
 		if(allNecc.length!=0){
 			for(var i = 0;i<allNecc.length;i++){
-				if(allNecc[i].val()==''){
+				if($(allNecc[i]).val()==''){
 					new Window().alert({
 						title   : '',
 						content : '有必填项未填写！',
@@ -40,22 +43,12 @@ $(document).ready(function() {
 						textForcancleBtn : false,
 						autoHide:true
 					});
+					return false;
 					break;
+
 				}
 			}
 		}
-
-		//if((neccName&&name)&&(neccParentId&&parentId)&&(neccApp&&app)){
-		//	new Window().alert({
-		//		title   : '',
-		//		content : '有必填项未填写！',
-		//		hasCloseBtn : false,
-		//		hasImg : true,
-		//		textForSureBtn : false,
-		//		textForcancleBtn : false,
-		//		autoHide:true
-		//	});
-		//}
 
 		var text = $(this).parents('.dialogAuth').find('.diaTitle').text();
 		if(text=='新增权限'){
@@ -74,6 +67,9 @@ $(document).ready(function() {
 	$('.plusAuth').click(function(){
 		$('.dialogMask').show();
 		$('.dialogAuth').show();
+		$('#name').val('');
+		$('#parentId').find('option:nth-child(1)').attr("selected",true);
+		$('#app').val('');
 		$('.dialogAuth').find('.diaTitle').html('新增权限');
 	})
 

@@ -104,19 +104,19 @@
 		<ul>
 			<li>
 				<span>应用名称：</span><span class="necc">*</span>
-				<input type="text" id="name"/>
+				<input type="text" id="name" necc='true'/>
 			</li>
 			<li>
 				<span>appid：</span><span class="necc">*</span>
-				<input type="text" id="appid"/>
+				<input type="text" id="appid" necc='true'/>
 			</li>
 			<li>
 				<span>appsecret：</span><span class="necc">*</span>
-				<input type="text" id="appsecret"/>
+				<input type="text" id="appsecret" necc='true'/>
 			</li>
 			<li>
 				<span>backurl：</span><span class="necc">*</span>
-				<input type="text" id="backurl"/>
+				<input type="text" id="backurl" necc='true'/>
 			</li>
 			<li id="isOpen">
 				<span>是否开启：</span><span class="necc">*</span>

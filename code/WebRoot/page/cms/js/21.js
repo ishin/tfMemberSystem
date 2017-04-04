@@ -10,7 +10,12 @@ var membertemplate = '<div id="mmemberid" name="membername" class="member21">'
 						+ '</div>';
 $(document).ready(function(){
 
-//	$('.line21').css('width', document.body.clientWidth * 0.12 + 'px');
+
+	$('.infotab').delegate('.infotabi','click',function(){
+		$('.infotabi').removeClass('tabactive');
+		$(this).addClass('tabactive');
+	})
+
 	$('.sidebar12').css('height', '1440px');
 	
 	showpage('210');
@@ -25,9 +30,9 @@ $(document).ready(function(){
 	});
 
 	$('#member').on('shown.bs.modal', function(e) {
-		callajax("branch!getOrganTree", "", cb_21_member_tree);
+		callajax("branch!getBranchTreeAndMember", "", cb_21_member_tree);
 	});
-
+	//切换角色
 	$('body').on('click', '#list21 li', function() {
 		$(this).parent().find('li').removeClass('prv21active');
 		$('#sanjiao').remove();
@@ -39,8 +44,12 @@ $(document).ready(function(){
 		currole = this.id.substr(1);
 		load210();
 		load211();
-		load212();
+		load211Save();
+
+
+		//load211();
 	});
+	//切换多选的checkbox
 	$('body').on('click', '.privgroup, .privgroupd', function() {
 		if ($(this).prop('src').indexOf('1.png') > 0) {
 			$(this).parent().parent().find('img').prop('src', 'images/select-2.png');
@@ -51,6 +60,7 @@ $(document).ready(function(){
 			$(this).parent().parent().find('input').prop('checked', true);
 		}
 	});
+	//切换多选的checkbox
 	$('body').on('click', '.pgc, .pgcd', function() {
 		if ($(this).prop('src').indexOf('1.png') > 0) {
 			$(this).parent().find('img').prop('src', 'images/select-2.png');
@@ -61,9 +71,9 @@ $(document).ready(function(){
 			$(this).parent().find('input').prop('checked', true);
 		}
 	});
+	//点击添加角色
 	$('#addrole').click(function(){
-		
-		//权限
+
 		if (has('qxgltj')) {
 			$('#role').modal({
 				backdrop: false,
@@ -76,6 +86,7 @@ $(document).ready(function(){
 			}});
 		}
 	});
+	//点击新增/修改人员
 	$('#editmember').click(function(){
 		if (currole == 1) {
 			bootbox.alert({'title':'提示', 'message':'不能修改组织管理员.', callback: function() {
@@ -104,7 +115,8 @@ $(document).ready(function(){
 			}});
 		}
 	});
-	$('#editpriv').click(function() {
+	//点击修改权限
+	$('.editpriv').click(function() {
 		if(currole == 1) {
 			bootbox.alert({"title":"提示","message":"不能修改组织管理员.", callback: function() {
 				$('#container').css('width', document.body.clientWidth + 'px');	
@@ -129,6 +141,7 @@ $(document).ready(function(){
 			}});
 		}
 	});
+	//分页
 	$('#pagefirst').click(function() {
 		if (pagenumber == 0) return;
 		if (curpage == 0) return;
@@ -204,7 +217,7 @@ function cb_21_member_tree(data) {
 	var t = $.fn.zTree.getZTreeObj('tree21member');
 	var ns = t.getNodesByParam('id', 1, null);
 	t.expandNode(ns[0], true);
-
+	var datas = JSON.stringify()
 	$('#21_memberlist').empty();
 	callajax('priv!getMemberByRole', {roleid: currole}, cb_21_member_check)
 }
@@ -350,7 +363,7 @@ function cb_211_fresh(data) {
 		}
 	}
 }
-function load212() {
+function load211Save() {
 	callajax('priv!getPrivByRole', {roleid: currole}, cb_212_fresh)
 }
 function cb_212_fresh(data) {
@@ -411,7 +424,10 @@ function cb_21_fresh(data) {
 	$('#list21').find('li:first-child').after('<img id="sanjiao" src="images/roleselect.png" style="float:right" />');
 	load210();
 	load211();
-	load212();
+	load211Save();
+	load213();
+	load214()
+
 }
 function del210(id) {
 	if (currole == 1) {
@@ -457,7 +473,7 @@ function save212() {
 }
 function cb_212_save(data) {
 	load211();
-	load212();
+	load211Save();
 	showpage('211');
 }
 function delrole() {
@@ -504,13 +520,23 @@ function cb_21_del(data) {
 	currole = $b[0].id.substr(1);
 	load210();
 	load211();
-	load212();
+	load211Save();
+	//保存211页面的修改
+	load213();
+	//load213Save();
+
+	load214();
+	//load214Save();
+
 }
 function showpage(cp) {
 	curpage = cp;
-	$('#210').hide();
-	$('#211').hide();
-	$('#212').hide();
+	if(cp!='210'){
+		$('#editmember').hide();
+	}else{
+		$('#editmember').show();
+	}
+	$('.collHide').hide();
 	$('#' + cp).show();
 }
 function stripicon(data) {
@@ -519,4 +545,84 @@ function stripicon(data) {
 		data[i].name = data[i].name.substr(iconlenth);
 	}
 	return data;
+}
+
+
+
+//加载页面213
+function load213() {
+	callajax('priv!getPrivByRole', {roleid: currole}, cb_213_fresh)
+}
+function cb_213_fresh(data) {
+	$('#list213').empty();
+	var i = data.length;
+	while (i--) {
+		if (data[i].parentid == 0) {
+			$('#list213').append('<div class="line211">' + data[i].privname + '</div>');
+			var j = data.length;
+			var x = 0;
+			while (j--) {
+				if (data[j].parentid == data[i].privid) {
+					if (x++ % 2 == 0)
+						$('#list213').append('<div class="line211a"></div>');
+					else
+						$('#list213').append('<div class="line211b"></div>');
+					var a = $('#list213').children().last();
+					$(a).append('<div class="line2111">' + data[j].privname + '</div>');
+					$(a).append('<div class="line2112"></div>');
+					var b = $(a).children().last();
+					var k = data.length;
+					while (k--) {
+						if (data[k].parentid == data[j].privid) {
+							if (data[k].roleid == currole) {
+								$(b).append('<div class="priv toleft"><img src="images/selected.png" style="margin-right: 5px" />' + data[k].privname + '</div>');
+							}
+							else {
+								$(b).append('<div class="priv toleft">' + data[k].privname + '</div>');
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+//加载页面214
+function load214() {
+	callajax('priv!getPrivByRole', {roleid: currole}, cb_214_fresh)
+}
+function cb_214_fresh(data) {
+	$('#list214').empty();
+	var i = data.length;
+	while (i--) {
+		if (data[i].parentid == 0) {
+			$('#list214').append('<div class="line211">' + data[i].privname + '</div>');
+			var j = data.length;
+			var x = 0;
+			while (j--) {
+				if (data[j].parentid == data[i].privid) {
+					if (x++ % 2 == 0)
+						$('#list214').append('<div class="line211a"></div>');
+					else
+						$('#list214').append('<div class="line211b"></div>');
+					var a = $('#list214').children().last();
+					$(a).append('<div class="line2111">' + data[j].privname + '</div>');
+					$(a).append('<div class="line2112"></div>');
+					var b = $(a).children().last();
+					var k = data.length;
+					while (k--) {
+						if (data[k].parentid == data[j].privid) {
+							if (data[k].roleid == currole) {
+								$(b).append('<div class="priv toleft"><img src="images/selected.png" style="margin-right: 5px" />' + data[k].privname + '</div>');
+							}
+							else {
+								$(b).append('<div class="priv toleft">' + data[k].privname + '</div>');
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
