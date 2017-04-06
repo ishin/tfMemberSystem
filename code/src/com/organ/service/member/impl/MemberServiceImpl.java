@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.util.ArrayUtil;
 
 import net.sf.json.JSONArray;
@@ -18,6 +19,7 @@ import com.organ.model.TMember;
 import com.organ.model.TextCode;
 import com.organ.service.member.MemberService;
 import com.organ.utils.JSONUtils;
+import com.organ.utils.LogUtils;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PinyinGenerator;
 import com.organ.utils.PropertiesUtils;
@@ -27,6 +29,8 @@ import com.organ.utils.TimeGenerator;
 
 public class MemberServiceImpl implements MemberService {
 
+	private static final Logger logger = Logger.getLogger(MemberServiceImpl.class);
+	
 	@Override
 	public TMember searchSigleUser(String name, String password) {
 		TMember memeber = null;
@@ -37,6 +41,7 @@ public class MemberServiceImpl implements MemberService {
 			memeber = memberDao.searchSigleUser(name, password);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		return memeber;
 	}
@@ -52,6 +57,7 @@ public class MemberServiceImpl implements MemberService {
 			status = memberDao.updateUserPwdForAccount(account, newPwd);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
 		return status;
@@ -65,6 +71,7 @@ public class MemberServiceImpl implements MemberService {
 			status = memberDao.updateUserPwdForPhone(phone, newPwd);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
 		return status;
@@ -97,8 +104,6 @@ public class MemberServiceImpl implements MemberService {
 					jo.put("birthday", isBlank(member[9]));
 					jo.put("workno", isBlank(member[10]));
 					jo.put("mobile", isBlank(member[11]));
-					// jo.put("groupmax", isBlank(member[12]));
-					// jo.put("groupuse", isBlank(member[13]));
 					jo.put("intro", isBlank(member[12]));
 					jo.put("branchid", isBlank(member[13]));
 					jo.put("branchname", isBlank(member[14]));
@@ -110,6 +115,7 @@ public class MemberServiceImpl implements MemberService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		return jo.toString();
 	}
@@ -122,6 +128,7 @@ public class MemberServiceImpl implements MemberService {
 			row = memberDao.updateUserTokenForId(userId, token);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
 		return row;
@@ -165,6 +172,7 @@ public class MemberServiceImpl implements MemberService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		return ja.toString();
 	}
@@ -177,6 +185,7 @@ public class MemberServiceImpl implements MemberService {
 			b = memberDao.valideOldPwd(account, oldPwd);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		return b;
 	}
@@ -202,6 +211,7 @@ public class MemberServiceImpl implements MemberService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
 		return code;
@@ -219,6 +229,7 @@ public class MemberServiceImpl implements MemberService {
 			textCodeDao.saveTextCode(stc);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 	}
 
@@ -254,6 +265,7 @@ public class MemberServiceImpl implements MemberService {
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			}
 		}
 
@@ -270,6 +282,7 @@ public class MemberServiceImpl implements MemberService {
 			status = memberDao.updateUserPwd(account, md5Pwd);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
 		return status;
@@ -299,6 +312,7 @@ public class MemberServiceImpl implements MemberService {
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			}
 		}
 
@@ -333,6 +347,7 @@ public class MemberServiceImpl implements MemberService {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		return null;
 	}
@@ -364,6 +379,7 @@ public class MemberServiceImpl implements MemberService {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
 		return jo.toString();
@@ -412,6 +428,7 @@ public class MemberServiceImpl implements MemberService {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		return jo.toString();
 	}
@@ -458,11 +475,133 @@ public class MemberServiceImpl implements MemberService {
 			return count;
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
 		return 0;
 	}
 
+	@Override
+	public String getMemberIdsByAccount(String names) {
+		String code = "0";
+		String text = null;
+		JSONObject ret = new JSONObject();
+		
+		try {
+			if (StringUtils.getInstance().isBlank(names)) {
+				text = Tips.WRONGPARAMS.getText();
+			} else {
+				String[] namesArr = StringUtils.getInstance().strToArray(names);
+				List list = memberDao.getMemberIdsByAccount(namesArr);
+				
+				if (list != null) {
+					code = "1";
+					text = list.toString();
+				} else {
+					text = Tips.NULLID.getText();
+				}
+			}
+			
+			ret.put("code", code);
+			ret.put("text", text);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		
+		return ret.toString();
+	}
+	
+	@Override
+	public String isUsedPic(String userId, String picName) {
+		JSONObject jo = new JSONObject();
+		
+		try {
+			int userIdInt = Integer.parseInt(userId);
+			boolean used = memberDao.isUsedPic(userIdInt, picName);
+			jo.put("code", 1);
+			jo.put("text", used);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		
+		return jo.toString();
+	}
+	
+	@Override
+	public String getMemberIdForAccount(String account) {
+		JSONObject jo = new JSONObject();
+		
+		try {
+			int id = memberDao.getMemberIdForAccount(account);
+			jo.put("code", 1);
+			jo.put("text", id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		return jo.toString();
+	}
+	
+	@Override
+	public String getMultipleMemberForIds(String ids) {
+		JSONObject jo = new JSONObject();
+		
+		try {
+			String[] idArr = StringUtils.getInstance().strToArray(ids);
+			int len = idArr.length;
+			Integer[] idIntArr = new Integer[len];
+			
+			for(int i = 0; i < len; i++) {
+				idIntArr[i] = Integer.parseInt(idArr[i]);
+			}
+			
+			List<TMember> list = memberDao.getMultipleMemberForIds(idIntArr);
+			List<JSONObject> lj = new ArrayList<JSONObject>();
+			
+ 			if (list != null) {
+				for (int i = 0; i < list.size(); i++) {
+					lj.add(JSONUtils.getInstance().modelToJSONObj(list.get(i)));
+				}
+ 			}
+ 			
+			if (list != null) {
+				jo.put("code", 1);
+				jo.put("text", lj.toString());
+			} else {
+				jo.put("code", 0);
+				jo.put("text", Tips.FAIL.getText());
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		return jo.toString();
+	}
+	
+	@Override
+	public String getMemberForId(String userId) {
+		JSONObject jo = new JSONObject();
+		
+		try {
+			int userIdInt = Integer.parseInt(userId);
+			TMember tm = memberDao.getMemberForId(userIdInt);
+			if (tm != null) {
+				jo.put("code", 1);
+				jo.put("text", JSONUtils.getInstance().modelToJSONObj(tm));
+			} else {
+				jo.put("code", 0);
+				jo.put("text", Tips.FAIL.getText());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	private String isBlank(Object o) {
 		return o == null ? "" : o + "";
 	}

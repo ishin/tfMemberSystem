@@ -6,8 +6,16 @@ import java.util.List;
 
 public class StringArray {
 	public static void main(String args[]) {
-		
-		arrayToList();
+		test1();
+		//arrayToList();
+	}
+	
+	public static void test1() {
+		List<String> l = new ArrayList<String>();
+		l.add("1");
+		l.add("2");
+		l.add("3");
+		System.out.println(l.toString());
 	}
 	
 	public static void test2(){

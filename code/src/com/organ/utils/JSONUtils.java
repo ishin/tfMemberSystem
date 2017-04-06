@@ -2,6 +2,7 @@ package com.organ.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Scanner;
 
 import net.sf.json.JSONArray;
@@ -56,6 +57,15 @@ public class JSONUtils {
 		return ja;
 	}
 	
+	
+	public JSONArray objToJSONArray(Object o) {
+		return JSONArray.fromObject(o);
+	}
+	
+	public List JSONArrayToList(JSONArray ja) {
+		List list = JSONArray.toList(ja);//这里的t是Class<T> 
+		return list;
+	}
 	/**
 	 * @Description 读json文件
 	 * */

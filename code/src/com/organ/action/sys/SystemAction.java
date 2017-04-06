@@ -32,7 +32,6 @@ import com.organ.utils.TimeGenerator;
  * @author hao_dy
  *
  */
-
 public class SystemAction extends BaseAction {
 	
 	private static final long serialVersionUID = -3901445181785461508L;

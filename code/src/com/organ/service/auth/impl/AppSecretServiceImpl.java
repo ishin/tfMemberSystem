@@ -535,6 +535,29 @@ public class AppSecretServiceImpl implements AppSecretService {
 		}
 		return false;
 	}
+	
+	@Override
+	public String getAppSecretByAppIdAndSecret(String appId, String secret) {
+		JSONObject jo = new JSONObject();
+		String code = "0";
+		boolean text = false;
+		
+		try {
+			if (!StringUtils.getInstance().isBlank(appId) && !StringUtils.getInstance().isBlank(secret)) {
+				AppSecret as = appSecretDao.getAppSecretByAppIdAndSecret(appId, secret);
+				if (as != null) {
+					code = "1";
+					text = true;
+				} 
+			}
+			jo.put("code", code);
+			jo.put("text", text);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		return jo.toString();
+	}
 
 	private ArrayList<String> makeAppId() {
 		ArrayList<String> as = new ArrayList<String>();

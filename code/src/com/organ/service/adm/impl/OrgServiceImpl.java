@@ -2,9 +2,14 @@ package com.organ.service.adm.impl;
 
 import java.util.List;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import com.organ.common.Tips;
 import com.organ.dao.adm.OrgDao;
 import com.organ.model.TOrgan;
 import com.organ.service.adm.OrgService;
+import com.organ.utils.JSONUtils;
 
 public class OrgServiceImpl implements OrgService {
 
@@ -62,6 +67,26 @@ public class OrgServiceImpl implements OrgService {
 	public void save(TOrgan organ) {
 		// TODO Auto-generated method stub
 		orgDao.update(organ);
+	}
+	@Override
+	public String getInfos(String ids) {
+		JSONObject jo = new JSONObject();
+		
+		try {
+			List list = orgDao.getInfos(ids);
+			
+			if (list != null) {
+				JSONArray ja = JSONUtils.getInstance().objToJSONArray(list);
+				jo.put("code", 1);
+				jo.put("text", ja.toString());
+			} else {
+				jo.put("code", 0);
+				jo.put("text", Tips.FAIL.getText());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jo.toString();
 	}
 
 }

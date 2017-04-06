@@ -180,4 +180,21 @@ public class StringUtils {
 		return sb.toString();
 	}
 	
+	/**
+	 * 数组字符串转数组
+	 * @param str "[x,x,x]"
+	 * @return
+	 */
+	public String[] strToArray(String str) {
+		str = str.replace("[", "");
+		str = str.replace("]", "");
+		str = str.replace("\"", "");
+		String[] arr = str.split(",");
+		
+		for(int i = 0; i < arr.length; i++) {
+			arr[i].trim();
+		}
+		return arr;
+	}
+	
 }
