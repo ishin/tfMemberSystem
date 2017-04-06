@@ -11,15 +11,45 @@
 	<!-- dao -->
 	<bean id="memberDao" class="com.organ.dao.member.impl.MemberDaoImpl" autowire="byName" />
 	<bean id="textCodeDao" class="com.organ.dao.member.impl.TextCodeDaoImpl" autowire="byName" />
+	<bean id="appSecretDao" class="com.organ.dao.auth.impl.AppSecretDaoImpl" autowire="byName" />
+	<bean id="userValidDao" class="com.organ.dao.auth.impl.UserValidDaoImpl" autowire="byName" />
+	<bean id="userSysRelationDao" class="com.organ.dao.auth.impl.UserSysRelationDaoImpl" autowire="byName" />
+	<bean id="roleDao" class="com.organ.dao.adm.impl.RoleDaoImpl" autowire="byName" />
+	<bean id="privDao" class="com.organ.dao.adm.impl.PrivDaoImpl" autowire="byName" />
+	<bean id="rolePrivDao" class="com.organ.dao.adm.impl.RolePrivDaoImpl" autowire="byName" />
+	<bean id="memberRoleDao" class="com.organ.dao.adm.impl.MemberRoleDaoImpl" autowire="byName" />
+	<bean id="cutLogoTempDao" class="com.organ.dao.upload.impl.CutLogoTempDaoImpl" autowire="byName" />
 	
-	<!-- service -->
 	<bean id="memberService" class="com.organ.service.member.impl.MemberServiceImpl" autowire="byName" >
 		<property name="memberDao" ref="memberDao" />
 		<property name="textCodeDao" ref="textCodeDao" />
 	</bean>
-	
+	<bean id="privService" class="com.organ.service.adm.impl.PrivServiceImpl" autowire="byName" >
+		<property name="roleDao" ref="roleDao" />
+		<property name="privDao" ref="privDao" />
+		<property name="rolePrivDao" ref="rolePrivDao" />
+		<property name="memberRoleDao" ref="memberRoleDao" />
+	</bean>
+	<bean id="appSecretService" class="com.organ.service.auth.impl.AppSecretServiceImpl" autowire="byName" >
+		<property name="appSecretDao" ref="appSecretDao" />
+		<property name="userValidDao" ref="userValidDao" />
+		<property name="memberDao" ref="memberDao" />
+		<property name="userSysRelationDao" ref="userSysRelationDao" />
+	</bean>
+	<bean id="uploadService" class="com.organ.service.upload.impl.UploadServiceImpl" autowire="byName" >
+		<property name="memberDao" ref="memberDao" />
+		<property name="cutLogoTempDao" ref="cutLogoTempDao" />
+	</bean>
+
 	<!-- action -->
-	<bean id="memberAction" class="com.organ.action.member.MemberAction" scope="prototype" autowire="byName" >
+	<bean id="abutmentMemberAction" class="com.organ.action.abutment.AbutmentMemberAction" scope="prototype" autowire="byName" >
 		<property name="memberService" ref="memberService" />
+		<property name="uploadService" ref="uploadService" />
+	</bean>
+	<bean id="abutmentAuthAction" class="com.organ.action.abutment.AbutmentAuthAction" scope="prototype" autowire="byName" >
+		<property name="appSecretService" ref="appSecretService" />
+	</bean>
+	<bean id="abutmentPrivilegeAction" class="com.organ.action.abutment.AbutmentPrivilegeAction" scope="prototype" autowire="byName" >
+		<property name="privService" ref="privService" />
 	</bean>
 </beans>

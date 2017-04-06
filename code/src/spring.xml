@@ -108,6 +108,7 @@
 				<value>com/organ/model/AppSecret.hbm.xml</value>
 				<value>com/organ/model/UserValid.hbm.xml</value>
 				<value>com/organ/model/UserSysRelation.hbm.xml</value>
+				<value>com/organ/model/TCutLogoTemp.hbm.xml</value>
 			</list>
 		</property>
 

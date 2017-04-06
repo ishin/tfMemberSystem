@@ -14,4 +14,5 @@ public interface OrgService {
 	public List getSubdustry(Integer industryId);
 	public TOrgan getInfo(Integer orgId);
 	public void save(TOrgan organ);
+	public String getInfos(String ids);
 }

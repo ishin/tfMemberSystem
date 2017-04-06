@@ -101,4 +101,11 @@ public interface BranchService {
 	 */
 	public String getBranchMember(String branchId);
 	
+	/**
+	 * 获取部门成员
+	 * @param ids
+	 * @return
+	 */
+	public String getBranchMemberByMemberIds(String ids);
+	
 }

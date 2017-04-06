@@ -8,21 +8,21 @@
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
 
-	<!-- dao -->
+	<!-- dao --><!--
 	<bean id="privilegeDao" class="com.organ.dao.privilege.impl.PrivilegeDaoImpl" autowire="byName" />
 	<bean id="rolePrivilegeDao" class="com.organ.dao.privilege.impl.RolePrivilegeDaoImpl" autowire="byName" />
 	<bean id="memberRoleDao" class="com.organ.dao.privilege.impl.MemberRoleDaoImpl" autowire="byName" />
 	
-	<!-- service -->
+	 service 
 	<bean id="privilegeService" class="com.organ.service.privilege.impl.PrivilegeServiceImpl" autowire="byName" >
 		<property name="privilegeDao" ref="privilegeDao" />
 		<property name="rolePrivilegeDao" ref="rolePrivilegeDao" />
 		<property name="memberRoleDao" ref="memberRoleDao" />
 	</bean>
 	
-	<!-- action -->
+	 action 
 	<bean id="privilegeAction" class="com.organ.action.privilege.PrivilegeAction" scope="prototype" autowire="byName" >
 		<property name="privilegeService" ref="privilegeService" />
 	</bean>
 	
-</beans>
+--></beans>
