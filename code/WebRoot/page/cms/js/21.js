@@ -9,30 +9,33 @@ var membertemplate = '<div id="mmemberid" name="membername" class="member21">'
 						+ '<img src="images/delete-2.png" /></div>'
 						+ '</div>';
 var tabPageTemp =  '<div class="col2 collHide" id="211" style="display:none">'+
-					'<div class="infotabr" style="padding-top: 10px;position: absolute;right: 0px;top: -50px;">'+
-					'<button class="editpriv addedit" id="editpriv" style="width:100px">修改权限</button>'+
-					'</div>'+
-					'<div id="list211">'+
-					'</div>'+
+						'<div class="infotabr" style="padding-top: 10px;position: absolute;right: 0px;top: -50px;">'+
+							'<button class="editpriv addedit" id="editpriv" style="width:100px">修改权限</button>'+
+						'</div>'+
+						'<div id="list211">'+
+						'</div>'+
 					'</div>';
+var tabPageEditTemp = '<div class="col2 collHide" id="211edit" style="display:none">'+
+						'<div class="infotabr" style="padding-top: 10px;position: absolute;right: 0px;top: -50px;">'+
+							'<button id="editmember" class="addedit editmember" style="width:100px" onclick="">保存权限</button>'+
+						'</div>'+
+						'<div id="list211edit">'+
+						'</div>'+
+					'</div>'
 	$(document).ready(function(){
-
-
 	$('.infotab').delegate('.infotabi','click',function(){
 		$('.infotabi').removeClass('tabactive');
 		$(this).addClass('tabactive');
 	})
 
-	$('.sidebar12').css('height', '1440px');
-	
-	showpage('210');
-	
 	if (has('qxglck')) {
-		callajax('priv!getRoleList', '', cb_21_fresh);
+
+		callajax('limit!getRoleList',{appname:''}, cb_21_fresh);
+		callajax('appinfoconfig!getAppName','', showTab);
 	}
 	
 	$('#role').on('shown.bs.modal', function(e) {
-		callajax('priv!getRoleList', '', cb_21_role_role);
+		callajax('limit!getRoleList', '', cb_21_role_role);
 		callajax('priv!getPrivByRole', {roleid: 0}, cb_21_role_priv)
 	});
 
@@ -48,13 +51,15 @@ var tabPageTemp =  '<div class="col2 collHide" id="211" style="display:none">'+
 		if (curpage == '211edit') {
 			showpage('210');
 		}
+		var curPage = $('.infotab').find('.tabactive').attr('bindpage');
+		var appName = $('.infotab').find('.tabactive').html();
+		if(curPage!=210){
+			//showpage(curPage);
+
+			loadPage(curPage,appName);
+		}
 		currole = this.id.substr(1);
 		load210();
-		load211();
-		load211Save();
-
-
-		//load211();
 	});
 	//切换多选的checkbox
 	$('body').on('click', '.privgroup, .privgroupd', function() {
@@ -122,11 +127,17 @@ var tabPageTemp =  '<div class="col2 collHide" id="211" style="display:none">'+
 			}});
 		}
 	});
+	//点击保存修改权限
+	$('.col21').on('click','.editmember',function(){
+		var bindPage = $('.infotab .infotabi.tabactive').attr('bindpage');
+		savaEditPage(bindPage)
+	})
+
 	//点击修改权限
-	$('.editpriv').click(function() {
+	$('.col21').on('click','.editpriv',function(){
 		if(currole == 1) {
 			bootbox.alert({"title":"提示","message":"不能修改组织管理员.", callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
+				$('#container').css('width', document.body.clientWidth + 'px');
 			}});
 			return;
 		}
@@ -135,7 +146,7 @@ var tabPageTemp =  '<div class="col2 collHide" id="211" style="display:none">'+
 		if (has('qxglxg')) {
 			if (currole == 0) {
 				bootbox.alert({title:'提示', message:'请先选择身份.', callback: function() {
-					$('#container').css('width', document.body.clientWidth + 'px');	
+					$('#container').css('width', document.body.clientWidth + 'px');
 				}});
 			}
 			else {
@@ -145,10 +156,11 @@ var tabPageTemp =  '<div class="col2 collHide" id="211" style="display:none">'+
 		}
 		else {
 			bootbox.alert({'title':'提示','message':'您没有权限修改权限.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
+				$('#container').css('width', document.body.clientWidth + 'px');
 			}});
 		}
-	});
+	})
+
 	//分页
 	$('#pagefirst').click(function() {
 		if (pagenumber == 0) return;
@@ -175,7 +187,54 @@ var tabPageTemp =  '<div class="col2 collHide" id="211" style="display:none">'+
 		load210page();
 	});
 });
+function cb_21_fresh(data) {
+	data = data.content;
+	initRoleList(data)
+	load210();
+}
+function initRoleList(data){
+	$('#list21').empty();
+	if(data){
+		var i = data.length;
+		while (i--) {
+			if (currole == 0) currole = data[i].id;
+			$('#list21').append('<li class="prv21 toleft" style="width: 100%" id="r' + data[i].id + '">' + data[i].name + '</li>');
+			$('#list21').find('li:last-child').css('width', $('#list21').find('li:last-child').css('width').replace('px', '') - 10);
+		}
+
+		$('#list21').find('#r'+currole).addClass('prv21active');
+		$('#list21').find('#r'+currole).after('<img id="sanjiao" src="images/roleselect.png" style="float:right" />');
+	}
+
+}
+function showTab(data){
+	var pageNum = 211;
+	var content = data.content;
+	var sHTML = '';
+	for(var i = 0;i<content.length;i++){
+		sHTML='<div class="infotabi" onclick="showpage('+pageNum+')" bindpage="'+pageNum+'">'+content[i]+'</div>';
+		$('.infotab').append($(sHTML));
+
+		$('.col21').append(tabPageTemp
+				.replace(/211/g, pageNum)
+		);
+		$('.col21').append(tabPageEditTemp
+				.replace(/211/g, pageNum)
+		);
+
+		loadPage(pageNum,content[i]);
+		loadEditPage(pageNum,content[i]);
+
+		pageNum++;
+	}
+	//$('.infotab').append($(sHTML));
+	//以下是接口页面//获取角色权限
+
+
+}
+
 function cb_21_role_role(data) {
+	data = data.content
 	$('#21_roletemplate').empty();
 	var i = data.length;
 	while(i--) {
@@ -334,24 +393,29 @@ function cb_210_fresh(data) {
 		$(this).removeClass('menuhover');
 	});
 }
-function load211() {
-	callajax('priv!getPrivByRole', {roleid: currole}, cb_211_fresh)
+
+function loadPage(pageNum,appName){
+	callajax('limit!getLimitByRole', {roleid: currole,appname:appName}, function(cbData){
+		//cb_211_fresh
+		cbFreshPage(cbData,pageNum);
+	})
 }
-function cb_211_fresh(data) {
-	$('#list211').empty();
+function cbFreshPage(cbData,pageNum){
+	var data = cbData;
+	$('#list'+pageNum).empty();
 	var i = data.length;
 	while (i--) {
 		if (data[i].parentid == 0) {
-			$('#list211').append('<div class="line211">' + data[i].privname + '</div>');
+			$('#list'+pageNum).append('<div class="line211">' + data[i].privname + '</div>');
 			var j = data.length;
 			var x = 0;
 			while (j--) {
 				if (data[j].parentid == data[i].privid) {
 					if (x++ % 2 == 0)
-						$('#list211').append('<div class="line211a"></div>');
+						$('#list'+pageNum).append('<div class="line211a"></div>');
 					else
-						$('#list211').append('<div class="line211b"></div>');
-					var a = $('#list211').children().last();
+						$('#list'+pageNum).append('<div class="line211b"></div>');
+					var a = $('#list'+pageNum).children().last();
 					$(a).append('<div class="line2111">' + data[j].privname + '</div>');
 					$(a).append('<div class="line2112"></div>');
 					var b = $(a).children().last();
@@ -373,123 +437,28 @@ function cb_211_fresh(data) {
 }
 
 
-function load211Save() {
-	callajax('priv!getPrivByRole', {roleid: currole}, cb_211edit_fresh)
+function loadEditPage(pageNum,appName){
+	var data = {roleid:currole,appname:appName}
+	callajax('limit!getLimitByRole', data, function(cbData){
+		freshCbEditPage(cbData,pageNum)
+	})
 }
-function load213Save() {
-	callajax('priv!getPrivByRole', {roleid: currole}, cb_213edit_fresh)
-}
-function load214Save() {
-	callajax('priv!getPrivByRole', {roleid: currole}, cb_214edit_fresh)
-}
-
-function cb_211edit_fresh(data) {
-	$('#list211edit').empty();
+function freshCbEditPage(cbData,pageNum){
+	var data = cbData;
+	$('#list'+pageNum+'edit').empty();
 	var i = data.length;
 	while (i--) {
 		if (data[i].parentid == 0) {
-			$('#list211edit').append('<div class="line211">' + data[i].privname + '</div>');
+			$('#list'+pageNum+'edit').append('<div class="line211">' + data[i].privname + '</div>');
 			var j = data.length;
 			var x = 0;
 			while (j--) {
 				if (data[j].parentid == data[i].privid) {
 					if (x++ % 2 == 0)
-						$('#list211edit').append('<div class="line211a"></div>');
+						$('#list'+pageNum+'edit').append('<div class="line211a"></div>');
 					else
-						$('#list211edit').append('<div class="line211b"></div>');
-					var a = $('#list211edit').children().last();
-					var g = '<div class="line2111">'
-						+ '<img src="images/select-2.png" class="privgroup pgcg">'
-						+ '<input type="checkbox" id="p' + data[j].privid + '" style="display:none" />'
-						+ data[j].privname + '</div>';
-					$(a).append(g);
-					$(a).append('<div class="line2112"></div>');
-					var b = $(a).children().last();
-					var k = data.length;
-					while (k--) {
-						if (data[k].parentid == data[j].privid) {
-							var gp;
-							if (data[k].roleid == currole) {
-								gp = '<div class="priv2 toleft">'
-									+ '<img src="images/select-1.png" class="pgc">'
-									+ '<input type="checkbox" id="p' + data[k].privid + '" style="display:none" checked />' 
-									+ data[k].privname + '</div>';
-							}
-							else {
-								gp = '<div class="priv2 toleft">'
-									+ '<img src="images/select-2.png" class="pgc">'
-									+ '<input type="checkbox" id="p' + data[k].privid + '" style="display:none" />'
-									+ data[k].privname + '</div>';
-							}
-							$(b).append(gp);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-function cb_213edit_fresh(data) {
-	$('#list213edit').empty();
-	var i = data.length;
-	while (i--) {
-		if (data[i].parentid == 0) {
-			$('#list213edit').append('<div class="line211">' + data[i].privname + '</div>');
-			var j = data.length;
-			var x = 0;
-			while (j--) {
-				if (data[j].parentid == data[i].privid) {
-					if (x++ % 2 == 0)
-						$('#list213edit').append('<div class="line211a"></div>');
-					else
-						$('#list213edit').append('<div class="line211b"></div>');
-					var a = $('#list213edit').children().last();
-					var g = '<div class="line2111">'
-						+ '<img src="images/select-2.png" class="privgroup pgcg">'
-						+ '<input type="checkbox" id="p' + data[j].privid + '" style="display:none" />'
-						+ data[j].privname + '</div>';
-					$(a).append(g);
-					$(a).append('<div class="line2112"></div>');
-					var b = $(a).children().last();
-					var k = data.length;
-					while (k--) {
-						if (data[k].parentid == data[j].privid) {
-							var gp;
-							if (data[k].roleid == currole) {
-								gp = '<div class="priv2 toleft">'
-								+ '<img src="images/select-1.png" class="pgc">'
-								+ '<input type="checkbox" id="p' + data[k].privid + '" style="display:none" checked />'
-								+ data[k].privname + '</div>';
-							}
-							else {
-								gp = '<div class="priv2 toleft">'
-								+ '<img src="images/select-2.png" class="pgc">'
-								+ '<input type="checkbox" id="p' + data[k].privid + '" style="display:none" />'
-								+ data[k].privname + '</div>';
-							}
-							$(b).append(gp);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-function cb_214edit_fresh(data) {
-	$('#list214edit').empty();
-	var i = data.length;
-	while (i--) {
-		if (data[i].parentid == 0) {
-			$('#list214edit').append('<div class="line211">' + data[i].privname + '</div>');
-			var j = data.length;
-			var x = 0;
-			while (j--) {
-				if (data[j].parentid == data[i].privid) {
-					if (x++ % 2 == 0)
-						$('#list214edit').append('<div class="line211a"></div>');
-					else
-						$('#list214edit').append('<div class="line211b"></div>');
-					var a = $('#list214edit').children().last();
+						$('#list'+pageNum+'edit').append('<div class="line211b"></div>');
+					var a = $('#list'+pageNum+'edit').children().last();
 					var g = '<div class="line2111">'
 						+ '<img src="images/select-2.png" class="privgroup pgcg">'
 						+ '<input type="checkbox" id="p' + data[j].privid + '" style="display:none" />'
@@ -522,29 +491,63 @@ function cb_214edit_fresh(data) {
 	}
 }
 
-function initRoleList(data){
-	$('#list21').empty();
+function loadSava(pageNum){
+	callajax('priv!getPrivByRole', {roleid: currole}, function(cb){
+		cbEditFresh(cb,pageNum)
+	})
+}
+
+
+function cbEditFresh(cbData,pageNum) {
+	var data = cbData
+	var curPage = $('#list'+pageNum+'edit')
+	curPage.empty();
 	var i = data.length;
 	while (i--) {
-		if (currole == 0) currole = data[i].id;
-		$('#list21').append('<li class="prv21 toleft" style="width: 100%" id="r' + data[i].id + '">' + data[i].name + '</li>');
-		$('#list21').find('li:last-child').css('width', $('#list21').find('li:last-child').css('width').replace('px', '') - 10);
+		if (data[i].parentid == 0) {
+			curPage.append('<div class="line211">' + data[i].privname + '</div>');
+			var j = data.length;
+			var x = 0;
+			while (j--) {
+				if (data[j].parentid == data[i].privid) {
+					if (x++ % 2 == 0)
+						curPage.append('<div class="line211a"></div>');
+					else
+						curPage.append('<div class="line211b"></div>');
+					var a = curPage.children().last();
+					var g = '<div class="line2111">'
+						+ '<img src="images/select-2.png" class="privgroup pgcg">'
+						+ '<input type="checkbox" id="p' + data[j].privid + '" style="display:none" />'
+						+ data[j].privname + '</div>';
+					$(a).append(g);
+					$(a).append('<div class="line2112"></div>');
+					var b = $(a).children().last();
+					var k = data.length;
+					while (k--) {
+						if (data[k].parentid == data[j].privid) {
+							var gp;
+							if (data[k].roleid == currole) {
+								gp = '<div class="priv2 toleft">'
+								+ '<img src="images/select-1.png" class="pgc">'
+								+ '<input type="checkbox" id="p' + data[k].privid + '" style="display:none" checked />'
+								+ data[k].privname + '</div>';
+							}
+							else {
+								gp = '<div class="priv2 toleft">'
+								+ '<img src="images/select-2.png" class="pgc">'
+								+ '<input type="checkbox" id="p' + data[k].privid + '" style="display:none" />'
+								+ data[k].privname + '</div>';
+							}
+							$(b).append(gp);
+						}
+					}
+				}
+			}
+		}
 	}
-
-	$('#list21').find('#r'+currole).addClass('prv21active');
-	$('#list21').find('#r'+currole).after('<img id="sanjiao" src="images/roleselect.png" style="float:right" />');
 }
 
-function cb_21_fresh(data) {
-	initRoleList(data)
-	load210();
-	load211();
-	load211Save();
-	load213();
-	load213Save();
-	load214()
-	load214Save();
-}
+//删除人员
 function del210(id) {
 	if (currole == 1) {
 		bootbox.alert({'title':'提示', 'message':'不能删除组织管理员.', callback: function() {
@@ -575,9 +578,9 @@ function del210(id) {
 function cb_210_del(data) {
 	load210();
 }
-//编辑权限
-function save211edit() {
-	var inps = $('#211edit').find('input');
+//编辑后保存
+function savaEditPage(pageNum){
+	var inps = $('#'+pageNum+'edit').find('input');
 	var i = inps.length;
 	var data = '';
 	while(i--) {
@@ -586,47 +589,17 @@ function save211edit() {
 			data += inps[i].id.substr(1);
 		}
 	}
-	callajax('priv!saveRole', {roleid: currole, privs: data}, cb_211edit_save);
+	callajax('priv!saveRole', {roleid: currole, privs: data}, function(cb){
+		cbEditSave(cb,pageNum);
+	});
 }
-function save213edit() {
-	var inps = $('#213edit').find('input');
-	var i = inps.length;
-	var data = '';
-	while(i--) {
-		if (inps[i].checked == true) {
-			if (data != '') data += ',';
-			data += inps[i].id.substr(1);
-		}
-	}
-	callajax('priv!saveRole', {roleid: currole, privs: data}, cb_213edit_save);
-}
-function save214edit() {
-	var inps = $('#214edit').find('input');
-	var i = inps.length;
-	var data = '';
-	while(i--) {
-		if (inps[i].checked == true) {
-			if (data != '') data += ',';
-			data += inps[i].id.substr(1);
-		}
-	}
-	callajax('priv!saveRole', {roleid: currole, privs: data}, cb_214edit_save);
-}
-//编辑权限后保存
-function cb_211edit_save(data) {
-	load211();
-	load211Save();
-	showpage('211');
-}
-function cb_213edit_save(data) {
-	load213();
-	load213Save();
-	showpage('213');
-}
-function cb_214edit_save(data) {
-	load214();
-	load214Save();
-	showpage('214');
+//编辑后保存的回调
+function cbEditSave(cb,pageNum){
+	var appName = $('.infotab .infotabi[bindpage='+pageNum+']').html();
+	loadPage(pageNum,appName);
+	loadSava(pageNum)
+	//loadSavePage(pageNum);
+	showpage(pageNum);
 }
 
 //删除角色
@@ -674,14 +647,14 @@ function cb_21_del(data) {
 	$b.after('<img id="sanjiao" src="images/roleselect.png" style="float:right" />');
 	currole = $b[0].id.substr(1);
 	load210();
-	load211();
-	load211Save();
-	//保存211页面的修改
-	load213();
-	//load213Save();
-
-	load214();
-	//load214Save();
+	//load211();
+	//load211Save();
+	////保存211页面的修改
+	//load213();
+	////load213Save();
+    //
+	//load214();
+	////load214Save();
 
 }
 
@@ -702,9 +675,10 @@ function changeRoleList(curpage){
 	}else{
 		var appName = $('.infotab .infotabi[bindpage='+curpage+']').html();
 	}
-	callajax('priv!getRoleList', {appName: appName}, rollList);
+	callajax('limit!getRoleList', {appname: appName}, rollList);
 }
 function rollList(data){
+	var data = data.content
 	initRoleList(data);
 }
 function stripicon(data) {
@@ -716,81 +690,3 @@ function stripicon(data) {
 }
 
 
-
-//加载页面213
-function load213() {
-	callajax('priv!getPrivByRole', {roleid: currole}, cb_213_fresh)
-}
-function cb_213_fresh(data) {
-	$('#list213').empty();
-	var i = data.length;
-	while (i--) {
-		if (data[i].parentid == 0) {
-			$('#list213').append('<div class="line211">' + data[i].privname + '</div>');
-			var j = data.length;
-			var x = 0;
-			while (j--) {
-				if (data[j].parentid == data[i].privid) {
-					if (x++ % 2 == 0)
-						$('#list213').append('<div class="line211a"></div>');
-					else
-						$('#list213').append('<div class="line211b"></div>');
-					var a = $('#list213').children().last();
-					$(a).append('<div class="line2111">' + data[j].privname + '</div>');
-					$(a).append('<div class="line2112"></div>');
-					var b = $(a).children().last();
-					var k = data.length;
-					while (k--) {
-						if (data[k].parentid == data[j].privid) {
-							if (data[k].roleid == currole) {
-								$(b).append('<div class="priv toleft"><img src="images/selected.png" style="margin-right: 5px" />' + data[k].privname + '</div>');
-							}
-							else {
-								$(b).append('<div class="priv toleft">' + data[k].privname + '</div>');
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-//加载页面214
-function load214() {
-	callajax('priv!getPrivByRole', {roleid: currole}, cb_214_fresh)
-}
-function cb_214_fresh(data) {
-	$('#list214').empty();
-	var i = data.length;
-	while (i--) {
-		if (data[i].parentid == 0) {
-			$('#list214').append('<div class="line211">' + data[i].privname + '</div>');
-			var j = data.length;
-			var x = 0;
-			while (j--) {
-				if (data[j].parentid == data[i].privid) {
-					if (x++ % 2 == 0)
-						$('#list214').append('<div class="line211a"></div>');
-					else
-						$('#list214').append('<div class="line211b"></div>');
-					var a = $('#list214').children().last();
-					$(a).append('<div class="line2111">' + data[j].privname + '</div>');
-					$(a).append('<div class="line2112"></div>');
-					var b = $(a).children().last();
-					var k = data.length;
-					while (k--) {
-						if (data[k].parentid == data[j].privid) {
-							if (data[k].roleid == currole) {
-								$(b).append('<div class="priv toleft"><img src="images/selected.png" style="margin-right: 5px" />' + data[k].privname + '</div>');
-							}
-							else {
-								$(b).append('<div class="priv toleft">' + data[k].privname + '</div>');
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}

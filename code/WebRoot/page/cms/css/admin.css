@@ -962,6 +962,7 @@ button.pagingJump {
 	margin: -188px 0px 0px -311px;
 	border-radius: 10px;
 	z-index:2;
+
 }
 .dialogAuth .dialogHeader ,.dialogApp .dialogHeader{
 	height: 60px;

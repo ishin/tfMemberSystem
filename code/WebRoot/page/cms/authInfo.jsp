@@ -97,6 +97,16 @@
 				<input type="text" id="name" necc="true"/>
 			</li>
 			<li>
+				<span>所属应用：</span><span class="necc">*</span>
+				<select name="category" class="category" id="app" necc="true">
+					<%--<option value="1">1</option>--%>
+					<%--<option value="2">2</option>--%>
+					<%--<option value="3">3</option>--%>
+					<%--<option value="4">4</option>--%>
+					<%--<option value="5">5</option>--%>
+				</select>
+			</li>
+			<li>
 				<span>权限类别：</span><span class="necc">*</span>
 				<!--<input type="text"/>-->
 				<select name="category" class="category" id="parentId" necc="true">
@@ -107,10 +117,7 @@
 					<option value="5">5</option>
 				</select>
 			</li>
-			<li>
-				<span>所属应用：</span><span class="necc">*</span>
-				<input type="text" id="app" necc="true"/>
-			</li>
+
 		</ul>
 	</div>
 	<div class="dialogFooter">
