@@ -1,6 +1,7 @@
 package com.organ.service.upload;
 
 import java.io.File;
+import java.io.InputStream;
 
 public interface UploadService {
 
@@ -43,5 +44,14 @@ public interface UploadService {
 	 * @return
 	 */
 	public String saveTempPic(String userId, String logName);
+
+	/**
+	 * 服务器上传文件
+	 * @param fileName
+	 * @param input 
+	 * @param realPath 
+	 * @return
+	 */
+	public String httpUpload(String fileName, InputStream input, String realPath);
 
 }

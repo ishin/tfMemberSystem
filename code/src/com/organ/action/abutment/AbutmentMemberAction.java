@@ -1,6 +1,7 @@
 package com.organ.action.abutment;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -35,6 +36,7 @@ public class AbutmentMemberAction extends BaseAction {
 
 	/**
 	 * 获取成员指定参数
+	 * 
 	 * @return
 	 * @throws ServcletException
 	 */
@@ -60,11 +62,11 @@ public class AbutmentMemberAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
-		
+
 		returnToClient(result.toString());
 		return "text";
 	}
-	
+
 	/**
 	 * 根据token获取成员
 	 */
@@ -79,7 +81,8 @@ public class AbutmentMemberAction extends BaseAction {
 				String token = jo.getString("token");
 				TMember tm = memberService.getMemberByToken(token);
 				if (tm != null) {
-					result = JSONUtils.getInstance().modelToJSONObj(tm).toString();
+					result = JSONUtils.getInstance().modelToJSONObj(tm)
+							.toString();
 				}
 			} else {
 				JSONObject jo = new JSONObject();
@@ -92,13 +95,14 @@ public class AbutmentMemberAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
-		
+
 		returnToClient(result.toString());
 		return "text";
 	}
-	
+
 	/**
 	 * 获取指定数量的用户id
+	 * 
 	 * @return
 	 * @throws ServletException
 	 */
@@ -123,13 +127,14 @@ public class AbutmentMemberAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
-		
+
 		returnToClient(result.toString());
 		return "text";
 	}
-	
+
 	/**
 	 * 根据id获取单个成员
+	 * 
 	 * @return
 	 * @throws ServletException
 	 */
@@ -154,13 +159,14 @@ public class AbutmentMemberAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
-		
+
 		returnToClient(result.toString());
 		return "text";
 	}
-	
+
 	/**
 	 * 根据id获取多个成员
+	 * 
 	 * @return
 	 * @throws ServletException
 	 */
@@ -185,16 +191,17 @@ public class AbutmentMemberAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
-		
+
 		returnToClient(result.toString());
 		return "text";
 	}
-	
+
 	/**
 	 * 根据账号获取id
+	 * 
 	 * @return
 	 */
-	public String getMemberIdForAccount() throws ServletException  {
+	public String getMemberIdForAccount() throws ServletException {
 		String result = null;
 
 		try {
@@ -215,11 +222,11 @@ public class AbutmentMemberAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
-		
+
 		returnToClient(result.toString());
 		return "text";
 	}
-	
+
 	/**
 	 * 登陆验证
 	 * 
@@ -539,7 +546,7 @@ public class AbutmentMemberAction extends BaseAction {
 
 		try {
 			String params = getRequestDataByStream();
-			
+
 			if (StringUtils.getInstance().isBlank(params)) {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
@@ -559,13 +566,14 @@ public class AbutmentMemberAction extends BaseAction {
 
 	/**
 	 * 获取短信码
+	 * 
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getTextCode() throws ServletException  {
+	public String getTextCode() throws ServletException {
 		String result = null;
 		JSONObject jo = new JSONObject();
-		
+
 		try {
 			String params = getRequestDataByStream();
 			if (StringUtils.getInstance().isBlank(params)) {
@@ -582,20 +590,21 @@ public class AbutmentMemberAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		returnToClient(jo.toString());
 		return "text";
 	}
-	
+
 	/**
 	 * 保存短信验证码记录
+	 * 
 	 * @return
 	 * @throws ServletException
 	 */
-	public String saveTextCode()  throws ServletException  {
+	public String saveTextCode() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
-		
+
 		try {
 			String params = getRequestDataByStream();
 			if (StringUtils.getInstance().isBlank(params)) {
@@ -613,20 +622,21 @@ public class AbutmentMemberAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		returnToClient(jo.toString());
 		return "text";
 	}
-	
+
 	/**
 	 * 验证旧密码
+	 * 
 	 * @return
 	 * @throws ServletException
 	 */
-	public String valideOldPwd() throws ServletException  {
+	public String valideOldPwd() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
-		
+
 		try {
 			String params = getRequestDataByStream();
 			if (StringUtils.getInstance().isBlank(params)) {
@@ -644,20 +654,21 @@ public class AbutmentMemberAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		returnToClient(result);
 		return "text";
 	}
-	
+
 	/**
 	 * 依据账号更新密码
+	 * 
 	 * @return
 	 * @throws ServletException
 	 */
-	public String updateUserPwdForAccount() throws ServletException  {
+	public String updateUserPwdForAccount() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
-		
+
 		try {
 			String params = getRequestDataByStream();
 			if (StringUtils.getInstance().isBlank(params)) {
@@ -667,7 +678,8 @@ public class AbutmentMemberAction extends BaseAction {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				String account = p.getString("account");
 				String newPwd = p.getString("newPwd");
-				boolean status = memberService.updateUserPwdForAccount(account, newPwd);
+				boolean status = memberService.updateUserPwdForAccount(account,
+						newPwd);
 				jo.put("code", 1);
 				jo.put("text", status);
 			}
@@ -675,20 +687,21 @@ public class AbutmentMemberAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		returnToClient(result);
 		return "text";
 	}
-	
+
 	/**
 	 * 依据手机号更新密码
+	 * 
 	 * @return
 	 * @throws ServletException
 	 */
-	public String updateUserPwdForPhone() throws ServletException  {
+	public String updateUserPwdForPhone() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
-		
+
 		try {
 			String params = getRequestDataByStream();
 			if (StringUtils.getInstance().isBlank(params)) {
@@ -698,7 +711,8 @@ public class AbutmentMemberAction extends BaseAction {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				String account = p.getString("phone");
 				String newPwd = p.getString("newPwd");
-				boolean status = memberService.updateUserPwdForPhone(account, newPwd);
+				boolean status = memberService.updateUserPwdForPhone(account,
+						newPwd);
 				jo.put("code", 1);
 				jo.put("text", status);
 			}
@@ -706,20 +720,21 @@ public class AbutmentMemberAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		returnToClient(result);
 		return "text";
 	}
-	
+
 	/**
 	 * 保存用户选择的头像
+	 * 
 	 * @return
 	 * @throws ServletException
 	 */
-	public String saveSelectedPic() throws ServletException  {
+	public String saveSelectedPic() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
-		
+
 		try {
 			String params = getRequestDataByStream();
 			if (StringUtils.getInstance().isBlank(params)) {
@@ -735,20 +750,21 @@ public class AbutmentMemberAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		returnToClient(result);
 		return "text";
 	}
-	
+
 	/**
 	 * 保存成员头像
+	 * 
 	 * @return
 	 * @throws ServletException
 	 */
-	public String saveTempPic() throws ServletException  {
+	public String saveTempPic() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
-		
+
 		try {
 			String params = getRequestDataByStream();
 			if (StringUtils.getInstance().isBlank(params)) {
@@ -764,20 +780,21 @@ public class AbutmentMemberAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		returnToClient(result);
 		return "text";
 	}
-	
+
 	/**
 	 * 删除成员头像
+	 * 
 	 * @return
 	 * @throws ServletException
 	 */
-	public String delUserLogos() throws ServletException  {
+	public String delUserLogos() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
-		
+
 		try {
 			String params = getRequestDataByStream();
 			if (StringUtils.getInstance().isBlank(params)) {
@@ -793,20 +810,21 @@ public class AbutmentMemberAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		returnToClient(result);
 		return "text";
 	}
-	
+
 	/**
 	 * 检测 是否正在使用头像
+	 * 
 	 * @return
 	 * @throws ServletException
 	 */
 	public String isUsedPic() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
-		
+
 		try {
 			String params = getRequestDataByStream();
 			if (StringUtils.getInstance().isBlank(params)) {
@@ -822,20 +840,21 @@ public class AbutmentMemberAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		returnToClient(result);
 		return "text";
 	}
-	
+
 	/**
-	 * 获取头像列表 
+	 * 获取头像列表
+	 * 
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getUserLogos() throws ServletException { 
+	public String getUserLogos() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
-		
+
 		try {
 			String params = getRequestDataByStream();
 			if (StringUtils.getInstance().isBlank(params)) {
@@ -850,21 +869,27 @@ public class AbutmentMemberAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		returnToClient(result);
 		return "text";
 	}
-	
+
 	/**
 	 * 通过http方式上传的图片
+	 * 
 	 * @return
 	 * @throws ServletException
+	 * @throws IOException 
 	 */
-	public String httpUpload() throws ServletException {
-		
+	public String httpUpload() throws ServletException, IOException {
+		String fileName = request.getParameter("fileName");
+		InputStream input = request.getInputStream();
+		String realPath = request.getSession().getServletContext().getRealPath("/");  
+		String result = uploadService.httpUpload(fileName, input, realPath);
+		returnToClient(result);
 		return "text";
 	}
-	
+
 	private MemberService memberService;
 	private UploadService uploadService;
 

@@ -68,6 +68,10 @@
 		<property name="memberDao" ref="memberDao" />
 		<property name="cutLogoTempDao" ref="cutLogoTempDao" />
 	</bean>
+	<bean id="msgService" class="com.organ.service.msg.impl.MessageServiceImpl" autowire="byName" >
+		<property name="appSecretDao" ref="appSecretDao" />
+		<property name="memberDao" ref="memberDao" />
+	</bean>
 	
 	<!-- action -->
 	<bean id="appSecretAction" class="com.organ.action.auth.AppSecretAction" scope="prototype" autowire="byName" >
@@ -111,6 +115,9 @@
 	</bean>
 	<bean id="abutmentPrivilegeAction" class="com.organ.action.abutment.AbutmentPrivilegeAction" scope="prototype" autowire="byName" >
 		<property name="privService" ref="privService" />
+	</bean>
+	<bean id="msgAction" class="com.organ.action.msg.MessageAction" scope="prototype" autowire="byName" >
+		<property name="msgService" ref="msgService" />
 	</bean>
 	
 </beans>

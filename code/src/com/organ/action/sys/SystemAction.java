@@ -128,6 +128,7 @@ public class SystemAction extends BaseAction {
 		} else {
 			token = member.getToken();
 		}
+		
 		logger.info(token);
 		
 		//设置用户session
@@ -138,6 +139,7 @@ public class SystemAction extends BaseAction {
 		su.setFullname(member.getFullname());
 		su.setToken(token);
 		setSessionUser(su);
+		
 		/*
 		//2.设置权限
 		SessionPrivilege sp = new SessionPrivilege();

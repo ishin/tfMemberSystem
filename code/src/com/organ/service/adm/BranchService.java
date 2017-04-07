@@ -90,16 +90,17 @@ public interface BranchService {
 
 	/**
 	 * 获取部门+成员 数据
+	 * @param appId 
 	 * @return
 	 */
-	public String getBranchTreeAndMember();
+	public String getBranchTreeAndMember(String appId);
 
 	/**
 	 * 取部门下的成员
 	 * @param branchId
 	 * @return
 	 */
-	public String getBranchMember(String branchId);
+	public String getBranchMember(String branchId, String appId);
 	
 	/**
 	 * 获取部门成员
