@@ -182,4 +182,19 @@ public interface MemberService {
 	 * @return
 	 */
 	public String getMemberForId(String userId);
+
+	/**
+	 * 获取指定数量的用户id
+	 * @param mapMax
+	 * @return
+	 */
+	public String getLimitMemberIds(String mapMax);
+
+	/**
+	 * 获取成员指定参数
+	 * @param id
+	 * @param ps
+	 * @return
+	 */
+	public String getMemberParam(String id, String ps);
 }

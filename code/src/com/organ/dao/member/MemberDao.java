@@ -186,5 +186,13 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	 * @return
 	 */
 	public List getMemberIdsByAccount(String[] targetNames);
+	
+	/**
+	 * 获取成员指定参数
+	 * @param ids
+	 * @param pss
+	 * @return
+	 */
+	public List getMemberParam(String ids, String[] pss);
 } 
 
