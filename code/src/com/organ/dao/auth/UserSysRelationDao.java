@@ -12,5 +12,4 @@ public interface UserSysRelationDao extends IBaseDao<UserSysRelation, Integer> {
 	 * @return
 	 */
 	public UserSysRelation getRelation(int appId, int userId);
-
 }

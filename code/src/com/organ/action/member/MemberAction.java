@@ -150,112 +150,56 @@ public class MemberAction extends BaseAction {
 	private String address;
 	private String userids;
 
-	public String getUserids() {
-		return userids;
-	}
-
 	public void setUserids(String userids) {
 		this.userids = userids;
-	}
-
-	public String getAddress() {
-		return address;
 	}
 
 	public void setAddress(String address) {
 		this.address = address;
 	}
 
-	public String getMobile() {
-		return mobile;
-	}
-
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
-	}
-
-	public String getUserid() {
-		return userid;
 	}
 
 	public void setUserid(String userid) {
 		this.userid = userid;
 	}
 
-	public String getAccount() {
-		return account;
-	}
-
 	public void setAccount(String account) {
 		this.account = account;
-	}
-
-	public String getFullname() {
-		return fullname;
 	}
 
 	public void setFullname(String fullname) {
 		this.fullname = fullname;
 	}
 
-	public String getSex() {
-		return sex;
-	}
-
 	public void setSex(String sex) {
 		this.sex = sex;
-	}
-
-	public String getPosition() {
-		return position;
 	}
 
 	public void setPosition(String position) {
 		this.position = position;
 	}
 
-	public String getBranch() {
-		return branch;
-	}
-
 	public void setBranch(String branch) {
 		this.branch = branch;
-	}
-
-	public String getEmail() {
-		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	public String getPhone() {
-		return phone;
-	}
-
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-
-	public String getSign() {
-		return sign;
-	}
-
+	
 	public void setSign(String sign) {
 		this.sign = sign;
-	}
-
-	public String getLogo() {
-		return logo;
 	}
 
 	public void setLogo(String logo) {
 		this.logo = logo;
 	}
 
-	public MemberService getMemberService() {
-		return memberService;
-	}
-	
 }

@@ -15,10 +15,6 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 
 	private AppInfoConfigDao appInfoConfigDao;
 
-	public AppInfoConfigDao getAppInfoConfigDao() {
-		return appInfoConfigDao;
-	}
-
 	public void setAppInfoConfigDao(AppInfoConfigDao appInfoConfigDao) {
 		this.appInfoConfigDao = appInfoConfigDao;
 	}

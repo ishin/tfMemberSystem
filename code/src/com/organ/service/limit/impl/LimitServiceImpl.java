@@ -19,10 +19,6 @@ public class LimitServiceImpl implements LimitService {
 
 	private LimitDao limitDao;
 
-	public LimitDao getLimitDao() {
-		return limitDao;
-	}
-
 	public void setLimitDao(LimitDao limitDao) {
 		this.limitDao = limitDao;
 	}

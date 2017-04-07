@@ -125,28 +125,12 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 			String hql;
 			if (!StringUtils.isBlank(Name)) {
 				hql="SELECT tmp.id,tmp.parent_id,tmp.name,tmp.category,tmp.url,tmp.app,tmp.parent_name FROM ("
-					+"SELECT tp.id,tp.parent_id,tp.name,tp.category,tp.url,tp.app,t.name AS parent_name FROM  t_priv tp "
-					+"LEFT JOIN t_priv t ON tp.parent_id=t.id "
-					+"WHERE tp.parent_id=0 "
-					+"UNION ALL "
-					+"SELECT p.id,p.parent_id,p.name,p.category,p.url,p.app,t.name AS parent_name FROM t_priv p "
-					+"LEFT JOIN t_priv t ON p.parent_id=t.id "
-					+"WHERE p.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0) "
-					+"UNION ALL "
 					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,t.name AS parent_name FROM t_priv pr "
 					+"LEFT JOIN t_priv t ON pr.parent_id=t.id "
 					+"WHERE pr.parent_id IN (SELECT  p.id FROM t_priv p WHERE p.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) "
 					+") tmp WHERE tmp.name like '%"+Name+"%'"+" or tmp.url like '%"+Name+"%' limit "+start+","+pagesize;
 			} else {
-				hql ="SELECT tp.id,tp.parent_id,tp.name,tp.category,tp.url,tp.app,t.name AS parent_name FROM  t_priv tp "
-					+"LEFT JOIN t_priv t ON tp.parent_id=t.id "
-					+"WHERE tp.parent_id=0 "
-					+"UNION ALL "
-					+"SELECT p.id,p.parent_id,p.name,p.category,p.url,p.app,t.name AS parent_name FROM t_priv p "
-					+"LEFT JOIN t_priv t ON p.parent_id=t.id "
-					+"WHERE p.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0) "
-					+"UNION ALL "
-					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,t.name AS parent_name FROM t_priv pr "
+				hql ="SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,t.name AS parent_name FROM t_priv pr "
 					+"LEFT JOIN t_priv t ON pr.parent_id=t.id "
 					+"WHERE pr.parent_id IN (SELECT  p.id FROM t_priv p WHERE p.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) "
 					+"limit "+ start + "," + pagesize;

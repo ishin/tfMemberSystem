@@ -723,7 +723,6 @@ public class BranchServiceImpl implements BranchService {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public String getBranchTreeAndMember(String appId) {
 		List list = branchDao.getBrancTreeAndMember();
 		
@@ -733,7 +732,7 @@ public class BranchServiceImpl implements BranchService {
 		ArrayList<Object> organList = new ArrayList<Object>();
 		ArrayList<String> ids = new ArrayList<String>();
 		
-		try {
+		/*try {
 			if (list != null) {
 				AppSecret as = appSecretDao.getAppSecretByAppId(appId);
 				int appRecordId = 0;
@@ -816,17 +815,16 @@ public class BranchServiceImpl implements BranchService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		*/
 //		logger.info(ja.toString());
 		
 		return ja.toString();
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Override
 	public String getBranchMember(String branchId, String appId) {
 		String result = null;
-		boolean status = true;
+		/*boolean status = true;
 		
 		if (StringUtils.getInstance().isBlank(branchId)) {
 			status = false;
@@ -891,13 +889,28 @@ public class BranchServiceImpl implements BranchService {
 			 jo.put("code", -1);
 			 jo.put("text", "err");
 			 result = jo.toString();
-		}
+		}*/
 		
 		return result;
 	}
 	
 	private String isBlank(Object o) {
 		return o == null ? "" : o + "";
+	}
+	@Override
+	public String getBranchMember(String branchId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String getBranchMemberByMemberIds(String ids) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String getBranchTreeAndMember() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

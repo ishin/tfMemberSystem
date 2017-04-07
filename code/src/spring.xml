@@ -12,9 +12,13 @@
 			<value>classpath:sealtalk.properties</value>
 		</property>
 	</bean>
-	<!-- ==============================================  数据库数据源  ================================================================== -->
-	<!--原生mysql连接池
-		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+	<!--
+		============================================== 数据库数据源
+		==================================================================
+	-->
+	<!--
+		原生mysql连接池 <bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close"> <property name="driverClassName"
 		value="${db.driver}"></property> <property name="url"
 		value="${db.url}" /> <property name="username" value="${db.username}"
@@ -31,23 +35,22 @@
 		<property name="logAbandoned" value="${db.logAbandoned}" /> </bean>
 	-->
 	<!-- c3p0连接池 -->
-	<bean id="dataSource"
-		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
 		<property name="driverClass" value="${db.driver}"></property>
 		<property name="jdbcUrl" value="${db.url}" />
 		<property name="user" value="${db.username}" />
 		<property name="password" value="${db.password}" />
-		<property name="minPoolSize" value="${c3p0.minPoolSize}" />  
-        <property name="maxPoolSize" value="${c3p0.maxPoolSize}" />  
-        <property name="maxIdleTime" value="${c3p0.maxIdleTime}" />  
-        <property name="acquireIncrement" value="${c3p0.acquireIncrement}" />  
-        <property name="maxStatements" value="${c3p0.maxStatements}" />  
-        <property name="initialPoolSize" value="${c3p0.initialPoolSize}" />  
-        <property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />  
-        <property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}" />  
-        <property name="breakAfterAcquireFailure" value="${c3p0.breakAfterAcquireFailure}" />  
-        <property name="testConnectionOnCheckout" value="${c3p0.testConnectionOnCheckout}" />  
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />
+		<property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
+		<property name="maxIdleTime" value="${c3p0.maxIdleTime}" />
+		<property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
+		<property name="maxStatements" value="${c3p0.maxStatements}" />
+		<property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
+		<property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}" />
+		<property name="breakAfterAcquireFailure" value="${c3p0.breakAfterAcquireFailure}" />
+		<property name="testConnectionOnCheckout" value="${c3p0.testConnectionOnCheckout}" />
 	</bean>
 
 	<!--
@@ -91,8 +94,6 @@
 				<value>com/organ/model/TBranchMember.hbm.xml</value>
 				<value>com/organ/model/TCity.hbm.xml</value>
 				<value>com/organ/model/TDistrict.hbm.xml</value>
-				<value>com/organ/model/TGroup.hbm.xml</value>
-				<value>com/organ/model/TGroupMember.hbm.xml</value>
 				<value>com/organ/model/TIndustry.hbm.xml</value>
 				<value>com/organ/model/TInward.hbm.xml</value>
 				<value>com/organ/model/TMember.hbm.xml</value>
@@ -135,14 +136,19 @@
 	</bean>
 
 	<!--
-		<bean id="baseDao" class="com.organ.common.BaseDao"> <property
-		name="sessionFactory"> <ref local="sessionFactory" /> </property>
+		<bean id="baseDao" class="com.organ.common.BaseDao">
+			<property name="sessionFactory"> 
+				<ref local="sessionFactory" />
+		    </property>
 		</bean>
-	--><!-- 定义切面，对com.organ.service包下的所有类的所有方法 都应用事务规则 -->
+	-->
+	
+	<!-- 定义切面，对com.organ.service包下的所有类的所有方法 都应用事务规则 -->
 	<aop:config>
 		<aop:advisor pointcut="execution(* com.organ.service..*(..))"
 			advice-ref="txAdvice" />
 	</aop:config>
+	
 	<!-- 事务 控制 -->
 	<tx:advice id="txAdvice">
 		<tx:attributes>

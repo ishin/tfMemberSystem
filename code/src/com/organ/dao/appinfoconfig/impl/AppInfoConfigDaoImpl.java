@@ -26,7 +26,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 					+ userId + " where tm.id =" + userId + " limit " + start
 					+ "," + pagesize;
 			SQLQuery query = this.getSession().createSQLQuery(hql);
-			List list = query.list();
+			List list = query.list();	
 			if (list.size() > 0) {
 				return list;
 			}

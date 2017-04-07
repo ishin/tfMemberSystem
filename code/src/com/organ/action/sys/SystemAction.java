@@ -421,10 +421,6 @@ public class SystemAction extends BaseAction {
 	public void setMemberService(MemberService memberService) {
 		this.memberService = memberService;
 	}
-	
-	public PrivService getPrivService() {
-		return privService;
-	}
 
 	public void setPrivService(PrivService privService) {
 		this.privService = privService;
@@ -440,80 +436,40 @@ public class SystemAction extends BaseAction {
 	private String phone;
 	private String token;
 
-	public String getToken() {
-		return token;
-	}
-
 	public void setToken(String token) {
 		this.token = token;
-	}
-
-	public String getAccount() {
-		return account;
 	}
 
 	public void setAccount(String account) {
 		this.account = account;
 	}
 
-	public String getUserpwd() {
-		return userpwd;
-	}
-
 	public void setUserpwd(String userpwd) {
 		this.userpwd = userpwd;
-	}
-
-	public String getOldpwd() {
-		return oldpwd;
 	}
 
 	public void setOldpwd(String oldpwd) {
 		this.oldpwd = oldpwd;
 	}
 
-	public String getNewpwd() {
-		return newpwd;
-	}
-
 	public void setNewpwd(String newpwd) {
 		this.newpwd = newpwd;
-	}
-
-	public String getTextcode() {
-		return textcode;
 	}
 
 	public void setTextcode(String textcode) {
 		this.textcode = textcode;
 	}
 
-	public String getComparepwd() {
-		return comparepwd;
-	}
-
 	public void setComparepwd(String comparepwd) {
 		this.comparepwd = comparepwd;
-	}
-
-	public String getDataSource() {
-		return dataSource;
 	}
 
 	public void setDataSource(String dataSource) {
 		this.dataSource = dataSource;
 	}
 
-	public String getPhone() {
-		return phone;
-	}
-
 	public void setPhone(String phone) {
 		this.phone = phone;
-	}
-
-	public MemberService getMemberService() {
-		return memberService;
 	}
 
 }

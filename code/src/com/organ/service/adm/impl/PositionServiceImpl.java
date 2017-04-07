@@ -10,9 +10,6 @@ public class PositionServiceImpl implements PositionService {
 
 	private PositionDao positionDao;
 	
-	public PositionDao getPositionDao() {
-		return positionDao;
-	}
 	public void setPositionDao(PositionDao positionDao) {
 		this.positionDao = positionDao;
 	}
