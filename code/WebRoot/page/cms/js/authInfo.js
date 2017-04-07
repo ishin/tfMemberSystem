@@ -13,10 +13,48 @@ var itemtemplate='<tr id="traid">'
 var grpid = 0;
 $(document).ready(function() {
 
+	$('#app').change(function(){
+		var curApp = $(this).val();
+		callajax('limit!getPrivNamebyclass',{appName:curApp},changeLimit);
+	})
+
+	fillAppSelect()
+	$('.searchInput').off('focus');
+	$('.searchInput').focus(function(){
+		$(this).off('keypress');
+		$(this).keypress(function(event) {
+			if (event.which == 13) {
+				$('.searchBTN').click();
+			}
+		})
+	})
+
+
 	$('.certainAdd').click(function(){
 		var name = $('#name').val();
 		var parentId = $('#parentId').val();
 		var app = $('#app').val();
+		//获取到所有必填项
+		var allNecc = $(this).parents('.dialogAuth').find('[necc=true]');
+		if(allNecc.length!=0){
+			for(var i = 0;i<allNecc.length;i++){
+				if($(allNecc[i]).val()==''){
+					new Window().alert({
+						title   : '',
+						content : '有必填项未填写！',
+						hasCloseBtn : false,
+						hasImg : true,
+						textForSureBtn : false,
+						textForcancleBtn : false,
+						autoHide:true
+					});
+					return false;
+					break;
+
+				}
+			}
+		}
+
 		var text = $(this).parents('.dialogAuth').find('.diaTitle').text();
 		if(text=='新增权限'){
 			var data = {name:name,app:app,parentId:parentId}
@@ -26,6 +64,7 @@ $(document).ready(function() {
 			var data = {name:name,app:app,parentId:parentId,privId:privId}
 			callajax('limit!EditPriv', data, afterEditPriv);
 		}
+
 		$('.dialogMask').hide();
 		$('.dialogAuth').hide();
 	})
@@ -33,6 +72,9 @@ $(document).ready(function() {
 	$('.plusAuth').click(function(){
 		$('.dialogMask').show();
 		$('.dialogAuth').show();
+		$('#name').val('');
+		$('#parentId').find('option:nth-child(1)').attr("selected",true);
+		//$('#app').val('');
 		$('.dialogAuth').find('.diaTitle').html('新增权限');
 	})
 
@@ -51,6 +93,34 @@ $(document).ready(function() {
 
 });
 
+function fillAppSelect(){
+	callajax('appinfoconfig!getAppName','',fillApp);
+}
+function fillApp(data){
+	var sHTML = '';
+	var eApp = $('.dialogBody').find('#app')
+
+	var content = data.content;
+	for(var i = 0;i<content.length;i++){
+		sHTML += '<option value="'+content[i]+'">'+content[i]+'</option>'
+	}
+	eApp.append($(sHTML));
+	$('#app').val(content[0])
+	//setTimeout(function(){$("#app").get(0).selectedIndex=1;},1000)
+	//$('#app option:last').attr('selected','selected');
+
+}
+function changeLimit(data){
+	console.log(data);
+	var sHTML = '';
+	var content = data.content
+	for(var i = 0;i<content.length;i++){
+		var value =content[i].id;
+		var name = content[i].name;
+		sHTML += '<option value="'+value+'">'+name+'</option>';
+	}
+	$('#parentId').html(sHTML);
+}
 function afterAddPriv(data){
 	console.log(data);
 	loadpage(newPaging.args.current)

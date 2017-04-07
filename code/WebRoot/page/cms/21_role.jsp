@@ -16,9 +16,13 @@
 	<div class='h40px'></div>
 	<div>
 		<div class='dialogtitle'><div class='toleft'>身份名称：</div>
-			<input type='text' id='21_rolename' class='toleft required' style='width: 270px; margin-left: 20px' />
-			<div class='toleft' style='margin-left: 117px'>身份模板：</div>
-			<select id="21_roletemplate" class='toleft' style='width: 270px;margin-left: 20px'>
+			<input type='text' id='21_rolename' class='toleft required' style='width: 180px; margin-left: 20px' />
+			<div class='toleft' style='margin-left: 14px'>所属应用：</div>
+			<select id="21_apptemplate" class='toleft' style='width: 180px;margin-left: 20px'>
+				<option>IMS</option>
+			</select>
+			<div class='toleft' style='margin-left: 14px'>身份模板：</div>
+			<select id="21_roletemplate" class='toleft' style='width: 180px;margin-left: 20px'>
 				<option>性别</option>
 			</select>
 		</div>

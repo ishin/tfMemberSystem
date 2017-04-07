@@ -1,5 +1,7 @@
 package com.organ.service.member;
 
+import javax.servlet.ServletException;
+
 import com.organ.model.TMember;
 
 /**
@@ -132,7 +134,7 @@ public interface MemberService {
 
 
 	/**
-	 * 使用初始化用户登陆
+	 * 统计成员账号个数
 	 * @param account
 	 * @param userpwd
 	 * @return
@@ -145,4 +147,39 @@ public interface MemberService {
 	 * @return
 	 */
 	public String getMultipleMemberForAccounts(String mulMemberStr);
+
+	/**
+	 * 根据成员账号获取成员id
+	 * @param names
+	 * @return
+	 */
+	public String getMemberIdsByAccount(String names);
+
+	/**
+	 * 检测 是否正在使用头像
+	 * @return
+	 * @throws ServletException
+	 */
+	public String isUsedPic(String userId, String picName);
+
+	/**
+	 * 根据单账号获取id
+	 * @param account
+	 * @return
+	 */
+	public String getMemberIdForAccount(String account);
+
+	/**
+	 * 根据id获取多成员
+	 * @param ids
+	 * @return
+	 */
+	public String getMultipleMemberForIds(String ids);
+
+	/**
+	 * 根据id获取单个成员
+	 * @param userId
+	 * @return
+	 */
+	public String getMemberForId(String userId);
 }

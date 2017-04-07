@@ -311,6 +311,7 @@ function cb_210_fresh(data) {
 		$(this).removeClass('menuhover');
 	});
 }
+//加载页面211
 function load211() {
 	callajax('priv!getPrivByRole', {roleid: currole}, cb_211_fresh)
 }
@@ -349,6 +350,8 @@ function cb_211_fresh(data) {
 		}
 	}
 }
+
+//加载页面212
 function load212() {
 	callajax('priv!getPrivByRole', {roleid: currole}, cb_212_fresh)
 }
@@ -398,6 +401,7 @@ function cb_212_fresh(data) {
 		}
 	}
 }
+
 function cb_21_fresh(data) {
 	$('#list21').empty();
 	var i = data.length;
@@ -411,6 +415,8 @@ function cb_21_fresh(data) {
 	load210();
 	load211();
 	load212();
+	load213();
+	load214();
 }
 function del210(id) {
 	if (currole == 1) {

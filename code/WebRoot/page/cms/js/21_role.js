@@ -1,9 +1,17 @@
 $(document).ready(function() {
 	
 	$('#role').validVal();
+	console.log(111);
+
+	callajax('appinfoconfig!getAppName','',fillAppSelect);
+
+	$('#21_apptemplate').change(function() {
+		var appName = $(this).val()
+		callajax('limit!getRoleList', {appname:appName}, changeRoleSelect)
+	});
 
 	$('#21_roletemplate').change(function() {
-		callajax('priv!getPrivByRole', {roleid: $(this).val().substr(2)}, cb_21_role_fresh)
+		callajax('priv!getPrivByRole', {roleid: $(this).val()}, cb_21_role_fresh)
 	});
 	$('#save21role').click(function() {
 		if ($( "#role" ).triggerHandler( "submitForm" ) == false) return;
@@ -21,6 +29,23 @@ $(document).ready(function() {
 		callajax('priv!saveRole', {rolename: rolename, privs: data}, cb_21_role_save);
 	});
 });
+
+function changeRoleSelect(data){
+	var content = data.content;
+	var sHTML = '';
+	for(var i = 0;i<content.length;i++){
+		sHTML += '<option value="'+content[i].id+'">'+content[i].name+'</option>'
+	}
+	$('#21_roletemplate').html(sHTML);
+}
+function fillAppSelect(data){
+	var content = data.content;
+	var sHTML = '';
+	for(var i = 0;i<content.length;i++){
+		sHTML += '<option value="'+content[i]+'">'+content[i]+'</option>'
+	}
+	$('#21_apptemplate').html(sHTML);
+}
 function cb_21_role_fresh(data) {
 	$('#21_list').empty();
 	var i = data.length;

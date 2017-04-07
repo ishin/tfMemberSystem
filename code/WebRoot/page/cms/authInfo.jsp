@@ -47,7 +47,7 @@
 		<div style="width:100%;padding:0 30px;">
 			<table class="t112">
 				<thead>
-					<tr">
+					<tr>
 						<th width="20%">编号</th>
 						<th width="20%">权限名称</th>
 						<th width="20%">权限类别</th>
@@ -94,12 +94,22 @@
 		<ul>
 			<li>
 				<span>权限名称：</span><span class="necc">*</span>
-				<input type="text" id="name"/>
+				<input type="text" id="name" necc="true"/>
+			</li>
+			<li>
+				<span>所属应用：</span><span class="necc">*</span>
+				<select name="category" class="category" id="app" necc="true">
+					<%--<option value="1">1</option>--%>
+					<%--<option value="2">2</option>--%>
+					<%--<option value="3">3</option>--%>
+					<%--<option value="4">4</option>--%>
+					<%--<option value="5">5</option>--%>
+				</select>
 			</li>
 			<li>
 				<span>权限类别：</span><span class="necc">*</span>
 				<!--<input type="text"/>-->
-				<select name="category" class="category" id="parentId">
+				<select name="category" class="category" id="parentId" necc="true">
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
@@ -107,10 +117,7 @@
 					<option value="5">5</option>
 				</select>
 			</li>
-			<li>
-				<span>所属应用：</span><span class="necc">*</span>
-				<input type="text" id="app"/>
-			</li>
+
 		</ul>
 	</div>
 	<div class="dialogFooter">

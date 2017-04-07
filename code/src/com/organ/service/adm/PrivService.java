@@ -2,6 +2,8 @@ package com.organ.service.adm;
 
 import java.util.List;
 
+import net.sf.json.JSONObject;
+
 import com.organ.model.TPriv;
 
 public interface PrivService {
@@ -22,5 +24,22 @@ public interface PrivService {
 	 * @return
 	 */
 	public List getRoleIdForId(int id);
+	
+	/**
+	 * 获取初始化权限
+	 * @return
+	 */
+	public List<JSONObject> getInitLoginPriv();
+	
+	/**
+	 * 根据url获取权限
+	 * @param strToArray
+	 * @return
+	 */
+	public String getPrivByUrl(String[] strToArray);
+	
+	public String getRolePrivsByPrivs(String[] strToArray);
+	
+	public String getRolesForIds(String[] strToArray);
 	
 }

@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="com.organ.model.TextCode" table="t_textcode" catalog="tfdb">
+    <class name="com.organ.model.TextCode" table="t_textcode" catalog="organ">
         <id name="id" type="java.lang.Integer">
             <column name="id" />
             <generator class="identity" />
