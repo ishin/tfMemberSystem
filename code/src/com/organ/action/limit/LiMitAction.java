@@ -1,6 +1,9 @@
 package com.organ.action.limit;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -10,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.JsonIOException;
 import com.hp.hpl.sparta.Text;
 import com.organ.action.member.MemberAction;
 import com.organ.common.BaseAction;
@@ -216,6 +220,75 @@ public class LiMitAction extends BaseAction {
 		} else {
 			jsonObject.put("code", 0 + "");
 			jsonObject.put("text", "请求失败");
+		}
+		returnToClient(jsonObject.toString());
+		return "text";
+	}
+	
+	public String getLimitByRole() throws ServletException,JSONException{
+		Integer roleid = Integer.parseInt(this.request.getParameter("roleid"));
+		String appName = this.request.getParameter("appname");
+		List list = limitService.getLimitbyRole(roleid, appName);
+		Iterator it = list.iterator();
+		ArrayList<JSONObject> ja = new ArrayList<JSONObject>();
+		while(it.hasNext()) {
+			Object[] o = (Object[])it.next();
+			JSONObject js = new JSONObject();
+			js.put("privid", o[0]);
+			js.put("privname", o[1]);
+			js.put("parentid", o[2]);
+			js.put("grouping", o[3]);
+			js.put("roleid", o[4] == null ? "" : o[4]);
+			ja.add(js);
+		}
+		returnToClient(ja.toString());
+		return "text";
+		
+	}
+	public String getRoleList() throws ServletException,JsonIOException{
+		String appname = this.request.getParameter("appname");
+		try {
+			String result = limitService.getRoleList(appname);
+			returnToClient(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "text";
+	}
+	public String getPrivNamebyclass() throws ServletException,JSONException{
+		String appname = this.request.getParameter("appName");
+		String result = limitService.getPrivNamebytwo(appname);
+		returnToClient(result);
+		return "text";
+	}
+	
+	public String saveRolebyApp() throws ServletException,JSONException{
+		//roleId, roleName, privs, appName
+		Integer roleId = Integer.parseInt(this.request.getParameter("roleId"));
+		String roleName = this.request.getParameter("roleName");
+		String privs = this.request.getParameter("privs");
+		String appName = this.request.getParameter("appName");
+		Integer appsecretId = Integer.parseInt(this.request.getParameter("appsecretId"));
+		boolean falg = false;
+		String result = "";
+		try {
+			result = limitService.saveRolebyApp(roleId,appsecretId,roleName, privs, appName);
+			if ("".equals(result) && null == result) {
+				falg = false;
+			} else {
+				falg = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			falg = false;
+		}
+		JSONObject jsonObject = new JSONObject();
+		if (falg) {
+			jsonObject.put("code", 1 + "");
+			jsonObject.put("text", "保存成功");
+		} else {
+			jsonObject.put("code", 0 + "");
+			jsonObject.put("text", "保存失败");
 		}
 		returnToClient(jsonObject.toString());
 		return "text";

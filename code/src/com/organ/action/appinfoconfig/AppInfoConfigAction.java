@@ -1,6 +1,5 @@
 package com.organ.action.appinfoconfig;
 
-import java.io.InputStream;
 
 import javax.servlet.ServletException;
 
@@ -86,11 +85,10 @@ public class AppInfoConfigAction extends BaseAction {
 		String callbackurl = this.request.getParameter("callbackurl");
 		String appname = this.request.getParameter("appname");
 		String isopen = this.request.getParameter("isopen");
-		Integer intappId = appId == null ? null : Integer.parseInt(appId);
 		Integer intisopen = isopen == null ? null : Integer.parseInt(isopen);
 		boolean falg = false;
 		try {
-			String result = appInfoConfigService.updatePriv(intappId, secert,
+			String result = appInfoConfigService.updatePriv(appId, secert,
 					callbackurl, appname, intisopen);
 			if ("".equals(result) && null == result) {
 				falg = false;
@@ -161,16 +159,13 @@ public class AppInfoConfigAction extends BaseAction {
 		String appId = this.request.getParameter("appId");
 		String secert = this.request.getParameter("secert");
 		String callbackurl = this.request.getParameter("callbackurl");
-		String apptime = this.request.getParameter("apptime");
 		String appname = this.request.getParameter("appname");
 		String isopen = this.request.getParameter("isopen");
-		Integer intappId = appId == null ? null : Integer.parseInt(appId);
 		Integer intisopen = isopen == null ? null : Integer.parseInt(isopen);
-		Long longapptime = apptime == null ? null : Long.parseLong(apptime);
 		Integer intid = id == null ? null : Integer.parseInt(id);
 		boolean flag = false;
 		try {
-			String result = appInfoConfigService.EditApp(intid, intappId, secert, callbackurl, longapptime, appname, intisopen);
+			String result = appInfoConfigService.EditApp(intid, appId, secert, callbackurl, appname, intisopen);
 			if ("".equals(result) && null == result) {
 				flag = false;
 			} else {
@@ -198,11 +193,20 @@ public class AppInfoConfigAction extends BaseAction {
 		String pagesize = this.request.getParameter("pagesize");
 		String pageindex = this.request.getParameter("pageindex");
 		String AppName = this.request.getParameter("AppName");
+		String userid = this.request.getParameter("userId");
 		Integer intpagesize = pagesize == null ? null : Integer
 				.parseInt(pagesize);
 		Integer intpageindex = pageindex == null ? null : Integer
 				.parseInt(pageindex);
-		String result = appInfoConfigService.SearchApp(AppName, intpagesize, intpageindex);
+		Integer intuserid = userid == null ? null : Integer
+				.parseInt(userid);
+		String result = appInfoConfigService.SearchApp(intuserid,AppName, intpagesize, intpageindex);
+		returnToClient(result);
+		return "text";
+	}
+	
+	public String getAppName() throws ServletException,JSONException{
+		String result = appInfoConfigService.SearchAppInfoName();
 		returnToClient(result);
 		return "text";
 	}

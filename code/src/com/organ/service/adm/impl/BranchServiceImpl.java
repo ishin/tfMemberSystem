@@ -1,10 +1,12 @@
-package com.organ.service.adm.impl;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -15,22 +17,23 @@ import com.organ.dao.adm.BranchDao;
 import com.organ.dao.adm.BranchMemberDao;
 import com.organ.dao.adm.MemberRoleDao;
 import com.organ.dao.adm.PositionDao;
+import com.organ.dao.auth.AppSecretDao;
+import com.organ.dao.auth.UserSysRelationDao;
 import com.organ.dao.member.MemberDao;
+import com.organ.model.AppSecret;
 import com.organ.model.ImpUser;
 import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
 import com.organ.model.TMember;
 import com.organ.model.TMemberRole;
 import com.organ.model.TPosition;
+import com.organ.model.UserSysRelation;
 import com.organ.service.adm.BranchService;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PinyinGenerator;
 import com.organ.utils.StringUtils;
 import com.organ.utils.TextHttpSender;
 import com.organ.utils.TimeGenerator;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 public class BranchServiceImpl implements BranchService {
 
@@ -39,7 +42,15 @@ public class BranchServiceImpl implements BranchService {
 	private BranchMemberDao branchMemberDao;
 	private MemberRoleDao memberRoleDao;
 	private PositionDao positionDao;
+	private UserSysRelationDao userSysRelationDao;
+	private AppSecretDao appSecretDao;
 	
+	public void setAppSecretDao(AppSecretDao appSecretDao) {
+		this.appSecretDao = appSecretDao;
+	}
+	public void setUserSysRelationDao(UserSysRelationDao userSysRelationDao) {
+		this.userSysRelationDao = userSysRelationDao;
+	}
 	public BranchDao getBranchDao() {
 		return branchDao;
 	}
@@ -90,7 +101,7 @@ public class BranchServiceImpl implements BranchService {
 			Object[] br = (Object[])it.next();
 			jo.put("id", br[0]);
 			jo.put("pid", 0);
-			jo.put("name", "<img src='page/admin/images/orga.png' style='padding-right: 10px'>" + br[1]);
+			jo.put("name", "<img src='images/orga.png' height='28px' style='padding-right: 10px'>" + br[1]);
 			jo.put("flag", 0);
 			jl.add(jo);
 		}
@@ -103,7 +114,7 @@ public class BranchServiceImpl implements BranchService {
 			Object[] br = (Object[])it.next();
 			jo.put("id", br[0]);
 			jo.put("pid", (Integer)br[1] == 0 ? organId : br[1]);
-			jo.put("name", "<img src='page/admin/images/work.png' style='padding-right: 10px'>" + br[2]);
+			jo.put("name", "<img src='images/work.png' height='28px' style='padding-right: 10px'>" + br[2]);
 			jo.put("flag", 1);
 			jo.put("isParent", "true");
 			jl.add(jo);
@@ -117,7 +128,7 @@ public class BranchServiceImpl implements BranchService {
 			Object[] br = (Object[])it.next();
 			jo.put("id", br[0]);
 			jo.put("pid", br[1]);
-			jo.put("name", "<img src='page/admin/images/memb.png' style='padding-right: 10px'>" + br[2]);
+			jo.put("name", "<img src='images/memb.png' height='28px' style='padding-right: 10px'>" + br[2]);
 			jo.put("flag", 2);
 			jl.add(jo);
 		}
@@ -713,16 +724,31 @@ public class BranchServiceImpl implements BranchService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String getBranchTreeAndMember() {
+	public String getBranchTreeAndMember(String appId) {
 		List list = branchDao.getBrancTreeAndMember();
 		
 		JSONArray ja = new JSONArray();
 		
 		ArrayList<Object> branchList = new ArrayList<Object>();
 		ArrayList<Object> organList = new ArrayList<Object>();
+		ArrayList<String> ids = new ArrayList<String>();
 		
 		try {
 			if (list != null) {
+				AppSecret as = appSecretDao.getAppSecretByAppId(appId);
+				int appRecordId = 0;
+				if (as != null) {
+					appRecordId = as.getId();
+				}
+				List<UserSysRelation> userSysList = userSysRelationDao.getAllRelation(appRecordId);
+				ArrayList<Integer> memberIds = new ArrayList<Integer>();
+				
+				if (userSysList != null) {
+					for(int i = 0; i < userSysList.size(); i++) {
+						memberIds.add(userSysList.get(i).getUserId());
+					}
+				}
+				
 				for(int i = 0; i < list.size(); i++) {
 					Object[] o = (Object[])list.get(i);
 					JSONObject jm = new JSONObject();
@@ -738,47 +764,51 @@ public class BranchServiceImpl implements BranchService {
 						jm.put("email", isBlank(o[12]));
 						jm.put("address", isBlank(o[13]));
 						jm.put("token", isBlank(o[14]));
-						jm.put("sex", isBlank(o[15]));
-						jm.put("birthday", isBlank(o[16]));
-						jm.put("workno", isBlank(o[17]));
-						jm.put("mobile", isBlank(o[18]));
-						jm.put("groupmax", isBlank(o[19]));
-						jm.put("groupuse", isBlank(o[20]));
-						jm.put("intro", isBlank(o[21]));
-						jm.put("postitionid", isBlank(o[22]));
-						jm.put("postitionname", isBlank(o[23]));
-						jm.put("sexid", isBlank(o[24]));
-						jm.put("sexname", isBlank(o[25]));
-						jm.put("organid", isBlank(o[26]));
-						jm.put("organname", isBlank(o[27]));
+						jm.put("birthday", isBlank(o[15]));
+						jm.put("workno", isBlank(o[16]));
+						jm.put("mobile", isBlank(o[17]));
+						jm.put("intro", isBlank(o[18]));
+						jm.put("postitionid", isBlank(o[19]));
+						jm.put("postitionname", isBlank(o[20]));
+						jm.put("sexid", isBlank(o[21]));
+						jm.put("sexname", isBlank(o[22]));
+						jm.put("organid", isBlank(o[23]));
+						jm.put("organname", isBlank(o[24]));
 						jm.put("branchid", isBlank(o[4]));
 						jm.put("branchname", isBlank(o[6]));
+						boolean status = false;
+						
+						if (!StringUtils.getInstance().isNull(o[7])) {
+							status = memberIds.contains(Integer.parseInt(isBlank(o[7])));
+						}
+						
+						jm.put("accessStatus", status);
 						
 						if (!branchList.contains(o[4])) {
 							String pid = isBlank(o[5]);
 							JSONObject jb = new JSONObject();
 							jb.put("flag", 0);
 							jb.put("id", isBlank(o[4]));
-							jb.put("pid", pid.equals("0") ? isBlank(o[26]) : pid);
+							jb.put("pid", pid.equals("0") ? isBlank(o[23]) : pid);
 							jb.put("name", isBlank(o[6]));
 							ja.add(jb);
 							branchList.add(o[4]);
 						}
 					} else {
-						if (!organList.contains(o[26])) {		//组织
-							JSONObject jor = new JSONObject();
-							jor.put("id", isBlank(o[26]));
-							jor.put("pid", 0);
-							jor.put("name", isBlank(o[27]));
-							jor.put("flag", 0);
-							ja.add(jor);
-							organList.add(o[26]);
-						}
 						String pid = isBlank(o[5]);
 						jm.put("id", isBlank(o[4]));
-						jm.put("pid", pid.equals("0") ? isBlank(o[26]) : pid);
+						jm.put("pid", pid.equals("0") ? isBlank(o[23]) : pid);
 						jm.put("name", isBlank(o[6]));
 						jm.put("flag", 0);  
+					}
+					if (!organList.contains(o[23])) {		//组织
+						JSONObject jor = new JSONObject();
+						jor.put("id", isBlank(o[23]));
+						jor.put("pid", 0);
+						jor.put("name", isBlank(o[24]));
+						jor.put("flag", -1);
+						ja.add(jor);
+						organList.add(o[23]);
 					}
 					ja.add(jm);
 				}
@@ -794,7 +824,7 @@ public class BranchServiceImpl implements BranchService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public String getBranchMember(String branchId) {
+	public String getBranchMember(String branchId, String appId) {
 		String result = null;
 		boolean status = true;
 		
@@ -806,6 +836,19 @@ public class BranchServiceImpl implements BranchService {
 			
 			try {
 				if( list != null) {
+					AppSecret as = appSecretDao.getAppSecretByAppId(appId);
+					int appRecordId = 0;
+					if (as != null) {
+						appRecordId = as.getId();
+					}
+					List<UserSysRelation> userSysList = userSysRelationDao.getAllRelation(appRecordId);
+					ArrayList<Integer> memberIds = new ArrayList<Integer>();
+					
+					if (userSysList != null) {
+						for(int i = 0; i < userSysList.size(); i++) {
+							memberIds.add(userSysList.get(i).getUserId());
+						}
+					}
 					for(int i = 0; i < list.size(); i++) {
 						Object[] o = (Object[])list.get(i);
 					
@@ -829,6 +872,7 @@ public class BranchServiceImpl implements BranchService {
 							jm.put("groupuse", isBlank(o[13]));
 							jm.put("intro", isBlank(o[14]));
 							jm.put("postitionname", isBlank(o[16]));
+							jm.put("accessStatus", memberIds.contains(Integer.parseInt(isBlank(o[17]))));
 							ja.add(jm); 
 							jm = null;
 						}

@@ -16,5 +16,13 @@ public interface LimitDao {
 	public int getCount();
 	
 	public int getSearchCount(String name);//获取查询结构的个数
+	
+	public List getLimitbyRole(Integer roleId,String appName);//根据姓名获取接口
+	
+	public List getRoleList(String appname);
+	
+	public List getPrivNamebytwo(String appName);//获取父id为2的所有权限名称
+	
+	public Integer saveRolebyApp(Integer roleId,Integer appsecretId, String roleName, String privs,String appName);
 }
 

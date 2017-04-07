@@ -69,10 +69,11 @@ public class LimitServiceImpl implements LimitService {
 					jo.put("category", isBlank(priv[3]));
 					jo.put("url", isBlank(priv[4]));
 					jo.put("app", isBlank(priv[5]));
+					jo.put("parent_name", isBlank(priv[6]));
 					ja.add(jo);
-					jsonObject.put("count", count+"");
-					jsonObject.put("content", ja);
 				}
+				jsonObject.put("count", count+"");
+				jsonObject.put("content", ja);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -95,6 +96,73 @@ public class LimitServiceImpl implements LimitService {
 		}
 
 		return 0;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List getLimitbyRole(Integer roleId, String appName) {
+		// TODO Auto-generated method stub
+		return limitDao.getLimitbyRole(roleId, appName);
+	}
+
+	@Override
+	public String getRoleList(String appname) {
+		JSONArray ja = new JSONArray();
+		JSONObject jsonObject = new JSONObject();
+		try {
+			List roles = limitDao.getRoleList(appname);
+			if (roles == null) {
+				JSONObject jo = new JSONObject();
+				jo.put("code", 0);
+				jo.put("text", "权限名称为空");
+			} else {
+				for (int i = 0; i < roles.size(); i++) {
+					Object[] role = (Object[]) roles.get(i);
+					JSONObject jo = new JSONObject();
+					jo.put("id", isBlank(role[0]));
+					jo.put("name", isBlank(role[1]));
+					ja.add(jo);
+					jsonObject.put("code", 1);
+					jsonObject.put("content", ja);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jsonObject.toString();
+	}
+
+	@Override
+	public String getPrivNamebytwo(String appName) {
+		JSONArray ja = new JSONArray();
+		JSONObject jsonObject = new JSONObject();
+		try {
+			List names = limitDao.getPrivNamebytwo(appName);
+			if(names == null){
+				JSONObject jo = new JSONObject();
+				jo.put("code", 0);
+				jo.put("text", "名称为空");
+			}else{
+				for (int i = 0; i < names.size(); i++) {
+					Object[] name = (Object[]) names.get(i);
+					JSONObject jo = new JSONObject();
+					jo.put("id", isBlank(name[0]));
+					jo.put("name", isBlank(name[1]));
+					ja.add(jo);
+					jsonObject.put("code", 1);
+					jsonObject.put("content", ja);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jsonObject.toString();
+	}
+
+	@Override
+	public String saveRolebyApp(Integer roleId,Integer appsecretId, String roleName, String privs,
+			String appName) {
+		return limitDao.saveRolebyApp(roleId,appsecretId,roleName, privs, appName)+"";
 	}
 
 }

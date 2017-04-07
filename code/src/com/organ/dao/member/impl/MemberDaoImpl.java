@@ -467,6 +467,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		
 		return null;
 	}
+	
+	
 
 	@SuppressWarnings("unchecked")
 	@Override

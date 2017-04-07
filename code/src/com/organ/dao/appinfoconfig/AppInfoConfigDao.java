@@ -8,15 +8,17 @@ public interface AppInfoConfigDao {
 
 	public List<AppSecret> getAppInfo(int userId,int pagesize,int pageindex);
 	
-	public int updatePriv(int appId,String secert,String callbackurl,String appname,int isopen);//���Ȩ�޽ӿ�
+	public int updatePriv(String appId,String secert,String callbackurl,String appname,int isopen);//���Ȩ�޽ӿ�
 	
 	public int DeletelApp(int id);
 	
 	public int getCount();//��ȡ����Ŀ
 	
-	public int editApp(int id,int appId,String secert,String callbackurl,long apptime,String appname,int isopen);
+	public int editApp(int id,String appId,String secert,String callbackurl,String appname,int isopen);
 	
-	public List SearchAppInfo(String AppName,int pagesize, int pageindex);
+	public List SearchAppInfo(int userId,String AppName,int pagesize, int pageindex);
 	
 	public int getSearchCount(String AppName);
+	
+	public List SearchAppInfoName();
 }

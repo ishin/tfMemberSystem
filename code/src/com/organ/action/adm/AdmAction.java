@@ -35,9 +35,7 @@ public class AdmAction extends BaseAction {
 	}
 
 	public String getBase() {
-
 		JSONObject js = new JSONObject();
-
 		String privs = (String) this.getSessionAttribute("privs");
 		if (privs == null) {
 			SessionUser su = this.getSessionUser();

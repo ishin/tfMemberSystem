@@ -323,6 +323,7 @@ function cb_211_fresh(data) {
 			var j = data.length;
 			var x = 0;
 			while (j--) {
+				
 				if (data[j].parentid == data[i].privid) {
 					if (x++ % 2 == 0)
 						$('#list211').append('<div class="line211a"></div>');
