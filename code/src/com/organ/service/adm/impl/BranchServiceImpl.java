@@ -38,6 +38,7 @@ import net.sf.json.JSONObject;
 
 public class BranchServiceImpl implements BranchService {
 	private static final Logger logger = Logger.getLogger(BranchServiceImpl.class);
+	
 	private BranchDao branchDao;
 	private MemberDao memberDao;
 	private BranchMemberDao branchMemberDao;

@@ -29,15 +29,7 @@
 	    <param-name>contextConfigLocation</param-name>
 	    <param-value>
 	    	classpath:spring.xml,
-	    	classpath:admin.xml,
-	    	classpath:member.xml,
-		    classpath:privilege.xml,
-	    	classpath:system.xml,
-	    	classpath:group.xml,
-	    	classpath:auth.xml,
-	    	classpath:limit.xml,
-	    	classpath:abutment.xml,
-	    	classpath:appinfoconfig.xml
+	    	classpath:bean.xml,
 	    </param-value>
 	</context-param>
 	

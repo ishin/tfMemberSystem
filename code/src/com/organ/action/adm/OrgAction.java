@@ -20,9 +20,6 @@ public class OrgAction extends BaseAction {
 
 	private OrgService orgService;
 	
-	public OrgService getOrgService() {
-		return orgService;
-	}
 	public void setOrgService(OrgService orgService) {
 		this.orgService = orgService;
 	}

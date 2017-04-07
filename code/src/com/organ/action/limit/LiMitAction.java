@@ -28,15 +28,6 @@ public class LiMitAction extends BaseAction {
 	private static final long serialVersionUID = -8882273369530974698L;
 	private static final Logger logger = Logger.getLogger(LiMitAction.class);
 	private LimitService limitService;
-	private LimitDao limitDao;
-
-	public LimitDao getLimitDao() {
-		return limitDao;
-	}
-
-	public void setLimitDao(LimitDao limitDao) {
-		this.limitDao = limitDao;
-	}
 
 	public LimitService getLimitService() {
 		return limitService;

@@ -15,9 +15,6 @@ public class OrgServiceImpl implements OrgService {
 
 	private OrgDao orgDao;
 	
-	public OrgDao getOrgDao() {
-		return orgDao;
-	}
 	public void setOrgDao(OrgDao orgDao) {
 		this.orgDao = orgDao;
 	}

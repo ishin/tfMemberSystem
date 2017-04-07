@@ -172,10 +172,6 @@ public class PrivAction extends BaseAction {
 	
 	PrivService privService;
 
-	public PrivService getPrivService() {
-		return privService;
-	}
-
 	public void setPrivService(PrivService privService) {
 		this.privService = privService;
 	}

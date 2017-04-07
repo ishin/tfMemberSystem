@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<!-- ssl-default -->
+	<!-- struts-default -->
+	<package name="com.organ.action.abutment" extends="all">
+		<!-- 成员管理 -->
+		<action name="abmember" class="com.organ.action.abutment.AbutmentMemberAction">
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<!-- 权限管理  -->
+		<action name="abprivilege"
+			class="com.organ.action.abutment.AbutmentPrivilegeAction">
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<!-- 授权管理  -->
+		<action name="abauth" class="com.organ.action.abutment.AbutmentAuthAction">
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<action name="abranch" class="com.organ.action.abutment.AbutmentBranchAction">
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+	
+	<!-- 系统管理 -->
+	<package name="com.sealtalk.action.sys" extends="all">
+		<action name="system" class="com.organ.action.sys.SystemAction">
+			<result name="loginPage">/page/cms/signin.jsp</result>
+			<result name="loginSuccess">/page/cms/11.jsp</result>
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+	
+	<package name="com.organ.action.appinfoconfig" extends="all">
+		<action name="appinfoconfig" class="com.organ.action.appinfoconfig.AppInfoConfigAction">
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+	
+	<package name="com.organ.action.auth" extends="all">
+        <action name="auth" class="com.organ.action.auth.AppSecretAction">
+        	<!--  服务器做重定向 -->
+        	<!--
+        	<result name="redirectLogin" type="redirectAction">
+        	  	<param name="actionName">auth!redirectLogin</param>  
+				<param name="unAuthToken">${unAuthToken}</param>  
+        	</result>-->
+        	<result name="oaLogin">/page/web/deng.jsp</result>
+        	<result name="login">/page/web/authorizePage.jsp</result>
+        	<result name="text" type="stream">
+        		<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+        	</result>
+        </action>
+    </package>
+    
+    <constant name="struts.action.excludePattern" value="/admlogo, /admimp"/>
+
+    <package name="com.organ.action.adm" extends="all">
+        <!-- 组织机构 -->
+        <action name="branch" class="com.organ.action.adm.BranchAction">
+        	<result name="text" type="stream">
+        		<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+        	</result>
+        </action>
+        <action name="priv" class="com.organ.action.adm.PrivAction">
+        	<result name="text" type="stream">
+        		<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+        	</result>
+        </action>
+        <action name="pos" class="com.organ.action.adm.PosAction">
+        	<result name="text" type="stream">
+        		<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+        	</result>
+        </action>
+        <action name="grp" class="com.organ.action.adm.GrpAction">
+        	<result name="text" type="stream">
+        		<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+        	</result>
+        </action>
+        <action name="org" class="com.organ.action.adm.OrgAction">
+        	<result name="text" type="stream">
+        		<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+        	</result>
+        </action>
+        <action name="adm" class="com.organ.action.adm.AdmAction">
+        	<result name="text" type="stream">
+        		<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+        	</result>
+        </action>
+    </package>
+   
+    <package name="com.organ.action.limit" extends="all">
+        <action name="limit" class="com.organ.action.limit.LiMitAction">
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+        </action>
+    </package>
+    
+    <package name="com.sealtalk.action.member" extends="all">
+   		 <!-- 成员管理 -->
+        <action name="member" class="com.organ.action.member.MemberAction">
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+        </action>
+    </package>
+
+</struts>
+

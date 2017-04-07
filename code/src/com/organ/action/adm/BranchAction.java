@@ -37,10 +37,7 @@ import com.bcloud.msg.http.HttpSender;
  */
 
 public class BranchAction extends BaseAction {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 		
 	/*
@@ -531,19 +528,11 @@ public class BranchAction extends BaseAction {
 	
 	private BranchService branchService;
 
-	public BranchService getBranchService() {
-		return branchService;
-	}
-
 	public void setBranchService(BranchService branchService) {
 		this.branchService = branchService;
 	}
 	
 	private String branchId;
-
-	public String getBranchId() {
-		return branchId;
-	}
 
 	public void setBranchId(String branchId) {
 		this.branchId = branchId;
