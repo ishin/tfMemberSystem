@@ -39,5 +39,21 @@ public class UserSysRelationDaoImpl extends BaseDao<UserSysRelation, Integer> im
 		}
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<UserSysRelation> getAllRelation(int id) {
+		try {
+			String hql = (new StringBuilder("from UserSysRelation where appId=").append(id)).toString();
+			List<UserSysRelation> list = this.getSession().createQuery(hql).list();
+			
+			if (list != null) {
+				return list;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }

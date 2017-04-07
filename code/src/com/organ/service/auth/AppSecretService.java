@@ -70,11 +70,12 @@ public interface AppSecretService {
 	public JSONObject reqAuthorizeTwoForApp(String userName, String appId, String unAuthToken);
 
 	/**
-	 * 根据appId及secret获取appsecret
+	 * 根据appid,secret获取appsecret
 	 * @param appId
 	 * @param secret
 	 * @return
 	 */
 	public String getAppSecretByAppIdAndSecret(String appId, String secret);
+
 
 }

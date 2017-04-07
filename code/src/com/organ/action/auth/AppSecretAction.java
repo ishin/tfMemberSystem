@@ -16,7 +16,7 @@ import com.organ.service.auth.AppSecretService;
  * @date 2017/03/08
  */
 public class AppSecretAction extends BaseAction {
-
+	
 	private static final long serialVersionUID = 1L;
 	
 	/**
