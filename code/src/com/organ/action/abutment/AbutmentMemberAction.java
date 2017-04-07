@@ -34,6 +34,101 @@ public class AbutmentMemberAction extends BaseAction {
 			.getLogger(AbutmentMemberAction.class);
 
 	/**
+	 * 获取成员指定参数
+	 * @return
+	 * @throws ServcletException
+	 */
+	public String getMemberParam() throws ServletException {
+		String result = null;
+
+		try {
+			String params = getRequestDataByStream();
+
+			if (params != null) {
+				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
+				String id = jo.getString("id");
+				String ps = jo.getString("params");
+				result = memberService.getMemberParam(id, ps);
+			} else {
+				JSONObject jo = new JSONObject();
+				jo = new JSONObject();
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
+				result = jo.toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		
+		returnToClient(result.toString());
+		return "text";
+	}
+	
+	/**
+	 * 根据token获取成员
+	 */
+	public String getMemberByToken() throws ServletException {
+		String result = null;
+
+		try {
+			String params = getRequestDataByStream();
+
+			if (params != null) {
+				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
+				String token = jo.getString("token");
+				TMember tm = memberService.getMemberByToken(token);
+				if (tm != null) {
+					result = JSONUtils.getInstance().modelToJSONObj(tm).toString();
+				}
+			} else {
+				JSONObject jo = new JSONObject();
+				jo = new JSONObject();
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
+				result = jo.toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		
+		returnToClient(result.toString());
+		return "text";
+	}
+	
+	/**
+	 * 获取指定数量的用户id
+	 * @return
+	 * @throws ServletException
+	 */
+	public String getLimitMemberIds() throws ServletException {
+		String result = null;
+
+		try {
+			String params = getRequestDataByStream();
+
+			if (params != null) {
+				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
+				String mapMax = jo.getString("mapMax");
+				result = memberService.getLimitMemberIds(mapMax);
+			} else {
+				JSONObject jo = new JSONObject();
+				jo = new JSONObject();
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
+				result = jo.toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		
+		returnToClient(result.toString());
+		return "text";
+	}
+	
+	/**
 	 * 根据id获取单个成员
 	 * @return
 	 * @throws ServletException
