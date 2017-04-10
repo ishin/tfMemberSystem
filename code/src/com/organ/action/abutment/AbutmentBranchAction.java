@@ -118,6 +118,7 @@ public class AbutmentBranchAction extends BaseAction {
 	 */
 	public String getBranchMemberByMemberIds() throws ServletException {
 		String result = null;
+		
 		try {
 			String params = getRequestDataByStream();
 			JSONObject jo = new JSONObject();
