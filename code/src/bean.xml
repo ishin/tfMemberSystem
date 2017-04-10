@@ -63,6 +63,11 @@
 	</bean>
 	<bean id="orgService" class="com.organ.service.adm.impl.OrgServiceImpl" autowire="byName" >
 		<property name="orgDao" ref="orgDao" />
+		<property name="memberDao" ref="memberDao" />
+		<property name="positionDao" ref="positionDao" />
+		<property name="branchDao" ref="branchDao" />
+		<property name="branchMemberDao" ref="branchMemberDao" />
+		
 	</bean>
 	<bean id="uploadService" class="com.organ.service.upload.impl.UploadServiceImpl" autowire="byName" >
 		<property name="memberDao" ref="memberDao" />
