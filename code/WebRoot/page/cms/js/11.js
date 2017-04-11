@@ -643,7 +643,7 @@ function del(tId) {
 		title:'提示',
 		message:'确定删除 ' + ns[0].name.substr(iconlenth) + ' ?',
 		callback: function(result) {
-			alert(result);
+			//alert(result);
 			if (result == false) return;
 			if (hasChildBranch(ns[0].id)) {
 				bootbox.dialog({

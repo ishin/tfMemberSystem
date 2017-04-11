@@ -38,7 +38,7 @@ $(document).ready(function(){
 				memberpositionid: $('#11memberpositionid').val(),
 				memberemail: $('#11memberemail').val(),
 				memberroleid: $('#11memberroleid').val(),
-				memberintro: $('#11memberintro').val()
+				memberintro: $('#11memberintro').val(),
 			};
 		callajax('branch!saveMember', data, cb_11_save_member);
 	});

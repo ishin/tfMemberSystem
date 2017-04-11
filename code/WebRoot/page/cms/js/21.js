@@ -30,7 +30,7 @@ var tabPageEditTemp = '<div class="col2 collHide" id="211edit" style="display:no
 
 	if (has('qxglck')) {
 
-		callajax('limit!getRoleList',{appname:''}, cb_21_fresh);
+		callajax('limit!getRoleList',{appId:''}, cb_21_fresh);
 		callajax('appinfoconfig!getAppName','', showTab);
 	}
 	
@@ -216,7 +216,7 @@ function showTab(data){
 	var content = data.content;
 	var sHTML = '';
 	var contentLength = content.length;
-	$('.infotitle .infotab').width(contentLength*100);
+	$('.infotitle .infotab').width(contentLength*100+100);
 	for(var i = 0;i<contentLength;i++){
 		sHTML='<div class="infotabi" appID="'+content[i].id+'" onclick="showpage('+pageNum+')" bindpage="'+pageNum+'">'+content[i].appName+'</div>';
 		$('.infotab').append($(sHTML));
@@ -386,10 +386,11 @@ function cb_210_fresh(data) {
 	var i = data.length;
 	while(i--) {
 		$('#list210').append('<tr></tr>');
+		var positionname = data[i].positionname?data[i].positionname:'';
 		$('#list210 tr:last-child')
 			.append('<td>' + data[i].membername + '</td>')
 			.append('<td>' + data[i].branchname + '</td>')
-			.append('<td>' + data[i].positionname + '</td>')
+			.append('<td>' + positionname + '</td>')
 			.append('<td><img src="images/delete-2.png" onclick="del210(' + data[i].memberroleid + ')"></img></td>');
 	}
 	$('#list210 tr').hover(function(){
@@ -670,9 +671,14 @@ function showpage(cp) {
 	curpage = cp;
 	changeRoleList(curpage);
 	if(cp!='210'){
+		if(typeof (curpage)=='number'){
+			var appName = $('.infotab .infotabi[bindpage='+curpage+']').html();
+			loadPage(cp,appName)
+		}
 		$('#editmember').hide();
 	}else{
 		$('#editmember').show();
+
 	}
 	$('.collHide').hide();
 	$('#' + cp).show();
@@ -695,13 +701,15 @@ function changeRoleList(curpage){
 	}else{
 		if(typeof (curpage)=='number'){
 			var appName = $('.infotab .infotabi[bindpage='+curpage+']').html();
+			var appID = $('.infotab .infotabi[bindpage='+curpage+']').attr('appid')
 		}else{
 			var pageNum = curpage.replace('edit','')
 			var appName = $('.infotab .infotabi[bindpage='+pageNum+']').html();
+			var appID = $('.infotab .infotabi[bindpage='+pageNum+']').attr('appid')
 
 		}
 	}
-	callajax('limit!getRoleList', {appname: appName}, rollList);
+	callajax('limit!getRoleList', {appId: appID}, rollList);
 }
 function rollList(data){
 	var data = data.content
