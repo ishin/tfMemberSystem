@@ -27,6 +27,8 @@
 	<bean id="memberRoleDao" class="com.organ.dao.adm.impl.MemberRoleDaoImpl" autowire="byName" />
 	<bean id="cutLogoTempDao" class="com.organ.dao.upload.impl.CutLogoTempDaoImpl" autowire="byName" />
 	
+	<bean id="roleappsecretDao" class="com.organ.dao.limit.impl.RoleAppSecretDaoImpl" autowire="byName" />
+	
 	<!-- service -->
 	<bean id="appSecretService" class="com.organ.service.auth.impl.AppSecretServiceImpl" autowire="byName" >
 		<property name="appSecretDao" ref="appSecretDao" />
@@ -36,6 +38,7 @@
 	</bean>
 	<bean id="limitService" class="com.organ.service.limit.impl.LimitServiceImpl" autowire="byName">
 		<property name="limitDao" ref="limitDao" />
+		<property name="roleappsecretDao" ref="roleappsecretDao" />
 	</bean>
 	<bean id="appInfoConfigService" class="com.organ.service.appinfoconfig.impl.AppInfoConfigServiceImpl" autowire="byName">
 		<property name="appInfoConfigDao" ref="appinfoconfigDao" />

@@ -51,11 +51,7 @@ public class LiMitAction extends BaseAction {
 	 * @throws UnsupportedEncodingException 
 	 */
 	public String AddPriv() throws ServletException, JSONException, UnsupportedEncodingException {
-/*		byte bufname[] = request.getParameter("name").getBytes("iso8859-1");
-		byte bufapp[] = request.getParameter("app").getBytes("iso8859-1");*/
 		String pid = this.request.getParameter("parentId");
-/*		String name = new String(bufname,"utf-8");
-		String app = new String(bufapp,"utf-8");*/
 		String name = this.request.getParameter("name");
 		String app = this.request.getParameter("app");
 		Integer intPid = pid == null ? null : Integer.parseInt(pid);
@@ -176,8 +172,6 @@ public class LiMitAction extends BaseAction {
 	}
 
 	public String SearchPriv() throws ServletException, JSONException, UnsupportedEncodingException {
-/*		byte buf[] = request.getParameter("name").getBytes("iso8859-1");
-		String name = new String(buf,"utf-8");*/
 		String pagesize = this.request.getParameter("pagesize");
 		String pageindex = this.request.getParameter("pageindex");
 		String name = this.request.getParameter("name");
@@ -255,15 +249,16 @@ public class LiMitAction extends BaseAction {
 	
 	public String saveRolebyApp() throws ServletException,JSONException{
 		//roleId, roleName, privs, appName
-		Integer roleId = Integer.parseInt(this.request.getParameter("roleId"));
+		String roleId = this.request.getParameter("roleid");
+		System.err.println("LimitAction:"+roleId);
+		Integer introleId = (roleId == null ? 0 : Integer.parseInt(roleId));
 		String roleName = this.request.getParameter("roleName");
 		String privs = this.request.getParameter("privs");
-		String appName = this.request.getParameter("appName");
 		Integer appsecretId = Integer.parseInt(this.request.getParameter("appsecretId"));
 		boolean falg = false;
 		String result = "";
 		try {
-			result = limitService.saveRolebyApp(roleId,appsecretId,roleName, privs, appName);
+			result = limitService.saveRolebyApp(introleId,appsecretId,roleName, privs);
 			if ("".equals(result) && null == result) {
 				falg = false;
 			} else {
@@ -283,6 +278,16 @@ public class LiMitAction extends BaseAction {
 		}
 		returnToClient(jsonObject.toString());
 		return "text";
+	}
+	
+	/**
+	 * 删除角色
+	 * @return
+	 */
+	public String delRole() {
+		Integer roleId = Integer.parseInt(this.request.getParameter("roleId"));
+		limitService.delRole(roleId);
+		return returnajaxid(0);
 	}
 
 }

@@ -23,7 +23,7 @@ public class AppInfoConfigAction extends BaseAction {
 	 */
 	private static final long serialVersionUID = 3357825063940018758L;
 	private AppInfoConfigService appInfoConfigService;
-
+	
 	public void setAppInfoConfigService(
 			AppInfoConfigService appInfoConfigService) {
 		this.appInfoConfigService = appInfoConfigService;

@@ -48,6 +48,8 @@ public interface LimitService {
 	
 	public String getPrivNamebytwo(String appName);//获取父id为2的所有权限名称
 	
-	public String saveRolebyApp(Integer roleId,Integer appsecretId, String roleName, String privs,String appName);
+	public String saveRolebyApp(Integer roleId,Integer appsecretId, String roleName, String privs);
+	
+	void delRole(Integer roleId);//删除应用时，同时删除角色
 
 }

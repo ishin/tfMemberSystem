@@ -8,10 +8,22 @@ import org.hibernate.SQLQuery;
 
 import com.organ.common.BaseDao;
 import com.organ.dao.appinfoconfig.AppInfoConfigDao;
+import com.organ.dao.limit.LimitDao;
 import com.organ.model.AppSecret;
+import com.organ.model.TPriv;
+import com.organ.utils.PrivUrlNameUtil;
 
 public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 		AppInfoConfigDao {
+	LimitDao limitDao;
+	
+	public LimitDao getLimitDao() {
+		return limitDao;
+	}
+
+	public void setLimitDao(LimitDao limitDao) {
+		this.limitDao = limitDao;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -59,8 +71,26 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 		appSecret.setSecert(secert);
 		try {
 			save(appSecret);
+			//保存以及权限
+			TPriv tPriv = new TPriv();
+			tPriv.setApp(appname);
+			tPriv.setName(appname);
+			tPriv.setParentId(0);
+			tPriv.setUrl(PrivUrlNameUtil.initUrlName(appname));
+			tPriv.setListorder(0); // 这个不能为空
+			limitDao.save(tPriv);
+			//添加二级权限
+			if(tPriv.getId() != null){
+				TPriv tPriv2 = new TPriv();
+				tPriv2.setApp(appname);
+				tPriv2.setName("访问权限");
+				tPriv2.setParentId(tPriv.getId());
+				tPriv2.setUrl(PrivUrlNameUtil.initUrlName("访问权限"));
+				tPriv2.setListorder(0); // 这个不能为空
+				limitDao.save(tPriv2);
+			}
+		
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return appSecret.getId();
