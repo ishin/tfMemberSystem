@@ -361,7 +361,7 @@ div#container {
 	margin-left: -2px;
 	height: 34px;
 	width: 20px;
-	border: 1px solid #ccc;
+	border: 1px solid #f0f0f0;
 	background: url("img/xiala-2.png") no-repeat;
 	background-position: 3px 13px;
 }
@@ -577,6 +577,7 @@ th {
 .col21 .col1 {
 	width: 25%;
 	float: left;
+	height: calc(100% - 10px);
 }
 .col21 .col2 {
 	width: 75%;
@@ -602,7 +603,11 @@ div#list211,div#list213,div#list214,div#list211edit,div#list213edit,div#list214e
 	margin: 20px 0 20px 40px;
 }
 .line21 ul {
-	background-color: #ccc;
+	/*background-color: #ccc;*/
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	overflow-y: auto;
 }
 .line21 li {
 	padding: 10px 0 10px 20px;
@@ -621,6 +626,8 @@ div#list211,div#list213,div#list214,div#list211edit,div#list213edit,div#list214e
 	margin-left: 30px;
 	border-bottom: 1px solid #cbcbcb;
 	FLOAT: right;
+	overflow: hidden;
+	overflow-x: auto;
 }
 .col21 .infotab {
 	float: left;
@@ -632,6 +639,8 @@ div#list211,div#list213,div#list214,div#list211edit,div#list213edit,div#list214e
 .infotabr {
 	float: right;
 	padding: 15px 30px 14px 8px;
+	position: relative;
+	z-index: 1;
 }
 .line211 {
 	padding: 20px 0 15px 50px;
@@ -862,14 +871,13 @@ div#list211,div#list213,div#list214,div#list211edit,div#list213edit,div#list214e
 	line-height: 36px;
 }
 .memberlist_21 {
-	/*overflow-y: auto; */
 	border: 1px solid #ccc;
 	margin: -1px 0 0 0;
 	padding: 5px 0 0 0;
 	height: 400px;
+	overflow: hidden;
+	overflow-y: scroll;
 }
-
-
 
 .searchArea {
 	width: 100%;

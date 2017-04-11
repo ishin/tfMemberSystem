@@ -23,7 +23,7 @@
 			</select>
 			<div class='toleft' style='margin-left: 14px'>身份模板：</div>
 			<select id="21_roletemplate" class='toleft' style='width: 180px;margin-left: 20px'>
-				<option>性别</option>
+				<%--<option>性别</option>--%>
 			</select>
 		</div>
 	</div>

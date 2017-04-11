@@ -40,7 +40,7 @@
 					<button id='addrole' class='cancel'><img src='images/addicon.png' style='' />添加身份</button>
 					<button class='cancel' onclick='delrole()' style='width:64px;    margin-top: 10px;'>删除</button>
 				</div>
-				<div class="line21" style="width:70%">
+				<div class="line21" style="width:70%;height: calc(100% - 84px);">
 					<ul id='list21'>
 <!-- 				<li>组织管理员</li>
 						<li class="active">普通成员</li>
@@ -55,7 +55,7 @@
 					<%--<div class="infotabi" onclick='showpage("214")' bindpage='214'>团餐SASS</div>--%>
 				</div>
 				<div class="infotabr" style='padding-top: 10px'>
-					<button id="editmember" style='width:100px'>新增/修改人员</button>
+					<button id="editmember" class="addedit" style='width:100px'>新增/修改人员</button>
 				</div>
 			</div>
 			<jsp:include page="210.jsp" flush="true" />

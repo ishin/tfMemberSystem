@@ -65,7 +65,9 @@ $(document).ready(function() {
 		var apptime = new Date().getTime();
 		if(text=='新增应用'){
 			var data = {appname:name,appId:appid,secert:appsecret,callbackurl:backurl,isopen:isOpen}
-			callajax('appinfoconfig!updateAppInfo', data, afterAddPriv);
+			callajax('appinfoconfig!updateAppInfo', data, function (cb){
+				afterAddPriv(cb,name);
+			});
 		}else if(text=='编辑应用'){
 			var id = $(this).parents('.dialogApp').attr('bindid');
 			var data = {id:id,appname:name,appId:appid,secert:appsecret,callbackurl:backurl,isopen:isOpen}
@@ -100,9 +102,27 @@ $(document).ready(function() {
 	loadpage();
 
 });
-function afterAddPriv(data){
+function afterAddPriv(data,appName){
 	console.log(data);
-	loadpage(newPaging.args.current)
+	loadpage(newPaging.args.current);
+	//手动添加一级二级权限
+	//1级
+	callajax('limit!AddPriv',{name:appName,app:appName,parentId:0},function(cb){
+		addLimit1(appName);
+	});
+
+}
+
+function addLimit1(appName){
+	console.log('添加一级权限')
+	//查询添加的以及应用的权限ID
+	callajax('limit!SearchPriv',{name:appName,pageindex:0,pagesize:1},function(cb){
+		var content = cb.content[0];
+		callajax('limit!AddPriv',{name:'登录权限',app:appName,parentId:content.id},addLimit2);
+	})
+}
+function addLimit2(){
+	console.log('添加er级权限')
 }
 function afterEditPriv(data){
 	loadpage(newPaging.args.current)
