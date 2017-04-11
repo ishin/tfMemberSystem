@@ -66,7 +66,6 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	public TMember searchSigleUser(String name, String password) {
 		
 		try {
-			
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("account", name));
 			ctr.add(Restrictions.eq("password", password));
@@ -629,6 +628,28 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
+	}
+
+	@Override
+	public TMember getSuperAdmin(String account, String password) {
+
+		try {
+			Criteria ctr = getCriteria();
+			ctr.add(Restrictions.eq("account", account));
+			ctr.add(Restrictions.eq("password", password));
+			ctr.add(Restrictions.eq("superAdmin", 1));
+			
+			List list = ctr.list();
+			
+			if (list.size() > 0) {
+				return (TMember) list.get(0);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return null;
 	}
 }

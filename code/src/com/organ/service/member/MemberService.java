@@ -198,4 +198,12 @@ public interface MemberService {
 	 * @return
 	 */
 	public String getMemberParam(String id, String ps);
+
+	/**
+	 * 获取超级管理员账号
+	 * @param account
+	 * @param userpwd
+	 * @return
+	 */
+	public TMember getSuperAdmin(String account, String userpwd);
 }
