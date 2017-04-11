@@ -154,50 +154,12 @@ public class PrivServiceImpl implements PrivService {
 	@Override
 	public List getRoleIdForId(int id) {
 		TMemberRole tmList = memberRoleDao.getRoleForId(id);
-		/*List<TPriv> privList = privDao.getAllPriv();
 		
-		for(int i = 0; i < privList.size();i++) {
-			System.out.println(privList.get(i).getId());
-		}
-		
-		//处理父级权限标识返回
-		Map<String, List<String>> map = new HashMap<String, List<String>>();
-		if (privList != null) {
-			
-			for(int i = 0; i < privList.size(); i++) {
-				List<String> list = new ArrayList<String>();
-				TPriv t = privList.get(i);
-				
-				map.put(t.getId() + "", list);
-			}
-		}
-		
-		for(Map.Entry<String, List<String>> m: map.entrySet()) {
-			System.out.println(m.getKey() + ": " + m.getValue().toString());
-		}
-		*/
 		ArrayList<String> priList = new ArrayList<String>();	
-		
-		priList.add("rsglck");
-		priList.add("rsgltj");
-		priList.add("rsgljcxx");
-		priList.add("rsglxgmm");
-		priList.add("rsglyd");
-		priList.add("rsglsc");
-		priList.add("bmglck");
-		priList.add("bmgltj");
-		priList.add("bmglxg");
-		priList.add("bmglyd");
-		priList.add("bmglsc");
-		priList.add("zzxxglck");
-		priList.add("zzxxglxg");
+
 		priList.add("qzglck");
 		priList.add("qzgljs");
 		priList.add("qzglxg");
-		priList.add("qxglck");
-		priList.add("qxgltj");
-		priList.add("qxglxg");
-		priList.add("qxglsc");
 	
 		if (tmList != null) {
 			int roleId = tmList.getRoleId();
@@ -213,7 +175,6 @@ public class PrivServiceImpl implements PrivService {
 						list.add(new Object[]{1,"htgl"});
 						break;
 					}
-					//System.out.println(o[0] + "_" + o[1]);
 				}
 			} 
 			
