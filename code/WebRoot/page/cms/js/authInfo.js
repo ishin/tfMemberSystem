@@ -172,6 +172,7 @@ function loadpage(pagenumber) {
 //
 //}
 function fShowTable(data) {
+	$('#grouplist').empty();
 	var i = data.length;
 	var count = data.count;
 	pagenumber = Math.ceil(count/itemsperpage);
@@ -195,10 +196,16 @@ function fShowTable(data) {
 			//重新fillPage并加载最后一页
 			newPaging.fillHtml($('.paging'),newPaging.args);
 			loadpage(newPaging.args.current);
+			return;
 		}else{
 			if(newPaging.args.pageCount<pagenumber){
 				newPaging.args.pageCount++;
 				newPaging.fillHtml($('.paging'),newPaging.args);
+			}else if(newPaging.args.pageCount>pagenumber){
+				newPaging.args.pageCount--;
+				newPaging.fillHtml($('.paging'),newPaging.args);
+				loadpage(newPaging.args.current);
+				return;
 			}
 		}
 	}

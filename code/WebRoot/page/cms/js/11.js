@@ -39,55 +39,55 @@ $(document).ready(function(){
 		curmember = '10001';
 
 		//权限
-		if (has('rsglck')) {
+		//if (has('rsglck')) {
 			callajax("branch!getMemberById", {'id': curmember}, cb_111_112);
-		}
+		//}
 		$('#shuoming').show();
 	});
 	$('.addbranch').click(function(){
 		
 		//权限
-		if (has('bmgltj')) {
+		//if (has('bmgltj')) {
 			$('#branch').modal({
 				backdrop: false,
 				remote: '11_branch.jsp'
 			});
-		}
-		else {
-			bootbox.alert({title:'提示', message:'您没有权限添加部门.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-		}
+		//}
+		//else {
+		//	bootbox.alert({title:'提示', message:'您没有权限添加部门.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//}
 	});
 	$('.addmember').click(function(){
 		
 		//权限
-		if (has('rsgltj')) {
+		//if (has('rsgltj')) {
 			$('#member').modal({
 				backdrop: false,
 				remote: '11_member.jsp'
 			});
-		}
-		else {
-			bootbox.alert({title:'提示', message:'您没有权限添加人员.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-		}
+		//}
+		//else {
+		//	bootbox.alert({title:'提示', message:'您没有权限添加人员.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//}
 	});
 	$('.addbatch').click(function(){
 		
 		//权限
-		if (has('rsgltj')) {
+		//if (has('rsgltj')) {
 			$('#imp').modal({
 				backdrop: false,
 				remote: '11_imp.jsp'
 			});
-		}
-		else {
-			bootbox.alert({title:'提示', message:'您没有权限批量导入成员.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-		}
+		//}
+		//else {
+		//	bootbox.alert({title:'提示', message:'您没有权限批量导入成员.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//}
 	});
 	
 	$('.downmov').click(function() {
@@ -337,24 +337,24 @@ var setting11 = {
 				curbranch = treeNode.id;
 				
 				//权限
-				if (has('bmglck')) {
+				//if (has('bmglck')) {
 					if (curpage != '110') showpage('110');
 					callajax("branch!getBranchById", {'id': curbranch}, cb_110);
-				}
+				//}
 			}
 
 			if (treeNode.flag == 2) {
 				curmember = treeNode.id;
 
 				//权限
-				if (has('rsglck')) {
+				//if (has('rsglck')) {
 					if (curpage == '110') showpage('111');
 					if (curmember == '10001') 
 						$('#shuoming').show();
 					else
 						$('#shuoming').hide();
 					callajax("branch!getMemberById", {'id': curmember}, cb_111_112);
-				}
+				//}
 			}
 		},
 		onRightClick: function(event, treeId, treeNode) {
@@ -368,10 +368,10 @@ var setting11 = {
 			
 			if (treeNodes[0].flag == 0)	return false;
 			else if (treeNodes[0].flag == 1) {
-				if (!has('bmglyd')) return false;
+				//if (!has('bmglyd')) return false;
 			}
 			else if (treeNodes[0].flag == 2) {
-				if (!has('rsglyd')) return false;
+				//if (!has('rsglyd')) return false;
 			}
 		},
 		beforeDragOpen: function(treeId, treeNode) {
@@ -578,20 +578,20 @@ function mov(tId) {
 	
 	//权限
 	else if (ns[0].flag == 1) {
-		if (!has('bmglyd')) {
-			bootbox.alert({title:'提示', message:'您没有权限移动部门.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-			return;
-		}
+		//if (!has('bmglyd')) {
+		//	bootbox.alert({title:'提示', message:'您没有权限移动部门.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//	return;
+		//}
 	}
 	else if (ns[0].flag == 2){
-		if (!has('rsglyd')) {
-			bootbox.alert({title:'提示', message:'您没有权限移动人员.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-			return;
-		}
+		//if (!has('rsglyd')) {
+		//	bootbox.alert({title:'提示', message:'您没有权限移动人员.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//	return;
+		//}
 	}
 	
 	movnode = ns[0];
@@ -623,20 +623,20 @@ function del(tId) {
 	
 	//权限
 	else if (ns[0].flag == 1) {
-		if (!has('bmglsc')) {
-			bootbox.alert({title:'提示', message:'您没有权限删除部门.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-			return;
-		}
+		//if (!has('bmglsc')) {
+		//	bootbox.alert({title:'提示', message:'您没有权限删除部门.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//	return;
+		//}
 	}
 	else if (ns[0].flag == 2){
-		if (!has('rsglsc')) {
-			bootbox.alert({title:'提示', message:'您没有权限删除人员.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-			return;
-		}
+		//if (!has('rsglsc')) {
+		//	bootbox.alert({title:'提示', message:'您没有权限删除人员.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//	return;
+		//}
 	}
 	
 	bootbox.confirm({

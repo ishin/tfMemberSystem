@@ -28,11 +28,11 @@ var tabPageEditTemp = '<div class="col2 collHide" id="211edit" style="display:no
 		$(this).addClass('tabactive');
 	})
 
-	if (has('qxglck')) {
+	//if (has('qxglck')) {
 
 		callajax('limit!getRoleList',{appId:''}, cb_21_fresh);
 		callajax('appinfoconfig!getAppName','', showTab);
-	}
+	//}
 	
 	$('#role').on('shown.bs.modal', function(e) {
 		//callajax('limit!getRoleList', '', cb_21_role_role);
@@ -90,29 +90,29 @@ var tabPageEditTemp = '<div class="col2 collHide" id="211edit" style="display:no
 	//点击添加角色
 	$('#addrole').click(function(){
 
-		if (has('qxgltj')) {
+		//if (has('qxgltj')) {
 			$('#role').modal({
 				backdrop: false,
 				remote: '21_role.jsp'
 			});
-		}
-		else {
-			bootbox.alert({'title':'提示','message':'您没有权限添加身份', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-		}
+		//}
+		//else {
+		//	bootbox.alert({'title':'提示','message':'您没有权限添加身份', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//}
 	});
 	//点击新增/修改人员
 	$('#editmember').click(function(){
 		if (currole == 1) {
 			bootbox.alert({'title':'提示', 'message':'不能修改组织管理员.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
+				$('#container').css('width', document.body.clientWidth + 'px');
 			}});
 			return;
 		}
 
 		//权限
-		if (has('qxglxg')) {
+		//if (has('qxglxg')) {
 			if (currole == 0) {
 				bootbox.alert({title:'提示', message:'请先选择身份.', callback: function() {
 					$('#container').css('width', document.body.clientWidth + 'px');	
@@ -124,12 +124,12 @@ var tabPageEditTemp = '<div class="col2 collHide" id="211edit" style="display:no
 					remote: '21_member.jsp'
 				});
 			}
-		}
-		else {
-			bootbox.alert({'title':'提示','message':'您没有权限新增/修改人员.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-		}
+		//}
+		//else {
+		//	bootbox.alert({'title':'提示','message':'您没有权限新增/修改人员.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//}
 	});
 	//点击保存修改权限
 	$('.col21').on('click','.editmember',function(){
@@ -139,30 +139,24 @@ var tabPageEditTemp = '<div class="col2 collHide" id="211edit" style="display:no
 
 	//点击修改权限
 	$('.col21').on('click','.editpriv',function(){
-		if(currole == 1) {
-			bootbox.alert({"title":"提示","message":"不能修改组织管理员.", callback: function() {
+		var activeRole = $('.toleft.prv21active').length
+		if(activeRole == 0||currole == 0) {
+			bootbox.alert({"title":"提示","message":"请先选择角色！", callback: function() {
 				$('#container').css('width', document.body.clientWidth + 'px');
 			}});
 			return;
 		}
 
 		//权限
-		if (has('qxglxg')) {
-			if (currole == 0) {
-				bootbox.alert({title:'提示', message:'请先选择身份.', callback: function() {
-					$('#container').css('width', document.body.clientWidth + 'px');
-				}});
-			}
-			else {
-				var bindPage = $('.infotab .infotabi.tabactive').attr('bindpage');
-				showpage(bindPage+'edit');
-			}
-		}
-		else {
-			bootbox.alert({'title':'提示','message':'您没有权限修改权限.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');
-			}});
-		}
+		//if (has('qxglxg')) {
+		var bindPage = $('.infotab .infotabi.tabactive').attr('bindpage');
+		showpage(bindPage+'edit');
+		//}
+		//else {
+		//	bootbox.alert({'title':'提示','message':'您没有权限修改权限.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//}
 	})
 
 	//分页
@@ -564,23 +558,23 @@ function del210(id) {
 	}
 	
 	//权限
-	if (has('qxglxg')) {
+	//if (has('qxglxg')) {
 		bootbox.confirm({
-			title: '提示', 
+			title: '提示',
 			message:'确定删除么 ？',
 			callback: function(result) {
 				if (result) {
 					callajax('priv!delMemberRole', {id: id}, cb_210_del)
 				}
-				$('#container').css('width', document.body.clientWidth + 'px');	
+				$('#container').css('width', document.body.clientWidth + 'px');
 			}
 		});
-	}
-	else {
-		bootbox.alert({'title':'提示','message':'您没有权限删除人员', callback: function() {
-			$('#container').css('width', document.body.clientWidth + 'px');	
-		}});
-	}
+	//}
+	//else {
+	//	bootbox.alert({'title':'提示','message':'您没有权限删除人员', callback: function() {
+	//		$('#container').css('width', document.body.clientWidth + 'px');
+	//	}});
+	//}
 }
 function cb_210_del(data) {
 	load210();
@@ -621,7 +615,7 @@ function delrole() {
 	}
 
 	//权限
-	if (has('qxglsc')) {
+	//if (has('qxglsc')) {
 		if (currole == 0) {
 			bootbox.alert({title:'提示', message:'请先选择身份.', callback: function() {
 				$('#container').css('width', document.body.clientWidth + 'px');	
@@ -639,12 +633,12 @@ function delrole() {
 				}
 			});
 		}
-	}
-	else {
-		bootbox.alert({'title':'提示','message':'您没有权限删除身份', callback: function() {
-			$('#container').css('width', document.body.clientWidth + 'px');	
-		}});
-	}
+	//}
+	//else {
+	//	bootbox.alert({'title':'提示','message':'您没有权限删除身份', callback: function() {
+	//		$('#container').css('width', document.body.clientWidth + 'px');
+	//	}});
+	//}
 }
 //确定删除角色
 function cb_21_del(data) {
@@ -673,12 +667,13 @@ function showpage(cp) {
 	if(cp!='210'){
 		if(typeof (curpage)=='number'){
 			var appName = $('.infotab .infotabi[bindpage='+curpage+']').html();
-			loadPage(cp,appName)
+			loadPage(cp,appName);
+			loadEditPage(cp,appName)
 		}
 		$('#editmember').hide();
 	}else{
 		$('#editmember').show();
-
+		load210()
 	}
 	$('.collHide').hide();
 	$('#' + cp).show();
