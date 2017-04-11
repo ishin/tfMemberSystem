@@ -278,6 +278,22 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 	 * userInfo.getAccountName(); }
 	 */
 
+	/**
+	 * 验证参数
+	 */
+	protected String valideParams(HttpServletRequest req, String[] params) {
+		String result = null;
+		
+		for(int i = 0; i < params.length; i++) {
+			String value = req.getParameter(params[i]);
+			if (StringUtils.getInstance().isBlank(value)) {
+				result = params[i] + " is null";
+				break;
+			}
+		}
+		
+		return result;
+	}
 	
 	
 	protected Integer getOrganId() {

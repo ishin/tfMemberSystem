@@ -71,7 +71,7 @@ public class SystemAction extends BaseAction {
 		/**
 		 * 初始化
 		 */
-		if (account.equals("Administrator")) {
+		/*if (account.equals("Administrator")) {
 			int count = memberService.countMember();
 			if (count > 1) {
 				result.put("code", 0);
@@ -79,7 +79,7 @@ public class SystemAction extends BaseAction {
 				returnToClient(result.toString());
 				return "text";
 			}
-		}
+		}*/
 		
 		TMember member = memberService.searchSigleUser(account, userpwd);
 		
@@ -90,7 +90,7 @@ public class SystemAction extends BaseAction {
 			return "text";
 		}
 		
-		logger.debug("That logining account is " + account);
+		logger.debug("The logining account is " + account);
 		
 		String userId = "" + member.getId();
 		String name = member.getFullname();
@@ -102,7 +102,6 @@ public class SystemAction extends BaseAction {
 		
 		if (member.getCreatetokendate()!=null) {
 			firstTokenDate = member.getCreatetokendate();
-			System.out.println("afterLogin 180: " + firstTokenDate);
 		}
 		
 		long now = TimeGenerator.getInstance().getUnixTime();
@@ -128,6 +127,7 @@ public class SystemAction extends BaseAction {
 		} else {
 			token = member.getToken();
 		}
+		
 		logger.info(token);
 		
 		//设置用户session
@@ -138,6 +138,7 @@ public class SystemAction extends BaseAction {
 		su.setFullname(member.getFullname());
 		su.setToken(token);
 		setSessionUser(su);
+		
 		/*
 		//2.设置权限
 		SessionPrivilege sp = new SessionPrivilege();
@@ -435,6 +436,11 @@ public class SystemAction extends BaseAction {
 	private String dataSource;
 	private String phone;
 	private String token;
+	private String organ;
+
+	public void setOrgan(String organ) {
+		this.organ = organ;
+	}
 
 	public void setToken(String token) {
 		this.token = token;

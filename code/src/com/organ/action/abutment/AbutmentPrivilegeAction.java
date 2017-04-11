@@ -67,7 +67,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 	}
 	
 	/**
-	 * 
+	 * 根据权限id获取角色
 	 * @return
 	 * @throws ServletException
 	 */
@@ -104,7 +104,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 	}
 	
 	/**
-	 * 
+	 * 根据权限标识获取权限
 	 * @return
 	 * @throws ServletException
 	 */

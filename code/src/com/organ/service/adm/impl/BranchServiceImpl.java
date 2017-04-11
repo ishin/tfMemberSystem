@@ -8,11 +8,13 @@ import java.util.List;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.organ.common.Tips;
 import com.organ.dao.adm.BranchDao;
 import com.organ.dao.adm.BranchMemberDao;
 import com.organ.dao.adm.MemberRoleDao;
@@ -29,6 +31,8 @@ import com.organ.model.TMemberRole;
 import com.organ.model.TPosition;
 import com.organ.model.UserSysRelation;
 import com.organ.service.adm.BranchService;
+import com.organ.utils.JSONUtils;
+import com.organ.utils.LogUtils;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PinyinGenerator;
 import com.organ.utils.StringUtils;
@@ -37,6 +41,8 @@ import com.organ.utils.TimeGenerator;
 
 public class BranchServiceImpl implements BranchService {
 
+	private static final Logger logger = Logger.getLogger(BranchServiceImpl.class);
+	
 	private BranchDao branchDao;
 	private MemberDao memberDao;
 	private BranchMemberDao branchMemberDao;
@@ -732,7 +738,7 @@ public class BranchServiceImpl implements BranchService {
 		ArrayList<Object> organList = new ArrayList<Object>();
 		ArrayList<String> ids = new ArrayList<String>();
 		
-		/*try {
+		try {
 			if (list != null) {
 				AppSecret as = appSecretDao.getAppSecretByAppId(appId);
 				int appRecordId = 0;
@@ -815,7 +821,7 @@ public class BranchServiceImpl implements BranchService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		*/
+		
 //		logger.info(ja.toString());
 		
 		return ja.toString();
@@ -824,7 +830,7 @@ public class BranchServiceImpl implements BranchService {
 	@SuppressWarnings("unchecked")
 	public String getBranchMember(String branchId, String appId) {
 		String result = null;
-		/*boolean status = true;
+		boolean status = true;
 		
 		if (StringUtils.getInstance().isBlank(branchId)) {
 			status = false;
@@ -889,7 +895,7 @@ public class BranchServiceImpl implements BranchService {
 			 jo.put("code", -1);
 			 jo.put("text", "err");
 			 result = jo.toString();
-		}*/
+		}
 		
 		return result;
 	}
@@ -897,20 +903,27 @@ public class BranchServiceImpl implements BranchService {
 	private String isBlank(Object o) {
 		return o == null ? "" : o + "";
 	}
-	@Override
-	public String getBranchMember(String branchId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 	@Override
 	public String getBranchMemberByMemberIds(String ids) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public String getBranchTreeAndMember() {
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject jo = new JSONObject();
+		try {
+			List list = branchMemberDao.getBranchMemberByMemberIds(ids);
+			
+			JSONArray ja = JSONUtils.getInstance().objToJSONArray(list);
+			
+			if (list != null) {
+				jo.put("code", 1);
+				jo.put("text", ja.toString());
+			} else {
+				jo.put("code", 0);
+				jo.put("text", Tips.FAIL.getText());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		return jo.toString();
 	}
 	
 }

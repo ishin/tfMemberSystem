@@ -66,10 +66,19 @@
 	</bean>
 	<bean id="orgService" class="com.organ.service.adm.impl.OrgServiceImpl" autowire="byName" >
 		<property name="orgDao" ref="orgDao" />
+		<property name="memberDao" ref="memberDao" />
+		<property name="positionDao" ref="positionDao" />
+		<property name="branchDao" ref="branchDao" />
+		<property name="branchMemberDao" ref="branchMemberDao" />
+		
 	</bean>
 	<bean id="uploadService" class="com.organ.service.upload.impl.UploadServiceImpl" autowire="byName" >
 		<property name="memberDao" ref="memberDao" />
 		<property name="cutLogoTempDao" ref="cutLogoTempDao" />
+	</bean>
+	<bean id="msgService" class="com.organ.service.msg.impl.MessageServiceImpl" autowire="byName" >
+		<property name="appSecretDao" ref="appSecretDao" />
+		<property name="memberDao" ref="memberDao" />
 	</bean>
 	
 	<!-- action -->
@@ -114,6 +123,9 @@
 	</bean>
 	<bean id="abutmentPrivilegeAction" class="com.organ.action.abutment.AbutmentPrivilegeAction" scope="prototype" autowire="byName" >
 		<property name="privService" ref="privService" />
+	</bean>
+	<bean id="msgAction" class="com.organ.action.msg.MessageAction" scope="prototype" autowire="byName" >
+		<property name="msgService" ref="msgService" />
 	</bean>
 	
 </beans>

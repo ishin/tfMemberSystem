@@ -8,36 +8,32 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.servlet.ServletException;
 
-import com.googlecode.sslplugin.annotation.Secured;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import com.organ.common.AuthTips;
 import com.organ.common.BaseAction;
-import com.organ.dao.adm.BranchMemberDao;
 import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
 import com.organ.model.TMember;
 import com.organ.model.TMemberRole;
 import com.organ.service.adm.BranchService;
+import com.organ.service.msg.MessageService;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PinyinGenerator;
-import com.organ.utils.StringUtils;
 import com.organ.utils.TextHttpSender;
 import com.organ.utils.TimeGenerator;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
-import com.bcloud.msg.http.HttpSender;
 
 /**
  * @author alopex
  *
  */
-
-public class BranchAction extends BaseAction {
 	
+public class BranchAction extends BaseAction {
+
 	private static final long serialVersionUID = 1L;
 		
 	/*
@@ -160,6 +156,28 @@ public class BranchAction extends BaseAction {
 		return "text";
 	}
 	
+	/**
+	 * 保存部门,专为外部接口使用
+	 * @throws SevletException
+	 */
+	public String saveBranchExtra() throws ServletException {
+		String result = null;
+		boolean as = msgService.validAppIdAndSecret(appId, secret);
+		
+		if (as) {
+			result = this.saveBranch();
+		} else {
+			JSONObject jo = new JSONObject();
+			jo.put("code", 0);
+			jo.put("text", AuthTips.WORNGAPPID.getText());
+			result = jo.toString();
+		}
+		
+		returnToClient(result);
+		return "text";
+	}
+	
+	
 	public String saveBranch() throws ServletException {
 		
 		TBranch branch = null;
@@ -209,7 +227,9 @@ public class BranchAction extends BaseAction {
 		JSONObject jo = new JSONObject();
 		jo.put("branchid", branchId);
 		
-		returnToClient(jo.toString());
+		if (appId == null && secret == null) {
+			returnToClient(jo.toString());
+		}
 
 		return "text";
 	}
@@ -219,6 +239,7 @@ public class BranchAction extends BaseAction {
 		
 		TMember member = null;
 		String id = this.request.getParameter("memberid");
+		boolean sms = false;
 		if (id != null && !"".equals(id)) {
 			member = branchService.getMemberObjectById(Integer.parseInt(id));
 			if (!member.getAccount().equalsIgnoreCase(this.request.getParameter("memberaccount"))) {
@@ -241,6 +262,7 @@ public class BranchAction extends BaseAction {
 			member.setGroupmax(0);
 			member.setGroupuse(0);
 			member.setPassword(PasswordGenerator.getInstance().getMD5Str("111111"));
+			sms = true;
 		}
 		if (this.request.getParameter("memberaccount") != null)
 			member.setAccount(this.request.getParameter("memberaccount"));
@@ -320,8 +342,10 @@ public class BranchAction extends BaseAction {
 		}
 		
 		//发短信
-		String msg = "您的IMS产品帐号" + member.getAccount() + ", 密码111111.";
-		TextHttpSender.getInstance().sendText(member.getMobile(), msg);
+		if (sms) {
+			String msg = "您的IMS产品帐号" + member.getAccount() + ", 密码111111.";
+			TextHttpSender.getInstance().sendText(member.getMobile(), msg);
+		}
 		
 		JSONObject jo = new JSONObject();
 		jo.put("memberid", memberId);
@@ -411,6 +435,28 @@ public class BranchAction extends BaseAction {
 		return "text";
 	}
 	
+	/**
+	 * 删除指定部门数据，专为外部接口使用
+	 * @return
+	 * @throws ServletException
+	 */
+	public String delExtra() throws ServletException {
+		String result = null;
+		boolean as = msgService.validAppIdAndSecret(appId, secret);
+		
+		if (as) {
+			result = this.del();
+		} else {
+			JSONObject jo = new JSONObject();
+			jo.put("code", 0);
+			jo.put("text", AuthTips.WORNGAPPID.getText());
+			result = jo.toString();
+		}
+		
+		returnToClient(result);
+		return "text";
+	}
+	
 	public String del() throws ServletException {
 		
 		Integer id = Integer.parseInt(this.request.getParameter("id"));
@@ -430,7 +476,10 @@ public class BranchAction extends BaseAction {
 		
 		JSONObject jo = new JSONObject();
 		jo.put("id", id);
-		returnToClient(jo.toString());
+		if (appId == null && secret == null) {
+			returnToClient(jo.toString());
+		}
+		
 		return "text";
 	}
 
@@ -506,7 +555,30 @@ public class BranchAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getBranchTreeAndMember() throws ServletException {
-		String result = branchService.getBranchTreeAndMember();
+		String result = branchService.getBranchTreeAndMember(appId);
+			
+		returnToClient(result);
+		
+		return "text";
+	}
+	
+	/**
+	 * 获取组织架构及成员，专为外部接口提供
+	 * @return
+	 * @throws ServletException
+	 */
+	public String getBranchTreeAndMembers() throws ServletException {
+		String result = null;
+		boolean as = msgService.validAppIdAndSecret(appId, secret);
+		
+		if (as) {
+			result = branchService.getBranchTreeAndMember(appId);
+		} else {
+			JSONObject jo = new JSONObject();
+			jo.put("code", 0);
+			jo.put("text", AuthTips.WORNGAPPID.getText());
+			result = jo.toString();
+		}
 			
 		returnToClient(result);
 		
@@ -515,24 +587,60 @@ public class BranchAction extends BaseAction {
 	
 	/**
 	 * 取得指定部门的成员
-	 * @return
+	 * @returen
 	 * @throws ServletException
 	 */
 	public String getBranchMember() throws ServletException {
 		
-		String result = branchService.getBranchMember(branchId);
+		String result = branchService.getBranchMember(branchId, appId);
 		
 		returnToClient(result);
 		return "text";
 	}
 	
+	/**
+	 * 取得指定部门的成员,专为外部接口提供
+	 * @return
+	 * @throws ServletException
+	 */
+	public String getBranchMembers() throws ServletException {
+		String result = null;
+		boolean as = msgService.validAppIdAndSecret(appId, secret);
+		
+		if (as) {
+			result = branchService.getBranchMember(branchId, appId);
+		} else {
+			JSONObject jo = new JSONObject();
+			jo.put("code", 0);
+			jo.put("text", AuthTips.WORNGAPPID.getText());
+			result = jo.toString();
+		}
+		returnToClient(result);
+		return "text";
+	}
+	
 	private BranchService branchService;
+	private MessageService msgService;
+
+	public void setMsgService(MessageService msgService) {
+		this.msgService = msgService;
+	}
 
 	public void setBranchService(BranchService branchService) {
 		this.branchService = branchService;
 	}
 	
 	private String branchId;
+	private String appId;
+	private String secret;
+
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
+
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
 
 	public void setBranchId(String branchId) {
 		this.branchId = branchId;

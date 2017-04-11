@@ -16,6 +16,7 @@ public interface MemberService {
 	 * 登陆验证
 	 * @param name
 	 * @param password
+	 * @param organ 
 	 * @return
 	 */
 	public TMember searchSigleUser(String name, String password);

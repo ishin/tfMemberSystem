@@ -1,6 +1,9 @@
 package com.organ.service.upload.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +15,6 @@ import com.organ.dao.upload.CutLogoTempDao;
 import com.organ.model.TCutLogoTemp;
 import com.organ.service.upload.UploadService;
 import com.organ.utils.FileUtil;
-import com.organ.utils.HttpRequest;
-import com.organ.utils.ImageUtils;
 import com.organ.utils.PropertiesUtils;
 import com.organ.utils.StringUtils;
 import com.organ.utils.TimeGenerator;
@@ -173,7 +174,6 @@ public class UploadServiceImpl implements UploadService {
 		
 		return jo.toString();
 	}
-	
 
 	@Override
 	public String saveTempPic(String userId, String logName) {
@@ -184,11 +184,68 @@ public class UploadServiceImpl implements UploadService {
         	 clte.setUserId(Integer.parseInt(userId));
         	 
         	 cutLogoTempDao.saveTempPic(clte);
+        	 
+        	 this.saveSelectedPic(userId, logName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return null;
+	}
+	
+	@Override
+	public String httpUpload(String fileName, InputStream input, String realPath) {
+		FileOutputStream fos = null;
+		JSONObject response = new JSONObject();
+		
+		try {
+			if (!StringUtils.getInstance().isBlank(fileName)) {
+				String imgPath = PropertiesUtils.getStringByKey("cfg.uploaddir");
+				String sep = PropertiesUtils.getStringByKey("dir.seperate");
+				
+				if (imgPath.endsWith(sep)) {
+					imgPath += sep;
+				}
+				
+				String dirPath = realPath + imgPath;
+				String fileFullPath = dirPath + fileName;
+				File file = new File(dirPath);
+				
+				if (!file.exists()) {
+					file.mkdirs();
+				}
+				
+				fos = new FileOutputStream(fileFullPath);
+				int size = 0;
+				byte[] buffer = new byte[1024];
+				
+				while ((size = input.read(buffer, 0, 1024)) != -1) {
+					fos.write(buffer, 0, size);
+				}
+				// 生成响应的json字符串
+				response.put("code", 1);
+				response.put("text", Tips.OK.getText());
+			} else {
+				response.put("code", 0);
+				response.put("text", Tips.FAIL.getText());
+			}
+		} catch (IOException e) {
+			response.put("code", 0);
+			response.put("text", e.getMessage());
+		} finally {
+			try {
+				if (input != null) {
+					input.close();
+				}
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return response.toString();
 	}
 	
 	private MemberDao memberDao;

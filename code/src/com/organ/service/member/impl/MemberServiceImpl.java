@@ -36,8 +36,6 @@ public class MemberServiceImpl implements MemberService {
 		TMember memeber = null;
 
 		try {
-			// password = PasswordGenerator.getInstance().getMD5Str(password);
-			// //前端加密
 			memeber = memberDao.searchSigleUser(name, password);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -657,7 +655,9 @@ public class MemberServiceImpl implements MemberService {
 						JSONObject t = new JSONObject();
 						Object[] o = (Object[]) memList.get(i);
 						t.put("userID", o[0]);
-						t.put("logo", o[1]);
+						for(int k = 1; k < pss.length; k++) {
+							t.put(pss[k], o[k]);
+						}
 						ja.add(t);
 					}
 					text = ja.toString();
