@@ -20,9 +20,6 @@ public class PosAction extends BaseAction {
 
 	private PositionService positionService;
 	
-	public PositionService getPositionService() {
-		return positionService;
-	}
 	public void setPositionService(PositionService positionService) {
 		this.positionService = positionService;
 	}

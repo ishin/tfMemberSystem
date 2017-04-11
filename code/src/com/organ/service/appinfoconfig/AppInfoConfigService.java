@@ -1,16 +1,17 @@
 package com.organ.service.appinfoconfig;
 
 public interface AppInfoConfigService {
-	public String getAppInfo(int pagesize, int pageindex);
+	public String getAppInfo(int userId,int pagesize, int pageindex);
 	
-	public String updatePriv(int appId,String secert,String callbackurl,String appname,int isopen);//Ìí¼ÓÈ¨ÏÞ½Ó¿Ú
+	public String updatePriv(String appId,String secert,String callbackurl,String appname,int isopen);//ï¿½ï¿½ï¿½È¨ï¿½Þ½Ó¿ï¿½
 	
 	
 	public String DelApp(int id);
 	
-	public String EditApp(int id,int appId,String secert,String callbackurl,long apptime,String appname,int isopen);
+	public String EditApp(int id,String appId,String secert,String callbackurl,String appname,int isopen);
 	
 	
-	public String SearchApp(String AppName,int pagesize, int pageindex);
+	public String SearchApp(int userId,String AppName,int pagesize, int pageindex);
 	
+	public String SearchAppInfoName();
 }

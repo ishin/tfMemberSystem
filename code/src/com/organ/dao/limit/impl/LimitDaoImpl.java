@@ -7,14 +7,58 @@ import org.apache.log4j.Logger;
 import org.hibernate.SQLQuery;
 
 import com.organ.common.BaseDao;
+import com.organ.dao.adm.PrivDao;
+import com.organ.dao.adm.RoleDao;
+import com.organ.dao.adm.RolePrivDao;
 import com.organ.dao.limit.LimitDao;
+import com.organ.dao.limit.RoleAppSecretDao;
+import com.organ.model.AppSecret;
 import com.organ.model.TPriv;
+import com.organ.model.TRole;
+import com.organ.model.TRoleAppSecret;
+import com.organ.model.TRolePriv;
 import com.organ.utils.PrivUrlNameUtil;
 
 public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
-
+	
+	RoleDao roleDao;
+	PrivDao privDao;
+	RolePrivDao rolePrivDao;
+	RoleAppSecretDao roleappsecretDao;
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(LimitDaoImpl.class);
+
+	public RoleDao getRoleDao() {
+		return roleDao;
+	}
+
+	public void setRoleDao(RoleDao roleDao) {
+		this.roleDao = roleDao;
+	}
+
+	public PrivDao getPrivDao() {
+		return privDao;
+	}
+
+	public void setPrivDao(PrivDao privDao) {
+		this.privDao = privDao;
+	}
+
+	public RolePrivDao getRolePrivDao() {
+		return rolePrivDao;
+	}
+
+	public void setRolePrivDao(RolePrivDao rolePrivDao) {
+		this.rolePrivDao = rolePrivDao;
+	}
+
+	public RoleAppSecretDao getRoleappsecretDao() {
+		return roleappsecretDao;
+	}
+
+	public void setRoleappsecretDao(RoleAppSecretDao roleappsecretDao) {
+		this.roleappsecretDao = roleappsecretDao;
+	}
 
 	/**
 	 * 实现添的接口
@@ -28,7 +72,7 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 		tPriv.setApp(app);
 		tPriv.setUrl(PrivUrlNameUtil.initUrlName(name));
 		tPriv.setListorder(0); // 这个不能为空
-		//tPriv.setCategory("0");
+		// tPriv.setCategory("0");
 		tPriv.setGrouping("0");
 		try {
 			save(tPriv);
@@ -80,19 +124,19 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 			int start = pageindex * pagesize;
 			String hql;
 			if (!StringUtils.isBlank(Name)) {
-				hql = "select " + "tp.id," + "tp.parent_id," + "tp.NAME,"
-						+ "tp.category," + "tp.url," + "tp.app "
-						+ "from t_priv tp where tp.name like '%" + Name + "%'"
-						+ "or tp.url like '%" + Name + "%' limit " + start
-						+ "," + pagesize;
+				hql="SELECT tmp.id,tmp.parent_id,tmp.name,tmp.category,tmp.url,tmp.app,tmp.parent_name FROM ("
+					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,t.name AS parent_name FROM t_priv pr "
+					+"LEFT JOIN t_priv t ON pr.parent_id=t.id "
+					+"WHERE pr.parent_id IN (SELECT  p.id FROM t_priv p WHERE p.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) "
+					+") tmp WHERE tmp.name like '%"+Name+"%'"+" or tmp.url like '%"+Name+"%' limit "+start+","+pagesize;
 			} else {
-				hql = "select " + "tp.id," + "tp.parent_id," + "tp.NAME,"
-						+ "tp.category," + "tp.url," + "tp.app "
-						+ "from t_priv tp limit " + start + "," + pagesize;
+				hql ="SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,t.name AS parent_name FROM t_priv pr "
+					+"LEFT JOIN t_priv t ON pr.parent_id=t.id "
+					+"WHERE pr.parent_id IN (SELECT  p.id FROM t_priv p WHERE p.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) "
+					+"limit "+ start + ", " + pagesize;
 			}
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 			List list = query.list();
-
 			if (list.size() > 0) {
 				return list;
 			}
@@ -122,16 +166,15 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 		String sql;
 		try {
 			if (!StringUtils.isBlank(name)) {
-				sql = "select count(*) from (" + "select " + "tp.id," + "tp.parent_id,"
-						+ "tp.NAME," + "tp.category," + "tp.url," + "tp.app "
-						+ "from t_priv tp where tp.name like '%" + name + "%'"
-						+ "or tp.url like '%" + name + "%') as tt";
+				sql="select count(*) from (("
+					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app FROM t_priv pr WHERE pr.parent_id IN (SELECT  pv.id FROM t_priv pv WHERE pv.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0))) as aa) "
+					+"where aa.name like '%"+name+"%' or aa.url like '%" + name + "%' ";
 			} else {
-				sql = "select count(*) from (" + "select " + "tp.id," + "tp.parent_id,"
-						+ "tp.NAME," + "tp.category," + "tp.url," + "tp.app "
-						+ "from t_priv tp) as tt";
+				sql = "select count(*) from (" 
+					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app FROM t_priv pr WHERE pr.parent_id IN (SELECT  pv.id FROM t_priv pv WHERE pv.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0))) AS tt";
 			}
-			int SearchCount =Integer.parseInt(this.getSession().createSQLQuery(sql).list().get(0).toString());
+			int SearchCount = Integer.parseInt(this.getSession()
+					.createSQLQuery(sql).list().get(0).toString());
 			return SearchCount;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -140,4 +183,51 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 		return 0;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List getLimitbyRole(Integer roleId, String appName) {
+		String sql = "select p.id, p.name, p.parent_id parentid, p.grouping, rp.role_id roleid, p.url url"
+				+ " from t_priv p"
+				+ " left join t_role_priv rp"
+				+ " on p.id = rp.priv_id and rp.role_id ="
+				+ roleId
+				+ " where p.app = '"
+				+ appName
+				+ "' order by p.parent_id desc, p.listorder desc";
+		return runSql(sql);
+	}
+
+	@Override
+	public List getRoleList(String appname) {
+		try {
+			String sql = null;
+			if (!StringUtils.isBlank(appname)) {
+				sql = "select tr.id,tr.name,tra.role_id from t_role tr "
+						+ " join t_role_appsecret tra on tr.id = tra.role_id "
+						+ "join t_appsecret ta on ta.id=tra.appsecret_id "
+						+ "where ta.appname = '" + appname + "'";
+			} else {
+/*				sql = "select tr.id,tr.name from t_role tr "
+						+ " join t_role_appsecret tra on tr.id = tra.role_id "
+						+ "join t_appsecret ta on ta.id=tra.appsecret_id ";*/
+				sql = "select id, name from t_role order by listorder desc";
+			}
+			return runSql(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public List getPrivNamebytwo(String appName) {
+		try {
+			String sql = "select p.id,p.name from t_priv p  where"
+					+ " p.parent_id IN (select tp.id from t_priv tp where tp.parent_id = 0) and p.app='"+appName+"'";
+			return runSql(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

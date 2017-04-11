@@ -15,16 +15,7 @@
 
 	<include file="struts-default.xml" />
 	<include file="struts-filter.xml" />
-	<include file="struts-system.xml" />
-	<include file="struts-member.xml" />
-	<include file="struts-branch.xml" />
-	<include file="struts-group.xml" />
-	<include file="struts-test.xml" />
-	<include file="struts-privilege.xml" />
-	<include file="struts-auth.xml" />
-	<include file="struts-abutment.xml" />
-	<include file="struts-limit.xml" />
-	<include file="struts-appinfoconfig.xml" />
+	<include file="struts-action.xml" />
 </struts>
 
 

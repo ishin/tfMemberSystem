@@ -10,7 +10,7 @@ public interface RolePrivDao extends IBaseDao<TRolePriv, Integer> {
 	/**
 	 * 获取角色根据权限id
 	 * @param privIds
-	 * @return
+	 * @returnS
 	 */
 	List<TRolePriv> getRolePrivsByPrivs(Integer[] privIds);
 

@@ -1,5 +1,7 @@
 package com.organ.service.limit;
 
+import java.util.List;
+
 /**
  * 
  * @author Lmy
@@ -39,5 +41,15 @@ public interface LimitService {
 	public String searchPriv(String Name,int pagesize,int pageindex);
 	
 	public int getCount();
+	
+	public List getLimitbyRole(Integer roleId, String appName);
+	
+	public String getRoleList(String appname);
+	
+	public String getPrivNamebytwo(String appName);//获取父id为2的所有权限名称
+	
+	public String saveRolebyApp(Integer roleId,Integer appsecretId, String roleName, String privs);
+	
+	void delRole(Integer roleId);//删除应用时，同时删除角色
 
 }

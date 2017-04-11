@@ -467,6 +467,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		
 		return null;
 	}
+	
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -589,6 +591,35 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 				}
 			}
 			sql.append(")");
+			SQLQuery query = this.getSession().createSQLQuery(sql.toString());
+			List list = query.list();
+
+			if (list != null && list.size() > 0) {
+				return list;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public List getMemberParam(String ids, String[] pss) {
+		try {
+			StringBuilder sql = new StringBuilder("select ");
+			int len = pss.length;
+			
+			for(int i = 0; i < len; i++) {
+				sql.append(pss[i]);
+				if (i < len - 1) {
+					sql.append(",");
+				}
+			}
+			
+			sql.append(" from t_member where id in(");
+			sql.append(ids);
+			sql.append(")");
+			
 			SQLQuery query = this.getSession().createSQLQuery(sql.toString());
 			List list = query.list();
 

@@ -1,6 +1,9 @@
 package com.organ.action.limit;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -10,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.JsonIOException;
 import com.hp.hpl.sparta.Text;
 import com.organ.action.member.MemberAction;
 import com.organ.common.BaseAction;
@@ -26,17 +30,9 @@ import com.organ.service.limit.LimitService;
 public class LiMitAction extends BaseAction {
 
 	private static final long serialVersionUID = -8882273369530974698L;
+	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(LiMitAction.class);
 	private LimitService limitService;
-	private LimitDao limitDao;
-
-	public LimitDao getLimitDao() {
-		return limitDao;
-	}
-
-	public void setLimitDao(LimitDao limitDao) {
-		this.limitDao = limitDao;
-	}
 
 	public LimitService getLimitService() {
 		return limitService;
@@ -55,11 +51,7 @@ public class LiMitAction extends BaseAction {
 	 * @throws UnsupportedEncodingException 
 	 */
 	public String AddPriv() throws ServletException, JSONException, UnsupportedEncodingException {
-/*		byte bufname[] = request.getParameter("name").getBytes("iso8859-1");
-		byte bufapp[] = request.getParameter("app").getBytes("iso8859-1");*/
 		String pid = this.request.getParameter("parentId");
-/*		String name = new String(bufname,"utf-8");
-		String app = new String(bufapp,"utf-8");*/
 		String name = this.request.getParameter("name");
 		String app = this.request.getParameter("app");
 		Integer intPid = pid == null ? null : Integer.parseInt(pid);
@@ -180,8 +172,6 @@ public class LiMitAction extends BaseAction {
 	}
 
 	public String SearchPriv() throws ServletException, JSONException, UnsupportedEncodingException {
-/*		byte buf[] = request.getParameter("name").getBytes("iso8859-1");
-		String name = new String(buf,"utf-8");*/
 		String pagesize = this.request.getParameter("pagesize");
 		String pageindex = this.request.getParameter("pageindex");
 		String name = this.request.getParameter("name");
@@ -218,6 +208,86 @@ public class LiMitAction extends BaseAction {
 		}
 		returnToClient(jsonObject.toString());
 		return "text";
+	}
+	
+	public String getLimitByRole() throws ServletException,JSONException{
+		Integer roleid = Integer.parseInt(this.request.getParameter("roleid"));
+		String appName = this.request.getParameter("appname");
+		List list = limitService.getLimitbyRole(roleid, appName);
+		Iterator it = list.iterator();
+		ArrayList<JSONObject> ja = new ArrayList<JSONObject>();
+		while(it.hasNext()) {
+			Object[] o = (Object[])it.next();
+			JSONObject js = new JSONObject();
+			js.put("privid", o[0]);
+			js.put("privname", o[1]);
+			js.put("parentid", o[2]);
+			js.put("grouping", o[3]);
+			js.put("roleid", o[4] == null ? "" : o[4]);
+			ja.add(js);
+		}
+		returnToClient(ja.toString());
+		return "text";
+		
+	}
+	public String getRoleList() throws ServletException,JsonIOException{
+		String appname = this.request.getParameter("appname");
+		try {
+			String result = limitService.getRoleList(appname);
+			returnToClient(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "text";
+	}
+	public String getPrivNamebyclass() throws ServletException,JSONException{
+		String appname = this.request.getParameter("appName");
+		String result = limitService.getPrivNamebytwo(appname);
+		returnToClient(result);
+		return "text";
+	}
+	
+	public String saveRolebyApp() throws ServletException,JSONException{
+		//roleId, roleName, privs, appName
+		String roleId = this.request.getParameter("roleid");
+		System.err.println("LimitAction:"+roleId);
+		Integer introleId = (roleId == null ? 0 : Integer.parseInt(roleId));
+		String roleName = this.request.getParameter("roleName");
+		String privs = this.request.getParameter("privs");
+		Integer appsecretId = Integer.parseInt(this.request.getParameter("appsecretId"));
+		boolean falg = false;
+		String result = "";
+		try {
+			result = limitService.saveRolebyApp(introleId,appsecretId,roleName, privs);
+			if ("".equals(result) && null == result) {
+				falg = false;
+			} else {
+				falg = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			falg = false;
+		}
+		JSONObject jsonObject = new JSONObject();
+		if (falg) {
+			jsonObject.put("code", 1 + "");
+			jsonObject.put("text", "保存成功");
+		} else {
+			jsonObject.put("code", 0 + "");
+			jsonObject.put("text", "保存失败");
+		}
+		returnToClient(jsonObject.toString());
+		return "text";
+	}
+	
+	/**
+	 * 删除角色
+	 * @return
+	 */
+	public String delRole() {
+		Integer roleId = Integer.parseInt(this.request.getParameter("roleId"));
+		limitService.delRole(roleId);
+		return returnajaxid(0);
 	}
 
 }

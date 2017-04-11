@@ -12,9 +12,11 @@ import com.organ.dao.adm.MemberRoleDao;
 import com.organ.dao.adm.PrivDao;
 import com.organ.dao.adm.RoleDao;
 import com.organ.dao.adm.RolePrivDao;
+import com.organ.model.AppSecret;
 import com.organ.model.TMemberRole;
 import com.organ.model.TPriv;
 import com.organ.model.TRole;
+import com.organ.model.TRoleAppSecret;
 import com.organ.model.TRolePriv;
 import com.organ.service.adm.PrivService;
 import com.organ.utils.JSONUtils;
@@ -92,9 +94,7 @@ public class PrivServiceImpl implements PrivService {
 			role.setListorder(roleDao.getMax("listorder", "from TRole") + 1);
 			roleDao.save(role);
 		}
-		
 		rolePrivDao.delete("delete from TRolePriv where roleId = " + role.getId());
-		
 		String[] pa = privs.split(",");
 		Integer i = pa.length;
 		while(i-- > 0) {

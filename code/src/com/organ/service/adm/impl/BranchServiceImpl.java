@@ -1,5 +1,4 @@
-package com.sealtalk.service.adm.impl;
-
+package com.organ.service.adm.impl;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,35 +8,41 @@ import java.util.List;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.sealtalk.auth.dao.AppSecretDao;
-import com.sealtalk.auth.dao.UserSysRelationDao;
-import com.sealtalk.auth.model.AppSecret;
-import com.sealtalk.auth.model.UserSysRelation;
-import com.sealtalk.dao.adm.BranchDao;
-import com.sealtalk.dao.adm.BranchMemberDao;
-import com.sealtalk.dao.adm.MemberRoleDao;
-import com.sealtalk.dao.adm.PositionDao;
-import com.sealtalk.dao.member.MemberDao;
-import com.sealtalk.model.ImpUser;
-import com.sealtalk.model.TBranch;
-import com.sealtalk.model.TBranchMember;
-import com.sealtalk.model.TMember;
-import com.sealtalk.model.TMemberRole;
-import com.sealtalk.model.TPosition;
-import com.sealtalk.service.adm.BranchService;
-import com.sealtalk.utils.PasswordGenerator;
-import com.sealtalk.utils.PinyinGenerator;
-import com.sealtalk.utils.StringUtils;
-import com.sealtalk.utils.TextHttpSender;
-import com.sealtalk.utils.TimeGenerator;
+import com.organ.common.Tips;
+import com.organ.dao.adm.BranchDao;
+import com.organ.dao.adm.BranchMemberDao;
+import com.organ.dao.adm.MemberRoleDao;
+import com.organ.dao.adm.PositionDao;
+import com.organ.dao.auth.AppSecretDao;
+import com.organ.dao.auth.UserSysRelationDao;
+import com.organ.dao.member.MemberDao;
+import com.organ.model.AppSecret;
+import com.organ.model.ImpUser;
+import com.organ.model.TBranch;
+import com.organ.model.TBranchMember;
+import com.organ.model.TMember;
+import com.organ.model.TMemberRole;
+import com.organ.model.TPosition;
+import com.organ.model.UserSysRelation;
+import com.organ.service.adm.BranchService;
+import com.organ.utils.JSONUtils;
+import com.organ.utils.LogUtils;
+import com.organ.utils.PasswordGenerator;
+import com.organ.utils.PinyinGenerator;
+import com.organ.utils.StringUtils;
+import com.organ.utils.TextHttpSender;
+import com.organ.utils.TimeGenerator;
 
 public class BranchServiceImpl implements BranchService {
 
+	private static final Logger logger = Logger.getLogger(BranchServiceImpl.class);
+	
 	private BranchDao branchDao;
 	private MemberDao memberDao;
 	private BranchMemberDao branchMemberDao;
@@ -724,7 +729,6 @@ public class BranchServiceImpl implements BranchService {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public String getBranchTreeAndMember(String appId) {
 		List list = branchDao.getBrancTreeAndMember();
 		
@@ -824,7 +828,6 @@ public class BranchServiceImpl implements BranchService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Override
 	public String getBranchMember(String branchId, String appId) {
 		String result = null;
 		boolean status = true;
@@ -899,6 +902,28 @@ public class BranchServiceImpl implements BranchService {
 	
 	private String isBlank(Object o) {
 		return o == null ? "" : o + "";
+	}
+	
+	@Override
+	public String getBranchMemberByMemberIds(String ids) {
+		JSONObject jo = new JSONObject();
+		try {
+			List list = branchMemberDao.getBranchMemberByMemberIds(ids);
+			
+			JSONArray ja = JSONUtils.getInstance().objToJSONArray(list);
+			
+			if (list != null) {
+				jo.put("code", 1);
+				jo.put("text", ja.toString());
+			} else {
+				jo.put("code", 0);
+				jo.put("text", Tips.FAIL.getText());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		return jo.toString();
 	}
 	
 }

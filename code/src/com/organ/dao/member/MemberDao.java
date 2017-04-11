@@ -15,6 +15,7 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	 * 登陆验证
 	 * @param name
 	 * @param password
+	 * @param organIdInt 
 	 * @return
 	 */
 	public TMember searchSigleUser(String name, String password);
@@ -186,5 +187,13 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	 * @return
 	 */
 	public List getMemberIdsByAccount(String[] targetNames);
+	
+	/**
+	 * 获取成员指定参数
+	 * @param ids
+	 * @param pss
+	 * @return
+	 */
+	public List getMemberParam(String ids, String[] pss);
 } 
 

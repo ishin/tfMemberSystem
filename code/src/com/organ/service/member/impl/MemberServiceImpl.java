@@ -36,8 +36,6 @@ public class MemberServiceImpl implements MemberService {
 		TMember memeber = null;
 
 		try {
-			// password = PasswordGenerator.getInstance().getMD5Str(password);
-			// //前端加密
 			memeber = memberDao.searchSigleUser(name, password);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -562,7 +560,9 @@ public class MemberServiceImpl implements MemberService {
 			
  			if (list != null) {
 				for (int i = 0; i < list.size(); i++) {
-					lj.add(JSONUtils.getInstance().modelToJSONObj(list.get(i)));
+					JSONObject tm = JSONUtils.getInstance().modelToJSONObj(list.get(i));
+					tm.remove("password");
+					lj.add(tm);
 				}
  			}
  			
@@ -588,20 +588,94 @@ public class MemberServiceImpl implements MemberService {
 		try {
 			int userIdInt = Integer.parseInt(userId);
 			TMember tm = memberDao.getMemberForId(userIdInt);
+			JSONObject j = JSONUtils.getInstance().modelToJSONObj(tm);
+			j.remove("password");
 			if (tm != null) {
 				jo.put("code", 1);
-				jo.put("text", JSONUtils.getInstance().modelToJSONObj(tm));
+				jo.put("text", j.toString());
 			} else {
 				jo.put("code", 0);
 				jo.put("text", Tips.FAIL.getText());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		
 		return null;
 	}
 	
+	@Override
+	public String getLimitMemberIds(String mapMax) {
+		JSONObject jo = new JSONObject();
+		
+		try {
+			int mapMaxInt = Integer.parseInt(mapMax);
+			List<TMember> tm = memberDao.getLimitMemberIds(mapMaxInt);
+			List<JSONObject> ret = new ArrayList<JSONObject>();
+			
+			if (tm != null) {
+				for(int i = 0; i < tm.size(); i++) {
+					ret.add(JSONUtils.getInstance().modelToJSONObj(tm.get(i)));
+				}
+				jo.put("code", 1);
+				jo.put("text", ret.toString());
+			} else {
+				jo.put("code", 0);
+				jo.put("text", Tips.FAIL.getText());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		
+		return null;
+	}
+	
+
+	@Override
+	public String getMemberParam(String id, String ps) {
+		JSONObject jo = new JSONObject();
+		String code = "0";
+		String text = null;
+		
+		try {
+			if (!StringUtils.getInstance().isBlank(id) && !StringUtils.getInstance().isBlank(ps)) {
+				id = StringUtils.getInstance().replaceChar(id, "[", "");
+				id = StringUtils.getInstance().replaceChar(id, "]", "");
+				id = StringUtils.getInstance().replaceChar(id, "\"", "");
+				String[] pss = StringUtils.getInstance().strToArray(ps);
+
+				List memList = memberDao.getMemberParam(id, pss);
+				JSONArray ja = new JSONArray();
+				
+				if (memList != null) {
+					code = "1";
+					for(int i = 0; i < memList.size(); i++) {
+						JSONObject t = new JSONObject();
+						Object[] o = (Object[]) memList.get(i);
+						t.put("userID", o[0]);
+						for(int k = 1; k < pss.length; k++) {
+							t.put(pss[k], o[k]);
+						}
+						ja.add(t);
+					}
+					text = ja.toString();
+				} else {
+					text = Tips.FAIL.getText();
+				}
+			}
+			
+			jo.put("code", code);
+			jo.put("text", text);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		
+		return jo.toString();
+	}
+
 	private String isBlank(Object o) {
 		return o == null ? "" : o + "";
 	}
@@ -629,5 +703,4 @@ public class MemberServiceImpl implements MemberService {
 	public MemberDao getMemberDao() {
 		return memberDao;
 	}
-
 }

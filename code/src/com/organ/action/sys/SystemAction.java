@@ -71,7 +71,7 @@ public class SystemAction extends BaseAction {
 		/**
 		 * 初始化
 		 */
-		if (account.equals("Administrator")) {
+		/*if (account.equals("Administrator")) {
 			int count = memberService.countMember();
 			if (count > 1) {
 				result.put("code", 0);
@@ -79,7 +79,7 @@ public class SystemAction extends BaseAction {
 				returnToClient(result.toString());
 				return "text";
 			}
-		}
+		}*/
 		
 		TMember member = memberService.searchSigleUser(account, userpwd);
 		
@@ -90,7 +90,7 @@ public class SystemAction extends BaseAction {
 			return "text";
 		}
 		
-		logger.debug("That logining account is " + account);
+		logger.debug("The logining account is " + account);
 		
 		String userId = "" + member.getId();
 		String name = member.getFullname();
@@ -102,7 +102,6 @@ public class SystemAction extends BaseAction {
 		
 		if (member.getCreatetokendate()!=null) {
 			firstTokenDate = member.getCreatetokendate();
-			System.out.println("afterLogin 180: " + firstTokenDate);
 		}
 		
 		long now = TimeGenerator.getInstance().getUnixTime();
@@ -128,6 +127,7 @@ public class SystemAction extends BaseAction {
 		} else {
 			token = member.getToken();
 		}
+		
 		logger.info(token);
 		
 		//设置用户session
@@ -138,6 +138,7 @@ public class SystemAction extends BaseAction {
 		su.setFullname(member.getFullname());
 		su.setToken(token);
 		setSessionUser(su);
+		
 		/*
 		//2.设置权限
 		SessionPrivilege sp = new SessionPrivilege();
@@ -421,10 +422,6 @@ public class SystemAction extends BaseAction {
 	public void setMemberService(MemberService memberService) {
 		this.memberService = memberService;
 	}
-	
-	public PrivService getPrivService() {
-		return privService;
-	}
 
 	public void setPrivService(PrivService privService) {
 		this.privService = privService;
@@ -439,81 +436,46 @@ public class SystemAction extends BaseAction {
 	private String dataSource;
 	private String phone;
 	private String token;
+	private String organ;
 
-	public String getToken() {
-		return token;
+	public void setOrgan(String organ) {
+		this.organ = organ;
 	}
 
 	public void setToken(String token) {
 		this.token = token;
 	}
 
-	public String getAccount() {
-		return account;
-	}
-
 	public void setAccount(String account) {
 		this.account = account;
-	}
-
-	public String getUserpwd() {
-		return userpwd;
 	}
 
 	public void setUserpwd(String userpwd) {
 		this.userpwd = userpwd;
 	}
 
-	public String getOldpwd() {
-		return oldpwd;
-	}
-
 	public void setOldpwd(String oldpwd) {
 		this.oldpwd = oldpwd;
-	}
-
-	public String getNewpwd() {
-		return newpwd;
 	}
 
 	public void setNewpwd(String newpwd) {
 		this.newpwd = newpwd;
 	}
 
-	public String getTextcode() {
-		return textcode;
-	}
-
 	public void setTextcode(String textcode) {
 		this.textcode = textcode;
-	}
-
-	public String getComparepwd() {
-		return comparepwd;
 	}
 
 	public void setComparepwd(String comparepwd) {
 		this.comparepwd = comparepwd;
 	}
 
-	public String getDataSource() {
-		return dataSource;
-	}
-
 	public void setDataSource(String dataSource) {
 		this.dataSource = dataSource;
 	}
 
-	public String getPhone() {
-		return phone;
-	}
-
 	public void setPhone(String phone) {
 		this.phone = phone;
-	}
-
-	public MemberService getMemberService() {
-		return memberService;
 	}
 
 }

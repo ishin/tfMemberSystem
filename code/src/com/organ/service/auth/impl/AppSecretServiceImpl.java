@@ -23,7 +23,7 @@ import com.organ.utils.PropertiesUtils;
 import com.organ.utils.SecretUtils;
 import com.organ.utils.StringUtils;
 import com.organ.utils.TimeGenerator;
-
+import com.organ.service.auth.impl.AppSecretServiceImpl;
 
 public class AppSecretServiceImpl implements AppSecretService {
 	private static final Logger logger = Logger
@@ -157,14 +157,15 @@ public class AppSecretServiceImpl implements AppSecretService {
 							appId += tokenValidTime;
 
 							String unAuthToken = makeCode(appId);
-							
+
 							int id = as.getId();
-							List<UserValid> uv = userValidDao.getUserValidByAsId(id);
-							
+							List<UserValid> uv = userValidDao
+									.getUserValidByAsId(id);
+
 							if (uv != null) {
 								userValidDao.delUserValid(id);
 							}
-							
+
 							UserValid uv1 = new UserValid();
 							uv1.setAsid(as.getId());
 							uv1.setUnAuthToken(unAuthToken);
@@ -213,7 +214,8 @@ public class AppSecretServiceImpl implements AppSecretService {
 					long now = TimeGenerator.getInstance().getUnixTime();
 
 					if (as != null) {
-						UserValid uv = userValidDao.getUserValidByUnAuthToken(unAuthToken);
+						UserValid uv = userValidDao
+								.getUserValidByUnAuthToken(unAuthToken);
 
 						if (uv != null) {
 							String callBackUrl = as.getCallBackUrl();
@@ -229,9 +231,11 @@ public class AppSecretServiceImpl implements AppSecretService {
 								if (tm != null) {
 									long authTokenTimeL = 0;
 									int infoInt = 3;
-									//if (StringUtils.getInstance().isBlank(info)) {
-									//	infoInt = Integer.parseInt(info);
-									//}
+									// if
+									// (StringUtils.getInstance().isBlank(info))
+									// {
+									// infoInt = Integer.parseInt(info);
+									// }
 									String authTokenTime = PropertiesUtils
 											.getStringByKey("auth.authtime");
 									appId += now;
@@ -248,7 +252,10 @@ public class AppSecretServiceImpl implements AppSecretService {
 									text = authToken;
 									jo.put("url", callBackUrl);
 									jo.put("name", as.getAppName());
-									jo.put("accountStatus", this.loginAbleStatus(Integer.valueOf(as.getId()), Integer.valueOf(tm.getId())));
+									jo.put("accountStatus", this
+											.loginAbleStatus(Integer.valueOf(as
+													.getId()), Integer
+													.valueOf(tm.getId())));
 								} else {
 									text = AuthTips.INVALUSER.getText();
 								}
@@ -290,19 +297,23 @@ public class AppSecretServiceImpl implements AppSecretService {
 					if (!secretDB.equals(secret)) {
 						text = AuthTips.WORNGSECRET.getText();
 					} else {
-						UserValid uv = userValidDao.getUserValidByAuthToken(authToken);
-	
+						UserValid uv = userValidDao
+								.getUserValidByAuthToken(authToken);
+
 						if (uv != null) {
 							long authTokenTimeDB = uv.getAuthTokenTime();
-							
+
 							if (now >= authTokenTimeDB) {
 								text = AuthTips.INVALTOKEN.getText();
 							} else {
 								long realTokenTimeL = 0;
-								String realTokenTime = PropertiesUtils.getStringByKey("auth.visittime");
-								realTokenTimeL = realTokenTime != null ? Long.parseLong(realTokenTime) : 0;
+								String realTokenTime = PropertiesUtils
+										.getStringByKey("auth.visittime");
+								realTokenTimeL = realTokenTime != null ? Long
+										.parseLong(realTokenTime) : 0;
 								String nowEncry = makeCode(now + "");
-								String secretPart = StringUtils.getInstance().getRandomString(nowEncry + secret, 10);
+								String secretPart = StringUtils.getInstance()
+										.getRandomString(nowEncry + secret, 10);
 								String realToken = makeCode(secretPart);
 								uv.setVisitToken(realToken);
 								uv.setVisitTokenTime(now + realTokenTimeL);
@@ -339,7 +350,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 				text = AuthTips.INVALTOKEN.getText();
 			} else {
 				UserValid as = userValidDao.getUserValidByRealToken(visitToken);
-				
+
 				if (as != null) {
 					long now = TimeGenerator.getInstance().getUnixTime();
 					long visitTokenTime = as.getVisitTokenTime();
@@ -353,8 +364,8 @@ public class AppSecretServiceImpl implements AppSecretService {
 						Object[] member = memberDao.getAuthResouce(userId);
 						JSONObject jo = new JSONObject();
 
-						jo.put("userId",isBlank(member[5]));
-						jo.put("account",isBlank(member[6]));
+						jo.put("userId", isBlank(member[5]));
+						jo.put("account", isBlank(member[6]));
 
 						if (info == 1 || info == 3) {
 							jo.put("name", isBlank(member[0]));
@@ -385,7 +396,8 @@ public class AppSecretServiceImpl implements AppSecretService {
 	}
 
 	@Override
-	public JSONObject reqAuthorizeTwo(SessionUser su, String appId, String unAuthToken) {
+	public JSONObject reqAuthorizeTwo(SessionUser su, String appId,
+			String unAuthToken) {
 		JSONObject ret = new JSONObject();
 		String code = "500";
 		String text = null;
@@ -405,9 +417,10 @@ public class AppSecretServiceImpl implements AppSecretService {
 					text = AuthTips.INVALTOKEN.getText();
 				} else {
 					AppSecret as = appSecretDao.getAppSecretByAppId(appId);
-					
+
 					if (as != null) {
-						UserValid uv = userValidDao.getUserValidByUnAuthToken(unAuthToken);
+						UserValid uv = userValidDao
+								.getUserValidByUnAuthToken(unAuthToken);
 						long now = TimeGenerator.getInstance().getUnixTime();
 
 						if (as != null) {
@@ -417,10 +430,12 @@ public class AppSecretServiceImpl implements AppSecretService {
 								text = AuthTips.INVALTOKEN.getText();
 							} else {
 								long authTokenTimeL = 0;
-								String authTokenTime = PropertiesUtils.getStringByKey("auth.authtime");
+								String authTokenTime = PropertiesUtils
+										.getStringByKey("auth.authtime");
 								appId += now;
 								String authToken = makeCode(appId);
-								authTokenTimeL = authTokenTime != null ? Long.parseLong(authTokenTime) : 0;
+								authTokenTimeL = authTokenTime != null ? Long
+										.parseLong(authTokenTime) : 0;
 								uv.setAuthToken(authToken);
 								uv.setAuthTokenTime(now + authTokenTimeL);
 								uv.setUserId(su.getId());
@@ -430,7 +445,9 @@ public class AppSecretServiceImpl implements AppSecretService {
 								text = authToken;
 								ret.put("url", as.getCallBackUrl());
 								ret.put("name", as.getAppName());
-								ret.put("accountStatus", this.loginAbleStatus(Integer.valueOf(as.getId()), Integer.valueOf(su.getId())));
+								ret.put("accountStatus", this.loginAbleStatus(
+										Integer.valueOf(as.getId()), Integer
+												.valueOf(su.getId())));
 							}
 						} else {
 							text = AuthTips.INVALIDAPPID.getText();
@@ -449,9 +466,10 @@ public class AppSecretServiceImpl implements AppSecretService {
 
 		return ret;
 	}
-	
+
 	@Override
-	public JSONObject reqAuthorizeTwoForApp(String userId, String appId, String unAuthToken) {
+	public JSONObject reqAuthorizeTwoForApp(String userId, String appId,
+			String unAuthToken) {
 		JSONObject ret = new JSONObject();
 		String code = "500";
 		String text = null;
@@ -471,9 +489,10 @@ public class AppSecretServiceImpl implements AppSecretService {
 					text = AuthTips.INVALTOKEN.getText();
 				} else {
 					AppSecret as = appSecretDao.getAppSecretByAppId(appId);
-					
+
 					if (as != null) {
-						UserValid uv = userValidDao.getUserValidByUnAuthToken(unAuthToken);
+						UserValid uv = userValidDao
+								.getUserValidByUnAuthToken(unAuthToken);
 						long now = TimeGenerator.getInstance().getUnixTime();
 
 						if (as != null) {
@@ -483,11 +502,13 @@ public class AppSecretServiceImpl implements AppSecretService {
 								text = AuthTips.INVALTOKEN.getText();
 							} else {
 								long authTokenTimeL = 0;
-								String authTokenTime = PropertiesUtils.getStringByKey("auth.authtime");
+								String authTokenTime = PropertiesUtils
+										.getStringByKey("auth.authtime");
 								appId += now;
 								String authToken = makeCode(appId);
-								authTokenTimeL = authTokenTime != null ? Long.parseLong(authTokenTime) : 0;
-								
+								authTokenTimeL = authTokenTime != null ? Long
+										.parseLong(authTokenTime) : 0;
+
 								uv.setAuthToken(authToken);
 								uv.setAuthTokenTime(now + authTokenTimeL);
 								uv.setUserId(Integer.parseInt(userId));
@@ -497,10 +518,12 @@ public class AppSecretServiceImpl implements AppSecretService {
 								text = authToken;
 								ret.put("url", as.getCallBackUrl());
 								ret.put("name", as.getAppName());
-								ret.put("accountStatus", this.loginAbleStatus(Integer.valueOf(as.getId()), Integer.parseInt(userId)));
+								ret.put("accountStatus", this.loginAbleStatus(
+										Integer.valueOf(as.getId()), Integer
+												.parseInt(userId)));
 							}
 						} else {
-						 	text = AuthTips.INVALIDAPPID.getText();
+							text = AuthTips.INVALIDAPPID.getText();
 						}
 					} else {
 						text = AuthTips.INVALIDAPPID.getText();
@@ -516,9 +539,10 @@ public class AppSecretServiceImpl implements AppSecretService {
 
 		return ret;
 	}
-	
+
 	/**
 	 * 获取用户是否有某应用权限
+	 * 
 	 * @param appName
 	 * @param userId
 	 * @return
@@ -526,11 +550,11 @@ public class AppSecretServiceImpl implements AppSecretService {
 	private boolean loginAbleStatus(Integer appId, Integer userId) {
 		try {
 			UserSysRelation usr = userSysRelationDao.getRelation(appId, userId);
-			
+
 			if (usr != null) {
 				return true;
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return false;
@@ -604,7 +628,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 
 		return code;
 	}
-	
+
 	private String isBlank(Object o) {
 		return o == null ? "" : o + "";
 	}
