@@ -31,7 +31,7 @@ Paging.prototype.fillHtml = function(obj,args){
         var start = args.current-2;var end = args.current+2;
         if(args.current<3&&args.pageCount>=5){
             start = 1;end = 5;
-        }else if(args.current<3&&args.pageCount<5){
+        }else if(args.pageCount<5){
             start = 1;end = args.pageCount;
         }else if(args.current>args.pageCount-3){
             start = args.pageCount-4;end = args.pageCount;

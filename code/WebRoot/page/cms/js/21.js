@@ -30,17 +30,17 @@ var tabPageEditTemp = '<div class="col2 collHide" id="211edit" style="display:no
 
 	if (has('qxglck')) {
 
-		callajax('limit!getRoleList',{appname:''}, cb_21_fresh);
+		callajax('limit!getRoleList',{appId:''}, cb_21_fresh);
 		callajax('appinfoconfig!getAppName','', showTab);
 	}
 	
 	$('#role').on('shown.bs.modal', function(e) {
-		callajax('limit!getRoleList', '', cb_21_role_role);
-		callajax('priv!getPrivByRole', {roleid: 0}, cb_21_role_priv)
+		//callajax('limit!getRoleList', '', cb_21_role_role);
+		//callajax('limit!getLimitByRole', {roleid: 0,appname:'IMS'}, cb_21_role_priv)
 	});
 
 	$('#member').on('shown.bs.modal', function(e) {
-		callajax("branch!getBranchTreeAndMember", "", cb_21_member_tree);
+		callajax("branch!getOrganTree", "", cb_21_member_tree);
 	});
 	//切换角色
 	$('body').on('click', '#list21 li', function() {
@@ -53,13 +53,17 @@ var tabPageEditTemp = '<div class="col2 collHide" id="211edit" style="display:no
 		}
 		var curPage = $('.infotab').find('.tabactive').attr('bindpage');
 		var appName = $('.infotab').find('.tabactive').html();
+		currole = this.id.substr(1);
 		if(curPage!=210){
 			//showpage(curPage);
 
 			loadPage(curPage,appName);
+			loadEditPage(curPage,appName)
+		}else{
+			load210();
+
 		}
-		currole = this.id.substr(1);
-		load210();
+
 	});
 	//切换多选的checkbox
 	$('body').on('click', '.privgroup, .privgroupd', function() {
@@ -211,8 +215,10 @@ function showTab(data){
 	var pageNum = 211;
 	var content = data.content;
 	var sHTML = '';
-	for(var i = 0;i<content.length;i++){
-		sHTML='<div class="infotabi" onclick="showpage('+pageNum+')" bindpage="'+pageNum+'">'+content[i]+'</div>';
+	var contentLength = content.length;
+	$('.infotitle .infotab').width(contentLength*100+100);
+	for(var i = 0;i<contentLength;i++){
+		sHTML='<div class="infotabi" appID="'+content[i].id+'" onclick="showpage('+pageNum+')" bindpage="'+pageNum+'">'+content[i].appName+'</div>';
 		$('.infotab').append($(sHTML));
 
 		$('.col21').append(tabPageTemp
@@ -221,9 +227,8 @@ function showTab(data){
 		$('.col21').append(tabPageEditTemp
 				.replace(/211/g, pageNum)
 		);
-
-		loadPage(pageNum,content[i]);
-		loadEditPage(pageNum,content[i]);
+		//loadPage(pageNum,content[i]);
+		//loadEditPage(pageNum,content[i]);
 
 		pageNum++;
 	}
@@ -381,10 +386,11 @@ function cb_210_fresh(data) {
 	var i = data.length;
 	while(i--) {
 		$('#list210').append('<tr></tr>');
+		var positionname = data[i].positionname?data[i].positionname:'';
 		$('#list210 tr:last-child')
 			.append('<td>' + data[i].membername + '</td>')
 			.append('<td>' + data[i].branchname + '</td>')
-			.append('<td>' + data[i].positionname + '</td>')
+			.append('<td>' + positionname + '</td>')
 			.append('<td><img src="images/delete-2.png" onclick="del210(' + data[i].memberroleid + ')"></img></td>');
 	}
 	$('#list210 tr').hover(function(){
@@ -492,7 +498,8 @@ function freshCbEditPage(cbData,pageNum){
 }
 
 function loadSava(pageNum){
-	callajax('priv!getPrivByRole', {roleid: currole}, function(cb){
+	var appName = $('.infotab .infotabi[bindpage='+pageNum+']').html();
+	callajax('limit!getLimitByRole', {roleid: currole,appname:appName}, function(cb){
 		cbEditFresh(cb,pageNum)
 	})
 }
@@ -589,7 +596,9 @@ function savaEditPage(pageNum){
 			data += inps[i].id.substr(1);
 		}
 	}
-	callajax('priv!saveRole', {roleid: currole, privs: data}, function(cb){
+	var appName = $('.infotabi.tabactive').attr('appid');
+	var roleName = $('.prv21active').html();
+	callajax('limit!saveRolebyApp', {roleid: currole, privs: data,appsecretId:appName,roleName:roleName}, function(cb){
 		cbEditSave(cb,pageNum);
 	});
 }
@@ -624,7 +633,7 @@ function delrole() {
 				message:'确定删除么 ？',
 				callback: function(result) {
 					if (result) {
-						callajax('priv!delRole', {roleid: currole}, cb_21_del);
+						callajax('limit!delRole', {roleId: currole}, cb_21_del);
 					}
 					$('#container').css('width', document.body.clientWidth + 'px');	
 				}
@@ -662,20 +671,45 @@ function showpage(cp) {
 	curpage = cp;
 	changeRoleList(curpage);
 	if(cp!='210'){
+		if(typeof (curpage)=='number'){
+			var appName = $('.infotab .infotabi[bindpage='+curpage+']').html();
+			loadPage(cp,appName)
+		}
 		$('#editmember').hide();
 	}else{
 		$('#editmember').show();
+
 	}
 	$('.collHide').hide();
 	$('#' + cp).show();
+	//if(curpage.indexOf('edit')!=-1){
+	//curpage = curpage.replace(/edit/g,'');
+	//}
+	//if(typeof(curpage)=='number'){
+	//	pageNum = curpage;
+	//}else{
+	//	var pageNum = curpage.replace('edit','')
+	//}
+	//var appName = $('.infotab .infotabi[bindpage='+pageNum+']').html();
+
+	//loadPage(cp,appName);
+	//loadEditPage(cp,appName);
 }
 function changeRoleList(curpage){
 	if(curpage=='210'){
 		appName = '';
 	}else{
-		var appName = $('.infotab .infotabi[bindpage='+curpage+']').html();
+		if(typeof (curpage)=='number'){
+			var appName = $('.infotab .infotabi[bindpage='+curpage+']').html();
+			var appID = $('.infotab .infotabi[bindpage='+curpage+']').attr('appid')
+		}else{
+			var pageNum = curpage.replace('edit','')
+			var appName = $('.infotab .infotabi[bindpage='+pageNum+']').html();
+			var appID = $('.infotab .infotabi[bindpage='+pageNum+']').attr('appid')
+
+		}
 	}
-	callajax('limit!getRoleList', {appname: appName}, rollList);
+	callajax('limit!getRoleList', {appId: appID}, rollList);
 }
 function rollList(data){
 	var data = data.content

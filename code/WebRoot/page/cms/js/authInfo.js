@@ -14,7 +14,8 @@ var grpid = 0;
 $(document).ready(function() {
 
 	$('#app').change(function(){
-		var curApp = $(this).val();
+		var curId = $(this).val();
+		var curApp = $(this).find('option[value='+curId+']').html();
 		callajax('limit!getPrivNamebyclass',{appName:curApp},changeLimit);
 	})
 
@@ -102,24 +103,24 @@ function fillApp(data){
 
 	var content = data.content;
 	for(var i = 0;i<content.length;i++){
-		sHTML += '<option value="'+content[i]+'">'+content[i]+'</option>'
+		sHTML += '<option value="'+content[i].id+'">'+content[i].appName+'</option>'
 	}
 	eApp.append($(sHTML));
-	$('#app').val(content[0])
-	//setTimeout(function(){$("#app").get(0).selectedIndex=1;},1000)
-	//$('#app option:last').attr('selected','selected');
-
+	$('#app').val(content[0].name);
 }
-function changeLimit(data){
+function changeLimit(data,callback){
 	console.log(data);
 	var sHTML = '';
-	var content = data.content
-	for(var i = 0;i<content.length;i++){
-		var value =content[i].id;
-		var name = content[i].name;
-		sHTML += '<option value="'+value+'">'+name+'</option>';
+	var content = data.content;
+	if(content){
+		for(var i = 0;i<content.length;i++){
+			var value =content[i].id;
+			var name = content[i].name;
+			sHTML += '<option value="'+value+'">'+name+'</option>';
+		}
 	}
 	$('#parentId').html(sHTML);
+	callback&&callback();
 }
 function afterAddPriv(data){
 	console.log(data);
@@ -135,44 +136,73 @@ function afterEditPriv(data){
 function loadpage(pagenumber) {
 	$('#grouplist').empty();
 	var authName = $('.searchInput').val();
+
 	if(pagenumber){
 		var data = {name:authName,pageindex: pagenumber-1, pagesize: itemsperpage};
-
-		callajax('limit!SearchPriv', data, fShowTableNew);
 	}else{
 		var data = {name:authName,pageindex: 0, pagesize: itemsperpage};
-
-		callajax('limit!SearchPriv', data, fShowTable);
 	}
+	callajax('limit!SearchPriv', data, fShowTable);
 }
-function fShowTableNew(data){
-	var datas = data.content;
-	var LocalData = JSON.stringify(datas);
-	window.localStorage.tableData = LocalData;
-	for(var i = 0;i<datas.length;i++){
-		$('#grouplist').append(itemtemplate
-				.replace('code', datas[i].id)
-				.replace('name', datas[i].name)
-				.replace('classify', datas[i].category)
-				.replace('belong', datas[i].app)
-				.replace(/aid/g, datas[i].id)
-		);
-	}
-}
+//function fShowTableNew(data,pagenumber,authName){
+//	if(data){
+//		var datas = data.content;
+//		var LocalData = JSON.stringify(datas);
+//		window.localStorage.tableData = LocalData;
+//		if(datas){
+//			for(var i = 0;i<datas.length;i++){
+//				$('#grouplist').append(itemtemplate
+//						.replace('code', datas[i].id)
+//						.replace('name', datas[i].name)
+//						.replace('classify', datas[i].parent_name)
+//						.replace('belong', datas[i].app)
+//						.replace(/aid/g, datas[i].id)
+//				);
+//			}
+//		}else{
+//			pagenumber = pagenumber - 1
+//			newPaging.args.pageCount--;
+//			var data = {name:authName,pageindex:pagenumber, pagesize: itemsperpage};
+//			callajax('limit!SearchPriv', data, function(cb){
+//				fShowTableNew(cb,pagenumber)
+//			});
+//		}
+//	}
+//
+//
+//}
 function fShowTable(data) {
-
 	var i = data.length;
 	var count = data.count;
 	pagenumber = Math.ceil(count/itemsperpage);
-	window.newPaging = new Paging('.paging',
-		{
-			pageCount : pagenumber,
-			current : 1,
-			backFn : function(){
-				loadpage(newPaging.args.current);
+
+	if($('.paging').find('.pageNum').length==0){
+		window.newPaging = new Paging('.paging',
+			{
+				pageCount : pagenumber,
+				current : 1,
+				backFn : function(){
+					loadpage(newPaging.args.current);
+				}
+			}
+		)
+	}else{
+		if(data&&!count){
+			newPaging.args.pageCount--;
+			if(newPaging.args.pageCount<newPaging.args.current) {
+				newPaging.args.current = newPaging.args.pageCount;
+			}
+			//重新fillPage并加载最后一页
+			newPaging.fillHtml($('.paging'),newPaging.args);
+			loadpage(newPaging.args.current);
+		}else{
+			if(newPaging.args.pageCount<pagenumber){
+				newPaging.args.pageCount++;
+				newPaging.fillHtml($('.paging'),newPaging.args);
 			}
 		}
-	)
+	}
+
 	var datas = data.content;
 	var localData = JSON.stringify(datas);
 	window.localStorage.tableData = localData
@@ -180,7 +210,7 @@ function fShowTable(data) {
 		$('#grouplist').append(itemtemplate
 				.replace('code', datas[i].id)
 				.replace('name', datas[i].name)
-				.replace('classify', datas[i].category)
+				.replace('classify', datas[i].parent_name)
 				.replace('belong', datas[i].app)
 				.replace(/aid/g, datas[i].id)
 		);
@@ -198,15 +228,29 @@ function findInList(id){
 	return finalData;
 }
 function editAuth(id,curDom){
-	//var targetList = $(curDom).closest('tr');
 	var curList = findInList(id)
 	var dialogAuth = $('.dialogAuth');
 
 	$('.dialogMask').show();
 	dialogAuth.show();
 	dialogAuth.find('#name').val(curList.name);
-	dialogAuth.find('#parentId').val(curList.category);
-	dialogAuth.find('#app').val(curList.app);
+	//dialogAuth.find('#parentId').val(curList.category);
+	var options = dialogAuth.find('#app option');
+	for(var i = 0;i<options.length;i++){
+		if($(options[i]).html()==curList.app){
+			var curVal = $(options[i]).attr('value');
+			break;
+		}
+
+	}
+	dialogAuth.find('#app').val(curVal);
+
+	callajax('limit!getPrivNamebyclass',{appName:curList.app},function(cb){
+		changeLimit(cb,function(){
+			dialogAuth.find('#parentId').val(curList.parent_id);
+		})
+	});
+
 	dialogAuth.attr('bindid',id);
 	dialogAuth.find('.diaTitle').html('编辑权限');
 }

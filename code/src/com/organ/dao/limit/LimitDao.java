@@ -2,8 +2,11 @@ package com.organ.dao.limit;
 
 import java.util.List;
 
+import com.organ.common.IBaseDao;
+import com.organ.model.TPriv;
 
-public interface LimitDao {
+
+public interface LimitDao extends IBaseDao<TPriv, Long>{
 
 	public int updatePriv(int parentId,String name,String app);//添加权限接口
 	
@@ -23,6 +26,5 @@ public interface LimitDao {
 	
 	public List getPrivNamebytwo(String appName);//获取父id为2的所有权限名称
 	
-	public Integer saveRolebyApp(Integer roleId,Integer appsecretId, String roleName, String privs,String appName);
 }
 

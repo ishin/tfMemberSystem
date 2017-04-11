@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.organ.common.BaseAction;
 import com.organ.model.TMember;
 import com.organ.model.TOrgan;
@@ -129,9 +131,13 @@ public class OrgAction extends BaseAction {
 		organ.setShortname(this.request.getParameter("shortname"));
 		organ.setEnglishname(this.request.getParameter("englishname"));
 		organ.setAd(this.request.getParameter("ad"));
-		organ.setProvinceId(this.request.getParameter("provinceid") == "" ? 0 : Integer.parseInt(this.request.getParameter("provinceid")));
-		organ.setCityId(this.request.getParameter("cityid") == "" ? 0 : Integer.parseInt(this.request.getParameter("cityid")));
-		organ.setDistrictId(this.request.getParameter("districtid") == "" ? 0 : Integer.parseInt(this.request.getParameter("districtid")));
+		//organ.setProvinceId(this.request.getParameter("provinceid") == "" ? 0 : Integer.parseInt(this.request.getParameter("provinceid")));
+		organ.setProvinceId(StringUtils.isBlank(this.request.getParameter("provinceid"))?0:Integer.parseInt(this.request.getParameter("provinceid")));
+		//cityid
+		organ.setCityId(StringUtils.isBlank(this.request.getParameter("cityid"))?0:Integer.parseInt(this.request.getParameter("cityid")));
+		//districtid
+		System.err.println(this.request.getParameter("districtid"));
+		organ.setDistrictId(StringUtils.isBlank(this.request.getParameter("districtid"))?0:Integer.parseInt(this.request.getParameter("districtid")));
 		organ.setContact(this.request.getParameter("contact"));
 		organ.setAddress(this.request.getParameter("address"));
 		organ.setTelephone(this.request.getParameter("telephone"));
@@ -139,16 +145,22 @@ public class OrgAction extends BaseAction {
 		organ.setEmail(this.request.getParameter("email"));
 		organ.setPostcode(this.request.getParameter("postcode"));
 		organ.setWebsite(this.request.getParameter("website"));
-		organ.setInwardId(this.request.getParameter("inwardid") == "" ? 0 : Integer.parseInt(this.request.getParameter("inwardid")));
-		organ.setIndustryId(this.request.getParameter("industryid") == "" ? 0 : Integer.parseInt(this.request.getParameter("industryid")));
-		organ.setSubdustryId(this.request.getParameter("subdustryid") == "" ? 0 : Integer.parseInt(this.request.getParameter("subdustryid")));
-		organ.setCapital(this.request.getParameter("capital") == "" ? 0 : Integer.parseInt(this.request.getParameter("capital")));
-		organ.setMembernumber(this.request.getParameter("membernumber") == "" ? 0 : Integer.parseInt(this.request.getParameter("membernumber")));
-		organ.setComputernumber(this.request.getParameter("computernumber") == "" ? 0 : Integer.parseInt(this.request.getParameter("computernumber")));
+		//inwardid
+		organ.setInwardId(StringUtils.isBlank(this.request.getParameter("inwardid"))?0:Integer.parseInt(this.request.getParameter("inwardid")));
+		//industryid
+		organ.setIndustryId(StringUtils.isBlank(this.request.getParameter("industryid"))?0:Integer.parseInt(this.request.getParameter("industryid")));
+		//subdustryid
+		organ.setSubdustryId(StringUtils.isBlank(this.request.getParameter("subdustryid"))?0:Integer.parseInt(this.request.getParameter("subdustryid")));
+		//capital
+		organ.setCapital(StringUtils.isBlank(this.request.getParameter("capital"))?0:Integer.parseInt(this.request.getParameter("capital")));
+		//membernumber
+		organ.setMembernumber(StringUtils.isBlank(this.request.getParameter("membernumber"))?0:Integer.parseInt(this.request.getParameter("membernumber")));
+		//computernumber
+		organ.setComputernumber(StringUtils.isBlank(this.request.getParameter("computernumber"))?0:Integer.parseInt(this.request.getParameter("computernumber")));
 		organ.setIntro(this.request.getParameter("intro"));
 		organ.setLogo(this.request.getParameter("logo"));
 		organ.setListorder(Integer.parseInt(this.request.getParameter("listorder")));
-		
+		System.err.println("是否走到这一步"+organ);
 		orgService.save(organ);
 		
 		return returnajaxid(organId);

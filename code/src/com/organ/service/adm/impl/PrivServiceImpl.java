@@ -102,7 +102,6 @@ public class PrivServiceImpl implements PrivService {
 				TRolePriv rolePriv = new TRolePriv();
 				rolePriv.setRoleId(role.getId());
 				rolePriv.setPrivId(Integer.parseInt(pa[i]));
-				System.err.println(privs);
 				rolePrivDao.save(rolePriv);
 			}
 		}

@@ -133,7 +133,7 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 				hql ="SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,t.name AS parent_name FROM t_priv pr "
 					+"LEFT JOIN t_priv t ON pr.parent_id=t.id "
 					+"WHERE pr.parent_id IN (SELECT  p.id FROM t_priv p WHERE p.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) "
-					+"limit "+ start + "," + pagesize;
+					+"limit "+ start + ", " + pagesize;
 			}
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 			List list = query.list();
@@ -166,15 +166,12 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 		String sql;
 		try {
 			if (!StringUtils.isBlank(name)) {
-				sql = "select count(*) from (" + "select " + "tp.id,"
-						+ "tp.parent_id," + "tp.NAME," + "tp.category,"
-						+ "tp.url," + "tp.app "
-						+ "from t_priv tp where tp.name like '%" + name + "%'"
-						+ "or tp.url like '%" + name + "%') as tt";
+				sql="select count(*) from (("
+					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app FROM t_priv pr WHERE pr.parent_id IN (SELECT  pv.id FROM t_priv pv WHERE pv.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0))) as aa) "
+					+"where aa.name like '%"+name+"%' or aa.url like '%" + name + "%' ";
 			} else {
-				sql = "select count(*) from (" + "select " + "tp.id,"
-						+ "tp.parent_id," + "tp.NAME," + "tp.category,"
-						+ "tp.url," + "tp.app " + "from t_priv tp) as tt";
+				sql = "select count(*) from (" 
+					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app FROM t_priv pr WHERE pr.parent_id IN (SELECT  pv.id FROM t_priv pv WHERE pv.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0))) AS tt";
 			}
 			int SearchCount = Integer.parseInt(this.getSession()
 					.createSQLQuery(sql).list().get(0).toString());
@@ -210,11 +207,11 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 						+ "join t_appsecret ta on ta.id=tra.appsecret_id "
 						+ "where ta.appname = '" + appname + "'";
 			} else {
-				sql = "select tr.id,tr.name from t_role tr "
+/*				sql = "select tr.id,tr.name from t_role tr "
 						+ " join t_role_appsecret tra on tr.id = tra.role_id "
-						+ "join t_appsecret ta on ta.id=tra.appsecret_id ";
+						+ "join t_appsecret ta on ta.id=tra.appsecret_id ";*/
+				sql = "select id, name from t_role order by listorder desc";
 			}
-			System.err.println(sql);
 			return runSql(sql);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -233,33 +230,4 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 		}
 		return null;
 	}
-
-	@Override
-	public Integer saveRolebyApp(Integer roleId,Integer appsecretId,String roleName, String privs,
-			String appName) {
-		TRole role = roleDao.get(roleId);
-		if (role == null) {
-			role = new TRole();
-			TRoleAppSecret roleAppSecret = new TRoleAppSecret();
-			role.setName(roleName);
-			role.setListorder(roleDao.getMax("listorder", "from TRole") + 1);
-			roleAppSecret.setAppsecretId(appsecretId);
-			roleAppSecret.setRoleId(roleId);
-			roleappsecretDao.save(roleAppSecret);
-			roleDao.save(role);
-		}
-		rolePrivDao.delete("delete from TRolePriv where roleId = " + role.getId());
-		String[] pa = privs.split(",");
-		Integer i = pa.length;
-		while(i-- > 0) {
-			if (!"".equals(pa[i])) {
-				TRolePriv rolePriv = new TRolePriv();
-				rolePriv.setRoleId(role.getId());
-				rolePriv.setPrivId(Integer.parseInt(pa[i]));
-				rolePrivDao.save(rolePriv);
-			}
-		}
-		return role.getId();
-	}
-
 }
