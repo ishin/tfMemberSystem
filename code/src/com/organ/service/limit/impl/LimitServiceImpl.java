@@ -152,13 +152,13 @@ public class LimitServiceImpl implements LimitService {
 		// TODO Auto-generated method stub
 		return limitDao.getLimitbyRole(roleId, appName);
 	}
-
+	
 	@Override
-	public String getRoleList(String appname) {
+	public String getRoleList(Integer appId) {
 		JSONArray ja = new JSONArray();
 		JSONObject jsonObject = new JSONObject();
 		try {
-			List roles = limitDao.getRoleList(appname);
+			List roles = limitDao.getRoleList(appId);
 			if (roles == null) {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
@@ -211,7 +211,6 @@ public class LimitServiceImpl implements LimitService {
 	public String saveRolebyApp(Integer roleId, Integer appsecretId,
 			String roleName, String privs) {
 		TRole role = roleDao.get(roleId);
-		System.err.println("是否为空" + roleId);
 		if (role == null) {
 			role = new TRole();
 
@@ -219,7 +218,7 @@ public class LimitServiceImpl implements LimitService {
 			role.setListorder(roleDao.getMax("listorder", "from TRole") + 1);
 			roleDao.save(role);
 		}
-		if (roleId == 0) {
+		if (roleId == -1) {
 			TRoleAppSecret roleAppSecret = new TRoleAppSecret();
 			roleAppSecret.setAppsecretId(appsecretId);
 			roleAppSecret.setRoleId(role.getId());
@@ -248,5 +247,6 @@ public class LimitServiceImpl implements LimitService {
 		roleappsecretDao.delete("delete from TRoleAppSecret where roleId = " + roleId);
 		roleDao.deleteById(roleId);
 	}
+
 
 }

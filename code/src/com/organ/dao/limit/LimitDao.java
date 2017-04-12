@@ -22,7 +22,7 @@ public interface LimitDao extends IBaseDao<TPriv, Long>{
 	
 	public List getLimitbyRole(Integer roleId,String appName);//根据姓名获取接口
 	
-	public List getRoleList(String appname);
+	public List getRoleList(Integer appId);
 	
 	public List getPrivNamebytwo(String appName);//获取父id为2的所有权限名称
 	
