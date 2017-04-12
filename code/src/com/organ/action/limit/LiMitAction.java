@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 
 import net.sf.json.JSONArray;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,17 +49,17 @@ public class LiMitAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 * @throws JSONException
-	 * @throws UnsupportedEncodingException 
+	 * @throws UnsupportedEncodingException
 	 */
-	public String AddPriv() throws ServletException, JSONException, UnsupportedEncodingException {
+	public String AddPriv() throws ServletException, JSONException,
+			UnsupportedEncodingException {
 		String pid = this.request.getParameter("parentId");
 		String name = this.request.getParameter("name");
 		String app = this.request.getParameter("app");
 		Integer intPid = pid == null ? null : Integer.parseInt(pid);
 		boolean falg = false;
 		try {
-			String resString = limitService.AddLimit(intPid, name,
-					app);
+			String resString = limitService.AddLimit(intPid, name, app);
 			if ("".equals(resString) && null == resString) {
 				falg = false;
 			} else {
@@ -123,22 +124,26 @@ public class LiMitAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 * @throws JSONException
-	 * @throws UnsupportedEncodingException 
+	 * @throws UnsupportedEncodingException
 	 */
-	public String EditPriv() throws ServletException, JSONException, UnsupportedEncodingException {
-/*		byte bufname[] = request.getParameter("name").getBytes("iso8859-1");
-		byte bufapp[] = request.getParameter("app").getBytes("iso8859-1");*/
+	public String EditPriv() throws ServletException, JSONException,
+			UnsupportedEncodingException {
+		/*
+		 * byte bufname[] = request.getParameter("name").getBytes("iso8859-1");
+		 * byte bufapp[] = request.getParameter("app").getBytes("iso8859-1");
+		 */
 		String id = this.request.getParameter("privId");
 		String pid = this.request.getParameter("parentId");
 		String name = this.request.getParameter("name");
 		String app = this.request.getParameter("app");
-/*		String name = new String(bufname,"utf-8");
-		String app = new String(bufapp,"utf-8");*/
+		/*
+		 * String name = new String(bufname,"utf-8"); String app = new
+		 * String(bufapp,"utf-8");
+		 */
 		Integer intid = id == null ? null : Integer.parseInt(id);
 		boolean flag = false;
 		try {
-			String result = limitService.EditLimit(intid, pid, name,
-					app);
+			String result = limitService.EditLimit(intid, pid, name, app);
 			if ("".equals(result) && null == result) {
 				flag = false;
 			} else {
@@ -171,7 +176,8 @@ public class LiMitAction extends BaseAction {
 		this.name = name;
 	}
 
-	public String SearchPriv() throws ServletException, JSONException, UnsupportedEncodingException {
+	public String SearchPriv() throws ServletException, JSONException,
+			UnsupportedEncodingException {
 		String pagesize = this.request.getParameter("pagesize");
 		String pageindex = this.request.getParameter("pageindex");
 		String name = this.request.getParameter("name");
@@ -179,16 +185,17 @@ public class LiMitAction extends BaseAction {
 				.parseInt(pagesize);
 		Integer intpageindex = pageindex == null ? null : Integer
 				.parseInt(pageindex);
-		String result= limitService.searchPriv(name, intpagesize,intpageindex);
+		String result = limitService
+				.searchPriv(name, intpagesize, intpageindex);
 		returnToClient(result);
 		return "text";
 	}
-	
-	public String getCount() throws ServletException,JSONException{
+
+	public String getCount() throws ServletException, JSONException {
 		boolean falg = false;
 		String result = "";
 		try {
-			result = limitService.getCount()+"";
+			result = limitService.getCount() + "";
 			if ("".equals(result) && null == result) {
 				falg = false;
 			} else {
@@ -209,15 +216,15 @@ public class LiMitAction extends BaseAction {
 		returnToClient(jsonObject.toString());
 		return "text";
 	}
-	
-	public String getLimitByRole() throws ServletException,JSONException{
+
+	public String getLimitByRole() throws ServletException, JSONException {
 		Integer roleid = Integer.parseInt(this.request.getParameter("roleid"));
 		String appName = this.request.getParameter("appname");
 		List list = limitService.getLimitbyRole(roleid, appName);
 		Iterator it = list.iterator();
 		ArrayList<JSONObject> ja = new ArrayList<JSONObject>();
-		while(it.hasNext()) {
-			Object[] o = (Object[])it.next();
+		while (it.hasNext()) {
+			Object[] o = (Object[]) it.next();
 			JSONObject js = new JSONObject();
 			js.put("privid", o[0]);
 			js.put("privname", o[1]);
@@ -228,37 +235,45 @@ public class LiMitAction extends BaseAction {
 		}
 		returnToClient(ja.toString());
 		return "text";
-		
+
 	}
-	public String getRoleList() throws ServletException,JsonIOException{
-		String appname = this.request.getParameter("appname");
+
+	public String getRoleList() throws ServletException, JsonIOException {
 		try {
-			String result = limitService.getRoleList(appname);
+			Integer appid = StringUtils.isBlank(this.request
+					.getParameter("appId")) ? null : Integer
+					.parseInt(this.request.getParameter("appId"));
+			String result = limitService.getRoleList(appid);
 			returnToClient(result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "text";
 	}
-	public String getPrivNamebyclass() throws ServletException,JSONException{
+
+	public String getPrivNamebyclass() throws ServletException, JSONException {
 		String appname = this.request.getParameter("appName");
 		String result = limitService.getPrivNamebytwo(appname);
 		returnToClient(result);
 		return "text";
 	}
-	
-	public String saveRolebyApp() throws ServletException,JSONException{
-		//roleId, roleName, privs, appName
-		String roleId = this.request.getParameter("roleid");
-		System.err.println("LimitAction:"+roleId);
-		Integer introleId = (roleId == null ? 0 : Integer.parseInt(roleId));
+
+	public String saveRolebyApp() throws ServletException, JSONException {
+		// roleId, roleName, privs, appName
+		//String roleId = this.request.getParameter("roleid");
+		//Integer introleId = (roleId == null ? 0 : Integer.parseInt(roleId));
+		Integer roleId = StringUtils.isBlank(this.request
+				.getParameter("roleid")) ? null : Integer
+				.parseInt(this.request.getParameter("roleid"));
 		String roleName = this.request.getParameter("roleName");
 		String privs = this.request.getParameter("privs");
-		Integer appsecretId = Integer.parseInt(this.request.getParameter("appsecretId"));
+		Integer appsecretId = Integer.parseInt(this.request
+				.getParameter("appsecretId"));
 		boolean falg = false;
 		String result = "";
 		try {
-			result = limitService.saveRolebyApp(introleId,appsecretId,roleName, privs);
+			result = limitService.saveRolebyApp(roleId, appsecretId,
+					roleName, privs);
 			if ("".equals(result) && null == result) {
 				falg = false;
 			} else {
@@ -279,9 +294,10 @@ public class LiMitAction extends BaseAction {
 		returnToClient(jsonObject.toString());
 		return "text";
 	}
-	
+
 	/**
 	 * 删除角色
+	 * 
 	 * @return
 	 */
 	public String delRole() {

@@ -44,7 +44,7 @@ public interface LimitService {
 	
 	public List getLimitbyRole(Integer roleId, String appName);
 	
-	public String getRoleList(String appname);
+	public String getRoleList(Integer appId);
 	
 	public String getPrivNamebytwo(String appName);//获取父id为2的所有权限名称
 	
