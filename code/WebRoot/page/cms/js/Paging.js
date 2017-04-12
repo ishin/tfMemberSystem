@@ -134,12 +134,12 @@ Paging.prototype.checkVal = function(val,obj,args){
     }
     else{
         new Window().alert({
-            title   : '消息',
+            title   : '',
             content : '请输入正确页码',
             hasCloseBtn : false,
             textForSureBtn : false,              //确定按钮
             textForcancleBtn : false,
-            skinClassName:'winSkin_a warning',
+            //skinClassName:'winSkin_a warning',
             autoHide:true
         });
     }

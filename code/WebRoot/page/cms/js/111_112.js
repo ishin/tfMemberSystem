@@ -21,6 +21,9 @@ $(document).ready(function(){
 	
 	$('#111').validVal();
 
+	$('#memberbirthday').datepicker();
+	$('#memberbirthday').datepicker( "option", "dateFormat", "yy-mm-dd");
+	
 	$('#position').on('shown.bs.modal', function(e) {
 		callajax("branch!getOrganOnlyTree", "", cb_112_position_tree);
 		callajax("branch!getPosition", "", cb_112_position_select);

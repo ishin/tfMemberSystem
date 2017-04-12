@@ -21,7 +21,7 @@
 	<div class='linespace'></div>
 	<div>
 		<div class='dialogtitle' style='margin-left: 10px'><span style='color:red'>*</span>手机号：	
-			<input type='text' id='11membermobile' name='11membermobile' class='w270px toright rightspace120 required'>
+			<input type='text' id='11membermobile' name='11membermobile' class='w270px toright rightspace120 required mobile'>
 		</div>
 	</div>
 	<div class='linespace'></div>
@@ -60,7 +60,7 @@
 	<div class='linespace'></div>
 	<div>
 		<div class='dialogtitle'>E-mail：
-			<input type='text' id="11memberemail" name="11memberemail"  class='w270px toright rightspace120'>
+			<input type='text' id="11memberemail" name="11memberemail"  class='w270px toright rightspace120 email'>
 		</div>
 	</div>
 	<div class='linespace'></div>
