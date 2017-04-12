@@ -4,16 +4,42 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.SQLQuery;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import com.organ.dao.appinfoconfig.AppInfoConfigDao;
 import com.organ.dao.limit.LimitDao;
+import com.organ.dao.limit.RoleAppSecretDao;
+import com.organ.model.TPriv;
 import com.organ.service.appinfoconfig.AppInfoConfigService;
 
 public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 
-	private AppInfoConfigDao appInfoConfigDao;
+	public AppInfoConfigDao appInfoConfigDao;
+	public RoleAppSecretDao roleappsecretDao;
+	public LimitDao limitDao;
+	
+	public LimitDao getLimitDao() {
+		return limitDao;
+	}
+
+	public void setLimitDao(LimitDao limitDao) {
+		this.limitDao = limitDao;
+	}
+
+	public AppInfoConfigDao getAppInfoConfigDao() {
+		return appInfoConfigDao;
+	}
+
+	public RoleAppSecretDao getRoleappsecretDao() {
+		return roleappsecretDao;
+	}
+
+	public void setRoleappsecretDao(RoleAppSecretDao roleappsecretDao) {
+		this.roleappsecretDao = roleappsecretDao;
+	}
 
 	public void setAppInfoConfigDao(AppInfoConfigDao appInfoConfigDao) {
 		this.appInfoConfigDao = appInfoConfigDao;
@@ -84,7 +110,12 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 
 	@Override
 	public String DelApp(int id) {
-		return appInfoConfigDao.DeletelApp(id) + "";
+		String appnameString = appInfoConfigDao.getAppNameByID(id);
+		System.err.println(appnameString);
+		appInfoConfigDao.delete("delete AppSecret where id =" + id);
+		roleappsecretDao.delete("delete from TRoleAppSecret where appsecretId = " + id);
+		limitDao.delete("delete from TPriv where app = '" + appnameString+"'");
+		return id + "";
 	}
 
 	@Override

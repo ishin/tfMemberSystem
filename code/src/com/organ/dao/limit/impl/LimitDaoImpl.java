@@ -198,18 +198,15 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 	}
 
 	@Override
-	public List getRoleList(String appname) {
+	public List getRoleList(Integer appId) {
 		try {
 			String sql = null;
-			if (!StringUtils.isBlank(appname)) {
+			if (null != appId) {
 				sql = "select tr.id,tr.name,tra.role_id from t_role tr "
 						+ " join t_role_appsecret tra on tr.id = tra.role_id "
 						+ "join t_appsecret ta on ta.id=tra.appsecret_id "
-						+ "where ta.appname = '" + appname + "'";
+						+ "where ta.id = " + appId;
 			} else {
-/*				sql = "select tr.id,tr.name from t_role tr "
-						+ " join t_role_appsecret tra on tr.id = tra.role_id "
-						+ "join t_appsecret ta on ta.id=tra.appsecret_id ";*/
 				sql = "select id, name from t_role order by listorder desc";
 			}
 			return runSql(sql);

@@ -116,7 +116,6 @@ public class AppInfoConfigAction extends BaseAction {
 		String result = null;
 		try {
 			result = appInfoConfigService.DelApp(intid);
-		
 			if ("".equals(result) && null == result) {
 				falg = false;
 			} else {

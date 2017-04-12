@@ -9,6 +9,7 @@ import org.hibernate.SQLQuery;
 import com.organ.common.BaseDao;
 import com.organ.dao.appinfoconfig.AppInfoConfigDao;
 import com.organ.dao.limit.LimitDao;
+import com.organ.dao.limit.RoleAppSecretDao;
 import com.organ.model.AppSecret;
 import com.organ.model.TPriv;
 import com.organ.utils.PrivUrlNameUtil;
@@ -16,7 +17,16 @@ import com.organ.utils.PrivUrlNameUtil;
 public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 		AppInfoConfigDao {
 	LimitDao limitDao;
+	RoleAppSecretDao roleappsecretDao;
 	
+	public RoleAppSecretDao getRoleappsecretDao() {
+		return roleappsecretDao;
+	}
+
+	public void setRoleappsecretDao(RoleAppSecretDao roleappsecretDao) {
+		this.roleappsecretDao = roleappsecretDao;
+	}
+
 	public LimitDao getLimitDao() {
 		return limitDao;
 	}
@@ -38,7 +48,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 					+ userId + " where tm.id =" + userId + " limit " + start
 					+ "," + pagesize;
 			SQLQuery query = this.getSession().createSQLQuery(hql);
-			List list = query.list();	
+			List list = query.list();
 			if (list.size() > 0) {
 				return list;
 			}
@@ -49,7 +59,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 	}
 
 	/**
-	 * ��ȡ��ǰ����
+	 * long转成data
 	 */
 	public Long getDate() {
 		Date d = new Date();
@@ -57,7 +67,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 	}
 
 	/**
-	 * ���Ӧ��
+	 * 添加应用
 	 */
 	@Override
 	public int updatePriv(String appId, String secert, String callbackurl,
@@ -71,7 +81,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 		appSecret.setSecert(secert);
 		try {
 			save(appSecret);
-			//保存以及权限
+			// 保存以及权限
 			TPriv tPriv = new TPriv();
 			tPriv.setApp(appname);
 			tPriv.setName(appname);
@@ -79,8 +89,8 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 			tPriv.setUrl(PrivUrlNameUtil.initUrlName(appname));
 			tPriv.setListorder(0); // 这个不能为空
 			limitDao.save(tPriv);
-			//添加二级权限
-			if(tPriv.getId() != null){
+			// 添加二级权限
+			if (tPriv.getId() != null) {
 				TPriv tPriv2 = new TPriv();
 				tPriv2.setApp(appname);
 				tPriv2.setName("访问权限");
@@ -88,26 +98,24 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 				tPriv2.setUrl(PrivUrlNameUtil.initUrlName("访问权限"));
 				tPriv2.setListorder(0); // 这个不能为空
 				limitDao.save(tPriv2);
+				// 添加三级权限
+				if (tPriv2.getId() != null) {
+					TPriv tPriv3 = new TPriv();
+					tPriv3.setApp(appname);
+					tPriv3.setName("登陆权限");
+					tPriv3.setParentId(tPriv2.getId());
+					tPriv3.setUrl(PrivUrlNameUtil.initUrlName("登陆权限"));
+					tPriv3.setListorder(0); // 这个不能为空
+					limitDao.save(tPriv3);
+				}
 			}
-		
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return appSecret.getId();
 	}
 
-	@Override
-	public int DeletelApp(int id) {
-		try {
-			String hql = "delete AppSecret where id =" + id;
-			int result = delete(hql);
-			return result;
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		return 0;
-	}
 
 	@Override
 	public int getCount() {
@@ -123,7 +131,8 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 	}
 
 	@Override
-	public int editApp(int id, String appId, String secert, String callBackUrl, String appName, int isOpen) {
+	public int editApp(int id, String appId, String secert, String callBackUrl,
+			String appName, int isOpen) {
 		try {
 			String hql = "update AppSecret ap set ap.appId= '" + appId
 					+ "',ap.secert='" + secert + "',ap.callBackUrl='"
@@ -140,23 +149,27 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List SearchAppInfo(int userId,String AppName, int pagesize, int pageindex) {
+	public List SearchAppInfo(int userId, String AppName, int pagesize,
+			int pageindex) {
 		try {
 			int start = pageindex * pagesize;
 			String hql;
 			if (!StringUtils.isBlank(AppName)) {
 				hql = "select "
-					+"aa.id,aa.appId,aa.secert,aa.callBackUrl,aa.appTime,aa.appName,aa.isOpen,aa.fullname from "
-					+"(select ap.id,ap.appId,ap.secert,ap.callBackUrl,ap.appTime,ap.appName,ap.isOpen,tm.fullname from t_appsecret ap right join t_member tm on tm.id ="
-					+userId+" where tm.id =" + userId
-					+") as aa where aa.appName like '%"
-						+ AppName + "%' limit " + start + "," + pagesize;
+						+ "aa.id,aa.appId,aa.secert,aa.callBackUrl,aa.appTime,aa.appName,aa.isOpen,aa.fullname from "
+						+ "(select ap.id,ap.appId,ap.secert,ap.callBackUrl,ap.appTime,ap.appName,ap.isOpen,tm.fullname from t_appsecret ap right join t_member tm on tm.id ="
+						+ userId + " where tm.id =" + userId
+						+ ") as aa where aa.appName like '%" + AppName
+						+ "%' limit " + start + "," + pagesize;
 			} else {
-				hql = "select ap.id,ap.appId,ap.secert,ap.callBackUrl,ap.appTime,ap.appName,ap.isOpen,tm.fullname from t_appsecret ap right join t_member tm on tm.id ="+
-				userId+" where tm.id =" + userId
-				+" limit "+ start + "," + pagesize;
+				hql = "select ap.id,ap.appId,ap.secert,ap.callBackUrl,ap.appTime,ap.appName,ap.isOpen,tm.fullname from t_appsecret ap right join t_member tm on tm.id ="
+						+ userId
+						+ " where tm.id ="
+						+ userId
+						+ " limit "
+						+ start + "," + pagesize;
 			}
-			System.out.println("---------"+hql);
+			System.out.println("---------" + hql);
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 			List list = query.list();
 			if (list.size() > 0) {
@@ -167,7 +180,18 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 		}
 		return null;
 	}
-
+	@Override
+	public String getAppNameByID(int id){
+		String name = null;
+		try {
+			String sql = "select appname from t_appsecret where id ="+id;
+			name= this.getSession().createSQLQuery(sql).uniqueResult().toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return name;
+	}
+	
 	@Override
 	public int getSearchCount(String AppName) {
 		String sql;
