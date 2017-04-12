@@ -65,18 +65,18 @@ $(document).ready(function(){
 	$('#11branchaddmember').click(function(){
 
 		//权限
-		if (has('rsgltj')) {
+		//if (has('rsgltj')) {
 			fillmember = 2;
 			$('#member').modal({
 				backdrop: false,
 				remote: '11_member.jsp'
 			});
-		}
-		else {
-			bootbox.alert({title:'提示', message:'您没有权限添加人员.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-		}
+		//}
+		//else {
+		//	bootbox.alert({title:'提示', message:'您没有权限添加人员.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//}
 	});
 });
 function cb_11_save_branch(data) {

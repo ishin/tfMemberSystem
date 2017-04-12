@@ -1,9 +1,6 @@
 package com.organ.action.sys;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -16,7 +13,6 @@ import com.organ.common.Constants;
 import com.organ.common.Tips;
 import com.organ.model.SessionUser;
 import com.organ.model.TMember;
-import com.organ.service.adm.PrivService;
 import com.organ.service.member.MemberService;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.MathUtils;
@@ -68,20 +64,7 @@ public class SystemAction extends BaseAction {
 			return "text";
 		}
 
-		/**
-		 * 初始化
-		 */
-		/*if (account.equals("Administrator")) {
-			int count = memberService.countMember();
-			if (count > 1) {
-				result.put("code", 0);
-				result.put("text", Tips.NOTINIT.getText());
-				returnToClient(result.toString());
-				return "text";
-			}
-		}*/
-		
-		TMember member = memberService.searchSigleUser(account, userpwd);
+		TMember member = memberService.getSuperAdmin(account, userpwd);
 		
 		if(member == null) {
 			result.put("code", 0);
@@ -139,31 +122,6 @@ public class SystemAction extends BaseAction {
 		su.setToken(token);
 		setSessionUser(su);
 		
-		/*
-		//2.设置权限
-		SessionPrivilege sp = new SessionPrivilege();
-		ArrayList<JSONObject> ja = new ArrayList<JSONObject>();
-		
-		if (!account.equals("Administrator")) {
-			List privList = privService.getRoleIdForId(member.getId());
-			
-			if (privList != null) {
-				Iterator it = privList.iterator();
-				
-				while(it.hasNext()) {
-					Object[] o = (Object[])it.next();
-					JSONObject js = new JSONObject();
-					js.put("privid", o[0]);
-					js.put("priurl", o[1]);
-					ja.add(js);
-				}
-			} 
-		} else {
-			ja = privService.getInitLoginPriv();
-		}
-	
-		sp.setPrivilige(ja);
-		setSessionAttribute(Constants.ATTRIBUTE_NAME_OF_SESSIONPRIVILEGE, sp);*/
 		JSONObject text = JSONUtils.getInstance().modelToJSONObj(member);
 		
 		text.remove("password");
@@ -171,7 +129,6 @@ public class SystemAction extends BaseAction {
 		text.remove("groupmax");
 		text.remove("groupuse");
 		text.put("token", token);
-		//text.put("priv", JSONUtils.getInstance().modelToJSONObj(sp));
 		
 		result.put("code", 1);
 		result.put("text", text.toString());
@@ -380,51 +337,10 @@ public class SystemAction extends BaseAction {
 		return "text";
 	}
 	
-	/**
-	 * 跳转组织信息
-	 * @return
-	 * @throws ServletException
-	 */
-	public String organInfo() throws ServletException {
-		return "organInfo";
-	}
-	
-	/**
-	 * 群组管理 
-	 * @return
-	 * @throws ServletException
-	 */
-	public String groupManager() throws ServletException {
-		return "groupManager";
-	}
-	
-	/**
-	 * 跳转组织结构
-	 * @return
-	 * @throws ServletException
-	 */
-	public String organFrame() throws ServletException {
-		return "organFrame";
-	}
-	
-	/**
-	 * 高级设置 
-	 * @return
-	 * @throws ServletException
-	 */
-	public String highset() throws ServletException {
-		return "highset";
-	}
-	
 	private MemberService memberService;
-	private PrivService privService;
 	
 	public void setMemberService(MemberService memberService) {
 		this.memberService = memberService;
-	}
-
-	public void setPrivService(PrivService privService) {
-		this.privService = privService;
 	}
 
 	private String account;
@@ -433,18 +349,7 @@ public class SystemAction extends BaseAction {
 	private String newpwd;
 	private String textcode;
 	private String comparepwd;
-	private String dataSource;
 	private String phone;
-	private String token;
-	private String organ;
-
-	public void setOrgan(String organ) {
-		this.organ = organ;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
 
 	public void setAccount(String account) {
 		this.account = account;
@@ -468,10 +373,6 @@ public class SystemAction extends BaseAction {
 
 	public void setComparepwd(String comparepwd) {
 		this.comparepwd = comparepwd;
-	}
-
-	public void setDataSource(String dataSource) {
-		this.dataSource = dataSource;
 	}
 
 	public void setPhone(String phone) {

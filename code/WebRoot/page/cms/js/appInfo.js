@@ -107,23 +107,23 @@ function afterAddPriv(data,appName){
 	loadpage(newPaging.args.current);
 	//手动添加一级二级权限
 	//1级
-	callajax('limit!AddPriv',{name:appName,app:appName,parentId:0},function(cb){
-		addLimit1(appName);
-	});
+	//callajax('limit!AddPriv',{name:appName,app:appName,parentId:0},function(cb){
+	//	addLimit1(appName);
+	//});
 
 }
 
-function addLimit1(appName){
-	console.log('添加一级权限')
-	//查询添加的以及应用的权限ID
-	callajax('limit!SearchPriv',{name:appName,pageindex:0,pagesize:1},function(cb){
-		var content = cb.content[0];
-		callajax('limit!AddPriv',{name:'登录权限',app:appName,parentId:content.id},addLimit2);
-	})
-}
-function addLimit2(){
-	console.log('添加er级权限')
-}
+//function addLimit1(appName){
+//	console.log('添加一级权限')
+//	//查询添加的以及应用的权限ID
+//	callajax('limit!SearchPriv',{name:appName,pageindex:0,pagesize:1},function(cb){
+//		var content = cb.content[0];
+//		callajax('limit!AddPriv',{name:'登录权限',app:appName,parentId:content.id},addLimit2);
+//	})
+//}
+//function addLimit2(){
+//	console.log('添加er级权限')
+//}
 function afterEditPriv(data){
 	loadpage(newPaging.args.current)
 }
@@ -139,13 +139,11 @@ function loadpage(pagenumber) {
 	var userId = oAccount.id;
 	if(pagenumber){
 		var data = {AppName:appName,pageindex: pagenumber-1, pagesize: itemsperpage,userId:userId};
-
-		callajax('appinfoconfig!SearchAppName', data, fShowTableNew);
 	}else{
 		var data = {AppName:appName,pageindex: 0, pagesize: itemsperpage,userId:userId};
-
-		callajax('appinfoconfig!SearchAppName', data, fShowTable);
 	}
+	callajax('appinfoconfig!SearchAppName', data, fShowTable);
+
 }
 function fShowTableNew(data){
 	var datas = data.content;
@@ -165,19 +163,42 @@ function fShowTableNew(data){
 	}
 }
 function fShowTable(data) {
-
+	$('#grouplist').empty();
 	var i = data.length;
 	var count = data.count;
 	pagenumber = Math.ceil(count/itemsperpage);
-	window.newPaging = new Paging('.paging',
-		{
-			pageCount : pagenumber,
-			current : 1,
-			backFn : function(){
+	if($('.paging').find('.pageNum').length==0){
+		window.newPaging = new Paging('.paging',
+			{
+				pageCount : pagenumber,
+				current : 1,
+				backFn : function(){
+					loadpage(newPaging.args.current);
+				}
+			}
+		)
+	}else{
+		if(data&&!count){
+			newPaging.args.pageCount--;
+			if(newPaging.args.pageCount<newPaging.args.current) {
+				newPaging.args.current = newPaging.args.pageCount;
+			}
+			//重新fillPage并加载最后一页
+			newPaging.fillHtml($('.paging'),newPaging.args);
+			loadpage(newPaging.args.current);
+			return;
+		}else{
+			if(newPaging.args.pageCount<pagenumber){
+				newPaging.args.pageCount++;
+				newPaging.fillHtml($('.paging'),newPaging.args);
+			}else if(newPaging.args.pageCount>pagenumber){
+				newPaging.args.pageCount--;
+				newPaging.fillHtml($('.paging'),newPaging.args);
 				loadpage(newPaging.args.current);
+				return;
 			}
 		}
-	)
+	}
 	var datas = data.content;
 	var localData = JSON.stringify(datas);
 	window.localStorage.tableData = localData

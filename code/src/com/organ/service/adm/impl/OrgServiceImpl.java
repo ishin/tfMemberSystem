@@ -125,28 +125,17 @@ public class OrgServiceImpl implements OrgService {
 		Random r = new Random();
 		String random = r.nextInt(999) + "";
 		String code = priv + random + PinyinGenerator.getPinYinHeadChar(organ.getName());
+		String ret = null;
 		
 		try {
 			organ.setCode(code);
 			//注册系统
 			orgDao.save(organ);
 			int organId = 0;
-			
 			organId = organ.getId() != null ? organ.getId() : 0;
 			
 			//初始化账号
 			if (organId != 0) {
-				//初始化职位
-				TPosition tp = new TPosition();
-				tp.setName("初始职位");
-				tp.setOrganId(organId);
-				tp.setListorder(0);
-				positionDao.save(tp);
-				
-				int pid = 0;
-				
-				pid = tp.getId() != null ? tp.getId() : 0;
-				
 				//初始化成员
 				TMember tm = new TMember();
 				tm.setAccount("admin");
@@ -166,11 +155,25 @@ public class OrgServiceImpl implements OrgService {
 				tm.setOrganId(organId);
 				tm.setAllpinyin("admin");
 				tm.setPassword("21232f297a57a5a743894a0e4a801fc3");
+				tm.setSuperAdmin(1);
 				memberDao.save(tm);
 				
+				/*
 				int memberId = 0;
 				
 				memberId = tm.getId() != null ? tm.getId() : 0;
+				
+			
+				//初始化职位
+				TPosition tp = new TPosition();
+				tp.setName("初始职位");
+				tp.setOrganId(organId);
+				tp.setListorder(0);
+				positionDao.save(tp);
+				
+				int pid = 0;
+				
+				pid = tp.getId() != null ? tp.getId() : 0;
 				
 				//初始化部门
 				TBranch tb = new TBranch();
@@ -205,8 +208,10 @@ public class OrgServiceImpl implements OrgService {
 				tmr.setRoleId(1);
 				tmr.setListorder(0);
 				memberRoleDao.save(tmr);
+				*/
+				ret = (new StringBuilder("注册成功,初始账号：").append(tm.getAccount()).append(",初始密码：").append("admin")).toString();
 			}
-			return "ok";
+			return ret;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

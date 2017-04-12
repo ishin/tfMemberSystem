@@ -49,9 +49,6 @@ public class MemberServiceImpl implements MemberService {
 		boolean status = false;
 
 		try {
-			// String md5Pwd =
-			// PasswordGenerator.getInstance().getMD5Str(newPwd);
-
 			status = memberDao.updateUserPwdForAccount(account, newPwd);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -676,6 +673,19 @@ public class MemberServiceImpl implements MemberService {
 		return jo.toString();
 	}
 
+	@Override
+	public TMember getSuperAdmin(String account, String userpwd) {
+		TMember memeber = null;
+
+		try {
+			memeber = memberDao.getSuperAdmin(account, userpwd);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		return memeber;
+	}
+
 	private String isBlank(Object o) {
 		return o == null ? "" : o + "";
 	}
@@ -703,4 +713,5 @@ public class MemberServiceImpl implements MemberService {
 	public MemberDao getMemberDao() {
 		return memberDao;
 	}
+
 }

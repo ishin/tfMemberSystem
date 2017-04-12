@@ -136,47 +136,80 @@ function afterEditPriv(data){
 function loadpage(pagenumber) {
 	$('#grouplist').empty();
 	var authName = $('.searchInput').val();
+
 	if(pagenumber){
 		var data = {name:authName,pageindex: pagenumber-1, pagesize: itemsperpage};
-
-		callajax('limit!SearchPriv', data, fShowTableNew);
 	}else{
 		var data = {name:authName,pageindex: 0, pagesize: itemsperpage};
-
-		callajax('limit!SearchPriv', data, fShowTable);
 	}
+	callajax('limit!SearchPriv', data, fShowTable);
 }
-function fShowTableNew(data){
-	var datas = data.content;
-	var LocalData = JSON.stringify(datas);
-	window.localStorage.tableData = LocalData;
-	if(datas){
-		for(var i = 0;i<datas.length;i++){
-			$('#grouplist').append(itemtemplate
-					.replace('code', datas[i].id)
-					.replace('name', datas[i].name)
-					.replace('classify', datas[i].parent_name)
-					.replace('belong', datas[i].app)
-					.replace(/aid/g, datas[i].id)
-			);
-		}
-	}
-
-}
+//function fShowTableNew(data,pagenumber,authName){
+//	if(data){
+//		var datas = data.content;
+//		var LocalData = JSON.stringify(datas);
+//		window.localStorage.tableData = LocalData;
+//		if(datas){
+//			for(var i = 0;i<datas.length;i++){
+//				$('#grouplist').append(itemtemplate
+//						.replace('code', datas[i].id)
+//						.replace('name', datas[i].name)
+//						.replace('classify', datas[i].parent_name)
+//						.replace('belong', datas[i].app)
+//						.replace(/aid/g, datas[i].id)
+//				);
+//			}
+//		}else{
+//			pagenumber = pagenumber - 1
+//			newPaging.args.pageCount--;
+//			var data = {name:authName,pageindex:pagenumber, pagesize: itemsperpage};
+//			callajax('limit!SearchPriv', data, function(cb){
+//				fShowTableNew(cb,pagenumber)
+//			});
+//		}
+//	}
+//
+//
+//}
 function fShowTable(data) {
-
+	$('#grouplist').empty();
 	var i = data.length;
 	var count = data.count;
 	pagenumber = Math.ceil(count/itemsperpage);
-	window.newPaging = new Paging('.paging',
-		{
-			pageCount : pagenumber,
-			current : 1,
-			backFn : function(){
+
+	if($('.paging').find('.pageNum').length==0){
+		window.newPaging = new Paging('.paging',
+			{
+				pageCount : pagenumber,
+				current : 1,
+				backFn : function(){
+					loadpage(newPaging.args.current);
+				}
+			}
+		)
+	}else{
+		if(data&&!count){
+			newPaging.args.pageCount--;
+			if(newPaging.args.pageCount<newPaging.args.current) {
+				newPaging.args.current = newPaging.args.pageCount;
+			}
+			//重新fillPage并加载最后一页
+			newPaging.fillHtml($('.paging'),newPaging.args);
+			loadpage(newPaging.args.current);
+			return;
+		}else{
+			if(newPaging.args.pageCount<pagenumber){
+				newPaging.args.pageCount++;
+				newPaging.fillHtml($('.paging'),newPaging.args);
+			}else if(newPaging.args.pageCount>pagenumber){
+				newPaging.args.pageCount--;
+				newPaging.fillHtml($('.paging'),newPaging.args);
 				loadpage(newPaging.args.current);
+				return;
 			}
 		}
-	)
+	}
+
 	var datas = data.content;
 	var localData = JSON.stringify(datas);
 	window.localStorage.tableData = localData

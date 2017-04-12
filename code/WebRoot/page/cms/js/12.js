@@ -30,12 +30,12 @@ $(document).ready(function() {
 		if ($( ".col12" ).triggerHandler( "submitForm" ) == false) return;
 
 		//权限
-		if (! has('zzxxglxg')) {
-			bootbox.alert({'title':'提示','message':'您没有权限修改组织信息', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-			return;
-		}
+		//if (! has('zzxxglxg')) {
+		//	bootbox.alert({'title':'提示','message':'您没有权限修改组织信息', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//	return;
+		//}
 
 		info.code =	$('#code').val();
 		info.name =	$('#name').val();
@@ -78,9 +78,9 @@ function loadmeta() {
 function loaddata() {
 
 	// 权限
-	if (has('zzxxglck')) {
+	//if (has('zzxxglck')) {
 		callajax('org!getInfo', '', cb_12_info);
-	}
+	//}
 }
 function cb_12_info(data) {
 	info = data;
@@ -153,32 +153,32 @@ function load(id, data) {
 function edit() {
 
 	//权限
-	if (has('zzxxglxg')) {
+	//if (has('zzxxglxg')) {
 		$('#logod').modal({
 			backdrop: false,
 			remote: '12_logo.jsp'
 		});
 		$('#filename').val('');
-	}
-	else {
-		bootbox.alert({'title':'提示','message':'您没有权限修改组织LOGO', callback: function() {
-			$('#container').css('width', document.body.clientWidth + 'px');	
-		}});
-	}
+	//}
+	//else {
+	//	bootbox.alert({'title':'提示','message':'您没有权限修改组织LOGO', callback: function() {
+	//		$('#container').css('width', document.body.clientWidth + 'px');
+	//	}});
+	//}
 	return false;
 }
 function del() {
 
 	//权限
-	if (has('zzxxglxg')) {
+	//if (has('zzxxglxg')) {
 		info.logo = '';
 		$('#logo').prop('src', imagedir + 'defaultlogo.png');
-	}
-	else {
-		bootbox.alert({'title':'提示','message':'您没有权限删除组织LOGO', callback: function() {
-			$('#container').css('width', document.body.clientWidth + 'px');	
-		}});
-	}
+	//}
+	//else {
+	//	bootbox.alert({'title':'提示','message':'您没有权限删除组织LOGO', callback: function() {
+	//		$('#container').css('width', document.body.clientWidth + 'px');
+	//	}});
+	//}
 }
 function complete() {
 	var complete = 0;

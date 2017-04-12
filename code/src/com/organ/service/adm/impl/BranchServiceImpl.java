@@ -781,6 +781,8 @@ public class BranchServiceImpl implements BranchService {
 						jm.put("organname", isBlank(o[24]));
 						jm.put("branchid", isBlank(o[4]));
 						jm.put("branchname", isBlank(o[6]));
+						jm.put("superior", isBlank(o[7]));			//直接领导人
+						
 						boolean status = false;
 						
 						if (!StringUtils.getInstance().isNull(o[7])) {
@@ -876,6 +878,7 @@ public class BranchServiceImpl implements BranchService {
 							jm.put("groupuse", isBlank(o[13]));
 							jm.put("intro", isBlank(o[14]));
 							jm.put("postitionname", isBlank(o[16]));
+							jm.put("superior", isBlank(o[7]));			//直接领导人
 							jm.put("accessStatus", memberIds.contains(Integer.parseInt(isBlank(o[17]))));
 							ja.add(jm); 
 							jm = null;

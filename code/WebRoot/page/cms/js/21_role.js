@@ -9,7 +9,8 @@ $(document).ready(function() {
 		console.log(222);
 		var appID = $(this).val();
 		var appName = $(this).find('option[value='+appID+']').html();
-		callajax('limit!getRoleList', {appname:appName}, changeRoleSelect);
+		var appId = $(this).find('option[value='+appID+']').val();
+		callajax('limit!getRoleList', {appId:appId}, changeRoleSelect);
 		callajax('limit!getLimitByRole', {roleid: 0,appname:appName}, cb_21_role_priv)
 	});
 
@@ -59,7 +60,7 @@ function fillAppSelect(data){
 	}
 	$('#21_apptemplate').html(sHTML);
 	console.log(content[0]);
-	callajax('limit!getRoleList', {appname:content[0].appName}, changeRoleSelect);
+	callajax('limit!getRoleList', {appId:content[0].id}, changeRoleSelect);
 	callajax('limit!getLimitByRole', {roleid: 0,appname:content[0].appName}, cb_21_role_priv);
 
 	//console.log('333')
@@ -124,8 +125,10 @@ function cb_21_role_save(data) {
 	var bindPage = curPage.attr('bindpage')
 	if(bindPage == 0||bindPage == '210'){
 		var appName = '';
+		var appId = '';
 	}else{
 		var appName = curPage.html();
+		var appId = curPage.attr('appid');
 	}
-	callajax('limit!getRoleList', {appname: appName}, rollList);
+	callajax('limit!getRoleList', {appId: appId}, rollList);
 }
