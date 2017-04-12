@@ -26,7 +26,7 @@
 		<div class="line111" style='padding-left: 23px'>
 			<div class="column1">
 				<span style='color:red'>*</span>手机：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<input type="text" id="membermobile" class='required' name="membermobile">
+				<input type="text" id="membermobile" class='required mobile' name="membermobile">
 			</div>
 			<div class="column2">
 				工号：
@@ -41,7 +41,7 @@
 			</div>
 			<div class="column2">
 				出生日期：
-				<input type="text" id="memberbirthday" name="memberbirthday">
+				<input type="text" id="memberbirthday" name="memberbirthday" readonly>
 			</div>
 		</div>
 		<div class="line111">
@@ -58,7 +58,7 @@
 		<div class="line111">
 			<div class="column1">
 				E-mail：&nbsp;&nbsp;&nbsp;&nbsp;
-				<input type="text" id="memberemail" name="memberemail">
+				<input type="text" id="memberemail" name="memberemail" class="email">
 			</div>
 			<div class="column2">
 				身份权限：

@@ -89,7 +89,7 @@
 				</div>
 				<div class="line12b">
 					<input style='width: 80px;border:none' value='E-mail：' readonly/>
-					<input type="text" id="email">
+					<input type="text" id="email" class="email">
 				</div>
 				<div class="line12b">
 					<input style='width: 80px;border:none' value='邮政编码：' readonly/>

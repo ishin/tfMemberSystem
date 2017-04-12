@@ -60,6 +60,9 @@ input:focus {
 	background-color: #b4b4b4;
 	box-shadow: none;
 }
+/*.ui-icon, .ui-widget-content .ui-icon{*/
+	/*background-image: url("images/ui-icons_444444_256x240.png") !important;*/
+/*}*/
 .cancel {
 	background-color: #fff;
 	color: #30c0da;
