@@ -150,7 +150,7 @@ function fShowTableNew(data){
 	var LocalData = JSON.stringify(datas);
 	window.localStorage.tableData = LocalData;
 	for(var i = 0;i<datas.length;i++){
-	var status = datas[i].isopen==1?'开启'：'关闭'；
+	var status = datas[i].isopen==1?'开启':'关闭';
 		$('#grouplist').append(itemtemplate
 				.replace('name', datas[i].appname)
 				.replace('appid', datas[i].appId)
@@ -204,7 +204,7 @@ function fShowTable(data) {
 	var localData = JSON.stringify(datas);
 	window.localStorage.tableData = localData
 	for(var i = 0;i<datas.length;i++){
-		var status = datas[i].isopen==1?'开启'：'关闭'；
+		var status = datas[i].isopen==1?'开启':'关闭';
 		$('#grouplist').append(itemtemplate
 				.replace('name', datas[i].appname)
 				.replace('appid', datas[i].appId)
