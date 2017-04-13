@@ -685,7 +685,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 		return memeber;
 	}
-
+	
 	private String isBlank(Object o) {
 		return o == null ? "" : o + "";
 	}

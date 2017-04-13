@@ -310,5 +310,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 		returnToClient(jo.toString());
 		return "text";
 	}
+	
+	protected int getSessionUserOrganId() {
+		SessionUser su = this.getSessionUser();
+		return su.getOrganId();
+	}
 
 }

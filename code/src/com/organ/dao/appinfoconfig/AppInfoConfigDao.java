@@ -7,9 +7,9 @@ import com.organ.model.AppSecret;
 
 public interface AppInfoConfigDao extends IBaseDao<AppSecret, Long>{
 
-	public List<AppSecret> getAppInfo(int userId,int pagesize,int pageindex);
+	public List<AppSecret> getAppInfo(int userId, int organId, int pagesize,int pageindex);
 	
-	public int updatePriv(String appId,String secert,String callbackurl,String appname,int isopen);
+	public int updatePriv(String appId,String secert,String callbackurl,String appname,int isopen, int organId);
 	public int getCount();
 	
 	public int editApp(int id,String appId,String secert,String callbackurl,String appname,int isopen);

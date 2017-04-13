@@ -16,4 +16,9 @@ public interface OrgService {
 	public void save(TOrgan organ);
 	public String getInfos(String ids);
 	public String registOrgan(TOrgan organ);
+	/**
+	 * 获取组织列表
+	 * @return
+	 */
+	public String getList();
 }
