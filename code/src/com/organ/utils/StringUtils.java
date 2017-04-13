@@ -198,10 +198,8 @@ public class StringUtils {
 		return arr;
 	}
 	// 判断一个字符串是否都为数字  
-	public static boolean isDigit(String strNum) {  
-	    Pattern pattern = Pattern.compile("[0-9]{1,}");  
-	    Matcher matcher = pattern.matcher((CharSequence) strNum);  
-	    return matcher.matches();  
+	public static boolean isDigit(String strNum) {
+		 return strNum.matches("[0-9]{1,}"); 
 	}
 
 	/**
