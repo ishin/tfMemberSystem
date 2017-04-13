@@ -122,16 +122,18 @@ public interface MemberService {
 
 	/**
 	 * 获取所有成员
+	 * @param organId 
 	 * @return
 	 */
-	public String getAllMemberInfo();
+	public String getAllMemberInfo(int organId);
 
 	/**
 	 * 获取成员在线状态(1：在线，0：离线，3：手机在线，4繁忙)
+	 * @param organId 
 	 * @param userids 
 	 * @return
 	 */
-	public String getAllMemberOnLineStatus(String userids);
+	public String getAllMemberOnLineStatus(int organId, String userids);
 
 
 	/**

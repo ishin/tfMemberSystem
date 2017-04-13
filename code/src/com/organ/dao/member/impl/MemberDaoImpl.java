@@ -513,8 +513,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TMember> getAllMemberInfo() {
-		String sql = (new StringBuilder("from TMember t")).toString();
+	public List<TMember> getAllMemberInfo(int organId) {
+		String sql = (new StringBuilder("from TMember t where t.organId=" + organId)).toString();
 		
 		try {
 			Query query = getSession().createQuery(sql);

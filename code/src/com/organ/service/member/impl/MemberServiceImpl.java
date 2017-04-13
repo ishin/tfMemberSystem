@@ -348,11 +348,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public String getAllMemberInfo() {
+	public String getAllMemberInfo(int organId) {
 		JSONObject jo = new JSONObject();
 
 		try {
-			List<TMember> memberList = memberDao.getAllMemberInfo();
+			List<TMember> memberList = memberDao.getAllMemberInfo(organId);
 
 			if (memberList != null) {
 				int memberLen = memberList.size();
@@ -381,7 +381,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public String getAllMemberOnLineStatus(String userIds) {
+	public String getAllMemberOnLineStatus(int organId, String userIds) {
 		JSONObject jo = new JSONObject();
 
 		try {
@@ -389,7 +389,7 @@ public class MemberServiceImpl implements MemberService {
 
 			if (StringUtils.getInstance().isBlank(userIds)) {
 				idList = new ArrayList<String>();
-				List<TMember> memberList = memberDao.getAllMemberInfo();
+				List<TMember> memberList = memberDao.getAllMemberInfo(organId);
 				if (memberList != null) {
 					int memberLen = memberList.size();
 					for (int i = 0; i < memberLen; i++) {

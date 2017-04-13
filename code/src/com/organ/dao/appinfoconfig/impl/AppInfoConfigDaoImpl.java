@@ -217,7 +217,6 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 			String hql = "select id,appname from t_appsecret";
 			return runSql(hql);
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return null;

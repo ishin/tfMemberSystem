@@ -18,9 +18,6 @@ import com.organ.service.appinfoconfig.AppInfoConfigService;
  */
 public class AppInfoConfigAction extends BaseAction {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3357825063940018758L;
 	private AppInfoConfigService appInfoConfigService;
 	
