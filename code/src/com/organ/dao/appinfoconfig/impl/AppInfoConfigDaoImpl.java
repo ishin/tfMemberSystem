@@ -1,6 +1,5 @@
 package com.organ.dao.appinfoconfig.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,12 +12,13 @@ import com.organ.dao.limit.RoleAppSecretDao;
 import com.organ.model.AppSecret;
 import com.organ.model.TPriv;
 import com.organ.utils.PrivUrlNameUtil;
+import com.organ.utils.TimeGenerator;
 
 public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 		AppInfoConfigDao {
 	LimitDao limitDao;
 	RoleAppSecretDao roleappsecretDao;
-	
+
 	public RoleAppSecretDao getRoleappsecretDao() {
 		return roleappsecretDao;
 	}
@@ -37,7 +37,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List getAppInfo(int userId, int pagesize, int pageindex) {
+	public List getAppInfo(int userId, int organId, int pagesize, int pageindex) {
 		// TODO Auto-generated method stub
 		try {
 			int start = pageindex * pagesize;
@@ -45,8 +45,8 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 					+ ",ta.callbackurl" + ",ta.apptime" + ",ta.appname"
 					+ ",ta.isopen" + ",tm.fullname"
 					+ " from t_appsecret ta right join t_member tm on tm.id ="
-					+ userId + " where tm.id =" + userId + " limit " + start
-					+ "," + pagesize;
+					+ userId + " where ta.organ_id=" + organId + " and tm.id ="
+					+ userId + " limit " + start + "," + pagesize;
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 			List list = query.list();
 			if (list.size() > 0) {
@@ -62,8 +62,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 	 * long转成data
 	 */
 	public Long getDate() {
-		Date d = new Date();
-		return d.getTime();
+		return TimeGenerator.getInstance().getUnixTime();
 	}
 
 	/**
@@ -71,7 +70,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 	 */
 	@Override
 	public int updatePriv(String appId, String secert, String callbackurl,
-			String appname, int isopen) {
+			String appname, int isopen, int organId) {
 		AppSecret appSecret = new AppSecret();
 		appSecret.setAppId(appId);
 		appSecret.setAppName(appname);
@@ -79,6 +78,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 		appSecret.setCallBackUrl(callbackurl);
 		appSecret.setIsOpen(isopen);
 		appSecret.setSecert(secert);
+		appSecret.setOrganId(organId);
 		try {
 			save(appSecret);
 			// 保存以及权限
@@ -115,7 +115,6 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 		}
 		return appSecret.getId();
 	}
-
 
 	@Override
 	public int getCount() {
@@ -180,18 +179,20 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 		}
 		return null;
 	}
+
 	@Override
-	public String getAppNameByID(int id){
+	public String getAppNameByID(int id) {
 		String name = null;
 		try {
-			String sql = "select appname from t_appsecret where id ="+id;
-			name= this.getSession().createSQLQuery(sql).uniqueResult().toString();
+			String sql = "select appname from t_appsecret where id =" + id;
+			name = this.getSession().createSQLQuery(sql).uniqueResult()
+					.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return name;
 	}
-	
+
 	@Override
 	public int getSearchCount(String AppName) {
 		String sql;
@@ -211,6 +212,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 		return 0;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List SearchAppInfoName() {
 		try {

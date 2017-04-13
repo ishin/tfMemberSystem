@@ -1,9 +1,9 @@
 package com.organ.service.appinfoconfig;
 
 public interface AppInfoConfigService {
-	public String getAppInfo(int userId,int pagesize, int pageindex);
+	public String getAppInfo(int userId, int organId, int pagesize, int pageindex);
 	
-	public String updatePriv(String appId,String secert,String callbackurl,String appname,int isopen);//���Ȩ�޽ӿ�
+	public String updatePriv(String appId,String secert,String callbackurl,String appname,int isopen, int organId);
 	
 	
 	public String DelApp(int id);

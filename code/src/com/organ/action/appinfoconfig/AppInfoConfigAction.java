@@ -39,10 +39,11 @@ public class AppInfoConfigAction extends BaseAction {
 				.parseInt(pageindex);
 		Integer intuserid = userid == null ? null : Integer
 				.parseInt(userid);
+		int organId = getSessionUserOrganId();
 		boolean flag = false;
 		String result = null;
 		try {
-			result = appInfoConfigService.getAppInfo(intuserid,intpagesize, intpageindex);
+			result = appInfoConfigService.getAppInfo(intuserid, organId, intpagesize, intpageindex);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -73,10 +74,11 @@ public class AppInfoConfigAction extends BaseAction {
 		String appname = this.request.getParameter("appname");
 		String isopen = this.request.getParameter("isopen");
 		Integer intisopen = isopen == null ? null : Integer.parseInt(isopen);
+		int organId = getSessionUserOrganId();
 		boolean falg = false;
 		try {
 			String result = appInfoConfigService.updatePriv(appId, secert,
-					callbackurl, appname, intisopen);
+					callbackurl, appname, intisopen, organId);
 			if ("".equals(result) && null == result) {
 				falg = false;
 			} else {
@@ -84,7 +86,6 @@ public class AppInfoConfigAction extends BaseAction {
 			}
 		} catch (Exception e) {
 			falg = false;
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		JSONObject jsonObject = new JSONObject();
@@ -186,7 +187,7 @@ public class AppInfoConfigAction extends BaseAction {
 				.parseInt(pageindex);
 		Integer intuserid = userid == null ? null : Integer
 				.parseInt(userid);
-		String result = appInfoConfigService.SearchApp(intuserid,AppName, intpagesize, intpageindex);
+		String result = appInfoConfigService.SearchApp(intuserid, AppName, intpagesize, intpageindex);
 		returnToClient(result);
 		return "text";
 	}
