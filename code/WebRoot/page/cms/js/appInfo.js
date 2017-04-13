@@ -156,7 +156,7 @@ function fShowTableNew(data){
 				.replace('appsecret', datas[i].secert)
 				.replace('backURL', datas[i].callbackurl)
 				.replace('states', datas[i].isopen)
-				.replace('operser', datas[i].apptime)
+				.replace('operser', datas[i].fullname)
 				.replace('date', datas[i].apptime)
 				.replace(/aid/g, datas[i].id)
 		);
