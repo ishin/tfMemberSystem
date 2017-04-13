@@ -532,7 +532,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	}
 
 	@Override
-	public Object[] getAuthResouce(int id) {
+	public Object[] getAuthResouce(int id, int organId) {
 		try {
 			String hql = "select " +
 				"M.fullname," +
@@ -548,7 +548,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 				"left join t_position P on BM.position_id=P.id " +
 				"left join t_sex S on M.sex=S.id " +
 				"inner join t_organ O on M.organ_id=O.id " +
-				"where M.id=" + id + " and BM.is_master=1";
+				"where M.id=" + id + " and M.organ_id=" + organId + " and BM.is_master=1";
 			
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 			

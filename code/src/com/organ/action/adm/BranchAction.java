@@ -555,7 +555,7 @@ public class BranchAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getBranchTreeAndMember() throws ServletException {
-		String result = branchService.getBranchTreeAndMember(appId);
+		String result = branchService.getBranchTreeAndMember(appId, companyId);
 			
 		returnToClient(result);
 		
@@ -572,7 +572,7 @@ public class BranchAction extends BaseAction {
 		boolean as = msgService.validAppIdAndSecret(appId, secret);
 		
 		if (as) {
-			result = branchService.getBranchTreeAndMember(appId);
+			result = branchService.getBranchTreeAndMember(appId, companyId);
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", 0);
@@ -592,7 +592,7 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchMember() throws ServletException {
 		
-		String result = branchService.getBranchMember(branchId, appId);
+		String result = branchService.getBranchMember(branchId, appId, companyId);
 		
 		returnToClient(result);
 		return "text";
@@ -608,7 +608,7 @@ public class BranchAction extends BaseAction {
 		boolean as = msgService.validAppIdAndSecret(appId, secret);
 		
 		if (as) {
-			result = branchService.getBranchMember(branchId, appId);
+			result = branchService.getBranchMember(branchId, appId, companyId);
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", 0);
@@ -633,6 +633,11 @@ public class BranchAction extends BaseAction {
 	private String branchId;
 	private String appId;
 	private String secret;
+	private String companyId;
+	
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
 
 	public void setAppId(String appId) {
 		this.appId = appId;

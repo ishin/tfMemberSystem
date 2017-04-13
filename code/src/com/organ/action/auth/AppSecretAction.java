@@ -47,7 +47,7 @@ public class AppSecretAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getTempTokenSceneOne() throws ServletException,IOException, JSONException {
-		JSONObject result = appSecretService.getTempTokenSceneOne(appId);
+		JSONObject result = appSecretService.getTempTokenSceneOne(appId, companyId);
 		//服务器主动跳转(前端异步提交时，不能正常跳转，会把页面返回去)
 		//如果使用服务器跳转，前端请使用form表单
 		/*if (result.getString("code").equals("500")) {
@@ -69,7 +69,7 @@ public class AppSecretAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getTempTokenSceneTwo() throws ServletException,IOException, JSONException {
-		JSONObject result = appSecretService.getTempTokenSceneOne(appId);
+		JSONObject result = appSecretService.getTempTokenSceneOne(appId, companyId);
 		returnToClient(result.toString());
 		return "text";
 	}
@@ -91,7 +91,7 @@ public class AppSecretAction extends BaseAction {
 	 * @throws IOException 
 	 */
 	public String reqAuthorizeOne() throws ServletException, JSONException, IOException {
-		JSONObject result = appSecretService.reqAuthorizeOne(unAuthToken, userName, userPwd, appId, info);
+		JSONObject result = appSecretService.reqAuthorizeOne(unAuthToken, userName, userPwd, appId, info, companyId);
 		//handleRedirect(result);
 		returnToClient(result.toString());
 		return "text";
@@ -121,7 +121,7 @@ public class AppSecretAction extends BaseAction {
 	 * @throws JSONException
 	 */
 	public String reqAuthorizeTwoForApp() throws ServletException, IOException, JSONException {
-		JSONObject result = appSecretService.reqAuthorizeTwoForApp(userId, appId, unAuthToken);
+		JSONObject result = appSecretService.reqAuthorizeTwoForApp(userId, appId, unAuthToken, companyId);
 		
 		returnToClient(result.toString());
 		return "text";
@@ -169,7 +169,7 @@ public class AppSecretAction extends BaseAction {
 	 */
 	public String getAuthResource() throws ServletException {
 		System.out.println("getAuthResource() visitToken: " + visitToken);
-		String result = appSecretService.getAuthResource(visitToken);
+		String result = appSecretService.getAuthResource(visitToken, companyId);
 		returnToClient(result.toString());
 		return "text";
 	}

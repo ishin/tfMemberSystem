@@ -729,7 +729,7 @@ public class BranchServiceImpl implements BranchService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public String getBranchTreeAndMember(String appId) {
+	public String getBranchTreeAndMember(String appId, String companyId) {
 		List list = branchDao.getBrancTreeAndMember();
 		
 		JSONArray ja = new JSONArray();
@@ -740,7 +740,7 @@ public class BranchServiceImpl implements BranchService {
 		
 		try {
 			if (list != null) {
-				AppSecret as = appSecretDao.getAppSecretByAppId(appId);
+				AppSecret as = appSecretDao.getAppSecretByAppId(appId, companyId);
 				int appRecordId = 0;
 				if (as != null) {
 					appRecordId = as.getId();
@@ -830,7 +830,7 @@ public class BranchServiceImpl implements BranchService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String getBranchMember(String branchId, String appId) {
+	public String getBranchMember(String branchId, String appId, String companyId) {
 		String result = null;
 		boolean status = true;
 		
@@ -842,7 +842,7 @@ public class BranchServiceImpl implements BranchService {
 			
 			try {
 				if( list != null) {
-					AppSecret as = appSecretDao.getAppSecretByAppId(appId);
+					AppSecret as = appSecretDao.getAppSecretByAppId(appId, companyId);
 					int appRecordId = 0;
 					if (as != null) {
 						appRecordId = as.getId();

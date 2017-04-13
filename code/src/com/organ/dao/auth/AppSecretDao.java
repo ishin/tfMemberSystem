@@ -14,9 +14,10 @@ public interface AppSecretDao extends IBaseDao<AppSecret, Integer> {
 	/**
 	 * 依据appId获取appSecret
 	 * @param appId
+	 * @param companyId 
 	 * @return
 	 */
-	public AppSecret getAppSecretByAppId(String appId);
+	public AppSecret getAppSecretByAppId(String appId, String companyId);
 
 	/**
 	 * 更新AppSecret
