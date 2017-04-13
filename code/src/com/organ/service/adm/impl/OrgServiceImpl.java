@@ -1,5 +1,6 @@
 package com.organ.service.adm.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -16,7 +17,6 @@ import com.organ.dao.member.MemberDao;
 import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
 import com.organ.model.TMember;
-import com.organ.model.TMemberRole;
 import com.organ.model.TOrgan;
 import com.organ.model.TPosition;
 import com.organ.service.adm.OrgService;
@@ -158,12 +158,9 @@ public class OrgServiceImpl implements OrgService {
 				tm.setSuperAdmin(1);
 				memberDao.save(tm);
 				
-				/*
 				int memberId = 0;
-				
 				memberId = tm.getId() != null ? tm.getId() : 0;
 				
-			
 				//初始化职位
 				TPosition tp = new TPosition();
 				tp.setName("初始职位");
@@ -201,7 +198,7 @@ public class OrgServiceImpl implements OrgService {
 				tbm.setIsMaster("1");
 				tbm.setListorder(0);
 				branchMemberDao.save(tbm);
-				
+				/*
 				//初始化角色
 				TMemberRole tmr = new TMemberRole();
 				tmr.setMemberId(memberId);
@@ -216,6 +213,29 @@ public class OrgServiceImpl implements OrgService {
 			e.printStackTrace();
 		}
 		return "fail";
+	}
+
+	@Override
+	public String getList() {
+		JSONObject jo = new JSONObject();
+		
+		try {
+			List<TOrgan> list = orgDao.getList();
+			ArrayList<JSONObject> retList = new ArrayList<JSONObject>();
+			
+			for(int i = 0; i < list.size(); i++) {
+				TOrgan to = list.get(i);
+				JSONObject t = new JSONObject();
+				t.put("id", to.getId());
+				t.put("name", to.getName());
+				retList.add(t);
+			}
+			jo.put("code", 1);
+			jo.put("text", retList.toString());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return jo.toString();
 	}
 
 }

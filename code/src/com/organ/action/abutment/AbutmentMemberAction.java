@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
 import com.organ.model.TMember;
+import com.organ.service.adm.BranchService;
 import com.organ.service.member.MemberService;
 import com.organ.service.upload.UploadService;
 import com.organ.utils.JSONUtils;
@@ -33,6 +34,39 @@ public class AbutmentMemberAction extends BaseAction {
 	private static final long serialVersionUID = -7324946068454866523L;
 	private static final Logger logger = Logger
 			.getLogger(AbutmentMemberAction.class);
+	
+	/**
+	 * 依据账号获取成员
+	 * @return
+	 * @throws ServletException
+	 */
+	public String getMemberByAccount() throws ServletException {
+		String result = null;
+		JSONObject jo = new JSONObject();
+		
+		try {
+			String params = getRequestDataByStream();
+
+			if (params != null) {
+				JSONObject param = JSONUtils.getInstance().stringToObj(params);
+				String account = param.getString("account");
+				TMember tm = branchService.getMemberByAccount(account);
+				jo.put("code", 1);
+				jo.put("text", JSONUtils.getInstance().modelToJSONObj(tm).toString());
+			} else {
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		
+		result = jo.toString();
+
+		returnToClient(result);
+		return "text";
+	}
 
 	/**
 	 * 获取成员指定参数
@@ -53,7 +87,6 @@ public class AbutmentMemberAction extends BaseAction {
 				result = memberService.getMemberParam(id, ps);
 			} else {
 				JSONObject jo = new JSONObject();
-				jo = new JSONObject();
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
@@ -892,6 +925,11 @@ public class AbutmentMemberAction extends BaseAction {
 
 	private MemberService memberService;
 	private UploadService uploadService;
+	private BranchService branchService;
+	
+	public void setBranchService(BranchService branchService) {
+		this.branchService = branchService;
+	}
 
 	public void setUploadService(UploadService uploadService) {
 		this.uploadService = uploadService;

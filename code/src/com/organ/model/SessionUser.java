@@ -13,13 +13,9 @@ public class SessionUser
 	*/ 
 	private int id;
 	private String account; 
-	
-	/** 
-	* @Fields accountName : TODO(名字) 
-	*/ 
 	private String fullname;
-	
 	private String token;
+	private int organId;
 	
 	public int getId() {
 		return id;
@@ -53,6 +49,12 @@ public class SessionUser
 		this.fullname = fullname;
 	}
 
-	
-	
+	public int getOrganId() {
+		return organId;
+	}
+
+	public void setOrganId(int organId) {
+		this.organId = organId;
+	}
+
 }

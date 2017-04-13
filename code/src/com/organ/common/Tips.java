@@ -39,6 +39,8 @@ public enum  Tips {
 	NULLGROUP("没有群组", "00033"),
 	SEARCHFAIL("查询失败", "00034"),
 	NOTINIT("请使用正确的账号登陆", "00035"),
+	VALIDFAIL("检验不通过", "00036"),
+	NULLORGAN("未指定公司", "00037"),
 	OK("OK", "10000"),
 	FAIL("fail", "20000");
 	

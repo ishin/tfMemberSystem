@@ -117,6 +117,7 @@
 	<bean id="abutmentMemberAction" class="com.organ.action.abutment.AbutmentMemberAction" scope="prototype" autowire="byName" >
 		<property name="memberService" ref="memberService" />
 		<property name="uploadService" ref="uploadService" />
+		<property name="branchService" ref="branchService" />
 	</bean>
 	<bean id="abutmentAuthAction" class="com.organ.action.abutment.AbutmentAuthAction" scope="prototype" autowire="byName" >
 		<property name="appSecretService" ref="appSecretService" />

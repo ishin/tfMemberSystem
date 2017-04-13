@@ -191,6 +191,7 @@ public class AppSecretAction extends BaseAction {
 	private String userName;	//用户名
 	private String userPwd;		//用户密码
 	private String userId;		//成员id
+	private String companyId;	//系统标识
 	
 	
 	public void setUserId(String userId) {
@@ -199,10 +200,6 @@ public class AppSecretAction extends BaseAction {
 
 	public void setIsOpen(String isOpen) {
 		this.isOpen = isOpen;
-	}
-
-	public String getInfo() {
-		return info;
 	}
 
 	public void setInfo(String info) {
@@ -221,40 +218,20 @@ public class AppSecretAction extends BaseAction {
 		this.url = url;
 	}
 	
-	public String getUnAuthToken() {
-		return unAuthToken;
-	}
-	
 	public void setUnAuthToken(String unAuthToken) {
 		this.unAuthToken = unAuthToken;
 	}
 	
-	public String getAuthToken() {
-		return authToken;
-	}
-
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken;
-	}
-
-	public String getVisitiToken() {
-		return visitToken;
 	}
 
 	public void setVisitToken(String visitToken) {
 		this.visitToken = visitToken;
 	}
 
-	public String getUserName() {
-		return userName;
-	}
-
 	public void setUserName(String userName) {
 		this.userName = userName;
-	}
-
-	public String getUserPwd() {
-		return userPwd;
 	}
 
 	public void setAppName(String appName) {
@@ -263,6 +240,10 @@ public class AppSecretAction extends BaseAction {
 
 	public void setUserPwd(String userPwd) {
 		this.userPwd = userPwd;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}
 
 	private AppSecretService appSecretService;

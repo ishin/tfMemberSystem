@@ -31,9 +31,38 @@ public class AbutmentPrivilegeAction extends BaseAction {
 			.getLogger(AbutmentPrivilegeAction.class);
 	
 	
-	/**
-	 * 
-	 */
+	public String getPrivStringByMember() throws ServletException {
+		String result = null;
+		JSONObject jo = new JSONObject();
+		
+		try {
+			String params = getRequestDataByStream();
+			
+			if (params != null) {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				String id = p.getString("id");
+				String privList = privService.getPrivStringByMember(Integer.parseInt(id));
+				
+				if (privList != null) {
+					jo.put("code", 1);
+					jo.put("text", privList);
+				} else {
+					jo.put("code", 0);
+					jo.put("text", Tips.FAIL.getText());
+				}
+			} else {
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
+			}
+			result = jo.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		returnToClient(result);
+		return "text";
+	}
+	
 	public String getRolesForIds() throws ServletException {
 		String result = null;
 		JSONObject jo = new JSONObject();
