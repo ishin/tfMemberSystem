@@ -213,7 +213,6 @@ public class LimitServiceImpl implements LimitService {
 		TRole role = roleDao.get(roleId);
 		if (role == null) {
 			role = new TRole();
-
 			role.setName(roleName);
 			role.setListorder(roleDao.getMax("listorder", "from TRole") + 1);
 			roleDao.save(role);
