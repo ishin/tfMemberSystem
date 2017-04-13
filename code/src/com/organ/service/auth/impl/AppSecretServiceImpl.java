@@ -114,7 +114,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 	}
 
 	@Override
-	public JSONObject getTempTokenSceneOne(String appId, String companyId) {
+	public JSONObject getTempTokenSceneOne(String appId, String organId) {
 		JSONObject jo = new JSONObject();
 		String code = "500";
 		String text = null;
@@ -124,12 +124,12 @@ public class AppSecretServiceImpl implements AppSecretService {
 		try {
 			if (StringUtils.getInstance().isBlank(appId)) {
 				text = AuthTips.WORNGPARAM.getText();
-			} else if (StringUtils.getInstance().isBlank(companyId)) {
+			} else if (StringUtils.getInstance().isBlank(organId)) {
 				text = AuthTips.INVALCOMPANYID.getText();
 			} else {
 				long now = TimeGenerator.getInstance().getUnixTime();
 				appId = appId.trim();
-				AppSecret as = appSecretDao.getAppSecretByAppId(appId, companyId);
+				AppSecret as = appSecretDao.getAppSecretByAppId(appId, Integer.parseInt(organId));
 
 				System.out.println("as= " + as);
 				
@@ -193,7 +193,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 
 	@Override
 	public JSONObject reqAuthorizeOne(String unAuthToken, String userName,
-			String userPwd, String appId, String info, String companyId) {
+			String userPwd, String appId, String info, String organId) {
 		JSONObject jo = new JSONObject();
 		String code = "500";
 		String text = null;
@@ -206,7 +206,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 			} else if (StringUtils.getInstance().isBlank(userName)
 					|| StringUtils.getInstance().isBlank(userPwd)) {
 				text = AuthTips.INVALUSER.getText();
-			} else if (StringUtils.getInstance().isBlank(companyId)) {
+			} else if (StringUtils.getInstance().isBlank(organId)) {
 				text = AuthTips.INVALCOMPANYID.getText();
 			} else {
 				String appIdCode = coverCode(unAuthToken);
@@ -215,7 +215,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 				if (!appId.equals(appIdc)) {
 					text = AuthTips.INVALTOKEN.getText();
 				} else {
-					AppSecret as = appSecretDao.getAppSecretByAppId(appId, companyId);
+					AppSecret as = appSecretDao.getAppSecretByAppId(appId, Integer.parseInt(organId));
 					long now = TimeGenerator.getInstance().getUnixTime();
 
 					if (as != null) {
@@ -423,7 +423,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 				if (!appIdc.equals(appId)) {
 					text = AuthTips.INVALTOKEN.getText();
 				} else {
-					AppSecret as = appSecretDao.getAppSecretByAppId(appId, su.getOrganId() + "");
+					AppSecret as = appSecretDao.getAppSecretByAppId(appId, su.getOrganId());
 
 					if (as != null) {
 						UserValid uv = userValidDao
@@ -476,7 +476,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 
 	@Override
 	public JSONObject reqAuthorizeTwoForApp(String userId, String appId,
-			String unAuthToken, String companyId) {
+			String unAuthToken, String organId) {
 		JSONObject ret = new JSONObject();
 		String code = "500";
 		String text = null;
@@ -488,7 +488,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 				text = AuthTips.INVALIDAPPID.getText();
 			} else if (StringUtils.getInstance().isBlank(unAuthToken)) {
 				text = AuthTips.INVALTOKEN.getText();
-			} else if (StringUtils.getInstance().isBlank(companyId)) {
+			} else if (StringUtils.getInstance().isBlank(organId)) {
 				text = AuthTips.INVALCOMPANYID.getText();
 			} else {
 				String appIdCode = coverCode(unAuthToken);
@@ -497,7 +497,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 				if (!appIdc.equals(appId)) {
 					text = AuthTips.INVALTOKEN.getText();
 				} else {
-					AppSecret as = appSecretDao.getAppSecretByAppId(appId, companyId);
+					AppSecret as = appSecretDao.getAppSecretByAppId(appId, Integer.parseInt(organId));
 
 					if (as != null) {
 						UserValid uv = userValidDao

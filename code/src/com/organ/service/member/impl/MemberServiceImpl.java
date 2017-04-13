@@ -464,9 +464,9 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public int countMember() {
+	public int countMember(int organId) {
 		try {
-			int count = memberDao.getMemberCount();
+			int count = memberDao.getMemberCount(organId);
 			return count;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -29,7 +29,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 	@Override
 	public List getOrgan(Integer organId) {
 
-		String sql = "select id, name from t_organ" + " where id = " + organId;
+		String sql = "select id, name from t_organ where id = " + organId;
 		return runSql(sql);
 	}
 
@@ -69,9 +69,9 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 	 * alopex
 	 */
 	@Override
-	public List getRole() {
+	public List getRole(Integer organId) {
 
-		String sql = "select id, name from t_role order by listorder desc";
+		String sql = "select id, name from t_role where organid=" + organId + " order by listorder desc";
 		return runSql(sql);
 	}
 
@@ -95,9 +95,9 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 	 * alopex
 	 */
 	@Override
-	public List getPosition() {
+	public List getPosition(Integer organId) {
 
-		String sql = "select id, name from t_position order by listorder desc";
+		String sql = "select id, name from t_position where organ_id=" + organId + " order by listorder desc";
 		return runSql(sql);
 	}
 
@@ -191,9 +191,9 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List getBranchTree() {
+	public List getBranchTree(Integer organId) {
 
-		String sql = "select id,parent_id,name from t_branch";
+		String sql = "select id,parent_id,name from t_branch where organ_id=" + organId;
 		SQLQuery query = this.getSession().createSQLQuery(sql);
 
 		List list = query.list();
@@ -203,7 +203,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List getBrancTreeAndMember() {
+	public List getBrancTreeAndMember(Integer organId) {
 		String sql = "select " + "BM.branch_id," + "BM.member_id,"
 				+ "BM.position_id," + "BM.is_master," + "BC.id BCID,"
 				+ "BC.parent_id," + "BC.name BCNAME," + "M.id MID,"
@@ -217,7 +217,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 				+ "right join t_organ TOR on TOR.id=BC.organ_id "
 				+ "left join t_member M on M.id=BM.member_id "
 				+ "left join t_position P on BM.position_id=P.id "
-				+ "left join t_sex S on M.sex=S.id";
+				+ "left join t_sex S on M.sex=S.id where bc.organ_id=" + organId;
 
 		System.out.println(sql);
 		try {

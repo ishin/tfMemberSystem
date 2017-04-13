@@ -138,11 +138,12 @@ public interface MemberService {
 
 	/**
 	 * 统计成员账号个数
+	 * @param organId 
 	 * @param account
 	 * @param userpwd
 	 * @return
 	 */
-	public int countMember();
+	public int countMember(int organId);
 
 	/**
 	 * 多账号查询成员

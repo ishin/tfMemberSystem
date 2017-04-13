@@ -179,9 +179,10 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	
 	/**
 	 * 获取成员总数
+	 * @param organId 
 	 * @return
 	 */
-	public int getMemberCount();
+	public int getMemberCount(int organId);
 	
 	/**
 	 * 根据账号获取成员id

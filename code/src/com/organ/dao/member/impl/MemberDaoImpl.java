@@ -568,9 +568,9 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	}
 
 	@Override
-	public int getMemberCount() {
+	public int getMemberCount(int organId) {
 		try {
-			return count("from TMember");
+			return count("from TMember where organId=" + organId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

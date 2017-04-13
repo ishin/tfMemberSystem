@@ -26,7 +26,7 @@ public interface AppSecretService {
 	 * @param companyId 
 	 * @return
 	 */
-	public JSONObject getTempTokenSceneOne(String appId, String companyId);
+	public JSONObject getTempTokenSceneOne(String appId, String organId);
 
 	/**
 	 * 场景一验证登陆，授权

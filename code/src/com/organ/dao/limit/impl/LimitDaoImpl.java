@@ -128,11 +128,11 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,t.name AS parent_name FROM t_priv pr "
 					+"LEFT JOIN t_priv t ON pr.parent_id=t.id "
 					+"WHERE pr.parent_id IN (SELECT  p.id FROM t_priv p WHERE p.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) "
-					+") tmp WHERE tmp.organid="+organId+" and tmp.name like '%"+Name+"%'"+" or tmp.url like '%"+Name+"%' limit "+start+","+pagesize;
+					+") tmp and tmp.organid="+organId+" and tmp.name like '%"+Name+"%'"+" or tmp.url like '%"+Name+"%' limit "+start+","+pagesize;
 			} else {
 				hql ="SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,t.name AS parent_name FROM t_priv pr "
 					+"LEFT JOIN t_priv t ON pr.parent_id=t.id "
-					+"WHERE pr.parent_id IN (SELECT  p.id FROM t_priv p WHERE p.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) where pr.organid=" + organId
+					+"WHERE pr.parent_id IN (SELECT  p.id FROM t_priv p WHERE p.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) and pr.organid=" + organId
 					+" limit "+ start + ", " + pagesize;
 			}
 			System.out.println("searchPriv: " + hql);
@@ -170,7 +170,7 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 					+"where aa.organid=" + organId + " aa.name like '%"+name+"%' or aa.url like '%" + name + "%' ";
 			} else {
 				sql = "select count(*) from (" 
-					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app FROM t_priv pr WHERE pr.parent_id IN (SELECT  pv.id FROM t_priv pv WHERE pv.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0))) AS tt where tt.organid=" + organId;
+					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app FROM t_priv pr WHERE pr.parent_id IN (SELECT  pv.id FROM t_priv pv WHERE pv.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) and pr.organid=" + organId + ") AS tt";
 			}
 			int SearchCount = Integer.parseInt(this.getSession()
 					.createSQLQuery(sql).list().get(0).toString());

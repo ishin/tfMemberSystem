@@ -451,7 +451,24 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getAllMemberInfo() throws ServletException {
-		String result = memberService.getAllMemberInfo();
+		String result = null;
+		JSONObject jo = new JSONObject();
+		
+		try {
+			String params = getRequestDataByStream();
+			if (params == null) {
+				jo = new JSONObject();
+				jo.put("code", -1);
+				jo.put("text", Tips.WRONGPARAMS.getText());
+				result = jo.toString();
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				int organId = p.getInt("organId");
+				result = memberService.getAllMemberInfo(organId);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		returnToClient(result);
 		return "text";
 	}
@@ -469,12 +486,14 @@ public class AbutmentMemberAction extends BaseAction {
 		try {
 			String params = getRequestDataByStream();
 			String userIds = null;
+			int organId = 0;
 
 			if (!params.equals("")) {
 				jo = JSONUtils.getInstance().stringToObj(params);
 				userIds = jo.getString("userIds");
+				organId = jo.getInt("organId");
 			}
-			result = memberService.getAllMemberOnLineStatus(userIds);
+			result = memberService.getAllMemberOnLineStatus(organId, userIds);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
@@ -527,9 +546,19 @@ public class AbutmentMemberAction extends BaseAction {
 		JSONObject jo = new JSONObject();
 
 		try {
-			int count = memberService.countMember();
-			jo.put("code", 1);
-			jo.put("text", count);
+			String params = getRequestDataByStream();
+			
+			if (params != null) {
+				jo = JSONUtils.getInstance().stringToObj(params);
+				int organId = jo.getInt("organId");
+				int count = memberService.countMember(organId);
+				jo.put("code", 1);
+				jo.put("text", count);
+			} else {
+				jo = new JSONObject();
+				jo.put("code", -1);
+				jo.put("text", Tips.WRONGPARAMS.getText());
+			}
 			result = jo.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
