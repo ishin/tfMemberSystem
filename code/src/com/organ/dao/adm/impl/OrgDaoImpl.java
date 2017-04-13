@@ -2,8 +2,12 @@ package com.organ.dao.adm.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+
 import com.organ.common.BaseDao;
 import com.organ.dao.adm.OrgDao;
+import com.organ.model.TMemberRole;
 import com.organ.model.TOrgan;
 
 public class OrgDaoImpl extends BaseDao<TOrgan, Integer> implements OrgDao {
@@ -60,6 +64,24 @@ public class OrgDaoImpl extends BaseDao<TOrgan, Integer> implements OrgDao {
 	public List getInfos(String soStr) {
 		String sql = new StringBuilder("select id, name from t_organ where id in(").append(soStr).append(")").toString();
 		return runSql(sql);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<TOrgan> getList() {
+		try {
+			Criteria ctr = getCriteria();
+			
+			List<TOrgan> list = ctr.list();
+			
+			if (list.size() > 0) {
+				return list;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 }

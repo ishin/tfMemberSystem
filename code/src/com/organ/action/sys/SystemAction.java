@@ -119,6 +119,7 @@ public class SystemAction extends BaseAction {
 		su.setId(member.getId());
 		su.setAccount(member.getAccount());
 		su.setFullname(member.getFullname());
+		su.setOrganId(member.getOrganId());
 		su.setToken(token);
 		setSessionUser(su);
 		
@@ -350,7 +351,7 @@ public class SystemAction extends BaseAction {
 	private String textcode;
 	private String comparepwd;
 	private String phone;
-
+	
 	public void setAccount(String account) {
 		this.account = account;
 	}

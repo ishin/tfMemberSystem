@@ -4,23 +4,26 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.SQLQuery;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import com.organ.dao.appinfoconfig.AppInfoConfigDao;
+import com.organ.dao.auth.UserValidDao;
 import com.organ.dao.limit.LimitDao;
 import com.organ.dao.limit.RoleAppSecretDao;
-import com.organ.model.TPriv;
 import com.organ.service.appinfoconfig.AppInfoConfigService;
 
 public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 
 	public AppInfoConfigDao appInfoConfigDao;
 	public RoleAppSecretDao roleappsecretDao;
+	public UserValidDao userValidDao;
 	public LimitDao limitDao;
 	
+	public void setUserValidDao(UserValidDao userValidDao) {
+		this.userValidDao = userValidDao;
+	}
+
 	public LimitDao getLimitDao() {
 		return limitDao;
 	}
@@ -51,12 +54,12 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String getAppInfo(int userId, int pagesize, int pageindex) {
-		// TODO Auto-generated method stub
+	public String getAppInfo(int userId, int organId, int pagesize, int pageindex) {
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonObject = new JSONObject();
+		
 		try {
-			List appList = appInfoConfigDao.getAppInfo(userId, pagesize,
+			List appList = appInfoConfigDao.getAppInfo(userId, organId, pagesize,
 					pageindex);
 			int count = appInfoConfigDao.getCount();
 			if (appList == null) {
@@ -93,7 +96,6 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 			}
 
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return jsonObject.toString();
@@ -101,11 +103,8 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 
 	@Override
 	public String updatePriv(String appId, String secert, String callbackurl,
-			String appname, int isopen) {
-		// TODO Auto-generated method stub
-		return appInfoConfigDao.updatePriv(appId, secert, callbackurl, appname,
-				isopen)
-				+ "";
+			String appname, int isopen, int organId) {
+		return appInfoConfigDao.updatePriv(appId, secert, callbackurl, appname, isopen, organId) + "";
 	}
 
 	@Override
@@ -115,6 +114,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 		appInfoConfigDao.delete("delete AppSecret where id =" + id);
 		roleappsecretDao.delete("delete from TRoleAppSecret where appsecretId = " + id);
 		limitDao.delete("delete from TPriv where app = '" + appnameString+"'");
+		userValidDao.delete("delete from UserValid where asid=" + id);
 		return id + "";
 	}
 
@@ -200,4 +200,5 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 		}
 		return jsonObject.toString();
 	}
+
 }

@@ -1,6 +1,7 @@
 package com.organ.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -197,10 +198,22 @@ public class StringUtils {
 		return arr;
 	}
 	// 判断一个字符串是否都为数字  
-	public static boolean isDigit(String strNum) {  
-	    Pattern pattern = Pattern.compile("[0-9]{1,}");  
-	    Matcher matcher = pattern.matcher((CharSequence) strNum);  
-	    return matcher.matches();  
+	public static boolean isDigit(String strNum) {
+		 return strNum.matches("[0-9]{1,}"); 
+	}
+
+	/**
+	 * 按字母表顺序排序
+	 * @param pStr
+	 * @return
+	 */
+	public String sortByChars(String pStr) {
+		if (pStr != null) {
+			char[] c = pStr.toCharArray();
+			Arrays.sort(c);
+			return new String(c);
+		}
+		return null;
 	}
 	
 }

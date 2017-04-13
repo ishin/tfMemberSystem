@@ -42,6 +42,9 @@
 	</bean>
 	<bean id="appInfoConfigService" class="com.organ.service.appinfoconfig.impl.AppInfoConfigServiceImpl" autowire="byName">
 		<property name="appInfoConfigDao" ref="appinfoconfigDao" />
+		<property name="userValidDao" ref="userValidDao" />
+		<property name="roleappsecretDao" ref="roleappsecretDao" />
+		<property name="limitDao" ref="limitDao" />
 	</bean>
 	<bean id="memberService" class="com.organ.service.member.impl.MemberServiceImpl" autowire="byName" >
 		<property name="memberDao" ref="memberDao" />
@@ -117,6 +120,7 @@
 	<bean id="abutmentMemberAction" class="com.organ.action.abutment.AbutmentMemberAction" scope="prototype" autowire="byName" >
 		<property name="memberService" ref="memberService" />
 		<property name="uploadService" ref="uploadService" />
+		<property name="branchService" ref="branchService" />
 	</bean>
 	<bean id="abutmentAuthAction" class="com.organ.action.abutment.AbutmentAuthAction" scope="prototype" autowire="byName" >
 		<property name="appSecretService" ref="appSecretService" />
