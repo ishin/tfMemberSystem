@@ -93,14 +93,14 @@ public interface BranchService {
 	 * @param appId 
 	 * @return
 	 */
-	public String getBranchTreeAndMember(String appId);
+	public String getBranchTreeAndMember(String appId, String companyId);
 
 	/**
 	 * 取部门下的成员
 	 * @param branchId
 	 * @return
 	 */
-	public String getBranchMember(String branchId, String appId);
+	public String getBranchMember(String branchId, String appId, String companyId);
 	
 	/**
 	 * 获取部门成员

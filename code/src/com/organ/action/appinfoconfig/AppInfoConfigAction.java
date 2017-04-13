@@ -187,7 +187,9 @@ public class AppInfoConfigAction extends BaseAction {
 				.parseInt(pageindex);
 		Integer intuserid = userid == null ? null : Integer
 				.parseInt(userid);
-		String result = appInfoConfigService.SearchApp(intuserid, AppName, intpagesize, intpageindex);
+		int organId = getSessionUserOrganId();
+		String memberName = getSessionUserName();
+		String result = appInfoConfigService.SearchApp(memberName, organId, AppName, intpagesize, intpageindex);
 		returnToClient(result);
 		return "text";
 	}

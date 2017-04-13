@@ -148,28 +148,26 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List SearchAppInfo(int userId, String AppName, int pagesize,
+	public List SearchAppInfo(int organId, String AppName, int pagesize,
 			int pageindex) {
 		try {
 			int start = pageindex * pagesize;
 			String hql;
 			if (!StringUtils.isBlank(AppName)) {
-				hql = "select "
-						+ "aa.id,aa.appId,aa.secert,aa.callBackUrl,aa.appTime,aa.appName,aa.isOpen,aa.fullname from "
-						+ "(select ap.id,ap.appId,ap.secert,ap.callBackUrl,ap.appTime,ap.appName,ap.isOpen,tm.fullname from t_appsecret ap right join t_member tm on tm.id ="
-						+ userId + " where tm.id =" + userId
-						+ ") as aa where aa.appName like '%" + AppName
-						+ "%' limit " + start + "," + pagesize;
-			} else {
-				hql = "select ap.id,ap.appId,ap.secert,ap.callBackUrl,ap.appTime,ap.appName,ap.isOpen,tm.fullname from t_appsecret ap right join t_member tm on tm.id ="
-						+ userId
-						+ " where tm.id ="
-						+ userId
+				hql = "select ap.id,ap.appId,ap.secert,ap.callBackUrl,ap.appTime,ap.appName,ap.isOpen from t_appsecret ap where ap.appName like '%"
+						+ AppName
+						+ "%' and ap.organ_id="
+						+ organId
 						+ " limit "
 						+ start + "," + pagesize;
+			} else {
+				hql = "select ap.id,ap.appId,ap.secert,ap.callBackUrl,ap.appTime,ap.appName,ap.isOpen from t_appsecret ap where ap.organ_id="
+						+ organId + " limit " + start + "," + pagesize;
 			}
 			System.out.println("---------" + hql);
+
 			SQLQuery query = this.getSession().createSQLQuery(hql);
+
 			List list = query.list();
 			if (list.size() > 0) {
 				return list;
@@ -194,14 +192,14 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 	}
 
 	@Override
-	public int getSearchCount(String AppName) {
+	public int getSearchCount(String AppName, int organId) {
 		String sql;
 		try {
 			if (!StringUtils.isBlank(AppName)) {
-				sql = "select count(*) from (select ap.id,ap.appId,ap.secert,ap.callBackUrl,ap.appTime,ap.appName,ap.isOpen from t_appsecret ap where ap.appName like '%"
-						+ AppName + "%') as aa";
+				sql = "select count(*) from t_appsecret ap where ap.organ_id=" + organId + " and ap.appName like '%"
+						+ AppName + "%'";
 			} else {
-				sql = "select count(*) from (select ap.id,ap.appId,ap.secert,ap.callBackUrl,ap.appTime,ap.appName,ap.isOpen from t_appsecret ap) as aa";
+				sql = "select count(*) from t_appsecret ap where ap.organ_id=" + organId;
 			}
 			int SearchCount = Integer.parseInt(this.getSession()
 					.createSQLQuery(sql).list().get(0).toString());

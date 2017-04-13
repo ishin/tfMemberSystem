@@ -37,14 +37,15 @@ public class AbutmentBranchAction extends BaseAction {
 			} else {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				String branchId = p.getString("branchId");
-				result = branchService.getBranchMember(branchId, null);
+				String organId = p.getString("organId");
+				result = branchService.getBranchMember(branchId, null, organId);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		returnToClient(result);
-		return "text";
+		return "text"; 
 	}
 	
 	/**
@@ -56,7 +57,18 @@ public class AbutmentBranchAction extends BaseAction {
 	public String getBranchTreeAndMember() throws ServletException {
 		String result = null;
 		try {
-			result = branchService.getBranchTreeAndMember(null);
+			String params = getRequestDataByStream();
+			JSONObject jo = new JSONObject();
+
+			if (params == null) {
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
+				result = jo.toString();
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				String organId = p.getString("organId");
+				result = branchService.getBranchTreeAndMember(null, organId);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));

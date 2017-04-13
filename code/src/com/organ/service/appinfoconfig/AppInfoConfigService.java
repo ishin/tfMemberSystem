@@ -11,7 +11,7 @@ public interface AppInfoConfigService {
 	public String EditApp(int id,String appId,String secert,String callbackurl,String appname,int isopen);
 	
 	
-	public String SearchApp(int userId,String AppName,int pagesize, int pageindex);
+	public String SearchApp(String name, int organId, String AppName,int pagesize, int pageindex);
 	
 	public String SearchAppInfoName();
 }
