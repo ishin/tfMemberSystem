@@ -40,8 +40,8 @@ public enum  Tips {
 	SEARCHFAIL("查询失败", "00034"),
 	NOTINIT("请使用正确的账号登陆", "00035"),
 	OK("OK", "10000"),
-	FAIL("fail", "20000");
-	
+	FAIL("fail", "20000"),
+	NOTUPDATE("更新成功","1");
 	private String name;
 	private String code;
 	
