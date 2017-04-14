@@ -103,7 +103,6 @@ public class LimitServiceImpl implements LimitService {
 			int count = limitDao.getSearchCount(organId, Name);
 			if (privlist == null) {
 				JSONObject jo = new JSONObject();
-
 				jo.put("code", 0);
 				jo.put("text", "权限名称为空");
 			} else {

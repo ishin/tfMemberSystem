@@ -198,6 +198,7 @@ public class OrgServiceImpl implements OrgService {
 				tbm.setIsMaster("1");
 				tbm.setListorder(0);
 				branchMemberDao.save(tbm);
+				
 				/*
 				//初始化角色
 				TMemberRole tmr = new TMemberRole();
@@ -206,7 +207,11 @@ public class OrgServiceImpl implements OrgService {
 				tmr.setListorder(0);
 				memberRoleDao.save(tmr);
 				*/
-				ret = (new StringBuilder("注册成功,初始账号：").append(tm.getAccount()).append(",初始密码：").append("admin")).toString();
+				JSONObject j = new JSONObject();
+				j.put("account", tm.getAccount());
+				j.put("pwd", "admin");
+				j.put("organId", organId);
+				ret = j.toString();
 			}
 			return ret;
 		} catch (Exception e) {
