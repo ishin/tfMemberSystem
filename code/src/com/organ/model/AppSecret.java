@@ -12,12 +12,14 @@ public class AppSecret {
 	private String secert;					//secret	用来获取访问令牌
 	private String callBackUrl;				//第三方系统回调地址
 	private String appName;					//应用名称
-	private long appTime;					//appid,secret生成时间
+	private long appTime;					//有效期
 	private int organId;					//公司id
+	private long createtime;				//appid,secret生成时间
+	
 	
 	public AppSecret() {}
 	public AppSecret(int id, int isOpen, String appId, String secert,
-			String callBackUrl, String appName, long appTime, int organId) {
+			String callBackUrl, String appName, long appTime, int organId,long createtime) {
 		super();
 		this.id = id;
 		this.isOpen = isOpen;
@@ -27,6 +29,7 @@ public class AppSecret {
 		this.appName = appName;
 		this.appTime = appTime;
 		this.organId = organId;
+		this.createtime = createtime;
 	}
 	public int getId() {
 		return id;
@@ -76,5 +79,10 @@ public class AppSecret {
 	public void setOrganId(int organId) {
 		this.organId = organId;
 	}
-	
+	public long getCreatetime() {
+		return createtime;
+	}
+	public void setCreatetime(long createtime) {
+		this.createtime = createtime;
+	}
 }
