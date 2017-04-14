@@ -37,11 +37,10 @@ public class AppSecretDaoImpl extends BaseDao<AppSecret, Integer> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public AppSecret getAppSecretByAppId(String appId, Integer organId) {
+	public AppSecret getAppSecretByAppId(String appId) {
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("appId", appId));
-			ctr.add(Restrictions.eq("organId", organId));
 
 			List<AppSecret> list = ctr.list();
 
@@ -68,10 +67,11 @@ public class AppSecretDaoImpl extends BaseDao<AppSecret, Integer> implements
 	}
 
 	@Override
-	public AppSecret getAppSecretBySecret(String secret) {
+	public AppSecret getAppSecretBySecret(String secret, Integer organId) {
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("secert", secret));
+			ctr.add(Restrictions.eq("organId", organId));
 
 			List<AppSecret> list = ctr.list();
 

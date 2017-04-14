@@ -175,7 +175,7 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	 * @param organId 
 	 * @return
 	 */
-	public Object[] getAuthResouce(int userId, int organId);
+	public Object[] getAuthResouce(int userId);
 	
 	/**
 	 * 获取成员总数

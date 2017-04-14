@@ -37,7 +37,7 @@ public interface BranchDao extends IBaseDao<TBranch, Integer> {
 	/*
 	 * 取人员所在部门
 	 */
-	public List getBranchMember(Integer memberId);
+	public List getBranchMember(Integer branchId);
 
 	/*
 	 * 取部门通过部门名称
@@ -71,6 +71,6 @@ public interface BranchDao extends IBaseDao<TBranch, Integer> {
 	 * @param branchId
 	 * @return
 	 */
-	public List getBranchMember(String branchId);
+	public List getBranchMember(String branchId, Integer organId);
 	
 }

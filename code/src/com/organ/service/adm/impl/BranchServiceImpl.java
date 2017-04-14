@@ -740,7 +740,7 @@ public class BranchServiceImpl implements BranchService {
 		
 		try {
 			if (list != null) {
-				AppSecret as = appSecretDao.getAppSecretByAppId(appId, organId);
+				AppSecret as = appSecretDao.getAppSecretByAppId(appId);
 				int appRecordId = 0;
 				if (as != null) {
 					appRecordId = as.getId();
@@ -839,12 +839,12 @@ public class BranchServiceImpl implements BranchService {
 		} else if (organId == 0) {
 			status = false;
 		} else {
-			List list = branchDao.getBranchMember(branchId);
+			List list = branchDao.getBranchMember(branchId, organId);
 			JSONArray ja = new JSONArray();
 			
 			try {
 				if( list != null) {
-					AppSecret as = appSecretDao.getAppSecretByAppId(appId, organId);
+					AppSecret as = appSecretDao.getAppSecretByAppId(appId);
 					int appRecordId = 0;
 					if (as != null) {
 						appRecordId = as.getId();
