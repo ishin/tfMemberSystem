@@ -127,14 +127,14 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 	}
 
 	@Override
-	public String SearchApp(int userId, String AppName, int pagesize,
+	public String SearchApp(String name, int organId, String AppName, int pagesize,
 			int pageindex) {
 		JSONArray ja = new JSONArray();
 		JSONObject jsonObject = new JSONObject();
 		try {
-			List appinfos = appInfoConfigDao.SearchAppInfo(userId, AppName,
+			List appinfos = appInfoConfigDao.SearchAppInfo(organId, AppName,
 					pagesize, pageindex);
-			int count = appInfoConfigDao.getSearchCount(AppName);
+			int count = appInfoConfigDao.getSearchCount(AppName, organId);
 			if (appinfos == null) {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
@@ -161,7 +161,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 					jo.put("apptime", s);
 					jo.put("appname", isBlank(appinfo[5]));
 					jo.put("isopen", isBlank(appinfo[6]));
-					jo.put("fullname", isBlank(appinfo[7]));
+					jo.put("fullname", name);
 					ja.add(jo);
 					jsonObject.put("count", count + "");
 					jsonObject.put("content", ja);

@@ -164,22 +164,25 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	public TMember getMemberByToken(String token);
 	/**
 	 * 获取全部成员
+	 * @param organId 
 	 * @return
 	 */
-	public List<TMember> getAllMemberInfo();
+	public List<TMember> getAllMemberInfo(int organId);
 	
 	/**
 	 * oauth2登陆获取成员信息
 	 * @param userId
+	 * @param organId 
 	 * @return
 	 */
-	public Object[] getAuthResouce(int userId);
+	public Object[] getAuthResouce(int userId, int organId);
 	
 	/**
 	 * 获取成员总数
+	 * @param organId 
 	 * @return
 	 */
-	public int getMemberCount();
+	public int getMemberCount(int organId);
 	
 	/**
 	 * 根据账号获取成员id

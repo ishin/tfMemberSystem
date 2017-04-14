@@ -37,14 +37,15 @@ public class AbutmentBranchAction extends BaseAction {
 			} else {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				String branchId = p.getString("branchId");
-				result = branchService.getBranchMember(branchId, null);
+				int organId = p.getInt("organId");
+				result = branchService.getBranchMember(branchId, null, organId);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		returnToClient(result);
-		return "text";
+		return "text"; 
 	}
 	
 	/**
@@ -56,7 +57,18 @@ public class AbutmentBranchAction extends BaseAction {
 	public String getBranchTreeAndMember() throws ServletException {
 		String result = null;
 		try {
-			result = branchService.getBranchTreeAndMember(null);
+			String params = getRequestDataByStream();
+			JSONObject jo = new JSONObject();
+
+			if (params == null) {
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
+				result = jo.toString();
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				int organId = p.getInt("organId");
+				result = branchService.getBranchTreeAndMember(null, organId);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
@@ -73,7 +85,19 @@ public class AbutmentBranchAction extends BaseAction {
 	public String getBranchTree() throws ServletException {
 		String result = null;
 		try {
-			result = branchService.getBranchTree();
+			String params = getRequestDataByStream();
+			JSONObject jo = new JSONObject();
+
+			if (params == null) {
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
+				result = jo.toString();
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				int organId = p.getInt("organId");
+				result = branchService.getBranchTree(organId);
+			}
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
@@ -149,10 +173,18 @@ public class AbutmentBranchAction extends BaseAction {
 	public String getPosition() throws ServletException {
 		String result = null;
 		try {
+			String params = getRequestDataByStream();
 			JSONObject jo = new JSONObject();
-			jo.put("code", 1);
-			jo.put("text", branchService.getPosition());
-			result = jo.toString();
+
+			if (params == null) {
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
+				result = jo.toString();
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				int organId = p.getInt("organId");
+				result = branchService.getPosition(organId);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));

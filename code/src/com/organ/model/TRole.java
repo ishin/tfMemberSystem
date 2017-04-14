@@ -15,6 +15,7 @@ public class TRole implements java.io.Serializable {
 	private Integer id;
 	private String name;
 	private Integer listorder;
+	private Integer organId;
 
 	// Constructors
 
@@ -57,6 +58,14 @@ public class TRole implements java.io.Serializable {
 
 	public void setListorder(Integer listorder) {
 		this.listorder = listorder;
+	}
+
+	public Integer getOrganId() {
+		return organId;
+	}
+
+	public void setOrganId(Integer organId) {
+		this.organId = organId;
 	}
 
 }

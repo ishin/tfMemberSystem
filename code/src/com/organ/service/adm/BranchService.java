@@ -47,9 +47,9 @@ public interface BranchService {
 	/*
 	 * 取字典
 	 */
-	public String getRole();
+	public String getRole(Integer integer);
 	public String getSex();
-	public String getPosition();
+	public String getPosition(Integer integer);
 	
 	/*
 	 * 取部门人员通过部门人员id
@@ -84,23 +84,24 @@ public interface BranchService {
 
 	/**
 	 * 获取部门数据
+	 * @param integer 
 	 * @return
 	 */
-	public String getBranchTree();
+	public String getBranchTree(Integer integer);
 
 	/**
 	 * 获取部门+成员 数据
 	 * @param appId 
 	 * @return
 	 */
-	public String getBranchTreeAndMember(String appId);
+	public String getBranchTreeAndMember(String appId, Integer organId);
 
 	/**
 	 * 取部门下的成员
 	 * @param branchId
 	 * @return
 	 */
-	public String getBranchMember(String branchId, String appId);
+	public String getBranchMember(String branchId, String appId, Integer organId);
 	
 	/**
 	 * 获取部门成员

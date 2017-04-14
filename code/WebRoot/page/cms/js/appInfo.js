@@ -150,13 +150,14 @@ function fShowTableNew(data){
 	var LocalData = JSON.stringify(datas);
 	window.localStorage.tableData = LocalData;
 	for(var i = 0;i<datas.length;i++){
+	var status = datas[i].isopen==1?'开启':'关闭';
 		$('#grouplist').append(itemtemplate
 				.replace('name', datas[i].appname)
 				.replace('appid', datas[i].appId)
 				.replace('appsecret', datas[i].secert)
 				.replace('backURL', datas[i].callbackurl)
-				.replace('states', datas[i].isopen)
-				.replace('operser', datas[i].apptime)
+				.replace('states', status)
+				.replace('operser', datas[i].fullname)
 				.replace('date', datas[i].apptime)
 				.replace(/aid/g, datas[i].id)
 		);
@@ -203,13 +204,14 @@ function fShowTable(data) {
 	var localData = JSON.stringify(datas);
 	window.localStorage.tableData = localData
 	for(var i = 0;i<datas.length;i++){
+		var status = datas[i].isopen==1?'开启':'关闭';
 		$('#grouplist').append(itemtemplate
 				.replace('name', datas[i].appname)
 				.replace('appid', datas[i].appId)
 				.replace('appsecret', datas[i].secert)
 				.replace('backURL', datas[i].callbackurl)
-				.replace('states', datas[i].isopen)
-				.replace('operser', datas[i].apptime)
+				.replace('states', status)
+				.replace('operser', datas[i].fullname)
 				.replace('date', datas[i].apptime)
 				.replace(/aid/g, datas[i].id)
 		);

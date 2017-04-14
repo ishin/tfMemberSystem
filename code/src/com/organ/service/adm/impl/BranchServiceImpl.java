@@ -308,11 +308,11 @@ public class BranchServiceImpl implements BranchService {
 	 * by alopex
 	 */
 	@Override
-	public String getRole() {
+	public String getRole(Integer organId) {
 
 		ArrayList<JSONObject> jl = new ArrayList<JSONObject>();
 
-		List list = branchDao.getRole();
+		List list = branchDao.getRole(organId);
 		Iterator it = list.iterator();
 		
 		while(it.hasNext()) {
@@ -356,11 +356,11 @@ public class BranchServiceImpl implements BranchService {
 	 * by alopex
 	 */
 	@Override
-	public String getPosition() {
+	public String getPosition(Integer organId) {
 
 		ArrayList<JSONObject> jl = new ArrayList<JSONObject>();
 
-		List list = branchDao.getPosition();
+		List list = branchDao.getPosition(organId);
 		Iterator it = list.iterator();
 		
 		while(it.hasNext()) {
@@ -710,9 +710,9 @@ public class BranchServiceImpl implements BranchService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String getBranchTree() {
+	public String getBranchTree(Integer organId) {
 		
-		List list = branchDao.getBranchTree();
+		List list = branchDao.getBranchTree(organId);
 		Iterator it = list.iterator();
 		ArrayList<JSONObject> jl = new ArrayList<JSONObject>();
 		
@@ -729,8 +729,8 @@ public class BranchServiceImpl implements BranchService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public String getBranchTreeAndMember(String appId) {
-		List list = branchDao.getBrancTreeAndMember();
+	public String getBranchTreeAndMember(String appId, Integer organId) {
+		List list = branchDao.getBrancTreeAndMember(organId);
 		
 		JSONArray ja = new JSONArray();
 		
@@ -740,7 +740,7 @@ public class BranchServiceImpl implements BranchService {
 		
 		try {
 			if (list != null) {
-				AppSecret as = appSecretDao.getAppSecretByAppId(appId);
+				AppSecret as = appSecretDao.getAppSecretByAppId(appId, organId);
 				int appRecordId = 0;
 				if (as != null) {
 					appRecordId = as.getId();
@@ -830,11 +830,13 @@ public class BranchServiceImpl implements BranchService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String getBranchMember(String branchId, String appId) {
+	public String getBranchMember(String branchId, String appId, Integer organId) {
 		String result = null;
 		boolean status = true;
 		
 		if (StringUtils.getInstance().isBlank(branchId)) {
+			status = false;
+		} else if (organId == 0) {
 			status = false;
 		} else {
 			List list = branchDao.getBranchMember(branchId);
@@ -842,7 +844,7 @@ public class BranchServiceImpl implements BranchService {
 			
 			try {
 				if( list != null) {
-					AppSecret as = appSecretDao.getAppSecretByAppId(appId);
+					AppSecret as = appSecretDao.getAppSecretByAppId(appId, organId);
 					int appRecordId = 0;
 					if (as != null) {
 						appRecordId = as.getId();

@@ -18,9 +18,6 @@ import com.organ.service.appinfoconfig.AppInfoConfigService;
  */
 public class AppInfoConfigAction extends BaseAction {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3357825063940018758L;
 	private AppInfoConfigService appInfoConfigService;
 	
@@ -187,7 +184,9 @@ public class AppInfoConfigAction extends BaseAction {
 				.parseInt(pageindex);
 		Integer intuserid = userid == null ? null : Integer
 				.parseInt(userid);
-		String result = appInfoConfigService.SearchApp(intuserid, AppName, intpagesize, intpageindex);
+		int organId = getSessionUserOrganId();
+		String memberName = getSessionUserName();
+		String result = appInfoConfigService.SearchApp(memberName, organId, AppName, intpagesize, intpageindex);
 		returnToClient(result);
 		return "text";
 	}

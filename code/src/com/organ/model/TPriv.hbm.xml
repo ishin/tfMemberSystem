@@ -39,5 +39,8 @@
         <property name="listorder" type="java.lang.Integer">
             <column name="listorder" not-null="true" />
         </property>
+        <property name="organId" type="java.lang.Integer">
+            <column name="organid" not-null="true" />
+        </property>
     </class>
 </hibernate-mapping>

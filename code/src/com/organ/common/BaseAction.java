@@ -315,5 +315,9 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 		SessionUser su = this.getSessionUser();
 		return su.getOrganId();
 	}
+	protected String getSessionUserName() {
+		SessionUser su = this.getSessionUser();
+		return su.getFullname();
+	}
 
 }

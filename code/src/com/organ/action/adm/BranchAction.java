@@ -24,6 +24,7 @@ import com.organ.service.adm.BranchService;
 import com.organ.service.msg.MessageService;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PinyinGenerator;
+import com.organ.utils.StringUtils;
 import com.organ.utils.TextHttpSender;
 import com.organ.utils.TimeGenerator;
 
@@ -136,7 +137,7 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getRole() throws ServletException {
 		
-		String result = branchService.getRole();
+		String result = branchService.getRole(this.getOrganId());
 		returnToClient(result);
 		
 		return "text";
@@ -148,9 +149,10 @@ public class BranchAction extends BaseAction {
 		
 		return "text";
 	}
+	
 	public String getPosition() throws ServletException {
 		
-		String result = branchService.getPosition();
+		String result = branchService.getPosition(this.getOrganId());
 		returnToClient(result);
 		
 		return "text";
@@ -543,7 +545,7 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchTree() throws ServletException {
 		
-		String result = branchService.getBranchTree();
+		String result = branchService.getBranchTree(this.getOrganId());
 		returnToClient(result);
 		
 		return "text";
@@ -555,7 +557,7 @@ public class BranchAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getBranchTreeAndMember() throws ServletException {
-		String result = branchService.getBranchTreeAndMember(appId);
+		String result = branchService.getBranchTreeAndMember(appId, this.getOrganId());
 			
 		returnToClient(result);
 		
@@ -572,7 +574,12 @@ public class BranchAction extends BaseAction {
 		boolean as = msgService.validAppIdAndSecret(appId, secret);
 		
 		if (as) {
-			result = branchService.getBranchTreeAndMember(appId);
+			int oid = 0;
+			if (!StringUtils.getInstance().isBlank(companyId)) {
+				oid = Integer.parseInt(companyId);
+			}
+			
+			result = branchService.getBranchTreeAndMember(appId, oid);
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", 0);
@@ -592,7 +599,7 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchMember() throws ServletException {
 		
-		String result = branchService.getBranchMember(branchId, appId);
+		String result = branchService.getBranchMember(branchId, appId, this.getOrganId());
 		
 		returnToClient(result);
 		return "text";
@@ -608,7 +615,11 @@ public class BranchAction extends BaseAction {
 		boolean as = msgService.validAppIdAndSecret(appId, secret);
 		
 		if (as) {
-			result = branchService.getBranchMember(branchId, appId);
+			int oid = 0;
+			if (!StringUtils.getInstance().isBlank(companyId)) {
+				oid = Integer.parseInt(companyId);
+			}
+			result = branchService.getBranchMember(branchId, appId, oid);
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", 0);
@@ -633,6 +644,11 @@ public class BranchAction extends BaseAction {
 	private String branchId;
 	private String appId;
 	private String secret;
+	private String companyId;
+	
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
 
 	public void setAppId(String appId) {
 		this.appId = appId;

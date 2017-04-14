@@ -513,8 +513,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TMember> getAllMemberInfo() {
-		String sql = (new StringBuilder("from TMember t")).toString();
+	public List<TMember> getAllMemberInfo(int organId) {
+		String sql = (new StringBuilder("from TMember t where t.organId=" + organId)).toString();
 		
 		try {
 			Query query = getSession().createQuery(sql);
@@ -532,7 +532,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	}
 
 	@Override
-	public Object[] getAuthResouce(int id) {
+	public Object[] getAuthResouce(int id, int organId) {
 		try {
 			String hql = "select " +
 				"M.fullname," +
@@ -548,7 +548,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 				"left join t_position P on BM.position_id=P.id " +
 				"left join t_sex S on M.sex=S.id " +
 				"inner join t_organ O on M.organ_id=O.id " +
-				"where M.id=" + id + " and BM.is_master=1";
+				"where M.id=" + id + " and M.organ_id=" + organId + " and BM.is_master=1";
 			
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 			
@@ -568,9 +568,9 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	}
 
 	@Override
-	public int getMemberCount() {
+	public int getMemberCount(int organId) {
 		try {
-			return count("from TMember");
+			return count("from TMember where organId=" + organId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
