@@ -160,18 +160,15 @@ public class AppSecretServiceImpl implements AppSecretService {
 							String unAuthToken = makeCode(appId);
 
 							int id = as.getId();
-							List<UserValid> uv = userValidDao
-									.getUserValidByAsId(id);
+							UserValid uv = userValidDao.getUserValidByAsId(id);
 
-							if (uv != null) {
-								userValidDao.delUserValid(id);
+							if (uv == null) {
+								uv = new UserValid();
+								uv.setAsid(as.getId());
 							}
-
-							UserValid uv1 = new UserValid();
-							uv1.setAsid(as.getId());
-							uv1.setUnAuthToken(unAuthToken);
-							uv1.setUnAuthTokenTime(tokenValidTime);
-							userValidDao.setUnAuthToken(uv1);
+							uv.setUnAuthToken(unAuthToken);
+							uv.setUnAuthTokenTime(tokenValidTime);
+							userValidDao.setUnAuthToken(uv);
 
 							code = "200";
 							text = unAuthToken;

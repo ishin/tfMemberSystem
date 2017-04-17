@@ -15,9 +15,11 @@ public interface UserValidDao extends IBaseDao<UserValid, Integer> {
 
 	public UserValid getUserValidByRealToken(String visitToken);
 
-	public List<UserValid> getUserValidByAsId(int asId);
+	public UserValid getUserValidByAsId(int asId);
 
 	public void delUserValid(int id);
 
 	public int deleteRelationByIds(String userids);
+	
+	public void updateUserValid(UserValid uv);
 }

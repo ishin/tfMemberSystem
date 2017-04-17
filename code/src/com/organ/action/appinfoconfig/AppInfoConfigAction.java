@@ -112,6 +112,7 @@ public class AppInfoConfigAction extends BaseAction {
 		Integer intid = id == null ? null : Integer.parseInt(id);
 		boolean falg = false;
 		String result = null;
+		
 		try {
 			result = appInfoConfigService.DelApp(intid);
 			if ("".equals(result) && null == result) {
