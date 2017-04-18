@@ -97,12 +97,12 @@ public class FKMultOrganAction extends BaseAction {
 		
 		long validTimeLong = Long.parseLong(validTime);
 		long now = TimeGenerator.getInstance().getUnixTime();
-		
-		now += validTimeLong;
+		long maxTime = now + validTimeLong;
+		long minTime = now - validTimeLong;
 		
 		long timeStampLong = timestamp != null ? Long.parseLong(timestamp) : 0;
 		
-		if (timeStampLong < now || timeStampLong > now) {
+		if (timeStampLong < minTime || timeStampLong > maxTime) {
 			return false;
 		}
 		String sign = this.request.getParameter("sign");
@@ -112,6 +112,7 @@ public class FKMultOrganAction extends BaseAction {
 		StringBuilder sbp = new StringBuilder();
 		
 		for(Map.Entry<String, String[]> m: paramMap.entrySet()) {
+			if (m.getKey().equals("sign")) continue;
 			sbp.append(m.getKey()).append("=");
 			String[] t = m.getValue();
 			for(int i = 0; i < t.length; i++) {

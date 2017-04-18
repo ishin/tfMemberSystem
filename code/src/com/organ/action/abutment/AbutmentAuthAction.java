@@ -19,7 +19,7 @@ public class AbutmentAuthAction extends BaseAction {
 			.getLogger(AbutmentAuthAction.class);
 	
 	
-	public String validAppIdAndSecret() throws ServletException {
+	public String validAppIdAndSecretAb() throws ServletException {
 		String result = null;
 		try {
 			String params = getRequestDataByStream();

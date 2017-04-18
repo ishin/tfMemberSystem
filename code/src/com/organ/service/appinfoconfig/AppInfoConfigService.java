@@ -13,5 +13,5 @@ public interface AppInfoConfigService {
 	
 	public String SearchApp(String name, int organId, String AppName,int pagesize, int pageindex);
 	
-	public String SearchAppInfoName();
+	public String SearchAppInfoName(int organId);
 }

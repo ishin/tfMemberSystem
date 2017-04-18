@@ -252,11 +252,41 @@ public class BranchAction extends BaseAction {
 					return "text";
 				}
 			}
-		}
-		else {
+			if (!member.getMobile().equalsIgnoreCase(this.request.getParameter("membermobile")) ||
+					!member.getTelephone().equalsIgnoreCase(this.request.getParameter("membertelephone"))) {
+				if (branchService.getMemberByMobile(this.request.getParameter("membermobile"), 
+						this.request.getParameter("membertelephone")) != null) {
+					JSONObject jo = new JSONObject();
+					jo.put("memberid", -1);
+					returnToClient(jo.toString());
+					return "text";
+				}
+			}
+			if (!member.getEmail().equalsIgnoreCase(this.request.getParameter("memberemail"))) {
+				if (branchService.getMemberByEmail(this.request.getParameter("memberemail")) != null) {
+					JSONObject jo = new JSONObject();
+					jo.put("memberid", -2);
+					returnToClient(jo.toString());
+					return "text";
+				}
+			}
+		} else {
 			if (branchService.getMemberByAccount(this.request.getParameter("memberaccount")) != null) {
 				JSONObject jo = new JSONObject();
 				jo.put("memberid", 0);
+				returnToClient(jo.toString());
+				return "text";
+			}
+			if (branchService.getMemberByMobile(this.request.getParameter("membermobile"), 
+					this.request.getParameter("membertelephone")) != null) {
+				JSONObject jo = new JSONObject();
+				jo.put("memberid", -1);
+				returnToClient(jo.toString());
+				return "text";
+			}
+			if (branchService.getMemberByEmail(this.request.getParameter("memberemail")) != null) {
+				JSONObject jo = new JSONObject();
+				jo.put("memberid", -2);
 				returnToClient(jo.toString());
 				return "text";
 			}

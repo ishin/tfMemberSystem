@@ -31,7 +31,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 			.getLogger(AbutmentPrivilegeAction.class);
 	
 	
-	public String getPrivStringByMember() throws ServletException {
+	public String getPrivStringByMemberAb() throws ServletException {
 		String result = null;
 		JSONObject jo = new JSONObject();
 		
@@ -63,7 +63,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 		return "text";
 	}
 	
-	public String getRolesForIds() throws ServletException {
+	public String getRolesForIdsAb() throws ServletException {
 		String result = null;
 		JSONObject jo = new JSONObject();
 		
@@ -100,7 +100,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getRolePrivsByPrivs() throws ServletException {
+	public String getRolePrivsByPrivsAb() throws ServletException {
 		String result = null;
 		JSONObject jo = new JSONObject();
 		
@@ -137,7 +137,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getPrivByUrl() throws ServletException {
+	public String getPrivByUrlAb() throws ServletException {
 		String result = null;
 		JSONObject jo = new JSONObject();
 		
@@ -173,7 +173,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getRoleIdForId() throws ServletException {
+	public String getRoleIdForIdAb() throws ServletException {
 		String result = null;
 		JSONObject jo = new JSONObject();
 		
@@ -205,7 +205,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 		return "text";
 	}
 	
-	public String getInitLoginPriv() throws ServletException {
+	public String getInitLoginPrivAb() throws ServletException {
 		String result = null;
 		
 		try {

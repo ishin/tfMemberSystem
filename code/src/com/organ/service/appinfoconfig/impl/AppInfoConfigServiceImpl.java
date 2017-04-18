@@ -174,11 +174,11 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 	}
 
 	@Override
-	public String SearchAppInfoName() {
+	public String SearchAppInfoName(int organId) {
 		JSONArray ja = new JSONArray();
 		JSONObject jsonObject = new JSONObject();
 		try {
-			List names = appInfoConfigDao.SearchAppInfoName();
+			List names = appInfoConfigDao.SearchAppInfoName(organId);
 			System.out.println("------------" + names);
 			if (names == null || "{ }".equals(names)) {
 				JSONObject jo = new JSONObject();

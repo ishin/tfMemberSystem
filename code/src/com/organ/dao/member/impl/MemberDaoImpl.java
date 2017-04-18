@@ -652,4 +652,44 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		
 		return null;
 	}
+
+	@Override
+	public TMember getMemberByMobile(String mobile, String telPhone) {
+		try {
+			
+			Criteria ctr = getCriteria();
+			ctr.add(Restrictions.or(Restrictions.eq("mobile", mobile), Restrictions.eq("telephone", telPhone)));
+			
+			List<TMember> list = ctr.list();
+			
+			if (list.size() > 0) {
+				return (TMember) list.get(0);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
+	@Override
+	public TMember getMemberByEmail(String email) {
+		try {
+			
+			Criteria ctr = getCriteria();
+			ctr.add(Restrictions.eq("email", email));
+			
+			List<TMember> list = ctr.list();
+			
+			if (list.size() > 0) {
+				return (TMember) list.get(0);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 }

@@ -24,7 +24,7 @@ public class AbutmentBranchAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getBranchMember() throws ServletException {
+	public String getBranchMemberAb() throws ServletException {
 		String result = null;
 		try {
 			String params = getRequestDataByStream();
@@ -54,7 +54,7 @@ public class AbutmentBranchAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getBranchTreeAndMember() throws ServletException {
+	public String getBranchTreeAndMemberAb() throws ServletException {
 		String result = null;
 		try {
 			String params = getRequestDataByStream();
@@ -82,7 +82,7 @@ public class AbutmentBranchAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getBranchTree() throws ServletException {
+	public String getBranchTreeAb() throws ServletException {
 		String result = null;
 		try {
 			String params = getRequestDataByStream();
@@ -111,7 +111,7 @@ public class AbutmentBranchAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getInfos() throws ServletException {
+	public String getInfosAb() throws ServletException {
 		String result = null;
 		try {
 			String params = getRequestDataByStream();
@@ -140,7 +140,7 @@ public class AbutmentBranchAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getBranchMemberByMemberIds() throws ServletException {
+	public String getBranchMemberByMemberIdsAb() throws ServletException {
 		String result = null;
 		
 		try {
@@ -170,7 +170,7 @@ public class AbutmentBranchAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getPosition() throws ServletException {
+	public String getPositionAb() throws ServletException {
 		String result = null;
 		try {
 			String params = getRequestDataByStream();

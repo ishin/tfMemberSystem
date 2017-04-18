@@ -206,5 +206,9 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	 * @return
 	 */
 	public TMember getSuperAdmin(String account, String account2);
+	
+	public TMember getMemberByMobile(String mobile, String telPhone);
+	
+	public TMember getMemberByEmail(String email);
 } 
 

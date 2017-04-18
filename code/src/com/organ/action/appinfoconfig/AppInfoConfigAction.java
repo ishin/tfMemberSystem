@@ -193,7 +193,8 @@ public class AppInfoConfigAction extends BaseAction {
 	}
 	
 	public String getAppName() throws ServletException,JSONException{
-		String result = appInfoConfigService.SearchAppInfoName();
+		int organId = getSessionUserOrganId();
+		String result = appInfoConfigService.SearchAppInfoName(organId);
 		returnToClient(result);
 		return "text";
 	}

@@ -220,7 +220,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 				+ "left join t_sex S on M.sex=S.id";
 				
 		if (organId != 0) {
-			sql += " where bc.organ_id=" + organId;
+			sql += " where BC.organ_id=" + organId;
 		}
 
 		System.out.println(sql);
