@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/White">
+
+        <TextView
+            android:id="@+id/tv_department_name_item"
+            style="@style/Contacts_company_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="天坊信息科技有限公司" />
+
+        <ImageView
+            android:id="@+id/iv_company_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/icon_right_jiao" />
+
+        <TextView
+            android:id="@+id/tv_dapartment_number_item"
+            style="@style/Contacts_company_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/iv_company_icon"
+            android:text="1" />
+
+    </RelativeLayout>
+</LinearLayout>
