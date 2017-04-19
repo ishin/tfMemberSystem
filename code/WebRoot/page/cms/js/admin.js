@@ -52,7 +52,8 @@ function cb_base(data) {
 }
 //判断是否有权限
 function has(priv) {
-	return (privs.indexOf(',' + priv + ',') > -1 ? true : false);
+	//privs = privs.text;
+	return (privs.text.indexOf(',' + priv + ',') > -1 ? true : false);
 }
 // 下拉相关
 function treeplace(oedit, otree) {
