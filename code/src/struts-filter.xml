@@ -35,7 +35,7 @@
 						getMultipleMemberForIdsAb,getMemberIdForAccountAb,getUserLogosAb,isUsedPicAb,delUserLogosAb,saveTempPicAb,saveSelectedPicAb,
 						updateUserPwdForPhoneAb,updateUserPwdForAccountAb,valideOldPwdAb,getMemberIdsByAccountAb,saveTextCodeAb,getTextCodeAb,
 						updateUserTokenForIdAb,checkAccountAb,getMemberCountAb,getMultipleMemberForAccountsAb,getAllMemberOnLineStatusAb,
-						getAllMemberInfoAb,updateMemberInfoForAppAb,updateMemberInfoForWebAb,searchUserAb,getOneOfMemberAb
+						getAllMemberInfoAb,updateMemberInfoForAppAb,updateMemberInfoForWebAb,searchUserAb,getOneOfMemberAb,registOrgan
 					</param>
 					<!-- <param name="includeMethods"></param> -->
 				</interceptor-ref>
@@ -51,8 +51,7 @@
 		<default-interceptor-ref name="myStack"></default-interceptor-ref>
 
 		<!--
-			<default-interceptor-ref
-			name="defaultStack"></default-interceptor-ref>
+			<default-interceptor-ref name="defaultStack"></default-interceptor-ref>
 		-->
 
 	</package>
