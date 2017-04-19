@@ -64,13 +64,13 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 	 * 实现添的接口
 	 */
 	@Override
-	public int updatePriv(int parentId, String name, String app) {
-		// TODO Auto-generated method stub
+	public int updatePriv(int parentId, String name, String app, int organId) {
 		TPriv tPriv = new TPriv();
 		tPriv.setParentId(parentId);
 		tPriv.setName(name);
 		tPriv.setApp(app);
 		tPriv.setUrl(PrivUrlNameUtil.initUrlName(name));
+		tPriv.setOrganId(organId);
 		tPriv.setListorder(0); // 这个不能为空
 		// tPriv.setCategory("0");
 		tPriv.setGrouping("0");
@@ -119,7 +119,7 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List searchPriv(String Name, int pagesize, int pageindex) {
+	public List searchPriv(int organId, String Name, int pagesize, int pageindex) {
 		try {
 			int start = pageindex * pagesize;
 			String hql;
@@ -128,13 +128,14 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,t.name AS parent_name FROM t_priv pr "
 					+"LEFT JOIN t_priv t ON pr.parent_id=t.id "
 					+"WHERE pr.parent_id IN (SELECT  p.id FROM t_priv p WHERE p.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) "
-					+") tmp WHERE tmp.name like '%"+Name+"%'"+" or tmp.url like '%"+Name+"%' limit "+start+","+pagesize;
+					+") tmp and tmp.organid="+organId+" and tmp.name like '%"+Name+"%'"+" or tmp.url like '%"+Name+"%' limit "+start+","+pagesize;
 			} else {
 				hql ="SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,t.name AS parent_name FROM t_priv pr "
 					+"LEFT JOIN t_priv t ON pr.parent_id=t.id "
-					+"WHERE pr.parent_id IN (SELECT  p.id FROM t_priv p WHERE p.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) "
-					+"limit "+ start + ", " + pagesize;
+					+"WHERE pr.parent_id IN (SELECT  p.id FROM t_priv p WHERE p.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) and pr.organid=" + organId
+					+" limit "+ start + ", " + pagesize;
 			}
+			System.out.println("searchPriv: " + hql);
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 			List list = query.list();
 			if (list.size() > 0) {
@@ -149,29 +150,27 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 	}
 
 	@Override
-	public int getCount() {
+	public int getCount(int organId) {
 		try {
-			int result = count("from TPriv");
+			int result = count("from TPriv where organId=" + organId);
 			return result;
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return 0;
 	}
 
 	@Override
-	public int getSearchCount(String name) {
-		// TODO Auto-generated method stub
+	public int getSearchCount(int organId, String name) {
 		String sql;
 		try {
 			if (!StringUtils.isBlank(name)) {
 				sql="select count(*) from (("
 					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app FROM t_priv pr WHERE pr.parent_id IN (SELECT  pv.id FROM t_priv pv WHERE pv.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0))) as aa) "
-					+"where aa.name like '%"+name+"%' or aa.url like '%" + name + "%' ";
+					+"where aa.organid=" + organId + " aa.name like '%"+name+"%' or aa.url like '%" + name + "%' ";
 			} else {
 				sql = "select count(*) from (" 
-					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app FROM t_priv pr WHERE pr.parent_id IN (SELECT  pv.id FROM t_priv pv WHERE pv.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0))) AS tt";
+					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app FROM t_priv pr WHERE pr.parent_id IN (SELECT  pv.id FROM t_priv pv WHERE pv.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) and pr.organid=" + organId + ") AS tt";
 			}
 			int SearchCount = Integer.parseInt(this.getSession()
 					.createSQLQuery(sql).list().get(0).toString());
@@ -198,16 +197,16 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 	}
 
 	@Override
-	public List getRoleList(Integer appId) {
+	public List getRoleList(Integer appId, int organId) {
 		try {
 			String sql = null;
-			if (null != appId) {
+			if (appId != 0) {
 				sql = "select tr.id,tr.name,tra.role_id from t_role tr "
 						+ " join t_role_appsecret tra on tr.id = tra.role_id "
 						+ "join t_appsecret ta on ta.id=tra.appsecret_id "
 						+ "where ta.id = " + appId;
 			} else {
-				sql = "select id, name from t_role order by listorder desc";
+				sql = "select id, name from t_role where organId="+organId+" order by listorder desc";
 			}
 			return runSql(sql);
 		} catch (Exception e) {
@@ -217,10 +216,10 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 	}
 
 	@Override
-	public List getPrivNamebytwo(String appName) {
+	public List getPrivNamebytwo(int organId, String appName) {
 		try {
 			String sql = "select p.id,p.name from t_priv p  where"
-					+ " p.parent_id IN (select tp.id from t_priv tp where tp.parent_id = 0) and p.app='"+appName+"'";
+					+ " p.parent_id IN (select tp.id from t_priv tp where tp.parent_id = 0 and tp.organid="+organId+") and p.app='"+appName+"' and p.organId=" + organId;
 			return runSql(sql);
 		} catch (Exception e) {
 			e.printStackTrace();

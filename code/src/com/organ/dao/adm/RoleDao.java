@@ -7,20 +7,27 @@ import com.organ.model.TRole;
 
 public interface RoleDao extends IBaseDao<TRole, Integer> {
 
-	List getMemberByRole(Integer roleId, Integer page, Integer itemsperpage);
-	int getMemberCountByRole(Integer roleId);
+	public List getMemberByRole(Integer roleId, Integer page, Integer itemsperpage);
+	public int getMemberCountByRole(Integer roleId);
 	/**
 	 * 返回角色权限（会返回所有权限,做角色修改用的）
 	 * @param roleId
 	 * @return
 	 */
-	List getPrivByRole(Integer roleId);
-	List getPrivByMember(Integer memberId);
+	public List getPrivByRole(Integer roleId);
+	public List getPrivByMember(Integer memberId);
 	/**
 	 * 返回角色权限（严格满足条件）
 	 * @param roleId
 	 * @return
 	 */
-	List getPrivilegeById(int roleId);
+	public List getPrivilegeById(int roleId);
+	
+	/**
+	 * 返回权限
+	 * @param roleIdList 角色id数组
+	 * @return
+	 */
+	public List<Object[]> getPrivilegeByRoleIds(Integer[] ids);
 	
 }

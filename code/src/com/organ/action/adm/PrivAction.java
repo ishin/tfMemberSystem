@@ -13,9 +13,6 @@ import net.sf.json.JSONObject;
 
 public class PrivAction extends BaseAction {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	/**

@@ -1,4 +1,4 @@
-package com.organ.action.limit;
+ package com.organ.action.limit;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -56,10 +56,11 @@ public class LiMitAction extends BaseAction {
 		String pid = this.request.getParameter("parentId");
 		String name = this.request.getParameter("name");
 		String app = this.request.getParameter("app");
+		int organId = getSessionUserOrganId();
 		Integer intPid = pid == null ? null : Integer.parseInt(pid);
 		boolean falg = false;
 		try {
-			String resString = limitService.AddLimit(intPid, name, app);
+			String resString = limitService.AddLimit(intPid, name, app, organId);
 			if ("".equals(resString) && null == resString) {
 				falg = false;
 			} else {
@@ -104,7 +105,6 @@ public class LiMitAction extends BaseAction {
 		} catch (Exception e) {
 			flag = false;
 			e.printStackTrace();
-			// TODO: handle exception
 		}
 		JSONObject jsonObject = new JSONObject();
 		if (flag) {
@@ -185,8 +185,9 @@ public class LiMitAction extends BaseAction {
 				.parseInt(pagesize);
 		Integer intpageindex = pageindex == null ? null : Integer
 				.parseInt(pageindex);
+		int organId = getSessionUserOrganId();
 		String result = limitService
-				.searchPriv(name, intpagesize, intpageindex);
+				.searchPriv(organId, name, intpagesize, intpageindex);
 		returnToClient(result);
 		return "text";
 	}
@@ -194,8 +195,9 @@ public class LiMitAction extends BaseAction {
 	public String getCount() throws ServletException, JSONException {
 		boolean falg = false;
 		String result = "";
+		int organId = getSessionUserOrganId();
 		try {
-			result = limitService.getCount() + "";
+			result = limitService.getCount(organId) + "";
 			if ("".equals(result) && null == result) {
 				falg = false;
 			} else {
@@ -220,6 +222,7 @@ public class LiMitAction extends BaseAction {
 	public String getLimitByRole() throws ServletException, JSONException {
 		Integer roleid = Integer.parseInt(this.request.getParameter("roleid"));
 		String appName = this.request.getParameter("appname");
+		
 		List list = limitService.getLimitbyRole(roleid, appName);
 		Iterator it = list.iterator();
 		ArrayList<JSONObject> ja = new ArrayList<JSONObject>();
@@ -239,21 +242,26 @@ public class LiMitAction extends BaseAction {
 	}
 
 	public String getRoleList() throws ServletException, JsonIOException {
+		String result = null;
+		
 		try {
-			Integer appid = StringUtils.isBlank(this.request
-					.getParameter("appId")) ? null : Integer
-					.parseInt(this.request.getParameter("appId"));
-			String result = limitService.getRoleList(appid);
-			returnToClient(result);
+			String appId = this.request.getParameter("appId");
+			boolean b = com.organ.utils.StringUtils.getInstance().isBlank(appId);
+			Integer appIdInt = !b ? Integer.parseInt(appId) : 0;
+			int organId = getSessionUserOrganId();
+			result = limitService.getRoleList(appIdInt, organId);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		returnToClient(result);
 		return "text";
 	}
 
 	public String getPrivNamebyclass() throws ServletException, JSONException {
 		String appname = this.request.getParameter("appName");
-		String result = limitService.getPrivNamebytwo(appname);
+		int organId = getSessionUserOrganId();
+		String result = limitService.getPrivNamebytwo(organId, appname);
 		returnToClient(result);
 		return "text";
 	}
@@ -262,18 +270,20 @@ public class LiMitAction extends BaseAction {
 		// roleId, roleName, privs, appName
 		//String roleId = this.request.getParameter("roleid");
 		//Integer introleId = (roleId == null ? 0 : Integer.parseInt(roleId));
-		Integer roleId = StringUtils.isBlank(this.request
-				.getParameter("roleid")) ? null : Integer
-				.parseInt(this.request.getParameter("roleid"));
+		String roleIdStr = this.request.getParameter("roleid");
+		boolean b = StringUtils.isBlank(roleIdStr);
+		Integer roleId = (!b && !roleIdStr.equals("0")) ? Integer.parseInt(roleIdStr) : -1;
+		
 		String roleName = this.request.getParameter("roleName");
 		String privs = this.request.getParameter("privs");
 		Integer appsecretId = Integer.parseInt(this.request
 				.getParameter("appsecretId"));
+		int organId = getSessionUserOrganId();
 		boolean falg = false;
 		String result = "";
 		try {
 			result = limitService.saveRolebyApp(roleId, appsecretId,
-					roleName, privs);
+					roleName, privs, organId);
 			if ("".equals(result) && null == result) {
 				falg = false;
 			} else {

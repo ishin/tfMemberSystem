@@ -164,9 +164,10 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	public TMember getMemberByToken(String token);
 	/**
 	 * 获取全部成员
+	 * @param organId 
 	 * @return
 	 */
-	public List<TMember> getAllMemberInfo();
+	public List<TMember> getAllMemberInfo(int organId);
 	
 	/**
 	 * oauth2登陆获取成员信息
@@ -174,13 +175,14 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	 * @param organId 
 	 * @return
 	 */
-	public Object[] getAuthResouce(int userId, int organId);
+	public Object[] getAuthResouce(int userId);
 	
 	/**
 	 * 获取成员总数
+	 * @param organId 
 	 * @return
 	 */
-	public int getMemberCount();
+	public int getMemberCount(int organId);
 	
 	/**
 	 * 根据账号获取成员id
@@ -204,5 +206,9 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	 * @return
 	 */
 	public TMember getSuperAdmin(String account, String account2);
+	
+	public TMember getMemberByMobile(String mobile, String telPhone);
+	
+	public TMember getMemberByEmail(String email);
 } 
 

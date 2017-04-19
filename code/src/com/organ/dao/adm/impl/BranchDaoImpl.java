@@ -29,7 +29,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 	@Override
 	public List getOrgan(Integer organId) {
 
-		String sql = "select id, name from t_organ" + " where id = " + organId;
+		String sql = "select id, name from t_organ where id = " + organId;
 		return runSql(sql);
 	}
 
@@ -69,9 +69,9 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 	 * alopex
 	 */
 	@Override
-	public List getRole() {
+	public List getRole(Integer organId) {
 
-		String sql = "select id, name from t_role order by listorder desc";
+		String sql = "select id, name from t_role where organid=" + organId + " order by listorder desc";
 		return runSql(sql);
 	}
 
@@ -95,9 +95,9 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 	 * alopex
 	 */
 	@Override
-	public List getPosition() {
+	public List getPosition(Integer organId) {
 
-		String sql = "select id, name from t_position order by listorder desc";
+		String sql = "select id, name from t_position where organ_id=" + organId + " order by listorder desc";
 		return runSql(sql);
 	}
 
@@ -191,9 +191,9 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List getBranchTree() {
+	public List getBranchTree(Integer organId) {
 
-		String sql = "select id,parent_id,name from t_branch";
+		String sql = "select id,parent_id,name from t_branch where organ_id=" + organId;
 		SQLQuery query = this.getSession().createSQLQuery(sql);
 
 		List list = query.list();
@@ -203,7 +203,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List getBrancTreeAndMember() {
+	public List getBrancTreeAndMember(Integer organId) {
 		String sql = "select " + "BM.branch_id," + "BM.member_id,"
 				+ "BM.position_id," + "BM.is_master," + "BC.id BCID,"
 				+ "BC.parent_id," + "BC.name BCNAME," + "M.id MID,"
@@ -218,6 +218,10 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 				+ "left join t_member M on M.id=BM.member_id "
 				+ "left join t_position P on BM.position_id=P.id "
 				+ "left join t_sex S on M.sex=S.id";
+				
+		if (organId != 0) {
+			sql += " where BC.organ_id=" + organId;
+		}
 
 		System.out.println(sql);
 		try {
@@ -235,7 +239,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List getBranchMember(String branchId) {
+	public List getBranchMember(String branchId, Integer organId) {
 		String sql = "select " + "M.id," + "M.account," + "M.fullname,"
 				+ "M.logo," + "M.telephone," + "M.email," + "M.address,"
 				+ "M.token," + "M.sex," + "M.birthday," + "M.workno,"
@@ -244,7 +248,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 				+ "from t_branch_member BM "
 				+ "left join t_position P on BM.position_id=P.id "
 				+ "inner join t_member M on BM.member_id=M.id "
-				+ "left join t_sex S on S.id=M.sex " + "where BM.branch_id="
+				+ "left join t_sex S on S.id=M.sex " + "where M.organ_id="+organId+" and BM.branch_id="
 				+ branchId;
 
 		try {

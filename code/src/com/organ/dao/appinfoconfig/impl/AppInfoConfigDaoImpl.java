@@ -79,6 +79,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 		appSecret.setIsOpen(isopen);
 		appSecret.setSecert(secert);
 		appSecret.setOrganId(organId);
+		appSecret.setCreatetime(getDate());
 		try {
 			save(appSecret);
 			// 保存以及权限
@@ -212,12 +213,11 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List SearchAppInfoName() {
+	public List SearchAppInfoName(int organId) {
 		try {
-			String hql = "select id,appname from t_appsecret";
+			String hql = "select id,appname from t_appsecret where organ_id=" + organId;
 			return runSql(hql);
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return null;

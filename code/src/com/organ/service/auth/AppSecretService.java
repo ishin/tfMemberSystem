@@ -26,7 +26,7 @@ public interface AppSecretService {
 	 * @param companyId 
 	 * @return
 	 */
-	public JSONObject getTempTokenSceneOne(String appId, String companyId);
+	public JSONObject getTempTokenSceneOne(String appId);
 
 	/**
 	 * 场景一验证登陆，授权
@@ -37,15 +37,16 @@ public interface AppSecretService {
 	 * @param companyId 
 	 * @return
 	 */
-	public JSONObject reqAuthorizeOne(String unAuthToken, String userName, String userPwd, String appId, String info, String companyId);
+	public JSONObject reqAuthorizeOne(String unAuthToken, String userName, String userPwd, String appId, String info);
 
 	/**
 	 * 获取真实访问令牌
 	 * @param secret
 	 * @param authToken
+	 * @param companyId 
 	 * @return
 	 */
-	public String getRealToken(String secret, String authToken);
+	public String getRealToken(String secret, String authToken, String companyId);
 	
 	/**
 	 * 获取授权资源
@@ -53,7 +54,7 @@ public interface AppSecretService {
 	 * @param companyId 
 	 * @return
 	 */
-	public String getAuthResource(String visitiToken, String companyId);
+	public String getAuthResource(String visitiToken);
 
 	/**
 	 * 场景二授权,web端
@@ -70,7 +71,7 @@ public interface AppSecretService {
 	 * @param unAuthToken2 
 	 * @return
 	 */
-	public JSONObject reqAuthorizeTwoForApp(String userName, String appId, String unAuthToken, String companyId);
+	public JSONObject reqAuthorizeTwoForApp(String userName, String appId, String unAuthToken);
 
 	/**
 	 * 根据appid,secret获取appsecret

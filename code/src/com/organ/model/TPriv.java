@@ -7,10 +7,6 @@ package com.organ.model;
 public class TPriv implements java.io.Serializable {
 
 	// Fields
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8778037318918502533L;
 	private Integer id;
 	private Integer parentId;
@@ -19,29 +15,27 @@ public class TPriv implements java.io.Serializable {
 	private String grouping;
 	private String url;
 	private String app;
+	private int organId;
 	private Integer listorder;
 
-	// Constructors
 
-	/** default constructor */
 	public TPriv() {
 	}
 
-	/** minimal constructor */
 	public TPriv(Integer parentId, Integer listorder) {
 		this.parentId = parentId;
 		this.listorder = listorder;
 	}
 
-	/** full constructor */
 	public TPriv(Integer parentId, String name, String category,
-			String grouping, String url, Integer listorder) {
+			String grouping, String url, int organId, Integer listorder) {
 		this.parentId = parentId;
 		this.name = name;
 		this.category = category;
 		this.grouping = grouping;
 		this.url = url;
 		this.listorder = listorder;
+		this.organId = organId;
 	}
 
 	// Property accessors
@@ -108,6 +102,14 @@ public class TPriv implements java.io.Serializable {
 
 	public void setListorder(Integer listorder) {
 		this.listorder = listorder;
+	}
+
+	public int getOrganId() {
+		return organId;
+	}
+
+	public void setOrganId(int organId) {
+		this.organId = organId;
 	}
 
 }

@@ -24,6 +24,7 @@ import com.organ.service.adm.BranchService;
 import com.organ.service.msg.MessageService;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PinyinGenerator;
+import com.organ.utils.StringUtils;
 import com.organ.utils.TextHttpSender;
 import com.organ.utils.TimeGenerator;
 
@@ -136,7 +137,7 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getRole() throws ServletException {
 		
-		String result = branchService.getRole();
+		String result = branchService.getRole(this.getOrganId());
 		returnToClient(result);
 		
 		return "text";
@@ -148,9 +149,10 @@ public class BranchAction extends BaseAction {
 		
 		return "text";
 	}
+	
 	public String getPosition() throws ServletException {
 		
-		String result = branchService.getPosition();
+		String result = branchService.getPosition(this.getOrganId());
 		returnToClient(result);
 		
 		return "text";
@@ -250,11 +252,41 @@ public class BranchAction extends BaseAction {
 					return "text";
 				}
 			}
-		}
-		else {
+			if (!member.getMobile().equalsIgnoreCase(this.request.getParameter("membermobile")) ||
+					!member.getTelephone().equalsIgnoreCase(this.request.getParameter("membertelephone"))) {
+				if (branchService.getMemberByMobile(this.request.getParameter("membermobile"), 
+						this.request.getParameter("membertelephone")) != null) {
+					JSONObject jo = new JSONObject();
+					jo.put("memberid", -1);
+					returnToClient(jo.toString());
+					return "text";
+				}
+			}
+			if (!member.getEmail().equalsIgnoreCase(this.request.getParameter("memberemail"))) {
+				if (branchService.getMemberByEmail(this.request.getParameter("memberemail")) != null) {
+					JSONObject jo = new JSONObject();
+					jo.put("memberid", -2);
+					returnToClient(jo.toString());
+					return "text";
+				}
+			}
+		} else {
 			if (branchService.getMemberByAccount(this.request.getParameter("memberaccount")) != null) {
 				JSONObject jo = new JSONObject();
 				jo.put("memberid", 0);
+				returnToClient(jo.toString());
+				return "text";
+			}
+			if (branchService.getMemberByMobile(this.request.getParameter("membermobile"), 
+					this.request.getParameter("membertelephone")) != null) {
+				JSONObject jo = new JSONObject();
+				jo.put("memberid", -1);
+				returnToClient(jo.toString());
+				return "text";
+			}
+			if (branchService.getMemberByEmail(this.request.getParameter("memberemail")) != null) {
+				JSONObject jo = new JSONObject();
+				jo.put("memberid", -2);
 				returnToClient(jo.toString());
 				return "text";
 			}
@@ -543,7 +575,7 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchTree() throws ServletException {
 		
-		String result = branchService.getBranchTree();
+		String result = branchService.getBranchTree(this.getOrganId());
 		returnToClient(result);
 		
 		return "text";
@@ -555,7 +587,7 @@ public class BranchAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getBranchTreeAndMember() throws ServletException {
-		String result = branchService.getBranchTreeAndMember(appId, companyId);
+		String result = branchService.getBranchTreeAndMember(appId, this.getOrganId());
 			
 		returnToClient(result);
 		
@@ -572,7 +604,12 @@ public class BranchAction extends BaseAction {
 		boolean as = msgService.validAppIdAndSecret(appId, secret);
 		
 		if (as) {
-			result = branchService.getBranchTreeAndMember(appId, companyId);
+			int oid = 0;
+			if (!StringUtils.getInstance().isBlank(companyId)) {
+				oid = Integer.parseInt(companyId);
+			}
+			
+			result = branchService.getBranchTreeAndMember(appId, oid);
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", 0);
@@ -592,7 +629,7 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchMember() throws ServletException {
 		
-		String result = branchService.getBranchMember(branchId, appId, companyId);
+		String result = branchService.getBranchMember(branchId, appId, this.getOrganId());
 		
 		returnToClient(result);
 		return "text";
@@ -608,7 +645,11 @@ public class BranchAction extends BaseAction {
 		boolean as = msgService.validAppIdAndSecret(appId, secret);
 		
 		if (as) {
-			result = branchService.getBranchMember(branchId, appId, companyId);
+			int oid = 0;
+			if (!StringUtils.getInstance().isBlank(companyId)) {
+				oid = Integer.parseInt(companyId);
+			}
+			result = branchService.getBranchMember(branchId, appId, oid);
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", 0);

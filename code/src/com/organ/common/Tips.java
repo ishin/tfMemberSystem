@@ -3,9 +3,9 @@ package com.organ.common;
 import net.sf.json.JSONObject;
 
 public enum  Tips {
-	NULLUSER("用户名为空", "00001"),
+	NULLUSER("账号为空", "00001"),
 	NULLID("ID为空", "00002"),
-	ERRORUSERORPWD("用户名或密码错误", "00003"),
+	ERRORUSERORPWD("账号或密码错误", "00003"),
 	FALSECOMPAREPWD("密码不一致", "00004"),
 	CHANGEPWDSUC("密码修改成功", "00005"),
 	CHANGEPWDFAIL("密码修改失败", "00006"),
@@ -41,9 +41,10 @@ public enum  Tips {
 	NOTINIT("请使用正确的账号登陆", "00035"),
 	VALIDFAIL("检验不通过", "00036"),
 	NULLORGAN("未指定公司", "00037"),
+	EXISTACCOUNT("账号已存在", "00038"),
 	OK("OK", "10000"),
-	FAIL("fail", "20000");
-	
+	FAIL("fail", "20000"),
+	NOTUPDATE("更新成功","1");
 	private String name;
 	private String code;
 	

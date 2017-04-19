@@ -16,27 +16,43 @@
 
 
 	<package name="all" extends="struts-default">
-		<!--
-			<interceptors> 先定义拦截器 <interceptor name="myInterceptor"
-			class="com.organ.action.filter.ValideFilter"> 指定系统初始化给拦截器的参数 <param
-			name="init">init</param> </interceptor> 加到自己设置的拦截器栈里边去
 
-			<interceptor-stack name="myStack"> <interceptor-ref
-			name="myInterceptor"> <param
-			name="excludeMethods">login,afterLogin</param> </interceptor-ref>
+		<interceptors>
+			<!-- 先定义拦截器 -->
+			<interceptor name="myInterceptor" class="com.organ.action.filter.ValideFilter">
+				<!-- 指定系统初始化给拦截器的参数  -->
+				<!-- <param name="init">init</param> -->
+			</interceptor>
 
-			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<!--加到自己设置的拦截器栈里边去 -->
 
-			</interceptor-stack> </interceptors>
-		-->
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="myInterceptor">
+					<param name="excludeMethods">
+						login,afterLogin,validAppIdAndSecretAb,getPrivStringByMemberAb,getRolesForIdsAb,getRolePrivsByPrivsAb,getPrivByUrlAb,
+						getInitLoginPrivAb,getRoleIdForIdAb,getBranchTreeAb,getBranchMemberAb,getBranchTreeAndMemberAb,getPositionAb,getInfosAb,
+						getBranchMemberByMemberIdsAb,getMemberByAccountAb,getMemberParamAb,getMemberByTokenAb,getLimitMemberIdsAb,getMemberForIdAb,
+						getMultipleMemberForIdsAb,getMemberIdForAccountAb,getUserLogosAb,isUsedPicAb,delUserLogosAb,saveTempPicAb,saveSelectedPicAb,
+						updateUserPwdForPhoneAb,updateUserPwdForAccountAb,valideOldPwdAb,getMemberIdsByAccountAb,saveTextCodeAb,getTextCodeAb,
+						updateUserTokenForIdAb,checkAccountAb,getMemberCountAb,getMultipleMemberForAccountsAb,getAllMemberOnLineStatusAb,
+						getAllMemberInfoAb,updateMemberInfoForAppAb,updateMemberInfoForWebAb,searchUserAb,getOneOfMemberAb,registOrgan
+					</param>
+					<!-- <param name="includeMethods"></param> -->
+				</interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
 		<!--
 			改变系统默认的拦截器,改成自己的默认拦截器,并且一个系统只能有一个默认的拦截器,这样这个拦截器栈会默认应用到所有的Action上去
 		-->
 
+
+		<default-interceptor-ref name="myStack"></default-interceptor-ref>
+
 		<!--
-			<default-interceptor-ref name="myStack"></default-interceptor-ref>
+			<default-interceptor-ref name="defaultStack"></default-interceptor-ref>
 		-->
-		<default-interceptor-ref name="defaultStack"></default-interceptor-ref>
 
 	</package>
 

@@ -158,6 +158,7 @@ CREATE TABLE `t_priv` (
   `grouping` CHAR(1) DEFAULT '0' COMMENT '0非分组记录，1分组记录',
   `url` VARCHAR(512) COMMENT '按url控制权限',
   `app` varchar(50) comment '所属应用',
+  `organid` int(11) default 0 comment '公司id',
   `listorder` INT NOT NULL DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;

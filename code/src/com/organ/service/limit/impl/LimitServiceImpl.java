@@ -76,9 +76,8 @@ public class LimitServiceImpl implements LimitService {
 	}
 
 	@Override
-	public String AddLimit(int parentId, String name, String app) {
-		// TODO Auto-generated method stub
-		return limitDao.updatePriv(parentId, name, app) + "";
+	public String AddLimit(int parentId, String name, String app, int organId) {
+		return limitDao.updatePriv(parentId, name, app, organId) + "";
 	}
 
 	@Override
@@ -95,16 +94,15 @@ public class LimitServiceImpl implements LimitService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String searchPriv(String Name, int pagesize, int pageindex) {
+	public String searchPriv(int organId, String Name, int pagesize, int pageindex) {
 		JSONArray ja = new JSONArray();
 		JSONObject jsonObject = new JSONObject();
 		try {
 
-			List privlist = limitDao.searchPriv(Name, pagesize, pageindex);
-			int count = limitDao.getSearchCount(Name);
+			List privlist = limitDao.searchPriv(organId, Name, pagesize, pageindex);
+			int count = limitDao.getSearchCount(organId, Name);
 			if (privlist == null) {
 				JSONObject jo = new JSONObject();
-
 				jo.put("code", 0);
 				jo.put("text", "权限名称为空");
 			} else {
@@ -135,9 +133,9 @@ public class LimitServiceImpl implements LimitService {
 	}
 
 	@Override
-	public int getCount() {
+	public int getCount(int organId) {
 		try {
-			int count = limitDao.getCount();
+			int count = limitDao.getCount(organId);
 			return count;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -154,11 +152,11 @@ public class LimitServiceImpl implements LimitService {
 	}
 	
 	@Override
-	public String getRoleList(Integer appId) {
+	public String getRoleList(Integer appId, int organId) {
 		JSONArray ja = new JSONArray();
 		JSONObject jsonObject = new JSONObject();
 		try {
-			List roles = limitDao.getRoleList(appId);
+			List roles = limitDao.getRoleList(appId, organId);
 			if (roles == null) {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
@@ -181,11 +179,11 @@ public class LimitServiceImpl implements LimitService {
 	}
 
 	@Override
-	public String getPrivNamebytwo(String appName) {
+	public String getPrivNamebytwo(int organId, String appName) {
 		JSONArray ja = new JSONArray();
 		JSONObject jsonObject = new JSONObject();
 		try {
-			List names = limitDao.getPrivNamebytwo(appName);
+			List names = limitDao.getPrivNamebytwo(organId, appName);
 			if (names == null) {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
@@ -209,12 +207,14 @@ public class LimitServiceImpl implements LimitService {
 
 	@Override
 	public String saveRolebyApp(Integer roleId, Integer appsecretId,
-			String roleName, String privs) {
+			String roleName, String privs, int organId) {
 		TRole role = roleDao.get(roleId);
 		if (role == null) {
 			role = new TRole();
 			role.setName(roleName);
-			role.setListorder(roleDao.getMax("listorder", "from TRole") + 1);
+			role.setOrganId(organId);
+			//role.setListorder(roleDao.getMax("listorder", "from TRole") + 1);
+			role.setListorder(0);
 			roleDao.save(role);
 		}
 		if (roleId == -1) {

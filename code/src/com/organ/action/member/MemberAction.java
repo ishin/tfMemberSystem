@@ -114,7 +114,8 @@ public class MemberAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getAllMemberInfo() throws ServletException {
-		String result = memberService.getAllMemberInfo();
+		int organId = getSessionUserOrganId();
+		String result = memberService.getAllMemberInfo(organId);
 		returnToClient(result);
 		return "text";
 	}
@@ -125,7 +126,8 @@ public class MemberAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getAllMemberOnLineStatus() throws ServletException {
-		String result = memberService.getAllMemberOnLineStatus(userids);
+		int organId = getSessionUserOrganId();
+		String result = memberService.getAllMemberOnLineStatus(organId, userids);
 		returnToClient(result);
 		return "text";
 	}

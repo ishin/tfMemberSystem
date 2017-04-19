@@ -153,7 +153,7 @@ public class PrivServiceImpl implements PrivService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List getRoleIdForId(int id) {
-		TMemberRole tmList = memberRoleDao.getRoleForId(id);
+		List<TMemberRole> tmList = memberRoleDao.getRoleForId(id);
 		
 		ArrayList<String> priList = new ArrayList<String>();	
 
@@ -161,24 +161,38 @@ public class PrivServiceImpl implements PrivService {
 		priList.add("qzgljs");
 		priList.add("qzglxg");
 	
-		if (tmList != null) {
-			int roleId = tmList.getRoleId();
-			List<Object[]> list = roleDao.getPrivilegeById(roleId);
+		if (tmList != null && tmList.size() > 0) {
+			int tmlen = tmList.size();
+			Integer[] roleIdList = new Integer[tmlen];
+			for(int i = 0; i < tmList.size(); i++) {
+				TMemberRole tr = tmList.get(i);
+				roleIdList[i] = tr.getRoleId();
+			}
+			List<Object[]> list = roleDao.getPrivilegeByRoleIds(roleIdList);
+			List<Object[]> alList = new ArrayList<Object[]>();
 			
 			if (list != null) {
 				int len = list.size();
-				boolean b = false;
+				ArrayList<String> listmp = new ArrayList<String>(); 
 				
 				for(int i = 0; i < len; i++) {
 					Object[] o = list.get(i);
+					if(!listmp.contains(o[1])) {
+						alList.add(o);
+						listmp.add((String)o[1]);
+					}
+				}
+				
+				for(int i = 0; i < alList.size(); i++) {
+					Object[] o = alList.get(i);
 					if (priList.contains(o[1])) {
-						list.add(new Object[]{1,"htgl"});
+						alList.add(new Object[]{1,"htgl"});
 						break;
 					}
 				}
 			} 
 			
-			return list;
+			return alList;
 		}
 		
 		return null;

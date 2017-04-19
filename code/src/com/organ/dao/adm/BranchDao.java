@@ -30,14 +30,14 @@ public interface BranchDao extends IBaseDao<TBranch, Integer> {
 	/*
 	 * 取字典
 	 */
-	public List getRole();
+	public List getRole(Integer organId);
 	public List getSex();
-	public List getPosition();
+	public List getPosition(Integer organId);
 
 	/*
 	 * 取人员所在部门
 	 */
-	public List getBranchMember(Integer memberId);
+	public List getBranchMember(Integer branchId);
 
 	/*
 	 * 取部门通过部门名称
@@ -57,19 +57,20 @@ public interface BranchDao extends IBaseDao<TBranch, Integer> {
 	/*
 	 * 取部门关系树
 	 */
-	public List getBranchTree();
+	public List getBranchTree(Integer organId);
 
 	/**
 	 * 取部门关系树与成员信息
+	 * @param organId 
 	 * @return
 	 */
-	public List getBrancTreeAndMember();
+	public List getBrancTreeAndMember(Integer organId);
 
 	/**
 	 * 获取指定部门的成员
 	 * @param branchId
 	 * @return
 	 */
-	public List getBranchMember(String branchId);
+	public List getBranchMember(String branchId, Integer organId);
 	
 }
