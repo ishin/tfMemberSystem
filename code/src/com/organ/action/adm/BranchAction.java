@@ -238,7 +238,6 @@ public class BranchAction extends BaseAction {
 	
 	
 	public String saveMember() throws ServletException {
-		
 		TMember member = null;
 		String id = this.request.getParameter("memberid");
 		boolean sms = false;

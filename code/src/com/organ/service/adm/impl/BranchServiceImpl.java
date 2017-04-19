@@ -258,7 +258,6 @@ public class BranchServiceImpl implements BranchService {
 			js.add(j);
 		}
 		jo.put("branchmember", js);
-		
 		return jo.toString();
 	}
 	
@@ -383,7 +382,6 @@ public class BranchServiceImpl implements BranchService {
 
 	@Override
 	public Integer saveMember(TMember member) {
-		
 		memberDao.saveOrUpdate(member);
 		return member.getId();
 	}
