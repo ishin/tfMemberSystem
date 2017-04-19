@@ -21,7 +21,8 @@ $(document).ready(function(){
 	
 	$('#111').validVal();
 
-	$('#memberbirthday').datepicker();
+	$('#memberbirthday').datepicker({changeMonth: true,
+		changeYear: true});
 	$('#memberbirthday').datepicker( "option", "dateFormat", "yy-mm-dd");
 	
 	$('#position').on('shown.bs.modal', function(e) {

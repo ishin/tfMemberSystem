@@ -84,5 +84,25 @@ public class RoleDaoImpl extends BaseDao<TRole, Integer> implements RoleDao {
 		
 		return runSql(sql);
 	}
+
+	@Override
+	public List<Object[]> getPrivilegeByRoleIds(Integer[] ids) {
+		StringBuilder sb = new StringBuilder();
+		int len = ids.length;
+		
+		for(int i = 0; i < len; i++) {
+			sb.append(ids[i]);
+			
+			if (i < len - 1) {
+				sb.append(",");
+			}
+		}
+		String sql = "select p.id, p.url from t_priv p"
+			+ " right join t_role_priv rp on p.id = rp.priv_id where rp.role_id in(" + sb.toString()
+			+ ") order by p.parent_id desc, p.listorder desc";
+		System.out.println("getPrivilegeByRoleIds: " + sql);
+		
+		return runSql(sql);
+	}
 	
 }

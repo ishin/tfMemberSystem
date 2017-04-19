@@ -110,4 +110,14 @@ public interface BranchService {
 	 */
 	public String getBranchMemberByMemberIds(String ids);
 	
+	/**
+	 * 获取成员
+	 * @param mobile  手机 
+	 * @param telPhone  电话 
+	 * @return
+	 */
+	public TMember getMemberByMobile(String mobile, String telPhone);
+	
+	public TMember getMemberByEmail(String parameter);
+	
 }

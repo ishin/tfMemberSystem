@@ -40,7 +40,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getMemberByAccount() throws ServletException {
+	public String getMemberByAccountAb() throws ServletException {
 		String result = null;
 		JSONObject jo = new JSONObject();
 		
@@ -74,7 +74,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServcletException
 	 */
-	public String getMemberParam() throws ServletException {
+	public String getMemberParamAb() throws ServletException {
 		String result = null;
 
 		try {
@@ -103,7 +103,7 @@ public class AbutmentMemberAction extends BaseAction {
 	/**
 	 * 根据token获取成员
 	 */
-	public String getMemberByToken() throws ServletException {
+	public String getMemberByTokenAb() throws ServletException {
 		String result = null;
 
 		try {
@@ -139,7 +139,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getLimitMemberIds() throws ServletException {
+	public String getLimitMemberIdsAb() throws ServletException {
 		String result = null;
 
 		try {
@@ -171,7 +171,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getMemberForId() throws ServletException {
+	public String getMemberForIdAb() throws ServletException {
 		String result = null;
 
 		try {
@@ -203,7 +203,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getMultipleMemberForIds() throws ServletException {
+	public String getMultipleMemberForIdsAb() throws ServletException {
 		String result = null;
 
 		try {
@@ -234,7 +234,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * 
 	 * @return
 	 */
-	public String getMemberIdForAccount() throws ServletException {
+	public String getMemberIdForAccountAb() throws ServletException {
 		String result = null;
 
 		try {
@@ -266,7 +266,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String checkAccount() throws ServletException {
+	public String checkAccountAb() throws ServletException {
 		JSONObject result = new JSONObject();
 
 		try {
@@ -299,7 +299,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	public String getOneOfMember() throws ServletException, IOException {
+	public String getOneOfMemberAb() throws ServletException, IOException {
 		String result = null;
 		JSONObject jo = null;
 
@@ -330,7 +330,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws Servlet
 	 */
-	public String searchUser() throws ServletException {
+	public String searchUserAb() throws ServletException {
 		String result = null;
 		JSONObject jo = null;
 
@@ -367,7 +367,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String updateMemberInfoForWeb() throws ServletException {
+	public String updateMemberInfoForWebAb() throws ServletException {
 		String result = null;
 		JSONObject jo = null;
 
@@ -407,7 +407,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String updateMemberInfoForApp() throws ServletException {
+	public String updateMemberInfoForAppAb() throws ServletException {
 		String result = null;
 		JSONObject jo = new JSONObject();
 
@@ -450,7 +450,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getAllMemberInfo() throws ServletException {
+	public String getAllMemberInfoAb() throws ServletException {
 		String result = null;
 		JSONObject jo = new JSONObject();
 		
@@ -479,7 +479,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getAllMemberOnLineStatus() throws ServletException {
+	public String getAllMemberOnLineStatusAb() throws ServletException {
 		String result = null;
 		JSONObject jo = null;
 
@@ -508,7 +508,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getMultipleMemberForAccounts() throws ServletException {
+	public String getMultipleMemberForAccountsAb() throws ServletException {
 		String result = null;
 		JSONObject jo = null;
 
@@ -541,7 +541,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getMemberCount() throws ServletException {
+	public String getMemberCountAb() throws ServletException {
 		String result = null;
 		JSONObject jo = new JSONObject();
 
@@ -575,7 +575,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws SevletException
 	 */
-	public String updateUserTokenForId() throws ServletException {
+	public String updateUserTokenForIdAb() throws ServletException {
 		String result = null;
 		JSONObject r = new JSONObject();
 
@@ -603,7 +603,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getMemberIdsByAccount() throws ServletException {
+	public String getMemberIdsByAccountAb() throws ServletException {
 		String result = null;
 
 		try {
@@ -632,7 +632,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getTextCode() throws ServletException {
+	public String getTextCodeAb() throws ServletException {
 		String result = null;
 		JSONObject jo = new JSONObject();
 
@@ -663,7 +663,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String saveTextCode() throws ServletException {
+	public String saveTextCodeAb() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
 
@@ -695,7 +695,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String valideOldPwd() throws ServletException {
+	public String valideOldPwdAb() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
 
@@ -727,7 +727,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String updateUserPwdForAccount() throws ServletException {
+	public String updateUserPwdForAccountAb() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
 
@@ -760,7 +760,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String updateUserPwdForPhone() throws ServletException {
+	public String updateUserPwdForPhoneAb() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
 
@@ -793,7 +793,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String saveSelectedPic() throws ServletException {
+	public String saveSelectedPicAb() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
 
@@ -823,7 +823,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String saveTempPic() throws ServletException {
+	public String saveTempPicAb() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
 
@@ -853,7 +853,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String delUserLogos() throws ServletException {
+	public String delUserLogosAb() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
 
@@ -883,7 +883,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String isUsedPic() throws ServletException {
+	public String isUsedPicAb() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
 
@@ -913,7 +913,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
-	public String getUserLogos() throws ServletException {
+	public String getUserLogosAb() throws ServletException {
 		JSONObject jo = new JSONObject();
 		String result = null;
 
@@ -943,7 +943,7 @@ public class AbutmentMemberAction extends BaseAction {
 	 * @throws ServletException
 	 * @throws IOException 
 	 */
-	public String httpUpload() throws ServletException, IOException {
+	public String httpUploadAb() throws ServletException, IOException {
 		String fileName = request.getParameter("fileName");
 		InputStream input = request.getInputStream();
 		String realPath = request.getSession().getServletContext().getRealPath("/");  

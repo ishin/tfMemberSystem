@@ -200,7 +200,7 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 	public List getRoleList(Integer appId, int organId) {
 		try {
 			String sql = null;
-			if (null != appId) {
+			if (appId != 0) {
 				sql = "select tr.id,tr.name,tra.role_id from t_role tr "
 						+ " join t_role_appsecret tra on tr.id = tra.role_id "
 						+ "join t_appsecret ta on ta.id=tra.appsecret_id "

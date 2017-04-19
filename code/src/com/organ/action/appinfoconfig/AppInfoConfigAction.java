@@ -112,6 +112,7 @@ public class AppInfoConfigAction extends BaseAction {
 		Integer intid = id == null ? null : Integer.parseInt(id);
 		boolean falg = false;
 		String result = null;
+		
 		try {
 			result = appInfoConfigService.DelApp(intid);
 			if ("".equals(result) && null == result) {
@@ -192,7 +193,8 @@ public class AppInfoConfigAction extends BaseAction {
 	}
 	
 	public String getAppName() throws ServletException,JSONException{
-		String result = appInfoConfigService.SearchAppInfoName();
+		int organId = getSessionUserOrganId();
+		String result = appInfoConfigService.SearchAppInfoName(organId);
 		returnToClient(result);
 		return "text";
 	}

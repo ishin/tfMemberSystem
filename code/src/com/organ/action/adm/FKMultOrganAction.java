@@ -13,6 +13,7 @@ import com.organ.service.adm.OrgService;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PropertiesUtils;
 import com.organ.utils.StringUtils;
+import com.organ.utils.TimeGenerator;
 
 /**
  * 多系统
@@ -91,14 +92,27 @@ public class FKMultOrganAction extends BaseAction {
 	}
 	
 	private boolean valideMd5() {
-		String sign = this.request.getParameter("sign");
 		String timestamp = this.request.getParameter("timestamp");
+		String validTime = PropertiesUtils.getStringByKey("organ.validtime");
+		
+		long validTimeLong = Long.parseLong(validTime);
+		long now = TimeGenerator.getInstance().getUnixTime();
+		long maxTime = now + validTimeLong;
+		long minTime = now - validTimeLong;
+		
+		long timeStampLong = timestamp != null ? Long.parseLong(timestamp) : 0;
+		
+		if (timeStampLong < minTime || timeStampLong > maxTime) {
+			return false;
+		}
+		String sign = this.request.getParameter("sign");
 		String key = PropertiesUtils.getStringByKey("organ.key");
 		
 		Map<String, String[]> paramMap = this.request.getParameterMap();
 		StringBuilder sbp = new StringBuilder();
 		
 		for(Map.Entry<String, String[]> m: paramMap.entrySet()) {
+			if (m.getKey().equals("sign")) continue;
 			sbp.append(m.getKey()).append("=");
 			String[] t = m.getValue();
 			for(int i = 0; i < t.length; i++) {
@@ -112,11 +126,11 @@ public class FKMultOrganAction extends BaseAction {
 		
 		System.out.println("sign: " + caclSign);
 		
-		if (caclSign.equals(sign)) {
-			return true;
+		if (!caclSign.equals(sign)) {
+			return false;
 		}
 		
-		return false;
+		return true;
 	}
 	
 	private OrgService orgService;

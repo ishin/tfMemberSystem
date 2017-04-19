@@ -929,4 +929,13 @@ public class BranchServiceImpl implements BranchService {
 		return jo.toString();
 	}
 	
+	@Override
+	public TMember getMemberByMobile(String mobile, String telPhone) {
+		return memberDao.getMemberByMobile(mobile, telPhone);
+	}
+	@Override
+	public TMember getMemberByEmail(String email) {
+		return memberDao.getMemberByEmail(email);
+	}
+	
 }

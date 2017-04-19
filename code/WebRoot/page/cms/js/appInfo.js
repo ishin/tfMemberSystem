@@ -203,19 +203,24 @@ function fShowTable(data) {
 	var datas = data.content;
 	var localData = JSON.stringify(datas);
 	window.localStorage.tableData = localData
-	for(var i = 0;i<datas.length;i++){
-		var status = datas[i].isopen==1?'开启':'关闭';
-		$('#grouplist').append(itemtemplate
-				.replace('name', datas[i].appname)
-				.replace('appid', datas[i].appId)
-				.replace('appsecret', datas[i].secert)
-				.replace('backURL', datas[i].callbackurl)
-				.replace('states', status)
-				.replace('operser', datas[i].fullname)
-				.replace('date', datas[i].apptime)
-				.replace(/aid/g, datas[i].id)
-		);
+	if(datas){
+		for(var i = 0;i<datas.length;i++){
+			var status = datas[i].isopen==1?'开启':'关闭';
+			$('#grouplist').append(itemtemplate
+					.replace('name', datas[i].appname)
+					.replace('appid', datas[i].appId)
+					.replace('appsecret', datas[i].secert)
+					.replace('backURL', datas[i].callbackurl)
+					.replace('states', status)
+					.replace('operser', datas[i].fullname)
+					.replace('date', datas[i].apptime)
+					.replace(/aid/g, datas[i].id)
+			);
+		}
+	}else{
+		console.log('datas undefined');
 	}
+
 }
 function findInList(id){
 	var tableData = localStorage.getItem('tableData');

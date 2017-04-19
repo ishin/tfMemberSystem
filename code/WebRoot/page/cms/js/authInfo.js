@@ -212,15 +212,17 @@ function fShowTable(data) {
 
 	var datas = data.content;
 	var localData = JSON.stringify(datas);
-	window.localStorage.tableData = localData
-	for(var i = 0;i<datas.length;i++){
-		$('#grouplist').append(itemtemplate
-				.replace('code', datas[i].id)
-				.replace('name', datas[i].name)
-				.replace('classify', datas[i].parent_name)
-				.replace('belong', datas[i].app)
-				.replace(/aid/g, datas[i].id)
-		);
+	window.localStorage.tableData = localData;
+	if(datas){
+		for(var i = 0;i<datas.length;i++){
+			$('#grouplist').append(itemtemplate
+					.replace('code', datas[i].id)
+					.replace('name', datas[i].name)
+					.replace('classify', datas[i].parent_name)
+					.replace('belong', datas[i].app)
+					.replace(/aid/g, datas[i].id)
+			);
+		}
 	}
 }
 function findInList(id){

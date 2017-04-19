@@ -1,4 +1,4 @@
-package com.organ.action.limit;
+ package com.organ.action.limit;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -242,16 +242,19 @@ public class LiMitAction extends BaseAction {
 	}
 
 	public String getRoleList() throws ServletException, JsonIOException {
+		String result = null;
+		
 		try {
-			Integer appid = StringUtils.isBlank(this.request
-					.getParameter("appId")) ? null : Integer
-					.parseInt(this.request.getParameter("appId"));
+			String appId = this.request.getParameter("appId");
+			boolean b = com.organ.utils.StringUtils.getInstance().isBlank(appId);
+			Integer appIdInt = !b ? Integer.parseInt(appId) : 0;
 			int organId = getSessionUserOrganId();
-			String result = limitService.getRoleList(appid, organId);
-			returnToClient(result);
+			result = limitService.getRoleList(appIdInt, organId);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		returnToClient(result);
 		return "text";
 	}
 
@@ -267,9 +270,10 @@ public class LiMitAction extends BaseAction {
 		// roleId, roleName, privs, appName
 		//String roleId = this.request.getParameter("roleid");
 		//Integer introleId = (roleId == null ? 0 : Integer.parseInt(roleId));
-		Integer roleId = StringUtils.isBlank(this.request
-				.getParameter("roleid")) ? null : Integer
-				.parseInt(this.request.getParameter("roleid"));
+		String roleIdStr = this.request.getParameter("roleid");
+		boolean b = StringUtils.isBlank(roleIdStr);
+		Integer roleId = (!b && !roleIdStr.equals("0")) ? Integer.parseInt(roleIdStr) : -1;
+		
 		String roleName = this.request.getParameter("roleName");
 		String privs = this.request.getParameter("privs");
 		Integer appsecretId = Integer.parseInt(this.request

@@ -89,13 +89,19 @@ public class UserValidDaoImpl extends BaseDao<UserValid, Integer> implements
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<UserValid> getUserValidByAsId(int asId) {
+	public UserValid getUserValidByAsId(int asId) {
 		try {
-			String sql = (new StringBuilder("from UserValid where asid=").append(asId)).toString();
-			Query query = getSession().createQuery(sql);
-			List list = query.list();
-			return list;
+			Criteria ctr = getCriteria();
+			ctr.add(Restrictions.eq("asid", asId));
+
+			List<UserValid> list = ctr.list();
+
+			if (list.size() > 0) {
+				return list.get(0);
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -125,6 +131,19 @@ public class UserValidDaoImpl extends BaseDao<UserValid, Integer> implements
 			e.printStackTrace();
 		}
 		return 0;
+	}
+	
+	@Override
+	public void updateUserValid(UserValid uv) {
+		try {
+			String hql = (new StringBuilder(
+					"update UserValid u set u.unAuthToken='").append(
+					uv.getUnAuthToken()).append("',unAuthTokenTime=").append(uv
+					.getUnAuthTokenTime()).append(" where u.asid=").append(uv.getAsid())).toString();
+			update(hql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
