@@ -33,7 +33,7 @@ $(document).ready(function(){
 	});
 	$('#save11branch').click(function() {
 		var branchparentid = $('#11branchbranchid').val();
-		var branchname = $('#branchname').val();
+		var branchname = $('#11branchname').val();
 		var branchmanagerid = $('#11branchmanagerid').val();
 		console.log('必填项不可为空');
 		if(!branchparentid||!branchname||!branchmanagerid){
