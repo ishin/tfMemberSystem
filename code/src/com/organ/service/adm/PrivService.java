@@ -8,12 +8,12 @@ import com.organ.model.TPriv;
 
 public interface PrivService {
 
-	List getRoleList();
+	List getRoleList(int organId);
 	int getMemberCountByRole(Integer roleId);
 	List getMemberByRole(Integer roleId, Integer page, Integer itemsperpage);
 	void delMemberRole(Integer id);
 	List getPrivByRole(Integer roleId);
-	Integer saveRole(Integer roleId, String roleName, String prive);
+	Integer saveRole(Integer roleId, String roleName, String prive, int organId);
 	void delRole(Integer roleId);
 	void saveRoleMember(Integer roleId, String memberlist);
 	String getPrivStringByMember(Integer memberId);
@@ -34,9 +34,10 @@ public interface PrivService {
 	/**
 	 * 根据url获取权限
 	 * @param strToArray
+	 * @param organId 
 	 * @return
 	 */
-	public String getPrivByUrl(String[] strToArray);
+	public String getPrivByUrl(String[] strToArray, int organId);
 	
 	public String getRolePrivsByPrivs(String[] strToArray);
 	

@@ -84,4 +84,23 @@ public class OrgDaoImpl extends BaseDao<TOrgan, Integer> implements OrgDao {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public TOrgan getOrganByCode(String organCode) {
+		try {
+			Criteria ctr = getCriteria();
+			ctr.add(Restrictions.eq("code", organCode));
+			
+			List<TOrgan> list = ctr.list();
+			
+			if (list.size() > 0) {
+				return list.get(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
 }

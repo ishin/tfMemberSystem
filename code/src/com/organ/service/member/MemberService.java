@@ -16,18 +16,20 @@ public interface MemberService {
 	 * 登陆验证
 	 * @param name
 	 * @param password
+	 * @param organId 
 	 * @param organ 
 	 * @return
 	 */
-	public TMember searchSigleUser(String name, String password);
+	public TMember searchSigleUser(String name, String password, int organId);
 
 	/**
 	 * 更新密码按账号
 	 * @param userName
 	 * @param newPwd
+	 * @param organId 
 	 * @return
 	 */
-	public boolean updateUserPwdForAccount(String account, String newPwd);
+	public boolean updateUserPwdForAccount(String account, String newPwd, int organId);
 	
 	/**
 	 * 更新密码按手机号
@@ -55,17 +57,19 @@ public interface MemberService {
 	/**
 	 * 搜索用户按账号或拼音
 	 * @param account
+	 * @param organId 
 	 * @return
 	 */
-	public String searchUser(String account);
+	public String searchUser(String account, int organId);
 
 	/**
 	 * 验证旧密码
 	 * @param account
 	 * @param newPwd
+	 * @param organId 
 	 * @return
 	 */
-	public boolean valideOldPwd(String account, String newPwd);
+	public boolean valideOldPwd(String account, String newPwd, int organId);
 
 	/**
 	 * 保存短信验证码
@@ -148,9 +152,10 @@ public interface MemberService {
 	/**
 	 * 多账号查询成员
 	 * @param mulMemberStr
+	 * @param organId 
 	 * @return
 	 */
-	public String getMultipleMemberForAccounts(String mulMemberStr);
+	public String getMultipleMemberForAccounts(String mulMemberStr, int organId);
 
 	/**
 	 * 根据成员账号获取成员id
@@ -169,9 +174,10 @@ public interface MemberService {
 	/**
 	 * 根据单账号获取id
 	 * @param account
+	 * @param organId 
 	 * @return
 	 */
-	public String getMemberIdForAccount(String account);
+	public String getMemberIdForAccount(String account, int organId);
 
 	/**
 	 * 根据id获取多成员
@@ -190,9 +196,10 @@ public interface MemberService {
 	/**
 	 * 获取指定数量的用户id
 	 * @param mapMax
+	 * @param organId 
 	 * @return
 	 */
-	public String getLimitMemberIds(String mapMax);
+	public String getLimitMemberIds(String mapMax, int organId);
 
 	/**
 	 * 获取成员指定参数
@@ -206,7 +213,8 @@ public interface MemberService {
 	 * 获取超级管理员账号
 	 * @param account
 	 * @param userpwd
+	 * @param organId 
 	 * @return
 	 */
-	public TMember getSuperAdmin(String account, String userpwd);
+	public TMember getSuperAdmin(String account, String userpwd, int organId);
 }

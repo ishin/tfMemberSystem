@@ -27,13 +27,13 @@ public class PositionServiceImpl implements PositionService {
 	@Override
 	public TPosition save(String name, Integer organId) {
 		
-		List list = positionDao.find("from TPosition where name = '" + name + "'");
+		List list = positionDao.find("from TPosition where name = '" + name + "' and organId="+organId);
 		if (list.size() > 0) return null;
 		
 		TPosition p = new TPosition();
 		p.setName(name);
 		p.setOrganId(organId);
-		p.setListorder(positionDao.getMax("listorder", "from TPosition") + 1);
+		p.setListorder(positionDao.getMax("listorder", "from TPosition where organId="+organId) + 1);
 		positionDao.save(p);
 		
 		return p;

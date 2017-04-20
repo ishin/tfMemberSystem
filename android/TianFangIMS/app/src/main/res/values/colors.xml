@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorNaviationClick">#53CCDD</color>
+    <color name="colorNavigation">#373E61</color>
+    <color name="text_white">#FFFFFF</color>
+    <color name="White">#FFFFFF</color>
+    <color name="backgroundColor">#f0f0f0</color>
+    <color name="fengexian">#0F000000</color>
+</resources>

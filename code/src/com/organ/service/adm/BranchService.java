@@ -37,8 +37,8 @@ public interface BranchService {
 	 */
 	public String getMemberById(Integer memberId);
 	public List getMemberBranchById(Integer memberId);
-	public TMember getMemberByAccount(String account);
-	public TBranch getBranchByName(String name);	
+	public TMember getMemberByAccount(String account, int organId);
+	public TBranch getBranchByName(String name, int organId);	
 
 	/*
 	 * 取人员对象通过人员id

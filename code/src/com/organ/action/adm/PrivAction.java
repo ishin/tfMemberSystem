@@ -20,8 +20,8 @@ public class PrivAction extends BaseAction {
 	 * @return
 	 */
 	public String getRoleList() {
-		
-		List list = privService.getRoleList();
+		int organId = getSessionUserOrganId();
+		List list = privService.getRoleList(organId);
 		ArrayList<JSONObject> ja = new ArrayList<JSONObject>();
 		Iterator it = list.iterator();
 		while (it.hasNext()) {
@@ -133,7 +133,8 @@ public class PrivAction extends BaseAction {
 		Integer roleId = (id == null ? 0 : Integer.parseInt(id));
 		String roleName = this.request.getParameter("rolename");
 		String privs = this.request.getParameter("privs");
-		roleId = privService.saveRole(roleId, roleName, privs);
+		int organId = getSessionUserOrganId();
+		roleId = privService.saveRole(roleId, roleName, privs, organId);
 		return returnajaxid(roleId);
 	}
 

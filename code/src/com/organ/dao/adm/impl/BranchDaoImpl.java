@@ -115,11 +115,12 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public TBranch getOneOfBranch(String name) {
+	public TBranch getOneOfBranch(String name, int organId) {
 		try {
 
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("name", name));
+			ctr.add(Restrictions.eq("organId", organId));
 
 			List<TBranch> list = ctr.list();
 

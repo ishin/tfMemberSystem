@@ -87,6 +87,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 			tPriv.setApp(appname);
 			tPriv.setName(appname);
 			tPriv.setParentId(0);
+			tPriv.setOrganId(organId);
 			tPriv.setUrl(PrivUrlNameUtil.initUrlName(appname));
 			tPriv.setListorder(0); // 这个不能为空
 			limitDao.save(tPriv);
@@ -96,6 +97,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 				tPriv2.setApp(appname);
 				tPriv2.setName("访问权限");
 				tPriv2.setParentId(tPriv.getId());
+				tPriv2.setOrganId(organId);
 				tPriv2.setUrl(PrivUrlNameUtil.initUrlName("访问权限"));
 				tPriv2.setListorder(0); // 这个不能为空
 				limitDao.save(tPriv2);
@@ -105,6 +107,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 					tPriv3.setApp(appname);
 					tPriv3.setName("登陆权限");
 					tPriv3.setParentId(tPriv2.getId());
+					tPriv3.setOrganId(organId);
 					tPriv3.setUrl(PrivUrlNameUtil.initUrlName("登陆权限"));
 					tPriv3.setListorder(0); // 这个不能为空
 					limitDao.save(tPriv3);
@@ -118,13 +121,12 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 	}
 
 	@Override
-	public int getCount() {
+	public int getCount(int organId) {
 		// TODO Auto-generated method stub
 		try {
-			int count = count("from AppSecret");
+			int count = count("from AppSecret where organId=" + organId);
 			return count;
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return 0;

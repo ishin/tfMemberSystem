@@ -136,11 +136,10 @@ public class OrgServiceImpl implements OrgService {
 				//初始化成员
 				String account = organ.getTelephone();
 			
-				if (memberDao.getOneMember(account) != null) {
+				if (memberDao.getOneMember(account, organId) != null) {
 					j.put("code", 0);
 					j.put("text", Tips.EXISTACCOUNT.getText());
 				} else {
-				
 					String organName = organ.getName();
 					String name = organName + "-InitMember";
 					TMember tm = new TMember();
@@ -252,6 +251,11 @@ public class OrgServiceImpl implements OrgService {
 			e.printStackTrace();
 		}
 		return jo.toString();
+	}
+
+	@Override
+	public TOrgan getOrganByCode(String organCode) {
+		return orgDao.getOrganByCode(organCode);
 	}
 
 }

@@ -147,7 +147,8 @@ public class AbutmentPrivilegeAction extends BaseAction {
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				String groupManager = p.getString("groupManager");
-				String privList = privService.getPrivByUrl(StringUtils.getInstance().strToArray(groupManager));
+				int organId = p.getInt("organId");
+				String privList = privService.getPrivByUrl(StringUtils.getInstance().strToArray(groupManager), organId);
 				if (privList != null) {
 					jo.put("code", 1);
 					jo.put("text", privList);
@@ -205,6 +206,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 		return "text";
 	}
 	
+	@Deprecated
 	public String getInitLoginPrivAb() throws ServletException {
 		String result = null;
 		
