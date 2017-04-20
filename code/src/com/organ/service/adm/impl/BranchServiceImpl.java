@@ -19,8 +19,8 @@ import com.organ.dao.adm.BranchDao;
 import com.organ.dao.adm.BranchMemberDao;
 import com.organ.dao.adm.MemberRoleDao;
 import com.organ.dao.adm.PositionDao;
+import com.organ.dao.appinfoconfig.AppInfoConfigDao;
 import com.organ.dao.auth.AppSecretDao;
-import com.organ.dao.auth.UserSysRelationDao;
 import com.organ.dao.member.MemberDao;
 import com.organ.model.AppSecret;
 import com.organ.model.ImpUser;
@@ -28,7 +28,6 @@ import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
 import com.organ.model.TMember;
 import com.organ.model.TMemberRole;
-import com.organ.model.TOrgan;
 import com.organ.model.TPosition;
 import com.organ.model.UserSysRelation;
 import com.organ.service.adm.BranchService;
@@ -49,46 +48,40 @@ public class BranchServiceImpl implements BranchService {
 	private BranchMemberDao branchMemberDao;
 	private MemberRoleDao memberRoleDao;
 	private PositionDao positionDao;
-	private UserSysRelationDao userSysRelationDao;
 	private AppSecretDao appSecretDao;
+	private AppInfoConfigDao appinfoconfigDao;
 	
 	public void setAppSecretDao(AppSecretDao appSecretDao) {
 		this.appSecretDao = appSecretDao;
 	}
-	public void setUserSysRelationDao(UserSysRelationDao userSysRelationDao) {
-		this.userSysRelationDao = userSysRelationDao;
-	}
-	public BranchDao getBranchDao() {
-		return branchDao;
-	}
 	public void setBranchDao(BranchDao branchDao) {
 		this.branchDao = branchDao;
-	}
-	public MemberDao getMemberDao() {
-		return memberDao;
 	}
 	public void setMemberDao(MemberDao memberDao) {
 		this.memberDao = memberDao;
 	}
-	public BranchMemberDao getBranchMemberDao() {
-		return branchMemberDao;
-	}
 	public void setBranchMemberDao(BranchMemberDao branchMemberDao) {
 		this.branchMemberDao = branchMemberDao;
 	}
-	public MemberRoleDao getMemberRoleDao() {
-		return memberRoleDao;
-	}
 	public void setMemberRoleDao(MemberRoleDao memberRoleDao) {
 		this.memberRoleDao = memberRoleDao;
-	}
-	public PositionDao getPositionDao() {
-		return positionDao;
 	}
 	public void setPositionDao(PositionDao positionDao) {
 		this.positionDao = positionDao;
 	}
 
+	@Override
+	public TMember getMemberByMobile(String mobile, String telPhone) {
+		return memberDao.getMemberByMobile(mobile, telPhone);
+	}
+	@Override
+	public TMember getMemberByEmail(String email) {
+		return memberDao.getMemberByEmail(email);
+	}
+	
+	public void setAppinfoconfigDao(AppInfoConfigDao appinfoconfigDao) {
+		this.appinfoconfigDao = appinfoconfigDao;
+	}
 	/*
 	 * (non-Javadoc)
 	 * @see com.sealtalk.service.adm.BranchService#getOrganTree(java.lang.Integer)
@@ -743,12 +736,31 @@ public class BranchServiceImpl implements BranchService {
 				if (as != null) {
 					appRecordId = as.getId();
 				}
-				List<UserSysRelation> userSysList = userSysRelationDao.getAllRelation(appRecordId);
-				ArrayList<Integer> memberIds = new ArrayList<Integer>();
+				List memberIds = null;
 				
-				if (userSysList != null) {
-					for(int i = 0; i < userSysList.size(); i++) {
-						memberIds.add(userSysList.get(i).getUserId());
+				if (appRecordId != 0) {
+					List roleIds = appinfoconfigDao.getRoleIdsByAppId(appRecordId);
+					
+					StringBuilder sb = new StringBuilder();
+					List exist = new ArrayList();
+					
+					if (roleIds != null) {
+						int len = roleIds.size();
+						for(int i = 0; i < len; i++) {
+							if (!exist.contains(roleIds.get(i))) {
+								sb.append(roleIds.get(i)).append(",");
+								exist.add(roleIds.get(i));
+							}
+						}
+					}
+					String sbStr = sb.toString();
+					
+					if (sbStr.endsWith(",")) {
+						sbStr = sbStr.substring(0, sbStr.length() - 1);
+					}
+					
+					if (sbStr.length() > 0) {
+						memberIds = memberRoleDao.getMemberIdsByRoleIds(sbStr);
 					}
 				}
 				
@@ -783,7 +795,7 @@ public class BranchServiceImpl implements BranchService {
 						
 						boolean status = false;
 						
-						if (!StringUtils.getInstance().isNull(o[7])) {
+						if (!StringUtils.getInstance().isNull(o[7]) && memberIds != null) {
 							status = memberIds.contains(Integer.parseInt(isBlank(o[7])));
 						}
 						
@@ -847,12 +859,30 @@ public class BranchServiceImpl implements BranchService {
 					if (as != null) {
 						appRecordId = as.getId();
 					}
-					List<UserSysRelation> userSysList = userSysRelationDao.getAllRelation(appRecordId);
-					ArrayList<Integer> memberIds = new ArrayList<Integer>();
-					
-					if (userSysList != null) {
-						for(int i = 0; i < userSysList.size(); i++) {
-							memberIds.add(userSysList.get(i).getUserId());
+					List memberIds = null;
+					if (appRecordId != 0) {
+						List roleIds = appinfoconfigDao.getRoleIdsByAppId(appRecordId);
+						List exist = new ArrayList();
+						StringBuilder sb = new StringBuilder();
+						
+						if (roleIds != null) {
+							int len = roleIds.size();
+							for(int i = 0; i < len; i++) {
+								if (!exist.contains(roleIds.get(i))) {
+									sb.append(roleIds.get(i)).append(",");
+									exist.add(roleIds.get(i));
+								}
+							}
+						}
+						String sbStr = sb.toString();
+						
+						if (sbStr.endsWith(",")) {
+							sbStr = sbStr.substring(0, sbStr.length() - 1);
+						}
+						
+	
+						if (sbStr.length() > 0) {
+							memberIds = memberRoleDao.getMemberIdsByRoleIds(sbStr);
 						}
 					}
 					for(int i = 0; i < list.size(); i++) {
@@ -879,7 +909,14 @@ public class BranchServiceImpl implements BranchService {
 							jm.put("intro", isBlank(o[14]));
 							jm.put("postitionname", isBlank(o[16]));
 							jm.put("superior", isBlank(o[7]));			//直接领导人
-							jm.put("accessStatus", memberIds.contains(Integer.parseInt(isBlank(o[17]))));
+							
+							boolean acStatus = false;
+							
+							if (!StringUtils.getInstance().isNull(o[17]) && memberIds != null) {
+								acStatus = memberIds.contains(Integer.parseInt(isBlank(o[17])));
+							}
+							
+							jm.put("accessStatus", acStatus);
 							ja.add(jm); 
 							jm = null;
 						}
@@ -928,13 +965,5 @@ public class BranchServiceImpl implements BranchService {
 		}
 		return jo.toString();
 	}
-	
-	@Override
-	public TMember getMemberByMobile(String mobile, String telPhone) {
-		return memberDao.getMemberByMobile(mobile, telPhone);
-	}
-	@Override
-	public TMember getMemberByEmail(String email) {
-		return memberDao.getMemberByEmail(email);
-	}
+
 }

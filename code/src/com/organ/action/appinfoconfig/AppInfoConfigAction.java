@@ -65,8 +65,8 @@ public class AppInfoConfigAction extends BaseAction {
 	public String updateAppInfo() throws ServletException, JSONException {
 		// int appId,String secert,String callbackurl,long apptime,String
 		// appname,int isopen
-		String appId = this.request.getParameter("appId");
-		String secert = this.request.getParameter("secert");
+		//String appId = this.request.getParameter("appId");
+		//String secert = this.request.getParameter("secert");
 		String callbackurl = this.request.getParameter("callbackurl");
 		String appname = this.request.getParameter("appname");
 		String isopen = this.request.getParameter("isopen");
@@ -74,8 +74,7 @@ public class AppInfoConfigAction extends BaseAction {
 		int organId = getSessionUserOrganId();
 		boolean falg = false;
 		try {
-			String result = appInfoConfigService.updatePriv(appId, secert,
-					callbackurl, appname, intisopen, organId);
+			String result = appInfoConfigService.updatePriv(callbackurl, appname, intisopen, organId);
 			if ("".equals(result) && null == result) {
 				falg = false;
 			} else {

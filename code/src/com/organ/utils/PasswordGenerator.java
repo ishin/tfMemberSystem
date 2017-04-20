@@ -2,6 +2,7 @@ package com.organ.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
 public class PasswordGenerator {
 
@@ -17,14 +18,22 @@ public class PasswordGenerator {
 	}
 
 	public String makePwd() {
-		String pwd = "111111";
 		char c[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
 				'b', 'c', 'd', 'e', 'f', 'j', 'h', 'k', 'g', 'i', 'l', 'm',
 				'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y',
 				'z', '*', '/', '$', '#' , ';', '&'};
-		return pwd;
+		int len = c.length;
+		StringBuilder sb = new StringBuilder();
+		Random r = new Random();
+		
+		for(int i = 0; i < 8; i++) {
+			int p = r.nextInt(len);
+			sb.append(c[p]);
+		}
+		
+		return sb.toString();
 	}
-
+	
 	public String getMD5Str(String pwdContext) {
 		String result = null;
 
@@ -59,4 +68,9 @@ public class PasswordGenerator {
 
 		return result;
 	}
+	
+
+	/*public static void main(String[] arg) {
+		System.out.println(makePwd());
+	}*/
 }

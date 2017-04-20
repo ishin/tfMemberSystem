@@ -1,6 +1,7 @@
 package com.organ.action.sys;
 
 import java.io.IOException;
+import java.lang.ProcessBuilder.Redirect;
 
 import javax.servlet.ServletException;
 
@@ -173,6 +174,8 @@ public class SystemAction extends BaseAction {
 	{
 		request.getSession().removeAttribute(Constants.ATTRIBUTE_NAME_OF_SESSIONUSER);
 		request.getSession().invalidate();
+		//response.sendRedirect("http://localhost:8080/organ/");
+		//request.getRequestDispatcher("/system!login").forward(request, response);
 		return "loginPage";
 	}
 	

@@ -17,15 +17,6 @@ import com.organ.utils.TimeGenerator;
 public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 		AppInfoConfigDao {
 	LimitDao limitDao;
-	RoleAppSecretDao roleappsecretDao;
-
-	public RoleAppSecretDao getRoleappsecretDao() {
-		return roleappsecretDao;
-	}
-
-	public void setRoleappsecretDao(RoleAppSecretDao roleappsecretDao) {
-		this.roleappsecretDao = roleappsecretDao;
-	}
 
 	public LimitDao getLimitDao() {
 		return limitDao;
@@ -219,6 +210,17 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 		try {
 			String hql = "select id,appname from t_appsecret where organ_id=" + organId;
 			return runSql(hql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public List getRoleIdsByAppId(int appRecordId) {
+		try {
+			String sql = "select role_id from t_role_appsecret where appsecret_id=" + appRecordId;
+			return runSql(sql);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
