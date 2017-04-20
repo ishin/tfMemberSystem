@@ -11,8 +11,15 @@ $(document).ready(function(){
 	callajax('adm!getBase', '', cb_base);
 	
 	$('#idlogout').click(function() {
-		window.location.href = '../../system!login';
-	});
+
+		sendAjax('system!logOut','',function(){
+			if (window.Electron) {
+				var curWindow = window.Electron.remote.getCurrentWindow().reload();
+			}else{
+				window.location.href = '../../system!login'
+			}
+		})
+	})
 	
 	// 下拉相关
 	$('#container').click(function(){
