@@ -124,11 +124,11 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 			int start = pageindex * pagesize;
 			String hql;
 			if (!StringUtils.isBlank(Name)) {
-				hql="SELECT tmp.id,tmp.parent_id,tmp.name,tmp.category,tmp.url,tmp.app,tmp.parent_name FROM ("
-					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,t.name AS parent_name FROM t_priv pr "
+				hql="SELECT tmp.id,tmp.parent_id,tmp.name,tmp.category,tmp.url,tmp.app,tmp.parent_name,tmp.organid FROM ("
+					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,pr.organid,t.name AS parent_name FROM t_priv pr "
 					+"LEFT JOIN t_priv t ON pr.parent_id=t.id "
 					+"WHERE pr.parent_id IN (SELECT  p.id FROM t_priv p WHERE p.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) "
-					+") tmp and tmp.organid="+organId+" and tmp.name like '%"+Name+"%'"+" or tmp.url like '%"+Name+"%' limit "+start+","+pagesize;
+					+") tmp where tmp.organid="+organId+" and tmp.name like '%"+Name+"%'"+" or tmp.url like '%"+Name+"%' limit "+start+","+pagesize;
 			} else {
 				hql ="SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,t.name AS parent_name FROM t_priv pr "
 					+"LEFT JOIN t_priv t ON pr.parent_id=t.id "
