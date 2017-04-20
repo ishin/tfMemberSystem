@@ -34,7 +34,7 @@ $(document).ready(function() {
 	$('.certainAdd').click(function(){
 		var name = $('#name').val();
 		var parentId = $('#parentId').val();
-		var app = $('#app').val();
+		var app = $('#app').find("option:selected").text();
 		//获取到所有必填项
 		var allNecc = $(this).parents('.dialogAuth').find('[necc=true]');
 		if(allNecc.length!=0){

@@ -100,7 +100,8 @@ function fToStep3(dom){
 function signin(){
     var accout = $('#username').val();
     var userpwd = hex_md5($('#pwdIn').val());
-    var data = {account:accout,userpwd:userpwd};
+    var organCode = $('#organCode').val();
+    var data = {account:accout,userpwd:userpwd,organCode:organCode};
     //验证
     sendAjax('system!afterLogin',data,function(datas){
 
