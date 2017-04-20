@@ -13,6 +13,8 @@ import com.organ.common.Constants;
 import com.organ.common.Tips;
 import com.organ.model.SessionUser;
 import com.organ.model.TMember;
+import com.organ.model.TOrgan;
+import com.organ.service.adm.OrgService;
 import com.organ.service.member.MemberService;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.MathUtils;
@@ -63,8 +65,28 @@ public class SystemAction extends BaseAction {
 			returnToClient(result.toString());
 			return "text";
 		}
+	
+		String organCode = this.request.getParameter("organCode");
 
-		TMember member = memberService.getSuperAdmin(account, userpwd);
+		if (StringUtils.getInstance().isBlank(organCode)) {
+			result.put("code", 0);
+			result.put("text", Tips.NULLCODE.getText());
+			returnToClient(result.toString());
+			return "text";
+		}
+
+		TOrgan organ = orgService.getOrganByCode(organCode);
+
+		int organId = organ.getId();
+		
+		if (organId == -1) {
+			result.put("code", 0);
+			result.put("text", Tips.NULLCODE.getText());
+			returnToClient(result.toString());
+			return "text";
+		}
+		
+		TMember member = memberService.getSuperAdmin(account, userpwd, organId);
 		
 		if(member == null) {
 			result.put("code", 0);
@@ -119,7 +141,7 @@ public class SystemAction extends BaseAction {
 		su.setId(member.getId());
 		su.setAccount(member.getAccount());
 		su.setFullname(member.getFullname());
-		su.setOrganId(member.getOrganId());
+		su.setOrganId(organId);
 		su.setToken(token);
 		setSessionUser(su);
 		
@@ -247,7 +269,8 @@ public class SystemAction extends BaseAction {
 		JSONObject text = new JSONObject();
 		
 		if (!StringUtils.getInstance().isBlank(oldpwd)) {				//登陆后修改密码
-			boolean validOldPwd = memberService.valideOldPwd(account, oldpwd);
+			int organId = getSessionUserOrganId();
+			boolean validOldPwd = memberService.valideOldPwd(account, oldpwd, organId);
 			if (!validOldPwd) {
 				text.put("code", 0);
 				text.put("text", Tips.WRONGOLDPWD.getText());
@@ -282,9 +305,11 @@ public class SystemAction extends BaseAction {
 		
 		boolean status = true;
 		int flag = 0;
-				
+		int organId = 0;		
+		
 		if (!StringUtils.getInstance().isBlank(oldpwd)) {				//登陆后修改密码
-			boolean validOldPwd = memberService.valideOldPwd(account, oldpwd);
+			organId = getSessionUserOrganId();
+			boolean validOldPwd = memberService.valideOldPwd(account, oldpwd, organId);
 			flag = 1;		//后台修改
 			if (!validOldPwd) {
 				text.put("code", -1);
@@ -320,7 +345,7 @@ public class SystemAction extends BaseAction {
 			boolean updateState = false;
 			
 			if (flag == 1) {
-				updateState = memberService.updateUserPwdForAccount(account, newpwd);
+				updateState = memberService.updateUserPwdForAccount(account, newpwd, organId);
 			} else {
 				updateState = memberService.updateUserPwdForPhone(phone, newpwd);
 			}
@@ -339,9 +364,14 @@ public class SystemAction extends BaseAction {
 	}
 	
 	private MemberService memberService;
+	private OrgService orgService;
 	
 	public void setMemberService(MemberService memberService) {
 		this.memberService = memberService;
+	}
+
+	public void setOrgService(OrgService orgService) {
+		this.orgService = orgService;
 	}
 
 	private String account;

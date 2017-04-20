@@ -42,7 +42,7 @@ public interface BranchDao extends IBaseDao<TBranch, Integer> {
 	/*
 	 * 取部门通过部门名称
 	 */
-	public TBranch getOneOfBranch(String name);
+	public TBranch getOneOfBranch(String name, int organId);
 	
 	/*
 	 * 取子部门

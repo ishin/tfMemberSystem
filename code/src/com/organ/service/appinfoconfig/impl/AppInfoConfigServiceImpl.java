@@ -61,7 +61,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 		try {
 			List appList = appInfoConfigDao.getAppInfo(userId, organId, pagesize,
 					pageindex);
-			int count = appInfoConfigDao.getCount();
+			int count = appInfoConfigDao.getCount(organId);
 			if (appList == null) {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);

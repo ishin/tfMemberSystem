@@ -15,7 +15,7 @@ import com.organ.common.ResourceLoader;
 public class PropertiesUtils {
 	private static ResourceLoader loader = ResourceLoader.getInstance();  
     private static ConcurrentMap<String, String> configMap = new ConcurrentHashMap<String, String>();  
-    private static final String DEFAULT_CONFIG_FILE = "sealtalk.properties";  
+    private static final String DEFAULT_CONFIG_FILE = "organ.properties";  
   
     private static Properties prop = null;  
   

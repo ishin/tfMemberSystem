@@ -30,6 +30,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 			.getLogger(AppSecretServiceImpl.class);
 
 	@Override
+	@Deprecated
 	public String getAppIDAndSecret() {
 		JSONObject jo = new JSONObject();
 		ArrayList<String> as = null;
@@ -59,6 +60,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 	}
 
 	@Override
+	@Deprecated
 	public String setAppIDAndSecretAndUrl(String appName, String appId,
 			String secret, String url, String isOpen) {
 		JSONObject jo = new JSONObject();
@@ -223,8 +225,9 @@ public class AppSecretServiceImpl implements AppSecretService {
 							if (now >= unAuthTokenTime) {
 								text = AuthTips.INVALTOKEN.getText();
 							} else {
+								int organId = as.getOrganId();
 								TMember tm = memberDao.searchSigleUser(
-										userName, userPwd);
+										userName, userPwd, organId);
 
 								if (tm != null) {
 									long authTokenTimeL = 0;

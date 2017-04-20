@@ -28,6 +28,7 @@ import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
 import com.organ.model.TMember;
 import com.organ.model.TMemberRole;
+import com.organ.model.TOrgan;
 import com.organ.model.TPosition;
 import com.organ.model.UserSysRelation;
 import com.organ.service.adm.BranchService;
@@ -267,9 +268,9 @@ public class BranchServiceImpl implements BranchService {
 	 * by alopex
 	 */
 	@Override
-	public TMember getMemberByAccount(String account) {
+	public TMember getMemberByAccount(String account, int organId) {
 		
-		return memberDao.getOneMember(account);
+		return memberDao.getOneMember(account, organId);
 	}
 
 	/*
@@ -278,9 +279,9 @@ public class BranchServiceImpl implements BranchService {
 	 * by alopex
 	 */
 	@Override
-	public TBranch getBranchByName(String name) {
+	public TBranch getBranchByName(String name, int organId) {
 		
-		return branchDao.getOneOfBranch(name);
+		return branchDao.getOneOfBranch(name, organId);
 	}
 
 	@Override
@@ -565,7 +566,7 @@ public class BranchServiceImpl implements BranchService {
 			m.setSex(user.getSex().equals("男") ? "1" : "2");
 			m.setTelephone(user.getTelephone());
 			m.setEmail(user.getEmail());
-			m.setAccount(pinyin2account(m.getPinyin()));
+			m.setAccount(pinyin2account(m.getPinyin(), organId));
 			m.setOrganId(organId);
 			m.setPassword(PasswordGenerator.getInstance().getMD5Str("111111"));
 			m.setGroupmax(0);
@@ -586,13 +587,13 @@ public class BranchServiceImpl implements BranchService {
 		it = ua.iterator();
 		while(it.hasNext()) {
 			ImpUser user = it.next();
-			TBranch br = this.getBranchByName(user.getBranch());
+			TBranch br = this.getBranchByName(user.getBranch(),organId);
 			if (br == null) {
 				br = new TBranch();
 				br.setName(user.getBranch());
 				br.setOrganId(organId);
 				br.setParentId(0);
-				TMember m = memberDao.getMemberByName(user.getManager());
+				TMember m = memberDao.getMemberByName(user.getManager(), organId);
 				if (m == null) {
 					br.setManagerId(0);
 				}
@@ -635,15 +636,15 @@ public class BranchServiceImpl implements BranchService {
 		
 	}
 
-	private String pinyin2account(String pinyin) {
+	private String pinyin2account(String pinyin, int organId) {
 	
-		TMember m = memberDao.getOneMember(pinyin);
+		TMember m = memberDao.getOneMember(pinyin, organId);
 		if (m == null) return pinyin;
 		
 		int i = 0;
 		while (true) {
 			String account = pinyin + String.valueOf(i);
-			m = memberDao.getOneMember(account);
+			m = memberDao.getOneMember(account, organId);
 			if (m == null) return account;
 			i++;
 		}
@@ -734,7 +735,6 @@ public class BranchServiceImpl implements BranchService {
 		
 		ArrayList<Object> branchList = new ArrayList<Object>();
 		ArrayList<Object> organList = new ArrayList<Object>();
-		ArrayList<String> ids = new ArrayList<String>();
 		
 		try {
 			if (list != null) {
@@ -937,5 +937,4 @@ public class BranchServiceImpl implements BranchService {
 	public TMember getMemberByEmail(String email) {
 		return memberDao.getMemberByEmail(email);
 	}
-	
 }

@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
+import com.organ.model.TOrgan;
 import com.organ.service.adm.BranchService;
 import com.organ.service.adm.OrgService;
 import com.organ.utils.JSONUtils;
@@ -193,6 +194,28 @@ public class AbutmentBranchAction extends BaseAction {
 		return "text";
 	}
 
+	public String getOrganCodeAb() throws ServletException {
+		String result = "-1";
+		
+		try {
+			String params = getRequestDataByStream();
+			
+			if (params != null) {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				String organCode = p.getString("organCode");
+				TOrgan to = orgService.getOrganByCode(organCode);
+				if (to != null) {
+					result = to.getId() + "";
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		returnToClient(result);
+		return "text";
+	}
+	
 	private BranchService branchService;
 	private OrgService orgService;
 

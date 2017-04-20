@@ -9,24 +9,27 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 
 	public List getMemberPosition(Integer memberId);
 	public List getMemberRole(Integer memberId);
-	public TMember getMemberByName(String name);
+	public TMember getMemberByName(String name, Integer organId);
 	
 	/**
 	 * 登陆验证
 	 * @param name
 	 * @param password
+	 * @param organId 
+	 * @param organId 
 	 * @param organIdInt 
 	 * @return
 	 */
-	public TMember searchSigleUser(String name, String password);
+	public TMember searchSigleUser(String name, String password, int organId);
 
 	/**
 	 * 更新用户密码
 	 * @param userName
 	 * @param md5Pwd
+	 * @param organId 
 	 * @return
 	 */
-	public boolean updateUserPwdForAccount(String account, String md5Pwd);
+	public boolean updateUserPwdForAccount(String account, String md5Pwd, int organId);
 	
 	/**
 	 * 更新用户密码
@@ -46,9 +49,10 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	/**
 	 * in 查询多个用户按账号
 	 * @param mulMemberStr
+	 * @param organId 
 	 * @return
 	 */
-	public List<TMember> getMultipleMemberForAccounts(String[] mulMemberStr);
+	public List<TMember> getMultipleMemberForAccounts(String[] mulMemberStr, int organId);
 
 	/**
 	 * 查询多个用户按id
@@ -75,25 +79,28 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	/**
 	 * 按账号查询id
 	 * @param account
+	 * @param organId 
 	 * @return
 	 */
-	public int getMemberIdForAccount(String account);
+	public int getMemberIdForAccount(String account, int organId);
 
 	/**
 	 * 按 账号或名称或全拼查找用户
 	 * @param account
+	 * @param organId 
 	 * @param pinYin 
 	 * @return
 	 */
-	public List searchUser(String account);
+	public List searchUser(String account, int organId);
 
 	/**
 	 * 验证旧密码
 	 * @param account
 	 * @param oldPwd
+	 * @param organId 
 	 * @return
 	 */
-	public boolean valideOldPwd(String account, String oldPwd);
+	public boolean valideOldPwd(String account, String oldPwd, int organId);
 
 	/**
 	 * 更新用户头像
@@ -145,16 +152,18 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	/**
 	 *	获取单用户 
 	 * @param account
+	 * @param organId 
 	 * @return
 	 */
-	public TMember getOneMember(String account);
+	public TMember getOneMember(String account, int organId);
 
 	/**
 	 * 获取指定数量的用户id
 	 * @param mapMax
+	 * @param organId 
 	 * @return
 	 */
-	public List<TMember> getLimitMemberIds(int mapMax);
+	public List<TMember> getLimitMemberIds(int mapMax, int organId);
 	
 	/**
 	 * 根据token取成员
@@ -203,12 +212,15 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	 * 获取超级管理员
 	 * @param account
 	 * @param account2
+	 * @param organId 
 	 * @return
 	 */
-	public TMember getSuperAdmin(String account, String account2);
+	public TMember getSuperAdmin(String account, String account2, int organId);
 	
 	public TMember getMemberByMobile(String mobile, String telPhone);
 	
 	public TMember getMemberByEmail(String email);
+	public TMember searchSigleUserByOrgan(String name, String password,
+			int organId);
 } 
 

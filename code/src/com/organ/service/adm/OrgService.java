@@ -21,4 +21,6 @@ public interface OrgService {
 	 * @return
 	 */
 	public String getList();
+	
+	public TOrgan getOrganByCode(String organCode);
 }

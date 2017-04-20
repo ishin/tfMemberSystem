@@ -100,6 +100,7 @@
 	</bean>
 	<bean id="systemAction" class="com.organ.action.sys.SystemAction" scope="prototype" autowire="byName">
 		<property name="memberService" ref="memberService" />
+		<property name="orgService" ref="orgService" />
 	</bean>
 	<bean id="branchAction" class="com.organ.action.adm.BranchAction" scope="prototype" autowire="byName" >
 		<property name="branchService" ref="branchService" />

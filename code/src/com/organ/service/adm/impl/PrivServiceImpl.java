@@ -55,9 +55,9 @@ public class PrivServiceImpl implements PrivService {
 	}
 
 	@Override
-	public List getRoleList() {
+	public List getRoleList(int organId) {
 		
-		return roleDao.find("from TRole order by listorder desc");
+		return roleDao.find("from TRole where organId=" + organId + " order by listorder desc");
 	}
 
 	@Override
@@ -85,12 +85,13 @@ public class PrivServiceImpl implements PrivService {
 	}
 
 	@Override
-	public Integer saveRole(Integer roleId, String roleName, String privs) {
+	public Integer saveRole(Integer roleId, String roleName, String privs, int organId) {
 
 		TRole role = roleDao.get(roleId);
 		if (role == null) {
 			role = new TRole();
 			role.setName(roleName);
+			role.setOrganId(organId);
 			role.setListorder(roleDao.getMax("listorder", "from TRole") + 1);
 			roleDao.save(role);
 		}
@@ -200,6 +201,7 @@ public class PrivServiceImpl implements PrivService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	@Deprecated
 	public ArrayList<JSONObject> getInitLoginPriv() {
 		ArrayList<JSONObject> alj = new ArrayList<JSONObject>();
 
@@ -225,9 +227,9 @@ public class PrivServiceImpl implements PrivService {
 	}
 	
 	@Override
-	public String getPrivByUrl(String[] strToArray) {
+	public String getPrivByUrl(String[] strToArray, int organId) {
 		try {
-			List<TPriv> list = privDao.getPrivByUrl(strToArray);
+			List<TPriv> list = privDao.getPrivByUrl(strToArray, organId);
 			List<JSONObject> lj = new ArrayList<JSONObject>();
 			
 			if (list != null) {

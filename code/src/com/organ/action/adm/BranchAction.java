@@ -184,10 +184,11 @@ public class BranchAction extends BaseAction {
 		
 		TBranch branch = null;
 		String id = this.request.getParameter("branchid");
+		int organId = getSessionUserOrganId();
 		if (id != null) {
 			branch = branchService.getBranchObjectById(Integer.parseInt(id));
 			if (!branch.getName().equalsIgnoreCase(this.request.getParameter("branchname"))) {
-				if (branchService.getBranchByName(this.request.getParameter("branchname")) != null) {
+				if (branchService.getBranchByName(this.request.getParameter("branchname"), organId) != null) {
 					JSONObject jo = new JSONObject();
 					jo.put("branchid", 0);
 					returnToClient(jo.toString());
@@ -196,7 +197,7 @@ public class BranchAction extends BaseAction {
 			}
 		}
 		else {
-			if (branchService.getBranchByName(this.request.getParameter("branchname")) != null) {
+			if (branchService.getBranchByName(this.request.getParameter("branchname"), organId) != null) {
 				JSONObject jo = new JSONObject();
 				jo.put("branchid", 0);
 				returnToClient(jo.toString());
@@ -240,11 +241,12 @@ public class BranchAction extends BaseAction {
 	public String saveMember() throws ServletException {
 		TMember member = null;
 		String id = this.request.getParameter("memberid");
+		int organId = getSessionUserOrganId();
 		boolean sms = false;
 		if (id != null && !"".equals(id)) {
 			member = branchService.getMemberObjectById(Integer.parseInt(id));
 			if (!member.getAccount().equalsIgnoreCase(this.request.getParameter("memberaccount"))) {
-				if (branchService.getMemberByAccount(this.request.getParameter("memberaccount")) != null) {
+				if (branchService.getMemberByAccount(this.request.getParameter("memberaccount"), organId) != null) {
 					JSONObject jo = new JSONObject();
 					jo.put("memberid", 0);
 					returnToClient(jo.toString());
@@ -270,7 +272,7 @@ public class BranchAction extends BaseAction {
 				}
 			}
 		} else {
-			if (branchService.getMemberByAccount(this.request.getParameter("memberaccount")) != null) {
+			if (branchService.getMemberByAccount(this.request.getParameter("memberaccount"), organId) != null) {
 				JSONObject jo = new JSONObject();
 				jo.put("memberid", 0);
 				returnToClient(jo.toString());

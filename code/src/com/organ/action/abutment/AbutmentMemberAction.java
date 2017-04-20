@@ -50,7 +50,8 @@ public class AbutmentMemberAction extends BaseAction {
 			if (params != null) {
 				JSONObject param = JSONUtils.getInstance().stringToObj(params);
 				String account = param.getString("account");
-				TMember tm = branchService.getMemberByAccount(account);
+				int organId = param.getInt("organId");
+				TMember tm = branchService.getMemberByAccount(account, organId);
 				jo.put("code", 1);
 				jo.put("text", JSONUtils.getInstance().modelToJSONObj(tm).toString());
 			} else {
@@ -148,7 +149,8 @@ public class AbutmentMemberAction extends BaseAction {
 			if (params != null) {
 				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
 				String mapMax = jo.getString("mapMax");
-				result = memberService.getLimitMemberIds(mapMax);
+				int organId = jo.getInt("organId");
+				result = memberService.getLimitMemberIds(mapMax, organId);
 			} else {
 				JSONObject jo = new JSONObject();
 				jo = new JSONObject();
@@ -243,7 +245,8 @@ public class AbutmentMemberAction extends BaseAction {
 			if (params != null) {
 				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
 				String account = jo.getString("account");
-				result = memberService.getMemberIdForAccount(account);
+				int organId = jo.getInt("organId");
+				result = memberService.getMemberIdForAccount(account, organId);
 			} else {
 				JSONObject jo = new JSONObject();
 				jo = new JSONObject();
@@ -276,7 +279,8 @@ public class AbutmentMemberAction extends BaseAction {
 				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
 				String account = jo.getString("account");
 				String pwd = jo.getString("password");
-				TMember tm = memberService.searchSigleUser(account, pwd);
+				int organId = jo.getInt("organId");
+				TMember tm = memberService.searchSigleUser(account, pwd, organId);
 				result.put("code", 1);
 				result.put("text", JSONUtils.getInstance().modelToJSONObj(tm)
 						.toString());
@@ -348,7 +352,8 @@ public class AbutmentMemberAction extends BaseAction {
 				String account = null;
 				jo = JSONUtils.getInstance().stringToObj(params);
 				account = jo.getString("account");
-				result = memberService.searchUser(account);
+				int organId = jo.getInt("organId");
+				result = memberService.searchUser(account, organId);
 			}
 
 			logger.info(result);
@@ -516,11 +521,10 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 
 			if (params != null) {
-				String mulMemberStr = null;
 				jo = JSONUtils.getInstance().stringToObj(params);
-				mulMemberStr = jo.getString("mulMemberStr");
-				result = memberService
-						.getMultipleMemberForAccounts(mulMemberStr);
+				String mulMemberStr = jo.getString("mulMemberStr");
+				int organId = jo.getInt("organId");
+				result = memberService.getMultipleMemberForAccounts(mulMemberStr, organId);
 			} else {
 				jo = new JSONObject();
 				jo.put("code", -1);
@@ -708,7 +712,8 @@ public class AbutmentMemberAction extends BaseAction {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				String account = p.getString("account");
 				String oldPwd = p.getString("oldPwd");
-				boolean status = memberService.valideOldPwd(account, oldPwd);
+				int organId = p.getInt("organId");
+				boolean status = memberService.valideOldPwd(account, oldPwd, organId);
 				jo.put("code", 1);
 				jo.put("text", status);
 			}
@@ -740,8 +745,8 @@ public class AbutmentMemberAction extends BaseAction {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				String account = p.getString("account");
 				String newPwd = p.getString("newPwd");
-				boolean status = memberService.updateUserPwdForAccount(account,
-						newPwd);
+				int organId = p.getInt("organId");
+				boolean status = memberService.updateUserPwdForAccount(account, newPwd, organId);
 				jo.put("code", 1);
 				jo.put("text", status);
 			}
