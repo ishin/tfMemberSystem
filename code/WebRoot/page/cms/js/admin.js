@@ -11,7 +11,7 @@ $(document).ready(function(){
 	callajax('adm!getBase', '', cb_base);
 	
 	$('#idlogout').click(function() {
-		window.location.href = 'signin.jsp';
+		window.location.href = '../../system!login';
 	});
 	
 	// 下拉相关

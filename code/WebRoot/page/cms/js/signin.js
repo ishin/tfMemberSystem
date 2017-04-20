@@ -109,7 +109,7 @@ function signin(){
         if(datas &&	datas.code == 1){
             data.token = datas.text.token;
             window.localStorage.account=JSON.stringify(datas.text);
-            window.location.href = '12.jsp';
+            window.location.href = 'page/cms/12.jsp';
         } else {
             new Window().alert({
                 title   : '',
