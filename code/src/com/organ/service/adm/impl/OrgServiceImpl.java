@@ -134,7 +134,8 @@ public class OrgServiceImpl implements OrgService {
 			
 			if (organId != 0) {
 				//初始化成员
-				String account = organ.getTelephone();
+				//String account = organ.getTelephone();
+				String account = "admin";
 			
 				if (memberDao.getOneMember(account, organId) != null) {
 					j.put("code", 0);
@@ -142,8 +143,9 @@ public class OrgServiceImpl implements OrgService {
 				} else {
 					String organName = organ.getName();
 					String name = organName + "-InitMember";
-					TMember tm = new TMember();
+					String pwd = "";
 					
+					TMember tm = new TMember();
 					tm.setAccount(account);
 					tm.setFullname(name);
 					tm.setPinyin(PinyinGenerator.getPinYinHeadChar(name));
@@ -157,7 +159,7 @@ public class OrgServiceImpl implements OrgService {
 					tm.setAddress("");
 					tm.setGroupmax(0);
 					tm.setGroupuse(0);
-					tm.setIntro(organName + "初始账号");
+					tm.setIntro(organName + "InitMember");
 					tm.setOrganId(organId);
 					tm.setAllpinyin(PinyinGenerator.getPinYin(name));
 					tm.setPassword(PasswordGenerator.getInstance().getMD5Str("111111"));
@@ -219,7 +221,7 @@ public class OrgServiceImpl implements OrgService {
 					j.put("organId", organId);
 					j.put("organCode", organ.getCode());
 					String msg = organName + "注册成功,初始账号：" + account + ";初始密码111111;公司ID:" + organId + ";公司码:"+organ.getCode();
-					TextHttpSender.getInstance().sendText(account, msg);
+					//TextHttpSender.getInstance().sendText(account, msg);
 				}
 				ret = j.toString();
 			}

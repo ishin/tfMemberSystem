@@ -78,14 +78,16 @@ public class SystemAction extends BaseAction {
 		
 		TOrgan organ = orgService.getOrganByCode(organCode);
 
-		int organId = organ.getId();
+		int organId = 0;
 		
-		if (organId == -1) {
+		if (organ == null || organId == -1) {
 			result.put("code", 0);
 			result.put("text", Tips.NULLCODE.getText());
 			returnToClient(result.toString());
 			return "text";
 		}
+		
+		organId = organ.getId();
 		
 		TMember member = memberService.getSuperAdmin(account, userpwd, organId);
 		
