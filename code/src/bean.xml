@@ -23,7 +23,6 @@
 	<bean id="positionDao" class="com.organ.dao.adm.impl.PositionDaoImpl" autowire="byName" />
 	<bean id="orgDao" class="com.organ.dao.adm.impl.OrgDaoImpl" autowire="byName" />
 	<bean id="userValidDao" class="com.organ.dao.auth.impl.UserValidDaoImpl" autowire="byName" />
-	<bean id="userSysRelationDao" class="com.organ.dao.auth.impl.UserSysRelationDaoImpl" autowire="byName" />
 	<bean id="memberRoleDao" class="com.organ.dao.adm.impl.MemberRoleDaoImpl" autowire="byName" />
 	<bean id="cutLogoTempDao" class="com.organ.dao.upload.impl.CutLogoTempDaoImpl" autowire="byName" />
 	
