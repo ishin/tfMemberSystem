@@ -74,7 +74,8 @@ public class SystemAction extends BaseAction {
 			returnToClient(result.toString());
 			return "text";
 		}
-
+		organCode = organCode.toUpperCase();
+		
 		TOrgan organ = orgService.getOrganByCode(organCode);
 
 		int organId = organ.getId();
