@@ -34,11 +34,11 @@ $(document).ready(function() {
 
 
 	$('.certainAdd').click(function(){
-		var name = $('#name').val();
-		var appid = $('#appid').val();
-		var appsecret = $('#appsecret').val();
-		var backurl = $('#backurl').val();
-		var isOpen = $('#isOpen').find('.CheckBoxChecked').attr('value');
+		var name = $(this).parents('.dialogApp').find('#name').val();
+		//var appid = $(this).parents('.dialogApp').find('#appid').val();
+		//var appsecret = $(this).parents('.dialogApp').find('#appsecret').val();
+		var backurl = $(this).parents('.dialogApp').find('#backurl').val();
+		var isOpen = $(this).parents('.dialogApp').find('#isOpen .CheckBoxChecked').attr('value');
 
 		//获取到所有必填项
 		var allNecc = $(this).parents('.dialogApp').find('[necc=true]');
@@ -79,11 +79,11 @@ $(document).ready(function() {
 
 	$('.plusApp').click(function(){
 		$('.dialogMask').show();
-		var dialogApp = $('.dialogApp');
+		var dialogApp = $('.dialogApp1');
 		dialogApp.show();
 		dialogApp.find('#name').val('');
-		dialogApp.find('#appid').val('');
-		dialogApp.find('#appsecret').val('');
+		//dialogApp.find('#appid').val('');
+		//dialogApp.find('#appsecret').val('');
 		dialogApp.find('#backurl').val('');
 
 		dialogApp.find('#isOpen .dialogCheckBox[value='+1+']').click();
@@ -235,13 +235,13 @@ function findInList(id){
 }
 function editApp(id,curDom){
 	var curList = findInList(id)
-	var dialogApp = $('.dialogApp');
+	var dialogApp = $('.dialogApp2');
 
 	$('.dialogMask').show();
 	dialogApp.show();
 	dialogApp.find('#name').val(curList.appname);
-	dialogApp.find('#appid').val(curList.appId);
-	dialogApp.find('#appsecret').val(curList.secert);
+	dialogApp.find('#appid').html(curList.appId);
+	dialogApp.find('#appsecret').html(curList.secert);
 	dialogApp.find('#backurl').val(curList.callbackurl);
 	var isOpenVal = curList.isopen;
 

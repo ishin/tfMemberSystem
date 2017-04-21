@@ -129,6 +129,29 @@ function showdate(data) {
 	if (data.length == 0) return '';
 	return data.substr(0,4) + '-' + data.substr(4,2) + '-' + data.substr(6,2);
 }
+function dosearchUL(search, tree, nodes,searchKey) {
+	var i;
+	if (nodes != null) {
+		i = nodes.length;
+		while (i--) {
+			$('#' + nodes[i].tId + '_a').removeAttr('style');
+		}
+	}
+
+	var text = searchKey;
+	if (text == '') return;
+
+	var t = $.fn.zTree.getZTreeObj(tree);
+	t.expandAll(true);
+	nodes = t.getNodesByParamFuzzy('name', text);
+	i = nodes.length;
+	while (i--) {
+		$('#' + nodes[i].tId + '_a').attr('style', 'color: red');
+		t.expandNode(nodes[i].getParentNode(), true);
+	}
+
+	return nodes;
+}
 function dosearch(search, tree, nodes) {
 	var i;
 	if (nodes != null) {
