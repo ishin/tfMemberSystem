@@ -18,7 +18,7 @@ public class MessageServiceImpl implements MessageService {
 	public String sendSysMsg(String fromId, String targetIds,
 			String targetNames, String msg, String extraMsg,
 			String pushContent, String pushData, String isPersisted,
-			String isCounted) {
+			String isCounted, int organId) {
 
 		try {
 			if (!StringUtils.getInstance().isBlank(fromId)
@@ -47,7 +47,7 @@ public class MessageServiceImpl implements MessageService {
 							targetNames, " ", "");
 
 					String[] names = targetNames.split(",");
-					List list = memberDao.getMemberIdsByAccount(names);
+					List list = memberDao.getMemberIdsByAccount(names, organId);
 
 					if (list != null) {
 						int len = list.size();
@@ -89,7 +89,7 @@ public class MessageServiceImpl implements MessageService {
 	public String sendPrivateMsg(String fromId, String targetIds,
 			String targetNames, String msg, String extraMsg,
 			String pushContent, String count, String verifyBlacklist,
-			String isPersisted, String isCounted) {
+			String isPersisted, String isCounted, int organId) {
 
 		try {
 			if (!StringUtils.getInstance().isBlank(fromId)
@@ -118,7 +118,7 @@ public class MessageServiceImpl implements MessageService {
 							targetNames, " ", "");
 
 					String[] names = targetNames.split(",");
-					List list = memberDao.getMemberIdsByAccount(names);
+					List list = memberDao.getMemberIdsByAccount(names, organId);
 
 					if (list != null) {
 						int len = list.size();
@@ -157,17 +157,17 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public boolean validAppIdAndSecret(String appId, String secret) {
+	public AppSecret validAppIdAndSecret(String appId, String secret) {
 		try {
 			AppSecret as = appSecretDao.getAppSecretByAppIdAndSecret(appId,
 					secret);
-			return as != null;
+			return as;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return false;
+		return null;
 	}
-
+	
 	private AppSecretDao appSecretDao;
 	private MemberDao memberDao;
 

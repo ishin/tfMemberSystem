@@ -21,19 +21,28 @@ public class AbutmentAuthAction extends BaseAction {
 	
 	public String validAppIdAndSecretAb() throws ServletException {
 		String result = null;
+		
 		try {
 			String params = getRequestDataByStream();
 			JSONObject jo = new JSONObject();
+			boolean s = true;
 			
 			if (params == null) {
+				s = false;
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String appId = p.getString("appId");
+					String secret = p.getString("secret");
+					result = appSecretService.getAppSecretByAppIdAndSecret(appId, secret);
+				}
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
-			} else {
-				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String appId = p.getString("appId");
-				String secret = p.getString("secret");
-				result = appSecretService.getAppSecretByAppIdAndSecret(appId, secret);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

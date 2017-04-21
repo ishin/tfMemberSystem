@@ -46,17 +46,26 @@ public class AbutmentMemberAction extends BaseAction {
 		
 		try {
 			String params = getRequestDataByStream();
-
+			boolean s = true;
+			
 			if (params != null) {
 				JSONObject param = JSONUtils.getInstance().stringToObj(params);
-				String account = param.getString("account");
-				int organId = param.getInt("organId");
-				TMember tm = branchService.getMemberByAccount(account, organId);
-				jo.put("code", 1);
-				jo.put("text", JSONUtils.getInstance().modelToJSONObj(tm).toString());
+				if (!validParams(param)) {
+					s = false;
+				} else {
+					String account = param.getString("account");
+					int organId = param.getInt("organId");
+					TMember tm = branchService.getMemberByAccount(account, organId);
+					jo.put("code", 1);
+					jo.put("text", JSONUtils.getInstance().modelToJSONObj(tm).toString());
+				}
 			} else {
+				s = false;
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
+				result = jo.toString();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -77,20 +86,28 @@ public class AbutmentMemberAction extends BaseAction {
 	 */
 	public String getMemberParamAb() throws ServletException {
 		String result = null;
-
+		JSONObject ret = new JSONObject();
+		
 		try {
 			String params = getRequestDataByStream();
-
+			boolean s = true;
+			
 			if (params != null) {
 				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
-				String id = jo.getString("id");
-				String ps = jo.getString("params");
-				result = memberService.getMemberParam(id, ps);
+				if (!validParams(jo)) {
+					s = false;
+				} else {
+					String id = jo.getString("id");
+					String ps = jo.getString("params");
+					result = memberService.getMemberParam(id, ps);
+				}
 			} else {
-				JSONObject jo = new JSONObject();
-				jo.put("code", 0);
-				jo.put("text", Tips.WRONGPARAMS.getText());
-				result = jo.toString();
+				s = false;
+			}
+			if (!s) {
+				ret.put("code", 0);
+				ret.put("text", Tips.WRONGPARAMS.getText());
+				result = ret.toString();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -106,21 +123,29 @@ public class AbutmentMemberAction extends BaseAction {
 	 */
 	public String getMemberByTokenAb() throws ServletException {
 		String result = null;
-
+		JSONObject jo = new JSONObject();
 		try {
 			String params = getRequestDataByStream();
-
+			boolean s = true;
+			
 			if (params != null) {
-				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
-				String token = jo.getString("token");
-				TMember tm = memberService.getMemberByToken(token);
-				if (tm != null) {
-					result = JSONUtils.getInstance().modelToJSONObj(tm)
-							.toString();
+				JSONObject param = JSONUtils.getInstance().stringToObj(params);
+				if (!validParams(param)) {
+					s = false;
+				} else {
+					String token = param.getString("token");
+					TMember tm = memberService.getMemberByToken(token);
+					if (tm != null) {
+						result = JSONUtils.getInstance().modelToJSONObj(tm)
+								.toString();
+					} else {
+						s = false;
+					}
 				}
 			} else {
-				JSONObject jo = new JSONObject();
-				jo = new JSONObject();
+				s = false;
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
@@ -142,18 +167,25 @@ public class AbutmentMemberAction extends BaseAction {
 	 */
 	public String getLimitMemberIdsAb() throws ServletException {
 		String result = null;
-
+		JSONObject jo = new JSONObject();
+		
 		try {
 			String params = getRequestDataByStream();
-
+			boolean s = true;
+			
 			if (params != null) {
-				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
-				String mapMax = jo.getString("mapMax");
-				int organId = jo.getInt("organId");
-				result = memberService.getLimitMemberIds(mapMax, organId);
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String mapMax = p.getString("mapMax");
+					int organId = p.getInt("organId");
+					result = memberService.getLimitMemberIds(mapMax, organId);
+				}
 			} else {
-				JSONObject jo = new JSONObject();
-				jo = new JSONObject();
+				s = false;
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
@@ -175,17 +207,24 @@ public class AbutmentMemberAction extends BaseAction {
 	 */
 	public String getMemberForIdAb() throws ServletException {
 		String result = null;
-
+		JSONObject jo = new JSONObject();
+		
 		try {
 			String params = getRequestDataByStream();
-
+			boolean s = true;
+			
 			if (params != null) {
-				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
-				String userId = jo.getString("userId");
-				result = memberService.getMemberForId(userId);
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String userId = p.getString("userId");
+					result = memberService.getMemberForId(userId);
+				}
 			} else {
-				JSONObject jo = new JSONObject();
-				jo = new JSONObject();
+				s = false;
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
@@ -207,17 +246,23 @@ public class AbutmentMemberAction extends BaseAction {
 	 */
 	public String getMultipleMemberForIdsAb() throws ServletException {
 		String result = null;
-
+		JSONObject jo = new JSONObject();
 		try {
 			String params = getRequestDataByStream();
-
+			boolean s = true;
+			
 			if (params != null) {
-				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
-				String ids = jo.getString("ids");
-				result = memberService.getMultipleMemberForIds(ids);
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String ids = p.getString("ids");
+					result = memberService.getMultipleMemberForIds(ids);
+				}
 			} else {
-				JSONObject jo = new JSONObject();
-				jo = new JSONObject();
+				s = false;
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
@@ -238,18 +283,25 @@ public class AbutmentMemberAction extends BaseAction {
 	 */
 	public String getMemberIdForAccountAb() throws ServletException {
 		String result = null;
-
+		JSONObject jo = new JSONObject();
 		try {
 			String params = getRequestDataByStream();
-
+			boolean s = true;
+			
 			if (params != null) {
-				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
-				String account = jo.getString("account");
-				int organId = jo.getInt("organId");
-				result = memberService.getMemberIdForAccount(account, organId);
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String account = p.getString("account");
+					int organId = p.getInt("organId");
+					result = memberService.getMemberIdForAccount(account, organId);
+				}
 			} else {
-				JSONObject jo = new JSONObject();
-				jo = new JSONObject();
+				s = false;
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
@@ -271,21 +323,28 @@ public class AbutmentMemberAction extends BaseAction {
 	 */
 	public String checkAccountAb() throws ServletException {
 		JSONObject result = new JSONObject();
-
+		
 		try {
 			String params = getRequestDataByStream();
-
+			boolean s = true;
+			
 			if (params != null) {
-				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
-				String account = jo.getString("account");
-				String pwd = jo.getString("password");
-				int organId = jo.getInt("organId");
-				TMember tm = memberService.searchSigleUser(account, pwd, organId);
-				result.put("code", 1);
-				result.put("text", JSONUtils.getInstance().modelToJSONObj(tm)
-						.toString());
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String account = p.getString("account");
+					String pwd = p.getString("password");
+					int organId = p.getInt("organId");
+					TMember tm = memberService.searchSigleUser(account, pwd, organId);
+					result.put("code", 1);
+					result.put("text", JSONUtils.getInstance().modelToJSONObj(tm)
+							.toString());
+				}
 			} else {
-				result = new JSONObject();
+				s = false;
+			}
+			if (!s) {
 				result.put("code", 0);
 				result.put("text", Tips.WRONGPARAMS.getText());
 			}
@@ -305,18 +364,24 @@ public class AbutmentMemberAction extends BaseAction {
 	 */
 	public String getOneOfMemberAb() throws ServletException, IOException {
 		String result = null;
-		JSONObject jo = null;
-
+		JSONObject jo = new JSONObject();
 		try {
 			String params = getRequestDataByStream();
-			String userId = null;
-
+			boolean s = true;
+			
 			if (params != null) {
-				jo = JSONUtils.getInstance().stringToObj(params);
-				userId = jo.getString("userId");
-				result = memberService.getOneOfMember(userId);
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String userId = p.getString("userId");
+					result = memberService.getOneOfMember(userId);
+				}
 			} else {
-				jo = new JSONObject();
+				s = false;
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
@@ -336,28 +401,33 @@ public class AbutmentMemberAction extends BaseAction {
 	 */
 	public String searchUserAb() throws ServletException {
 		String result = null;
-		JSONObject jo = null;
-
+		JSONArray ja = new JSONArray();
+		
 		try {
 			String params = getRequestDataByStream();
-
+			boolean s = true;
+			
 			if (params == null) {
-				JSONArray ja = new JSONArray();
-				jo = new JSONObject();
-				jo.put("code", 0);
-				jo.put("text", Tips.NULLUSER);
-				ja.add(jo);
-				result = ja.toString();
+				s = false;
 			} else {
-				String account = null;
-				jo = JSONUtils.getInstance().stringToObj(params);
-				account = jo.getString("account");
-				int organId = jo.getInt("organId");
-				result = memberService.searchUser(account, organId);
+				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
+				
+				if (!validParams(jo)) {
+					s = false;
+				} else {
+					String account = jo.getString("account");
+					int organId = jo.getInt("organId");
+					result = memberService.searchUser(account, organId);
+				}
 			}
-
-			logger.info(result);
-
+			if (!s) {
+				JSONObject j = new JSONObject();
+				j = new JSONObject();
+				j.put("code", 0);
+				j.put("text", Tips.WRONGPARAMS.getText());
+				ja.add(j);
+				result = ja.toString();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -374,28 +444,33 @@ public class AbutmentMemberAction extends BaseAction {
 	 */
 	public String updateMemberInfoForWebAb() throws ServletException {
 		String result = null;
-		JSONObject jo = null;
-
+		
 		try {
 			String params = getRequestDataByStream();
-			String userId = null;
-			String position = null;
-			String fullName = null;
-			String sign = null;
-
+			boolean s = true;
+			
 			if (params != null) {
-				jo = JSONUtils.getInstance().stringToObj(params);
-				userId = jo.getString("userId");
-				position = jo.getString("position");
-				fullName = jo.getString("fullName");
-				sign = jo.getString("sign");
-				result = memberService.updateMemberInfoForWeb(userId, position,
-						fullName, sign);
-			} else {
-				jo = new JSONObject();
-				jo.put("code", -1);
-				jo.put("text", Tips.WRONGPARAMS.getText());
-				result = jo.toString();
+				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
+				
+				if (!validParams(jo)) {
+					s = false;
+				} else {
+					String userId = jo.getString("userId");
+					String position = jo.containsKey("position") ? jo.getString("position") : null;
+					String fullName = jo.containsKey("fullName") ? jo.getString("fullName"): null;
+					String sign = jo.containsKey("signature") ? jo.getString("signature") : null;
+					result = memberService.updateMemberInfoForWeb(userId, position,
+							fullName, sign);
+				}
+			} else {	
+				s = false;
+			}
+			if (!s) {
+				JSONObject j = new JSONObject();
+				j = new JSONObject();
+				j.put("code", 0);
+				j.put("text", Tips.WRONGPARAMS.getText());
+				result = j.toString();
 			}
 
 		} catch (Exception e) {
@@ -414,32 +489,36 @@ public class AbutmentMemberAction extends BaseAction {
 	 */
 	public String updateMemberInfoForAppAb() throws ServletException {
 		String result = null;
-		JSONObject jo = new JSONObject();
 
 		try {
 			String params = getRequestDataByStream();
-			String userId = null;
-			String email = null;
-			String mobile = null;
-			String phone = null;
-			String address = null;
-
+			
+			boolean s = true;
+			
 			if (params != null) {
-				jo = JSONUtils.getInstance().stringToObj(params);
-				userId = jo.getString("userId");
-				email = jo.getString("email");
-				mobile = jo.getString("mobile");
-				phone = jo.getString("phone");
-				address = jo.getString("address");
-				result = memberService.updateMemberForApp(userId, email,
-						mobile, phone, address);
+				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
+				
+				if (!validParams(jo)) {
+					s = false;
+				} else {
+					String userId = jo.getString("userId");
+					String email = jo.containsKey("email") ? jo.getString("email") : null;
+					String mobile = jo.containsKey("mobile") ? jo.getString("mobile") : null;
+					String phone = jo.containsKey("phone") ? jo.getString("phone") : null;
+					String address = jo.containsKey("address") ? jo.getString("address") : null;
+					result = memberService.updateMemberForApp(userId, email,
+							mobile, phone, address);
+				}
 			} else {
-				jo = new JSONObject();
-				jo.put("code", -1);
-				jo.put("text", Tips.WRONGPARAMS.getText());
-				result = jo.toString();
+				s = false;
 			}
-
+			if (!s) {
+				JSONObject j = new JSONObject();
+				j = new JSONObject();
+				j.put("code", 0);
+				j.put("text", Tips.WRONGPARAMS.getText());
+				result = j.toString();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
@@ -461,15 +540,26 @@ public class AbutmentMemberAction extends BaseAction {
 		
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
+			
 			if (params == null) {
-				jo = new JSONObject();
-				jo.put("code", -1);
-				jo.put("text", Tips.WRONGPARAMS.getText());
-				result = jo.toString();
+				s = false;
 			} else {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				int organId = p.getInt("organId");
-				result = memberService.getAllMemberInfo(organId);
+				
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					int organId = p.getInt("organId");
+					result = memberService.getAllMemberInfo(organId);
+				}
+			}
+			if (!s) {
+				JSONObject j = new JSONObject();
+				j = new JSONObject();
+				j.put("code", 0);
+				j.put("text", Tips.WRONGPARAMS.getText());
+				result = j.toString();
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -486,19 +576,29 @@ public class AbutmentMemberAction extends BaseAction {
 	 */
 	public String getAllMemberOnLineStatusAb() throws ServletException {
 		String result = null;
-		JSONObject jo = null;
 
 		try {
 			String params = getRequestDataByStream();
-			String userIds = null;
-			int organId = 0;
-
+			boolean s = true;
+			
 			if (!params.equals("")) {
-				jo = JSONUtils.getInstance().stringToObj(params);
-				userIds = jo.getString("userIds");
-				organId = jo.getInt("organId");
+				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
+				
+				if (!validParams(jo)) {
+					s = false;
+				} else {
+					String userIds = jo.containsKey("userIds") ? jo.getString("userIds") : null;
+					int organId = jo.containsKey("organId") ? jo.getInt("organId") : 0;
+					result = memberService.getAllMemberOnLineStatus(organId, userIds);
+				}
 			}
-			result = memberService.getAllMemberOnLineStatus(organId, userIds);
+			if (!s) {
+				JSONObject ret = new JSONObject();
+				ret.put("code", 0);
+				ret.put("text", Tips.WRONGPARAMS.getText());
+				result = ret.toString();
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
@@ -515,21 +615,32 @@ public class AbutmentMemberAction extends BaseAction {
 	 */
 	public String getMultipleMemberForAccountsAb() throws ServletException {
 		String result = null;
-		JSONObject jo = null;
 
 		try {
 			String params = getRequestDataByStream();
-
+			boolean s = true;
+			
 			if (params != null) {
-				jo = JSONUtils.getInstance().stringToObj(params);
-				String mulMemberStr = jo.getString("mulMemberStr");
-				int organId = jo.getInt("organId");
-				result = memberService.getMultipleMemberForAccounts(mulMemberStr, organId);
+				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
+				
+				if (!validParams(jo)) {
+					s = false;
+				} else {
+					String mulMemberStr = jo.getString("mulMemberStr");
+					int organId = jo.containsKey("organId") ? jo.getInt("organId") : 0;
+					result = memberService.getMultipleMemberForAccounts(mulMemberStr, organId);
+				}
 			} else {
-				jo = new JSONObject();
-				jo.put("code", -1);
-				jo.put("text", Tips.WRONGPARAMS.getText());
-				result = jo.toString();
+				JSONObject ret = new JSONObject();
+				ret.put("code", 0);
+				ret.put("text", Tips.WRONGPARAMS.getText());
+				result = ret.toString();
+			}
+			if (!s) {
+				JSONObject ret = new JSONObject();
+				ret.put("code", 0);
+				ret.put("text", Tips.WRONGPARAMS.getText());
+				result = ret.toString();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -547,23 +658,31 @@ public class AbutmentMemberAction extends BaseAction {
 	 */
 	public String getMemberCountAb() throws ServletException {
 		String result = null;
-		JSONObject jo = new JSONObject();
-
+		JSONObject ret = new JSONObject();
+		
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
 			
 			if (params != null) {
-				jo = JSONUtils.getInstance().stringToObj(params);
-				int organId = jo.getInt("organId");
-				int count = memberService.countMember(organId);
-				jo.put("code", 1);
-				jo.put("text", count);
+				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
+				
+				if (!validParams(jo)) {
+					s = false;
+				} else {
+					int organId = jo.getInt("organId");
+					int count = memberService.countMember(organId);
+					ret.put("code", 1);
+					ret.put("text", count);
+				}
 			} else {
-				jo = new JSONObject();
-				jo.put("code", -1);
-				jo.put("text", Tips.WRONGPARAMS.getText());
+				s = false;
 			}
-			result = jo.toString();
+			if (!s) {
+				ret.put("code", 0);
+				ret.put("text", Tips.WRONGPARAMS.getText());
+			}
+			result = ret.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
@@ -581,17 +700,32 @@ public class AbutmentMemberAction extends BaseAction {
 	 */
 	public String updateUserTokenForIdAb() throws ServletException {
 		String result = null;
-		JSONObject r = new JSONObject();
+		JSONObject ret = new JSONObject();
 
 		try {
 			String params = getRequestDataByStream();
-			JSONObject jo = JSONUtils.getInstance().stringToObj(params);
-			String userId = jo.getString("userId");
-			String token = jo.getString("token");
-			int count = memberService.updateUserTokenForId(userId, token);
-			r.put("code", 1);
-			r.put("text", count);
-			result = r.toString();
+			boolean s = true;
+			
+			if (params != null) {
+				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
+				
+				if (!validParams(jo)) {
+					s = false;
+				} else {
+					String userId = jo.getString("userId");
+					String token = jo.getString("token");
+					int count = memberService.updateUserTokenForId(userId, token);
+					ret.put("code", 1);
+					ret.put("text", count);
+				}
+			} else {
+				s = false;
+			}
+			if (!s) {
+				ret.put("code", 0);
+				ret.put("text", Tips.WRONGPARAMS.getText());
+			}
+			result = ret.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
@@ -612,16 +746,26 @@ public class AbutmentMemberAction extends BaseAction {
 
 		try {
 			String params = getRequestDataByStream();
-
+			boolean s = true;
+			
 			if (StringUtils.getInstance().isBlank(params)) {
+				s = false;
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String names = p.getString("accounts");
+					int organId = p.getInt("organId");
+					result = memberService.getMemberIdsByAccount(names, organId);
+				}
+			}
+			if (!s) {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
-			} else {
-				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String names = p.getString("accounts");
-				result = memberService.getMemberIdsByAccount(names);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -642,16 +786,25 @@ public class AbutmentMemberAction extends BaseAction {
 
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
+			
 			if (StringUtils.getInstance().isBlank(params)) {
-				jo.put("code", 0);
-				jo.put("text", Tips.WRONGPARAMS.getText());
-				result = jo.toString();
+				s = false;
 			} else {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String phone = p.getString("phone");
-				result = memberService.getTextCode(phone);
-				jo.put("code", 1);
-				jo.put("text", result);
+				
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String phone = p.getString("phone");
+					result = memberService.getTextCode(phone);
+					jo.put("code", 1);
+					jo.put("text", result);
+				}
+			}
+			if (!s) {
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -673,17 +826,26 @@ public class AbutmentMemberAction extends BaseAction {
 
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
+			
 			if (StringUtils.getInstance().isBlank(params)) {
-				jo.put("code", 0);
-				jo.put("text", Tips.WRONGPARAMS.getText());
-				result = jo.toString();
+				s = false;
 			} else {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String phone = p.getString("phone");
-				String code = p.getString("code");
-				memberService.saveTextCode(phone, code);
-				jo.put("code", 1);
-				jo.put("text", result);
+				
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String phone = p.getString("phone");
+					String code = p.getString("code");
+					memberService.saveTextCode(phone, code);
+					jo.put("code", 1);
+					jo.put("text", result);
+				}
+			}
+			if (!s) {
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -705,17 +867,27 @@ public class AbutmentMemberAction extends BaseAction {
 
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
+			
 			if (StringUtils.getInstance().isBlank(params)) {
-				jo.put("code", 0);
-				jo.put("text", Tips.WRONGPARAMS.getText());
+				s = false;
 			} else {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String account = p.getString("account");
-				String oldPwd = p.getString("oldPwd");
-				int organId = p.getInt("organId");
-				boolean status = memberService.valideOldPwd(account, oldPwd, organId);
-				jo.put("code", 1);
-				jo.put("text", status);
+				
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String account = p.getString("account");
+					String oldPwd = p.getString("oldPwd");
+					int organId = p.getInt("organId");
+					boolean status = memberService.valideOldPwd(account, oldPwd, organId);
+					jo.put("code", 1);
+					jo.put("text", status);
+				}
+			}
+			if (!s) {
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
 			}
 			result = jo.toString();
 		} catch (Exception e) {
@@ -738,17 +910,27 @@ public class AbutmentMemberAction extends BaseAction {
 
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
+			
 			if (StringUtils.getInstance().isBlank(params)) {
-				jo.put("code", 0);
-				jo.put("text", Tips.WRONGPARAMS.getText());
+				s = false;
 			} else {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String account = p.getString("account");
-				String newPwd = p.getString("newPwd");
-				int organId = p.getInt("organId");
-				boolean status = memberService.updateUserPwdForAccount(account, newPwd, organId);
-				jo.put("code", 1);
-				jo.put("text", status);
+				
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String account = p.getString("account");
+					String newPwd = p.getString("newPwd");
+					int organId = p.getInt("organId");
+					boolean status = memberService.updateUserPwdForAccount(account, newPwd, organId);
+					jo.put("code", 1);
+					jo.put("text", status);
+				}
+			}
+			if (!s) {
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
 			}
 			result = jo.toString();
 		} catch (Exception e) {
@@ -771,17 +953,27 @@ public class AbutmentMemberAction extends BaseAction {
 
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
+			
 			if (StringUtils.getInstance().isBlank(params)) {
-				jo.put("code", 0);
-				jo.put("text", Tips.WRONGPARAMS.getText());
+				s = false;
 			} else {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String account = p.getString("phone");
-				String newPwd = p.getString("newPwd");
-				boolean status = memberService.updateUserPwdForPhone(account,
-						newPwd);
-				jo.put("code", 1);
-				jo.put("text", status);
+				
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String account = p.getString("phone");
+					String newPwd = p.getString("newPwd");
+					boolean status = memberService.updateUserPwdForPhone(account,
+							newPwd);
+					jo.put("code", 1);
+					jo.put("text", status);
+				}
+			}
+			if (!s) {
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
 			}
 			result = jo.toString();
 		} catch (Exception e) {
@@ -804,15 +996,25 @@ public class AbutmentMemberAction extends BaseAction {
 
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
+			
 			if (StringUtils.getInstance().isBlank(params)) {
+				s = false;
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String userId = p.getString("userId");
+					String picName = p.getString("picName");
+					result = uploadService.saveSelectedPic(userId, picName);
+				}
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
-			} else {
-				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String userId = p.getString("userId");
-				String picName = p.getString("picName");
-				result = uploadService.saveSelectedPic(userId, picName);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -834,15 +1036,25 @@ public class AbutmentMemberAction extends BaseAction {
 
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
+			
 			if (StringUtils.getInstance().isBlank(params)) {
+				s = false;
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String logName = p.getString("logName");
+					String userId = p.getString("userId");
+					result = uploadService.saveTempPic(userId, logName);
+				}
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
-			} else {
-				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String logName = p.getString("logName");
-				String userId = p.getString("userId");
-				result = uploadService.saveTempPic(userId, logName);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -864,15 +1076,25 @@ public class AbutmentMemberAction extends BaseAction {
 
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
+			
 			if (StringUtils.getInstance().isBlank(params)) {
+				s = false;
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String picName = p.getString("picName");
+					String userId = p.getString("userId");
+					result = uploadService.delUserLogos(userId, picName);
+				}
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
-			} else {
-				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String picName = p.getString("picName");
-				String userId = p.getString("userId");
-				result = uploadService.delUserLogos(userId, picName);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -894,15 +1116,25 @@ public class AbutmentMemberAction extends BaseAction {
 
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
+			
 			if (StringUtils.getInstance().isBlank(params)) {
+				s = false;
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String picName = p.getString("picName");
+					String userId = p.getString("userId");
+					result = memberService.isUsedPic(userId, picName);
+				}
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
-			} else {
-				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String picName = p.getString("picName");
-				String userId = p.getString("userId");
-				result = memberService.isUsedPic(userId, picName);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -924,14 +1156,24 @@ public class AbutmentMemberAction extends BaseAction {
 
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
+			
 			if (StringUtils.getInstance().isBlank(params)) {
+				s = false;
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String userId = p.getString("userId");
+					result = uploadService.getUserLogos(userId);
+				}
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
-			} else {
-				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String userId = p.getString("userId");
-				result = uploadService.getUserLogos(userId);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

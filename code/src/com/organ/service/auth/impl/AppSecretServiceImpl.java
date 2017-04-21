@@ -19,7 +19,9 @@ import com.organ.model.TMember;
 import com.organ.model.UserSysRelation;
 import com.organ.model.UserValid;
 import com.organ.service.auth.AppSecretService;
+import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
+import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PropertiesUtils;
 import com.organ.utils.SecretUtils;
 import com.organ.utils.StringUtils;
@@ -590,14 +592,14 @@ public class AppSecretServiceImpl implements AppSecretService {
 	public String getAppSecretByAppIdAndSecret(String appId, String secret) {
 		JSONObject jo = new JSONObject();
 		String code = "0";
-		boolean text = false;
+		String text = null;
 		
 		try {
 			if (!StringUtils.getInstance().isBlank(appId) && !StringUtils.getInstance().isBlank(secret)) {
 				AppSecret as = appSecretDao.getAppSecretByAppIdAndSecret(appId, secret);
 				if (as != null) {
 					code = "1";
-					text = true;
+					text = JSONUtils.getInstance().modelToJSONObj(as).toString();
 				} 
 			}
 			jo.put("code", code);
@@ -613,12 +615,9 @@ public class AppSecretServiceImpl implements AppSecretService {
 		ArrayList<String> as = new ArrayList<String>();
 
 		try {
-			UUID uuid = UUID.randomUUID();
-			String uuidStr = uuid.toString();
-			uuidStr = StringUtils.getInstance().replaceChar(uuidStr, "-", "");
-			as.add(uuidStr);
-			uuidStr = new SecretUtils().encrypt(uuidStr);
-			as.add(uuidStr);
+			String id = PasswordGenerator.getInstance().createId(18);
+			as.add(id);
+			as.add(new SecretUtils().encrypt(id));
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));

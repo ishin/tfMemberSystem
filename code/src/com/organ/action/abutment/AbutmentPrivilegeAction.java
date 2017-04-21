@@ -37,20 +37,29 @@ public class AbutmentPrivilegeAction extends BaseAction {
 		
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
 			
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String id = p.getString("id");
-				String privList = privService.getPrivStringByMember(Integer.parseInt(id));
 				
-				if (privList != null) {
-					jo.put("code", 1);
-					jo.put("text", privList);
+				if (!validParams(p)) {
+					s = false;
 				} else {
-					jo.put("code", 0);
-					jo.put("text", Tips.FAIL.getText());
+					String id = p.getString("id");
+					String privList = privService.getPrivStringByMember(Integer.parseInt(id));
+					
+					if (privList != null) {
+						jo.put("code", 1);
+						jo.put("text", privList);
+					} else {
+						jo.put("code", 0);
+						jo.put("text", Tips.FAIL.getText());
+					}
 				}
 			} else {
+				s = false;
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 			}
@@ -69,20 +78,29 @@ public class AbutmentPrivilegeAction extends BaseAction {
 		
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
 			
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String ids = p.getString("ids");
-				String privList = privService.getRolePrivsByPrivs(StringUtils.getInstance().strToArray(ids));
 				
-				if (privList != null) {
-					jo.put("code", 1);
-					jo.put("text", privList);
+				if (!validParams(p)) {
+					s = false;
 				} else {
-					jo.put("code", 0);
-					jo.put("text", Tips.FAIL.getText());
+					String ids = p.getString("ids");
+					String privList = privService.getRolePrivsByPrivs(StringUtils.getInstance().strToArray(ids));
+					
+					if (privList != null) {
+						jo.put("code", 1);
+						jo.put("text", privList);
+					} else {
+						jo.put("code", 0);
+						jo.put("text", Tips.FAIL.getText());
+					}
 				}
 			} else {
+				s = false;
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 			}
@@ -106,20 +124,29 @@ public class AbutmentPrivilegeAction extends BaseAction {
 		
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
 			
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String privIds = p.getString("privIds");
-				String privList = privService.getRolePrivsByPrivs(StringUtils.getInstance().strToArray(privIds));
 				
-				if (privList != null) {
-					jo.put("code", 1);
-					jo.put("text", privList);
+				if (!validParams(p)) {
+					s = false;
 				} else {
-					jo.put("code", 0);
-					jo.put("text", Tips.FAIL.getText());
+					String privIds = p.getString("privIds");
+					String privList = privService.getRolePrivsByPrivs(StringUtils.getInstance().strToArray(privIds));
+					
+					if (privList != null) {
+						jo.put("code", 1);
+						jo.put("text", privList);
+					} else {
+						jo.put("code", 0);
+						jo.put("text", Tips.FAIL.getText());
+					}
 				}
 			} else {
+				s = false;
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 			}
@@ -143,20 +170,29 @@ public class AbutmentPrivilegeAction extends BaseAction {
 		
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
 			
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String groupManager = p.getString("groupManager");
-				int organId = p.getInt("organId");
-				String privList = privService.getPrivByUrl(StringUtils.getInstance().strToArray(groupManager), organId);
-				if (privList != null) {
-					jo.put("code", 1);
-					jo.put("text", privList);
+				
+				if (!validParams(p)) {
+					s = false;
 				} else {
-					jo.put("code", 0);
-					jo.put("text", Tips.FAIL.getText());
+					String groupManager = p.getString("groupManager");
+					int organId = p.getInt("organId");
+					String privList = privService.getPrivByUrl(StringUtils.getInstance().strToArray(groupManager), organId);
+					if (privList != null) {
+						jo.put("code", 1);
+						jo.put("text", privList);
+					} else {
+						jo.put("code", 0);
+						jo.put("text", Tips.FAIL.getText());
+					}
 				}
 			} else {
+				s = false;
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 			}
@@ -180,20 +216,29 @@ public class AbutmentPrivilegeAction extends BaseAction {
 		
 		try {
 			String params = getRequestDataByStream();
+			boolean s = true;
 			
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String userId = p.getString("userId");
-				List privList = privService.getRoleIdForId(Integer.parseInt(userId));
-				if (privList != null) {
-					JSONArray ja = JSONUtils.getInstance().objToJSONArray(privList);
-					jo.put("code", 1);
-					jo.put("text", ja.toString());
+				
+				if (!validParams(p)) {
+					s = false;
 				} else {
-					jo.put("code", 0);
-					jo.put("text", Tips.FAIL.getText());
+					String userId = p.getString("userId");
+					List privList = privService.getRoleIdForId(Integer.parseInt(userId));
+					if (privList != null) {
+						JSONArray ja = JSONUtils.getInstance().objToJSONArray(privList);
+						jo.put("code", 1);
+						jo.put("text", ja.toString());
+					} else {
+						jo.put("code", 0);
+						jo.put("text", Tips.FAIL.getText());
+					}
 				}
 			} else {
+				s = false;
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 			}

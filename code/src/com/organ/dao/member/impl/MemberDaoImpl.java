@@ -605,10 +605,10 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements
 	}
 
 	@Override
-	public List getMemberIdsByAccount(String[] targetNames) {
+	public List getMemberIdsByAccount(String[] targetNames, int organId) {
 		try {
 			StringBuilder sql = new StringBuilder(
-					"select id from t_member where account in(");
+					"select id from t_member where organ_id=").append(organId).append(" and account in(");
 			int len = targetNames.length;
 
 			for (int i = 0; i < len; i++) {

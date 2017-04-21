@@ -478,7 +478,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public String getMemberIdsByAccount(String names) {
+	public String getMemberIdsByAccount(String names, int organId) {
 		String code = "0";
 		String text = null;
 		JSONObject ret = new JSONObject();
@@ -488,7 +488,7 @@ public class MemberServiceImpl implements MemberService {
 				text = Tips.WRONGPARAMS.getText();
 			} else {
 				String[] namesArr = StringUtils.getInstance().strToArray(names);
-				List list = memberDao.getMemberIdsByAccount(namesArr);
+				List list = memberDao.getMemberIdsByAccount(namesArr, organId);
 				
 				if (list != null) {
 					code = "1";

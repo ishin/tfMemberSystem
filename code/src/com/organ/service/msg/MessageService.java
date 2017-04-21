@@ -1,5 +1,7 @@
 package com.organ.service.msg;
 
+import com.organ.model.AppSecret;
+
 /**
  * 融云消息发送
  * 
@@ -19,12 +21,13 @@ public interface MessageService {
 	 * @param isCounted
 	 * @param isPersisted
 	 * @param pushData
+	 * @param organId 
 	 * @return
 	 */
 	public String sendSysMsg(String fromid, String targetids,
 			String targetNames, String msg, String extraMsg,
 			String pushContent, String pushData, String isPersisted,
-			String isCounted);
+			String isCounted, int organId);
 
 	/**
 	 * 发送个人、多个会话
@@ -37,12 +40,13 @@ public interface MessageService {
 	 * @param verifyBlacklist
 	 * @param isPersisted
 	 * @param isCounted
+	 * @param organId 
 	 * @return
 	 */
 	public String sendPrivateMsg(String fromId, String targetIds,
 			String targetNames, String msg, String extraMsg,
 			String pushContent, String count, String verifyBlacklist,
-			String isPersisted, String isCounted);
+			String isPersisted, String isCounted, int organId);
 
 	/**
 	 * 验证是否有appId及secret
@@ -51,6 +55,6 @@ public interface MessageService {
 	 * @param secret
 	 * @return
 	 */
-	public boolean validAppIdAndSecret(String appId, String secret);
+	public AppSecret validAppIdAndSecret(String appId, String secret);
 
 }

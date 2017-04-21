@@ -16,6 +16,7 @@ import net.sf.json.JSONObject;
 
 import com.organ.common.AuthTips;
 import com.organ.common.BaseAction;
+import com.organ.model.AppSecret;
 import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
 import com.organ.model.TMember;
@@ -164,9 +165,9 @@ public class BranchAction extends BaseAction {
 	 */
 	public String saveBranchExtra() throws ServletException {
 		String result = null;
-		boolean as = msgService.validAppIdAndSecret(appId, secret);
+		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
 		
-		if (as) {
+		if (as != null) {
 			result = this.saveBranch();
 		} else {
 			JSONObject jo = new JSONObject();
@@ -478,9 +479,9 @@ public class BranchAction extends BaseAction {
 	 */
 	public String delExtra() throws ServletException {
 		String result = null;
-		boolean as = msgService.validAppIdAndSecret(appId, secret);
+		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
 		
-		if (as) {
+		if (as != null) {
 			result = this.del();
 		} else {
 			JSONObject jo = new JSONObject();
@@ -605,9 +606,9 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchTreeAndMembers() throws ServletException {
 		String result = null;
-		boolean as = msgService.validAppIdAndSecret(appId, secret);
+		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
 		
-		if (as) {
+		if (as != null) {
 			int oid = 0;
 			if (!StringUtils.getInstance().isBlank(companyId)) {
 				oid = Integer.parseInt(companyId);
@@ -646,9 +647,9 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchMembers() throws ServletException {
 		String result = null;
-		boolean as = msgService.validAppIdAndSecret(appId, secret);
+		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
 		
-		if (as) {
+		if (as != null) {
 			int oid = 0;
 			if (!StringUtils.getInstance().isBlank(companyId)) {
 				oid = Integer.parseInt(companyId);
