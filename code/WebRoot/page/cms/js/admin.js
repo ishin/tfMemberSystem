@@ -47,6 +47,19 @@ $(document).ready(function(){
 		$(this).removeClass('menuhover');
 	});
 })
+function sendAjax(url,data,callback,callbackB){
+	$.ajax({
+		type: "POST",
+		url: url,
+		data:data,
+		success: function(data){
+			callback && callback(data);
+		},
+		error:function(){
+			callbackB&&callbackB();
+		}
+	})
+}
 function cb_base(data) {
 	
 	// 取权限失败返回登录界面

@@ -243,13 +243,17 @@ public class BranchAction extends BaseAction {
 		String id = this.request.getParameter("memberid");
 		int organId = getSessionUserOrganId();
 		boolean sms = false;
+		JSONObject jo = new JSONObject();
+		
+		String email = this.request.getParameter("memberemail");
+		
 		if (id != null && !"".equals(id)) {
 			member = branchService.getMemberObjectById(Integer.parseInt(id));
 			if (!member.getAccount().equalsIgnoreCase(this.request.getParameter("memberaccount"))) {
 				if (branchService.getMemberByAccount(this.request.getParameter("memberaccount"), organId) != null) {
-					JSONObject jo = new JSONObject();
+					JSONObject jo1 = new JSONObject();
 					jo.put("memberid", 0);
-					returnToClient(jo.toString());
+					returnToClient(jo1.toString());
 					return "text";
 				}
 			}
@@ -257,7 +261,7 @@ public class BranchAction extends BaseAction {
 					!member.getTelephone().equalsIgnoreCase(this.request.getParameter("membertelephone"))) {
 				if (branchService.getMemberByMobile(this.request.getParameter("membermobile"), 
 						this.request.getParameter("membertelephone")) != null) {
-					JSONObject jo = new JSONObject();
+					JSONObject jo1 = new JSONObject();
 					jo.put("memberid", -1);
 					returnToClient(jo.toString());
 					return "text";
@@ -265,7 +269,7 @@ public class BranchAction extends BaseAction {
 			}
 			if (!member.getEmail().equalsIgnoreCase(this.request.getParameter("memberemail"))) {
 				if (branchService.getMemberByEmail(this.request.getParameter("memberemail")) != null) {
-					JSONObject jo = new JSONObject();
+					JSONObject jo1 = new JSONObject();
 					jo.put("memberid", -2);
 					returnToClient(jo.toString());
 					return "text";
@@ -273,22 +277,22 @@ public class BranchAction extends BaseAction {
 			}
 		} else {
 			if (branchService.getMemberByAccount(this.request.getParameter("memberaccount"), organId) != null) {
-				JSONObject jo = new JSONObject();
+				JSONObject jo1 = new JSONObject();
 				jo.put("memberid", 0);
-				returnToClient(jo.toString());
+				returnToClient(jo1.toString());
 				return "text";
 			}
 			if (branchService.getMemberByMobile(this.request.getParameter("membermobile"), 
 					this.request.getParameter("membertelephone")) != null) {
-				JSONObject jo = new JSONObject();
+				JSONObject jo1 = new JSONObject();
 				jo.put("memberid", -1);
-				returnToClient(jo.toString());
+				returnToClient(jo1.toString());
 				return "text";
 			}
-			if (branchService.getMemberByEmail(this.request.getParameter("memberemail")) != null) {
-				JSONObject jo = new JSONObject();
+			if (!StringUtils.getInstance().isBlank(email) && branchService.getMemberByEmail(email) != null) {
+				JSONObject jo1 = new JSONObject();
 				jo.put("memberid", -2);
-				returnToClient(jo.toString());
+				returnToClient(jo1.toString());
 				return "text";
 			}
 			member = new TMember();
@@ -380,7 +384,6 @@ public class BranchAction extends BaseAction {
 			TextHttpSender.getInstance().sendText(member.getMobile(), msg);
 		}
 		
-		JSONObject jo = new JSONObject();
 		jo.put("memberid", memberId);
 		
 		returnToClient(jo.toString());

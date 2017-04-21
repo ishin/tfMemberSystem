@@ -21,4 +21,6 @@ public interface AppInfoConfigDao extends IBaseDao<AppSecret, Long>{
 	public List SearchAppInfoName(int organId);
 
 	public String getAppNameByID(int id);
+
+	public List getRoleIdsByAppId(int appRecordId);
 }

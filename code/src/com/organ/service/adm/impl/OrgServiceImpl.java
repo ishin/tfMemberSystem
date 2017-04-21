@@ -143,8 +143,7 @@ public class OrgServiceImpl implements OrgService {
 				} else {
 					String organName = organ.getName();
 					String name = organName + "-InitMember";
-					String pwd = "";
-					
+					String pwd = PasswordGenerator.getInstance().makePwd();
 					TMember tm = new TMember();
 					tm.setAccount(account);
 					tm.setFullname(name);
@@ -162,7 +161,7 @@ public class OrgServiceImpl implements OrgService {
 					tm.setIntro(organName + "InitMember");
 					tm.setOrganId(organId);
 					tm.setAllpinyin(PinyinGenerator.getPinYin(name));
-					tm.setPassword(PasswordGenerator.getInstance().getMD5Str("111111"));
+					tm.setPassword(PasswordGenerator.getInstance().getMD5Str(pwd));
 					tm.setSuperAdmin(1);
 					memberDao.save(tm);
 					
@@ -217,10 +216,10 @@ public class OrgServiceImpl implements OrgService {
 					*/
 					
 					j.put("account", tm.getAccount());
-					j.put("pwd", "11111");
+					j.put("pwd", pwd);
 					j.put("organId", organId);
 					j.put("organCode", organ.getCode());
-					String msg = organName + "注册成功,初始账号：" + account + ";初始密码111111;公司ID:" + organId + ";公司码:"+organ.getCode();
+					//String msg = organName + "注册成功,初始账号：" + account + ";初始密码"+pwd+";公司ID:" + organId + ";公司码:"+organ.getCode();
 					//TextHttpSender.getInstance().sendText(account, msg);
 				}
 				ret = j.toString();
