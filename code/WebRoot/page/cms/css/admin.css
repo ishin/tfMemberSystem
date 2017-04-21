@@ -141,13 +141,13 @@ input:focus {
 }
 .menupanel11 {
 	float: left;
-	width: 500px;
+	width: 750px;
 	box-shadow: 0px 0px 10px #cbcbcb;
 	background: white;
 }
 .sidebar11 {
 	float: left;
-	width: 200px;
+	width: 250px;
 /*	padding-top: 3%;
 	height: 830px;
 */	border-right:1px solid #cbcbcb;	
@@ -168,7 +168,7 @@ input:focus {
 /*}*/
 .organ {
 	float: left;
-	width: 300px;
+	width: 500px;
 	padding-top: 10px;
 }
 .organline {
@@ -272,7 +272,7 @@ input:focus {
 }
 div#container {
 	height: 100%;
-	background: #e8e8e8;
+	background: #ebf0f5;
 	overflow: hidden;
 }
 .admadd {
@@ -288,16 +288,67 @@ div#container {
 }
 .infopanel11 {
 	float: left;
-	width: calc(100% - 600px);
+	width: calc(100% - 850px);
 	margin: 30px 50px;
 	background: white;
 	height: calc(100% - 125px);
 }
+ul.searchResultUL {
+	background: #fff;
+	position: relative;
+	padding: 6px 0px;
+	border: 1px solid #e6e6e6;
+	box-shadow: 0px 0px 10px #e6e6e6;
+	border-top: none;
+}
+ul.searchResultUL li {
+	height: 42px;
+	/*background: paleturquoise;*/
+	margin: 6px;
+	line-height: 42px;
+	text-indent: 10px;
+	border-radius: 5px;
+}
+
+.searchResultUL li.searchNoResult{
+	height: 132px;
+	position: relative;
+	background: url('img/noResult.png') no-repeat 125px 30px;
+}
+.searchResultUL li.searchNoResult:hover{
+	background-color: #ffffff ;
+	background: url('img/noResult.png') no-repeat 200px 30px;
+}
+.searchResultUL li.searchNoResult span{
+	display: inline-block;
+	position: absolute;
+	/* background: paleturquoise; */
+	bottom: 0px;
+	/* left: 100px; */
+	width: 100%;
+	text-align: center;
+}
+ul.searchResultUL li img {
+	margin-right: 10px;
+}
+
+ul.searchResultUL li:hover {
+	background: #f5f5f5;
+}
+form#memberform {
+	width: 800px;
+}
+form#branchform {
+	 width: 500px;
+ }
 .info {
 	width: 100%;
 	box-shadow: 0px 0px 10px #cbcbcb;
 	border-radius: 6px;
 	height: 100%;
+	/* min-width: 700px; */
+	background: #fff;
+	overflow: scroll;
 }
 .infotitle {
 	height: 50px;
@@ -469,7 +520,7 @@ th {
 }
 .menupanel12 {
 	float: left;
-	width: 200px;
+	width: 250px;
 	box-shadow: 0px 0px 10px #cbcbcb;
 	background: white;
 	height: 100%;
@@ -487,7 +538,7 @@ th {
 }
 .infopanel12 {
 	float: left;
-	width: calc(100% - 300px);
+	width: calc(100% - 350px);
 	margin: 30px 50px;
 	min-width: 500px;
 	height: calc(100% - 120px);
@@ -567,7 +618,7 @@ th {
 }
 .infopanel21 {
 	float: left;
-	width: calc(100% - 300px);
+	width: calc(100% - 350px);
 	margin: 30px 50px 30px 50px;
 	background: white;
 	height: calc(100% - 125px);
@@ -950,7 +1001,7 @@ button.pagingJump {
 	display:none;
 	z-index:1;
 }
-.dialogApp{
+.dialogApp2{
 	display:none;
 	height: 521px;
 	width: 622px;
@@ -959,6 +1010,28 @@ button.pagingJump {
 	left: 50%;
 	top: 50%;
 	margin: -260px 0px 0px -311px;
+	border-radius: 10px;
+	z-index:2;
+}
+span#appsecret {
+	text-indent: 10px;
+	display: inline-block;
+	max-width: 409px;
+	/* overflow: hidden; */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+.dialogApp1{
+	display:none;
+	height: 400px;
+	width: 622px;
+	position: absolute;
+	background: white;
+	left: 50%;
+	top: 50%;
+	margin: -200px 0px 0px -311px;
 	border-radius: 10px;
 	z-index:2;
 }
@@ -1002,8 +1075,11 @@ span.closeX {
 	/*background: palegoldenrod;*/
 	padding: 0px 50px;
 }
-.dialogApp .dialogBody{
-	height:360px;
+.dialogApp2 .dialogBody{
+	 height:360px;
+ }
+.dialogApp1 .dialogBody{
+	height:223px;
 }
 .dialogBody ul li{
 	height:70px;

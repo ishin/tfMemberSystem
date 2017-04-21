@@ -43,7 +43,7 @@
             </div>
 			
 		</div>
-		<div class="organline" >
+		<div class="organline" id="organlineRes">
 			<input type="text" class='organsearch organsearchnone' placeholder="搜索人员" id="search11" />
 		</div>
 		<div class="organline ztree" id="tree11"></div>

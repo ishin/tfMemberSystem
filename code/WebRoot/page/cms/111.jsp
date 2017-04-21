@@ -70,7 +70,7 @@
 			<textarea id="memberintro" name="memberintro"></textarea>
 		</div>
 		</form>
-		<div id='shuoming' class="line111" style='margin: 0 0 30px 30px; padding-top: 0'>
+		<div id='shuoming' class="line111" style='margin: 0 0 30px 74px; padding-top: 0;color: #b3b3b3;'>
 			a) admin是系统自动为您分配的超级管理员。他可以进行组织架构、权限等后台管理操作。
 			<br>b) admin的初始密码为创建者手机号的前6位，为保障账号安全，请及时重置密码。
 		</div>
