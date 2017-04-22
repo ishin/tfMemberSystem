@@ -36,7 +36,8 @@
 						getMultipleMemberForIdsAb,getMemberIdForAccountAb,getUserLogosAb,isUsedPicAb,delUserLogosAb,saveTempPicAb,saveSelectedPicAb,
 						updateUserPwdForPhoneAb,updateUserPwdForAccountAb,valideOldPwdAb,getMemberIdsByAccountAb,saveTextCodeAb,getTextCodeAb,
 						updateUserTokenForIdAb,checkAccountAb,getMemberCountAb,getMultipleMemberForAccountsAb,getAllMemberOnLineStatusAb,
-						getAllMemberInfoAb,updateMemberInfoForAppAb,updateMemberInfoForWebAb,searchUserAb,getOneOfMemberAb,registOrgan,getOrganCodeAb
+						getAllMemberInfoAb,updateMemberInfoForAppAb,updateMemberInfoForWebAb,searchUserAb,getOneOfMemberAb,registOrgan,getOrganCodeAb,
+						httpUploadAb
 					</param>
 					<!-- <param name="includeMethods"></param> -->
 				</interceptor-ref>

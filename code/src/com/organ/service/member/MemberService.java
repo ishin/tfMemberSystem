@@ -162,7 +162,7 @@ public interface MemberService {
 	 * @param names
 	 * @return
 	 */
-	public String getMemberIdsByAccount(String names);
+	public String getMemberIdsByAccount(String names, int organId);
 
 	/**
 	 * 检测 是否正在使用头像

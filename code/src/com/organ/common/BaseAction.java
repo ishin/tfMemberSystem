@@ -22,6 +22,7 @@ import org.directwebremoting.WebContextFactory;
 import com.opensymphony.xwork2.ActionSupport;
 import com.organ.model.SessionUser;
 import com.organ.model.TMember;
+import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PropertiesUtils;
 import com.organ.utils.StringUtils;
 
@@ -325,4 +326,18 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 		return su.getFullname();
 	}
 
+	/**
+	 * 验证参数有效性
+	 * @param timeStamp
+	 * @param validTime
+	 * @param key
+	 * @return
+	 */
+	protected boolean validParams(JSONObject params) {
+		String timeStamp = params.getString("timestamp");
+		String key = PropertiesUtils.getStringByKey("param.key");
+		String validTime = PropertiesUtils.getStringByKey("param.validtime");
+		long validTimeLong = validTime != null ? Long.parseLong(validTime) : 0;
+		return PasswordGenerator.getInstance().valideMd5(params, timeStamp, validTimeLong, key);
+	}
 }
