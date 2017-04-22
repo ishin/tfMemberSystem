@@ -76,6 +76,14 @@ public class BranchAction extends BaseAction {
 		return "text";
 	}
 	
+	public String getSuperMember() throws ServletException {
+		int organId = getSessionUserOrganId();
+		String result = branchService.getSuperMember(organId);
+		returnToClient(result);
+		
+		return "text";
+	}
+	
 	/*
 	 * 取人员通过人员id
 	 * by alopex
@@ -233,9 +241,10 @@ public class BranchAction extends BaseAction {
 		
 		if (appId == null && secret == null) {
 			returnToClient(jo.toString());
+			return "text";
+		} else {
+			return jo.toString();
 		}
-
-		return "text";
 	}
 	
 	
@@ -515,9 +524,10 @@ public class BranchAction extends BaseAction {
 		jo.put("id", id);
 		if (appId == null && secret == null) {
 			returnToClient(jo.toString());
+			return "text";
+		} else {
+			return jo.toString();
 		}
-		
-		return "text";
 	}
 
 	public String mov() throws ServletException {

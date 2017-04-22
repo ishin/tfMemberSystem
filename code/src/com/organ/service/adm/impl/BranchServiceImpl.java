@@ -965,5 +965,59 @@ public class BranchServiceImpl implements BranchService {
 		}
 		return jo.toString();
 	}
+	@Override
+	public String getSuperMember(int organId) {
+		TMember tm = memberDao.getSuperMember(organId);
+		if (tm != null) {
+			int memberId = tm.getId();
+			JSONObject jo = JSONObject.fromObject(tm);
+			
+			/*
+			 * 取职务
+			 */
+			List list1 = memberDao.getMemberPosition(memberId);
+			Iterator it1 = list1.iterator();
+			if (it1.hasNext()) {
+				Object[] pos = (Object[])it1.next();
+				jo.put("positionId", pos[0]);
+				jo.put("branchId", pos[1]);
+				jo.put("branchMemberId", pos[2]);
+			}
+			
+			/*
+			 * 取角色
+			 */
+			List list2 = memberDao.getMemberRole(memberId);
+			Iterator it2 = list2.iterator();
+			if (it2.hasNext()) {
+				Object rol = (Object)it2.next();
+				jo.put("roleId", rol);
+			}
+			
+			/*
+			 * 取所在部门
+			 */
+			ArrayList<JSONObject> js = new ArrayList<JSONObject>();
+			List list3 = branchDao.getBranchMember(memberId);
+			Iterator it3 = list3.iterator();
+			while (it3.hasNext()) {
+				JSONObject j = new JSONObject();
+				Object[] bm = (Object[])it3.next();
+				j.put("branchmemberid", bm[0]);
+				j.put("branchname", bm[1] != null ? bm[1] : "（未分组人员）");
+				j.put("positionname", bm[2] == null ? "(未知职务)" : bm[2]);
+				j.put("ismaster", bm[3]);
+				js.add(j);
+			}
+			jo.put("branchmember", js);
+			return jo.toString();
+		} else {
+			JSONObject j = new JSONObject();
+			j.put("code", 0);
+			j.put("text", Tips.FAIL.getText());
+			return j.toString();
+		}
+		
+	}
 
 }

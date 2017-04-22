@@ -119,5 +119,6 @@ public interface BranchService {
 	public TMember getMemberByMobile(String mobile, String telPhone);
 	
 	public TMember getMemberByEmail(String parameter);
+	public String getSuperMember(int organId);
 	
 }

@@ -158,7 +158,7 @@ public class AppSecretAction extends BaseAction {
 	 */
 	public String getRealToken() throws ServletException {
 		String result = appSecretService.getRealToken(secret, authToken, companyId);
-		returnToClient(result.toString());
+		returnToClient(result);
 		return "text";
 	}
 	
@@ -170,7 +170,7 @@ public class AppSecretAction extends BaseAction {
 	public String getAuthResource() throws ServletException {
 		System.out.println("getAuthResource() visitToken: " + visitToken);
 		String result = appSecretService.getAuthResource(visitToken);
-		returnToClient(result.toString());
+		returnToClient(result);
 		return "text";
 	}
 	

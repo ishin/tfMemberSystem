@@ -600,7 +600,7 @@ public class MemberServiceImpl implements MemberService {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		
-		return null;
+		return jo.toString();
 	}
 	
 	@Override
@@ -627,7 +627,7 @@ public class MemberServiceImpl implements MemberService {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		
-		return null;
+		return jo.toString();
 	}
 	
 

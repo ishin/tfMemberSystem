@@ -209,6 +209,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 			WebContext ctx = WebContextFactory.get();
 			HttpSession session = ctx.getSession(false);
 			session.setAttribute(key, o);
+			String time = PropertiesUtils
+			.getStringByKey("session.inactiveInterval");
+			session.setMaxInactiveInterval(StringUtils.getInstance().isBlank(
+					time) ? 86400 : Integer.parseInt(time));
 		} else {
 			request.getSession().setAttribute(key, o);
 		}
