@@ -13,11 +13,11 @@ $(document).ready(function(){
 	$('#idlogout').click(function() {
 
 		sendAjax('system!logOut','',function(){
-			if (window.Electron) {
-				var curWindow = window.Electron.remote.getCurrentWindow().reload();
-			}else{
+			//if (window.Electron) {
+			//	var curWindow = window.Electron.remote.getCurrentWindow().reload();
+			//}else{
 				window.location.href = '../../system!login'
-			}
+			//}
 		})
 	})
 	

@@ -64,13 +64,13 @@ $(document).ready(function() {
 		var text = $(this).parents('.dialogApp').find('.diaTitle').text();
 		var apptime = new Date().getTime();
 		if(text=='新增应用'){
-			var data = {appname:name,appId:appid,secert:appsecret,callbackurl:backurl,isopen:isOpen}
+			var data = {appname:name,callbackurl:backurl,isopen:isOpen}
 			callajax('appinfoconfig!updateAppInfo', data, function (cb){
 				afterAddPriv(cb,name);
 			});
 		}else if(text=='编辑应用'){
 			var id = $(this).parents('.dialogApp').attr('bindid');
-			var data = {id:id,appname:name,appId:appid,secert:appsecret,callbackurl:backurl,isopen:isOpen}
+			var data = {id:id,appname:name,callbackurl:backurl,isopen:isOpen}
 			callajax('appinfoconfig!EditApp', data, afterEditPriv);
 		}
 		$('.dialogMask').hide();

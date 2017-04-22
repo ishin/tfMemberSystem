@@ -11,7 +11,7 @@
 			<%--<button id="editmember" style='width:100px'>新增/修改人员</button>--%>
 		<%--</div>--%>
 	<%--</div>--%>
-	<div style="width:100%;padding-left:30px;">
+	<div style="width:100%;margin-left:30px;">
 		<table class="t210">
 			<thead>
 				<tr>
