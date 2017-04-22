@@ -148,14 +148,16 @@ input:focus {
 .sidebar11 {
 	float: left;
 	width: 250px;
+	padding-top: 8px;
 /*	padding-top: 3%;
 	height: 830px;
-*/	border-right:1px solid #cbcbcb;	
+*/	border-right:1px solid #cbcbcb;
 }
 .menu {
-	padding: 15px 0;
-	margin-top: 15px;
+	margin-top: 16px;
 	cursor: pointer;
+	height: 50px;
+	line-height: 50px;
 }
 .menuicon {
 	margin: 0 8% 0 12%;
@@ -339,7 +341,10 @@ form#memberform {
 	width: 800px;
 }
 form#branchform {
-	 width: 500px;
+	/* width: 500px; */
+	overflow: scroll;
+	overflow: auto;
+	/* overflow-x: auto; */
  }
 .info {
 	width: 100%;
@@ -348,17 +353,21 @@ form#branchform {
 	height: 100%;
 	/* min-width: 700px; */
 	background: #fff;
-	overflow: scroll;
+	/*overflow: scroll;*/
 }
 .infotitle {
 	height: 50px;
 	width: 100%;
 	border-bottom: 1px solid #f0f0f0;
+	min-width: 800px;
 }
 .title {
 	float: left;
-	padding: 15px 0 0 30px;
+	/* padding: 15px 0 0 30px; */
 	font-size: 16px;
+	line-height: 50px;
+	text-indent: 42px;
+	color: #333333;
 }
 .dtitle {
 	font-size: 16px;
@@ -495,7 +504,8 @@ th {
 	height: 50px;
 }
 .t210 tr {
-	height: 40px;
+	height: 50px;
+	line-height: 50px;
 }
 .t112 th, .t112 td {
 	padding: 0 0 0 20px;
@@ -528,10 +538,10 @@ th {
 .sidebar12 {
 	float: left;
 	width: 100%;
-	/* padding-top: 15px; */
+	padding-top: 8px;
 	/* height: 1520px; */
 	box-shadow: 0px 0px 10px #cbcbcb;
-	height: calc(100% - 50px);
+	height: calc(100% - 50px) !important;
 }
 #grouplist tr:hover{
 	background-color: #ebf0f5;
@@ -627,14 +637,21 @@ th {
 	margin: 10px 0 0 0;
 	width: 100%;
 	height: calc(100% - 50px);
+	min-width: 900px;
+	position: relative;
+	/* padding-right: 62px; */
+	/* padding-left: 62px; */
+	/*overflow: scroll;*/
 }
 .col21 .col1 {
 	width: 25%;
 	float: left;
 	height: calc(100% - 10px);
+	/*min-width: 230px;*/
+	padding-left: 62px;
 }
 .col21 .col2 {
-	width: 75%;
+	width: calc(75% - 62px);
 	float: left;
 	/* overflow: scroll; */
 	height: 100%;
@@ -654,7 +671,7 @@ div#list211,div#list213,div#list214,div#list211edit,div#list213edit,div#list214e
 	width: calc(100% - 10px) !important;
 }
 .line21 {
-	margin: 20px 0 20px 40px;
+	margin: 20px 0 20px 0px;
 }
 .line21 ul {
 	/*background-color: #ccc;*/
@@ -676,12 +693,15 @@ div#list211,div#list213,div#list214,div#list211edit,div#list213edit,div#list214e
 }
 .col21 .infotitle {
 	height: 50px;
-	width: 71%;
-	margin-left: 30px;
+	width: calc(75% - 100px);
+	/* margin-left: 30px; */
 	border-bottom: 1px solid #f0f0f0;
-	FLOAT: right;
-	overflow: hidden;
-	overflow-x: auto;
+	FLOAT: left;
+	 overflow: hidden;
+	 overflow-x: auto;
+	min-width: auto;
+	margin-right: 62px;
+	margin-left: 30px;
 }
 .col21 .infotab {
 	float: left;
@@ -692,9 +712,14 @@ div#list211,div#list213,div#list214,div#list211edit,div#list213edit,div#list214e
 }
 .infotabr {
 	float: right;
-	padding: 15px 30px 14px 8px;
-	position: relative;
-	z-index: 1;
+	/* padding: 15px 0px 14px 8px; */
+	position: absolute;
+	/* z-index: 28; */
+	/* background: palevioletred; */
+	position: absolute;
+	/* right: -140px; */
+	/* top: -52px; */
+	right: 72px;
 }
 .line211 {
 	padding: 20px 0 15px 50px;
@@ -1138,4 +1163,14 @@ span.plusAuth,span.plusApp {
 }
 select.category{
 	width: 318px;;
+}
+
+#list210 tr td img{
+	display: none;
+}
+#list210 tr:hover td img{
+	display: block;
+}
+#list210 tr:hover{
+	background: #f0fdff;
 }
