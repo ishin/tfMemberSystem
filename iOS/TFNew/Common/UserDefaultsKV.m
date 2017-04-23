@@ -161,6 +161,76 @@
     return [[NSUserDefaults standardUserDefaults] objectForKey:DATE_EMAIL];
     
 }
+
+
++(void)cachedOrgCode:(NSString *)orgCode
+{
+    [[NSUserDefaults standardUserDefaults] setObject:orgCode forKey:@"TF_ORG_CODE"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+}
++(NSString *)getCachedOrgCode
+{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:@"TF_ORG_CODE"];
+    
+}
+
++(void) saveLoginSession{
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSArray *allCookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+    for(NSHTTPCookie *cookie in allCookies)
+    {
+        if([cookie.name isEqualToString:@"JSESSIONID"])
+        {
+            NSMutableDictionary *cookieDict = [NSMutableDictionary dictionaryWithDictionary:[defaults dictionaryForKey:@"TF_Cookie"]];
+            
+            [cookieDict setObject:cookie.properties forKey:@"cookieDict"];
+            [defaults setObject:cookieDict forKey:@"TF_Cookie"];
+            [defaults synchronize];
+            break;
+        }
+    }
+}
+
++ (NSHTTPCookie*)getCookie{
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *cookieDict = [NSMutableDictionary dictionaryWithDictionary:[defaults dictionaryForKey:@"TF_Cookie"]];
+    
+    NSMutableDictionary *cookieProperties = [cookieDict valueForKey:@"cookieDict"];
+    if(cookieProperties != nil)
+    {
+        NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
+        
+        return cookie;
+    }
+ 
+    return nil;
+}
+
++(void) updateSession{
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *cookieDict = [NSMutableDictionary dictionaryWithDictionary:[defaults dictionaryForKey:@"TF_Cookie"]];
+    
+    NSMutableDictionary *cookieProperties = [cookieDict valueForKey:@"cookieDict"];
+    if(cookieProperties != nil)
+    {
+        NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
+        
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+    }
+
+}
+
++(void) removeLoginSession{
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:@"TF_Cookie"];
+    [defaults synchronize];
+}
+
 + (CGSize) testLabelTextSize:(NSString*)txt frame:(CGRect)frame font:(UIFont*)font{
     
     UILabel *tL = [[UILabel alloc] initWithFrame:frame];

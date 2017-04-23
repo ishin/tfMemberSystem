@@ -127,6 +127,15 @@
 		[dic removeObjectForKey:@"baseUrl"];
 	}
 	
+    if([self._method isEqualToString:API_LOGIN])
+    {
+        _httpAdmin._grapCookie = YES;
+    }
+    else
+    {
+        _httpAdmin._grapCookie = NO;
+    }
+    
     
     if([_httpMethod isEqualToString:@"POST"])
         [_httpAdmin postUrlRequest:url param:dic];

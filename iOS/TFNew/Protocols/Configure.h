@@ -25,12 +25,14 @@
 
 
 //
-#define WEB_API_URL             @"http://120.26.42.225:8080/sealtalk/"//@"http://35.164.107.27:8080/im"
+#define WEB_API_URL                 @"http://120.26.42.225:8080/im/"
+                                    //@"http://120.26.42.225:8080/sealtalk/"
 
 
 #define API_LOGIN               @"/system!afterLogin"
 #define API_GET_CODE            @"/system!requestText"
 #define API_RESET_PASSWORD      @"/system!newPassword"
+#define API_CHECK_SESSION       @"/system!attemptSession"
 
 #define API_SEARCH_FANS         @"/member!searchUser"
 #define API_USER_PROFILE        @"/member!getOneOfMember"

@@ -24,6 +24,8 @@
     int keyboard_space;
     
     UIButton *btnSignin;
+    
+    WebClient *_loginClient;
 }
 @end
 
@@ -77,20 +79,60 @@
     
     UIImageView *loginPanIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"login_input_pan.png"]];
     [_maskView addSubview:loginPanIcon];
+    CGRect rc = loginPanIcon.frame;
+    rc.size.height = rc.size.height*1.5;
+    loginPanIcon.frame = rc;
+    
+    UIImage *img = [[UIImage imageNamed:@"login_input_pan.png"]
+                    stretchableImageWithLeftCapWidth:50
+                    topCapHeight:50];
+    loginPanIcon.image = img;
+    
     loginPanIcon.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*0.45);
     
     
-    int h2 = CGRectGetHeight(loginPanIcon.frame)/2;
+    int h3 = CGRectGetHeight(loginPanIcon.frame)/3;
     
     float left = CGRectGetMinX(loginPanIcon.frame)+36;
-    
-    UIImageView *icon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_mobile.png"]];
-    [_maskView addSubview:icon];
-    icon.center = CGPointMake(left, CGRectGetMinY(loginPanIcon.frame)+h2/2);
-    
-    
-    
     float realW = SCREEN_WIDTH - 2*left-10;
+    
+    
+    UIImageView *icon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"LOGIN_SN-of-company.png"]];
+    [_maskView addSubview:icon];
+    icon.center = CGPointMake(left, CGRectGetMinY(loginPanIcon.frame)+h3/2);
+    
+    
+    _orgCode = [[UITextField alloc] initWithFrame:CGRectMake(CGRectGetMaxX(icon.frame)+10,
+                                                             CGRectGetMinY(icon.frame)-6,
+                                                             realW,
+                                                             31)];
+    _orgCode.backgroundColor = [UIColor clearColor];
+    _orgCode.clearButtonMode = UITextFieldViewModeNever;
+    [_maskView addSubview:_orgCode];
+    _orgCode.font = [UIFont systemFontOfSize:14];
+    _orgCode.delegate = self;
+    _orgCode.returnKeyType = UIReturnKeyDone;
+    _orgCode.textColor = [UIColor blackColor];
+    
+    _orgCode.attributedPlaceholder = [[NSAttributedString alloc]
+                                      initWithString:@"企业码"
+                                      attributes:@{NSForegroundColorAttributeName: COLOR_TEXT_C}];
+    
+    int top = CGRectGetMaxY(_orgCode.frame);
+    
+    UIButton *btnClear = [UIButton buttonWithType:UIButtonTypeCustom];
+    btnClear.frame = CGRectMake(CGRectGetMaxX(_orgCode.frame)-30, CGRectGetMinY(_orgCode.frame)-10, 50, 50);
+    [btnClear setImage:[UIImage imageNamed:@"tf_field_clear.png"] forState:UIControlStateNormal];
+    [_maskView addSubview:btnClear];
+    [btnClear addTarget:self action:@selector(clearOrgCodeEnter:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    icon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_mobile.png"]];
+    [_maskView addSubview:icon];
+    icon.center = CGPointMake(left, CGRectGetMinY(loginPanIcon.frame)+h3+h3/2);
+    
+    
+    
     
     _loginName = [[UITextField alloc] initWithFrame:CGRectMake(CGRectGetMaxX(icon.frame)+10,
                                                                CGRectGetMinY(icon.frame)-8,
@@ -108,9 +150,9 @@
                                         initWithString:@"用户名称"
                                         attributes:@{NSForegroundColorAttributeName: COLOR_TEXT_C}];
     
-    int top = CGRectGetMaxY(_loginName.frame);
+    top = CGRectGetMaxY(_loginName.frame);
     
-    UIButton *btnClear = [UIButton buttonWithType:UIButtonTypeCustom];
+    btnClear = [UIButton buttonWithType:UIButtonTypeCustom];
     btnClear.frame = CGRectMake(CGRectGetMaxX(_loginName.frame)-30, CGRectGetMinY(_loginName.frame)-10, 50, 50);
     [btnClear setImage:[UIImage imageNamed:@"tf_field_clear.png"] forState:UIControlStateNormal];
     [_maskView addSubview:btnClear];
@@ -120,7 +162,7 @@
     
     icon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_mima.png"]];
     [_maskView addSubview:icon];
-    icon.center = CGPointMake(left, CGRectGetMinY(loginPanIcon.frame)+h2+h2/2-5);
+    icon.center = CGPointMake(left, CGRectGetMinY(loginPanIcon.frame)+h3*2+h3/2-5);
     
     
     _loginPwd = [[UITextField alloc] initWithFrame:CGRectMake(CGRectGetMaxX(icon.frame)+10,
@@ -163,7 +205,7 @@
     btnPwd.frame = getPwd.frame;
     [_maskView addSubview:btnPwd];
     [btnPwd addTarget:self action:@selector(getPassword:) forControlEvents:UIControlEventTouchUpInside];
-
+    
     icon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_getpwd.png"]];
     [_maskView addSubview:icon];
     icon.center = CGPointMake(left, getPwd.center.y);
@@ -184,8 +226,11 @@
     
     keyboard_space = 256 - (SCREEN_HEIGHT - CGRectGetMaxY(btnSignin.frame));
     
+    NSString *cachedCode = [UserDefaultsKV getCachedOrgCode];
+    _orgCode.text = cachedCode;
     
-
+    _orgCode.text = @"C887TFXX";
+    
     User *u = [UserDefaultsKV getUser];
     if(u)
     {
@@ -196,8 +241,9 @@
     {
         _loginName.text = [UserDefaultsKV getAccount];
         
-       
+        
     }
+    
     
     [self testLoginBtnEnabled];
     
@@ -219,8 +265,18 @@
     {
         [_loginPwd resignFirstResponder];
     }
+    if([_orgCode isFirstResponder])
+    {
+        [_orgCode resignFirstResponder];
+    }
     
 }
+
+- (void) clearOrgCodeEnter:(id)sender{
+    
+    _orgCode.text = @"";
+}
+
 
 - (void) clearLoginNameEnter:(id)sender{
     
@@ -243,7 +299,7 @@
 - (void) textFieldChanged:(NSNotification *)notify{
     
     [self testLoginBtnEnabled];
-
+    
 }
 
 
@@ -283,8 +339,13 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
-
-    if(textField == _loginName)
+    
+    if(textField == _orgCode)
+    {
+        [_loginName becomeFirstResponder];
+    }
+    
+    else if(textField == _loginName)
     {
         [_loginPwd becomeFirstResponder];
     }
@@ -301,11 +362,22 @@
 
 
 - (void) loginAction:(UIButton*)btn{
-
+    
     
     if([_loginName.text length] < 3)
     {
-        UIAlertView *alert  = [[UIAlertView alloc] initWithTitle:@""
+        UIAlertView *alert  = [[UIAlertView alloc] initWithTitle:nil
+                                                         message:@"请输入企业码！"
+                                                        delegate:nil
+                                               cancelButtonTitle:@"确定"
+                                               otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+    
+    if([_loginName.text length] < 3)
+    {
+        UIAlertView *alert  = [[UIAlertView alloc] initWithTitle:nil
                                                          message:@"请输入正确的用户名！"
                                                         delegate:nil
                                                cancelButtonTitle:@"确定"
@@ -318,7 +390,7 @@
     
     if([pwd length] == 0)
     {
-        UIAlertView *alert  = [[UIAlertView alloc] initWithTitle:@""
+        UIAlertView *alert  = [[UIAlertView alloc] initWithTitle:nil
                                                          message:@"请输入密码！"
                                                         delegate:nil
                                                cancelButtonTitle:@"确定"
@@ -329,7 +401,7 @@
     
     if([pwd length] < 3 || [pwd length] > 32)
     {
-        UIAlertView *alert  = [[UIAlertView alloc] initWithTitle:@""
+        UIAlertView *alert  = [[UIAlertView alloc] initWithTitle:nil
                                                          message:@"请输入长度为6-32位的密码！"
                                                         delegate:nil
                                                cancelButtonTitle:@"确定"
@@ -338,24 +410,28 @@
         return;
     }
     
+    if([_orgCode isFirstResponder])
+        [_orgCode resignFirstResponder];
+    
     if([_loginName isFirstResponder])
         [_loginName resignFirstResponder];
     if([_loginPwd isFirstResponder])
         [_loginPwd resignFirstResponder];
     
     
-    if(_http == nil)
-        _http = [[WebClient alloc] initWithDelegate:self];
+    if(_loginClient == nil)
+        _loginClient = [[WebClient alloc] initWithDelegate:self];
     
-    _http._httpMethod = @"GET";
-    _http._method = API_LOGIN;
+    _loginClient._httpMethod = @"GET";
+    _loginClient._method = API_LOGIN;
     
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setObject:_loginName.text forKey:@"account"];
     [params setObject:md5Encode(_loginPwd.text) forKey:@"userpwd"];
     [params setObject:@"CN" forKey:@"countrycode"];
-    _http._requestParam = params;
+    [params setObject:_orgCode.text forKey:@"organCode"];
+    _loginClient._requestParam = params;
     
     
     IMP_BLOCK_SELF(SigninViewController);
@@ -365,7 +441,7 @@
     [[WaitDialog sharedDialog] setTitle:@"登录中..."];
     [[WaitDialog sharedDialog] startLoading];
     
-    [_http requestWithSusessBlock:^(id lParam, id rParam) {
+    [_loginClient requestWithSusessBlock:^(id lParam, id rParam) {
         
         NSString *response = lParam;
         //NSLog(@"%@", response);
@@ -385,11 +461,14 @@
                     NSDictionary *value = [v objectForKey:@"text"];
                     
                     User *u = [[User alloc] initWithDicionary:value];
-
+                    
                     [UserDefaultsKV saveUser:u];
                     [UserDefaultsKV saveMyAccount:_loginName.text];
                     [UserDefaultsKV saveUserPwd:_loginPwd.text];
+                    [UserDefaultsKV cachedOrgCode:_orgCode.text];
                     
+                    
+                    [UserDefaultsKV saveLoginSession];
                     
                     //[block_self checkInfoFinishStatus:v user:u];
                     [block_self didLogin];
@@ -401,7 +480,7 @@
                     {
                         NSDictionary *value = [v objectForKey:@"text"];
                         
-                       msg = [value objectForKey:@"context"];
+                        msg = [value objectForKey:@"context"];
                         
                     }
                     
@@ -412,7 +491,7 @@
                                                           cancelButtonTitle:@"OK"
                                                           otherButtonTitles:nil, nil];
                     [alert show];
-                
+                    
                 }
                 return;
             }
@@ -476,13 +555,13 @@
 
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

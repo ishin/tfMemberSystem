@@ -29,7 +29,7 @@
     
     
     self.view.backgroundColor = RGB(0xf8, 0xf8, 0xf8);
-   
+    
     
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-64)
                                               style:UITableViewStylePlain];
@@ -64,7 +64,7 @@
         
         if(indexPath.row == 0)
         {
-    
+            
             UILabel* nameL = [[UILabel alloc] initWithFrame:CGRectMake(10,
                                                                        0,
                                                                        SCREEN_WIDTH-60, 60)];
@@ -82,7 +82,7 @@
         }
         else if(indexPath.row == 1)
         {
-         
+            
             UILabel* nameL = [[UILabel alloc] initWithFrame:CGRectMake(10,
                                                                        0,
                                                                        SCREEN_WIDTH-60, 60)];
@@ -100,7 +100,7 @@
         }
         else if(indexPath.row == 2)
         {
-
+            
             UILabel* nameL = [[UILabel alloc] initWithFrame:CGRectMake(10,
                                                                        0,
                                                                        SCREEN_WIDTH-60, 60)];
@@ -124,7 +124,7 @@
         
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
-    
+        
         if(indexPath.row == 0)
         {
             
@@ -147,7 +147,7 @@
         {
             
             cell.accessoryType = UITableViewCellAccessoryNone;
-       
+            
             
             
             UILabel* nameL = [[UILabel alloc] initWithFrame:CGRectMake(10,
@@ -268,7 +268,7 @@
             edt._u = [UserDefaultsKV getUser];
             [self.navigationController pushViewController:edt animated:YES];
         }
-
+        
     }
     else if(indexPath.section == 1)
     {
@@ -292,7 +292,7 @@
             [self exitApp:nil];
         }
     }
-   
+    
     
 }
 
@@ -371,7 +371,7 @@
         
         [self clearCacheFiles];
     }
-   
+    
 }
 
 //清理缓存
@@ -398,28 +398,28 @@
     [self clearCacheSuccess];
     
     /*
-    return;
-    
-    dispatch_async(
-                   dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                       
-                       //这里清除 Library/Caches 里的所有文件，融云的缓存文件及图片存放在 Library/Caches/RongCloud 下
-                       NSString *cachPath = [NSSearchPathForDirectoriesInDomains(
-                                                                                 NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-                       NSArray *files =
-                       [[NSFileManager defaultManager] subpathsAtPath:cachPath];
-                       
-                       for (NSString *p in files) {
-                           NSError *error;
-                           NSString *path = [cachPath stringByAppendingPathComponent:p];
-                           if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
-                               [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
-                           }
-                       }
-                       [self performSelectorOnMainThread:@selector(clearCacheSuccess)
-                                              withObject:nil
-                                           waitUntilDone:YES];
-                   });
+     return;
+     
+     dispatch_async(
+     dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+     
+     //这里清除 Library/Caches 里的所有文件，融云的缓存文件及图片存放在 Library/Caches/RongCloud 下
+     NSString *cachPath = [NSSearchPathForDirectoriesInDomains(
+     NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+     NSArray *files =
+     [[NSFileManager defaultManager] subpathsAtPath:cachPath];
+     
+     for (NSString *p in files) {
+     NSError *error;
+     NSString *path = [cachPath stringByAppendingPathComponent:p];
+     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+     [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
+     }
+     }
+     [self performSelectorOnMainThread:@selector(clearCacheSuccess)
+     withObject:nil
+     waitUntilDone:YES];
+     });
      */
 }
 
@@ -441,13 +441,13 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

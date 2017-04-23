@@ -18,7 +18,6 @@
 		043AD7F31E78FA00004A2529 /* RCConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 043AD7E61E78FA00004A2529 /* RCConfig.plist */; };
 		043AD7F41E78FA00004A2529 /* RongIMLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043AD7E71E78FA00004A2529 /* RongIMLib.framework */; };
 		043AD7F51E78FA00004A2529 /* RongCloudPTT.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 043AD7E81E78FA00004A2529 /* RongCloudPTT.bundle */; };
-		043AD7F61E78FA00004A2529 /* RongPTTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043AD7E91E78FA00004A2529 /* RongPTTKit.framework */; };
 		043AD7F71E78FA00004A2529 /* RongPTTLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043AD7EA1E78FA00004A2529 /* RongPTTLib.framework */; };
 		04413C101C16FC4900D09218 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04413C0F1C16FC4900D09218 /* ChatViewController.m */; };
 		0443C62F1C58A2EC00EE25A1 /* DataSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 0443C62E1C58A2EC00EE25A1 /* DataSync.m */; };
@@ -391,6 +390,10 @@
 		04F20D0E1D0AB6DA0074B780 /* cell_mask@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04F20D0D1D0AB6DA0074B780 /* cell_mask@2x.png */; };
 		04F82E911C2D2AF70098E54F /* libMobClickLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04F82E8E1C2D2AF70098E54F /* libMobClickLibrary.a */; };
 		341193B01E7F76BE0001332B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 341193AF1E7F76BE0001332B /* MapKit.framework */; };
+		341951661EACE9CE004D6BFF /* RCPTT.m in Sources */ = {isa = PBXBuildFile; fileRef = 341951651EACE9CE004D6BFF /* RCPTT.m */; };
+		341951691EACEDFF004D6BFF /* LOGIN_SN-of-company@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 341951671EACEDFF004D6BFF /* LOGIN_SN-of-company@2x.png */; };
+		3419516A1EACEDFF004D6BFF /* LOGIN_SN-of-company@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 341951681EACEDFF004D6BFF /* LOGIN_SN-of-company@3x.png */; };
+		3419516D1EACEE1C004D6BFF /* TFMsgSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 3419516C1EACEE1C004D6BFF /* TFMsgSound.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -406,7 +409,6 @@
 		043AD7E61E78FA00004A2529 /* RCConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = RCConfig.plist; sourceTree = "<group>"; };
 		043AD7E71E78FA00004A2529 /* RongIMLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RongIMLib.framework; sourceTree = "<group>"; };
 		043AD7E81E78FA00004A2529 /* RongCloudPTT.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = RongCloudPTT.bundle; sourceTree = "<group>"; };
-		043AD7E91E78FA00004A2529 /* RongPTTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RongPTTKit.framework; sourceTree = "<group>"; };
 		043AD7EA1E78FA00004A2529 /* RongPTTLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RongPTTLib.framework; sourceTree = "<group>"; };
 		04413C0E1C16FC4900D09218 /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
 		04413C0F1C16FC4900D09218 /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
@@ -966,6 +968,12 @@
 		04F82E901C2D2AF70098E54F /* MobClickSocialAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobClickSocialAnalytics.h; sourceTree = "<group>"; };
 		341193AD1E7F76BA0001332B /* Hint.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Hint.entitlements; sourceTree = "<group>"; };
 		341193AF1E7F76BE0001332B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		341951641EACE9CE004D6BFF /* RCPTT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPTT.h; sourceTree = "<group>"; };
+		341951651EACE9CE004D6BFF /* RCPTT.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPTT.m; sourceTree = "<group>"; };
+		341951671EACEDFF004D6BFF /* LOGIN_SN-of-company@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LOGIN_SN-of-company@2x.png"; sourceTree = "<group>"; };
+		341951681EACEDFF004D6BFF /* LOGIN_SN-of-company@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LOGIN_SN-of-company@3x.png"; sourceTree = "<group>"; };
+		3419516B1EACEE1C004D6BFF /* TFMsgSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TFMsgSound.h; sourceTree = "<group>"; };
+		3419516C1EACEE1C004D6BFF /* TFMsgSound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TFMsgSound.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -976,7 +984,6 @@
 				043AD7EC1E78FA00004A2529 /* AgoraRtcEngineKit.framework in Frameworks */,
 				04B48C461E63F871006F7C99 /* VideoToolbox.framework in Frameworks */,
 				04B48C441E63F85A006F7C99 /* CoreMotion.framework in Frameworks */,
-				043AD7F61E78FA00004A2529 /* RongPTTKit.framework in Frameworks */,
 				04D9A8AB1D539CDE006CDE86 /* CoreText.framework in Frameworks */,
 				04DA4B9C1D36389200BCA6F9 /* libxml2.tbd in Frameworks */,
 				04E107D01B9EE1CF00A5280B /* libiconv.dylib in Frameworks */,
@@ -1018,7 +1025,6 @@
 				043AD7DD1E78FA00004A2529 /* RongCloud_iOS_IMKit_2.8.6_PrivateCloud_V1.4 */,
 				043AD7E41E78FA00004A2529 /* RongCloud_iOS_IMLib_2.8.6_PrivateCloud_V1.4 */,
 				043AD7E81E78FA00004A2529 /* RongCloudPTT.bundle */,
-				043AD7E91E78FA00004A2529 /* RongPTTKit.framework */,
 				043AD7EA1E78FA00004A2529 /* RongPTTLib.framework */,
 			);
 			path = RongCloud_private;
@@ -1065,6 +1071,8 @@
 		04B4888A1E63F1EC006F7C99 /* HintResources */ = {
 			isa = PBXGroup;
 			children = (
+				341951671EACEDFF004D6BFF /* LOGIN_SN-of-company@2x.png */,
+				341951681EACEDFF004D6BFF /* LOGIN_SN-of-company@3x.png */,
 				04E37B271E7518AD00595D3F /* file_selected_n@2x.png */,
 				04E37B281E7518AD00595D3F /* file_selected_n@3x.png */,
 				04E37B291E7518AD00595D3F /* file_selected@2x.png */,
@@ -1315,6 +1323,8 @@
 		04B48B971E63F28B006F7C99 /* RealTalk */ = {
 			isa = PBXGroup;
 			children = (
+				341951641EACE9CE004D6BFF /* RCPTT.h */,
+				341951651EACE9CE004D6BFF /* RCPTT.m */,
 			);
 			path = RealTalk;
 			sourceTree = "<group>";
@@ -1755,6 +1765,8 @@
 		04D5E9A51B2FD6B6004D8CD9 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				3419516B1EACEE1C004D6BFF /* TFMsgSound.h */,
+				3419516C1EACEE1C004D6BFF /* TFMsgSound.m */,
 				04D7CDDD1D36723C00AC2099 /* PhotoGetter.h */,
 				04D7CDDE1D36723C00AC2099 /* PhotoGetter.m */,
 				04A0EA471CC77CD000A5BC7D /* SHA1.h */,
@@ -2105,6 +2117,7 @@
 				04B48A861E63F1EE006F7C99 /* icon_org@2x.png in Resources */,
 				04B48ADD1E63F1EE006F7C99 /* read_more_icon@2x.png in Resources */,
 				04D5EC321B2FD6B8004D8CD9 /* MJRefresh.bundle in Resources */,
+				3419516A1EACEDFF004D6BFF /* LOGIN_SN-of-company@3x.png in Resources */,
 				04B48B3B1E63F1EE006F7C99 /* u_touxiang2x.png in Resources */,
 				04B48A7E1E63F1EE006F7C99 /* icon_mobile2@3x.png in Resources */,
 				04B48A061E63F1EE006F7C99 /* btn_submit@2x.png in Resources */,
@@ -2154,6 +2167,7 @@
 				04B48A0B1E63F1EE006F7C99 /* call_chat_switch@3x.png in Resources */,
 				04B48A8D1E63F1EE006F7C99 /* icon_setting@3x.png in Resources */,
 				04B48B081E63F1EE006F7C99 /* contacts_up@3x.png in Resources */,
+				341951691EACEDFF004D6BFF /* LOGIN_SN-of-company@2x.png in Resources */,
 				04B48A221E63F1EE006F7C99 /* default_avatar@2x.png in Resources */,
 				04B48B1C1E63F1EE006F7C99 /* talk_voice_normal@2x.png in Resources */,
 				04B48B351E63F1EE006F7C99 /* trangle_icon@2x.png in Resources */,
@@ -2310,6 +2324,7 @@
 				04B48B6B1E63F23F006F7C99 /* ChooseContactViewController.m in Sources */,
 				04C04FBE1C1FEE810019263B /* UserInfoViewController.m in Sources */,
 				046260701B9D76CF0090FF44 /* UserCell.m in Sources */,
+				3419516D1EACEE1C004D6BFF /* TFMsgSound.m in Sources */,
 				04D5EC451B2FD6B8004D8CD9 /* SDWebImageManager.m in Sources */,
 				04D5EC3A1B2FD6B8004D8CD9 /* SBJson4StreamTokeniser.m in Sources */,
 				04B48BF91E63F28C006F7C99 /* DefaultPortraitView.m in Sources */,
@@ -2326,6 +2341,7 @@
 				04DC65041B8189BE00F46825 /* SigninViewController.m in Sources */,
 				04D5EC351B2FD6B8004D8CD9 /* MJRefreshHeaderView.m in Sources */,
 				04B48C051E63F28C006F7C99 /* UITextFiled+Shake.m in Sources */,
+				341951661EACE9CE004D6BFF /* RCPTT.m in Sources */,
 				04D5EC641B2FD6B8004D8CD9 /* RRScrollView.m in Sources */,
 				04DBF2821C5F0C91004DCDAD /* ProgressView.m in Sources */,
 				04D5EC411B2FD6B8004D8CD9 /* SDWebImageCompat.m in Sources */,

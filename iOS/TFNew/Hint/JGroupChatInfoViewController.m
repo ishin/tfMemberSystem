@@ -647,7 +647,8 @@
         if(buttonIndex == 0)
         {
             NSString *targetId = _group.groupId;
-            [[RCIMClient sharedRCIMClient] clearMessages:ConversationType_PRIVATE targetId:targetId];
+            [[RCIMClient sharedRCIMClient] clearMessages:ConversationType_GROUP
+                                                targetId:targetId];
             
         }
     }

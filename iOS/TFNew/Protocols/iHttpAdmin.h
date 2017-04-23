@@ -13,12 +13,20 @@
 
 @interface iHttpAdmin : NSObject {
     
+	//id						delegate_;
+    //data
+
+	NSURLConnection			*connection;
+	NSMutableData			*characterBuffer;
+	//NSAutoreleasePool		*uploadPool;
 	
 	NSInteger				errorCode_;
 	
 	BOOL					done;
 	
 	NSString				*error_;
+		
+	//ArchiveParser			*archiveParser_;
 		
 	int						curPage;
 	int						curCommentPage_;
@@ -34,8 +42,11 @@
 @property (nonatomic, weak) id  delegate_;
 @property (nonatomic, strong) NSURLConnection *connection;
 @property (nonatomic, strong) NSMutableData *characterBuffer;
+//@property (nonatomic, assign) NSAutoreleasePool *uploadPool;
 @property NSInteger errorCode_;
 @property (nonatomic, strong) NSString *error_;
+
+@property (nonatomic, assign) BOOL _grapCookie;
 
 + (NSString*) escapeURIComponent:(NSString*)src;
 

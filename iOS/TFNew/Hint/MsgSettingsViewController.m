@@ -73,15 +73,39 @@
             nameL.text = @"新消息通知";
             
             UILabel* valueL = [[UILabel alloc] initWithFrame:CGRectMake(10,
-                                                                       0,
-                                                                       SCREEN_WIDTH-25, 60)];
+                                                                        0,
+                                                                        SCREEN_WIDTH-25, 60)];
             valueL.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:valueL];
             valueL.font = [UIFont systemFontOfSize:16];
             valueL.textAlignment = NSTextAlignmentRight;
             valueL.textColor  = COLOR_TEXT_B;
             valueL.text = @"已开启";
-
+            
+            BOOL bRes = YES;
+            if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0)
+            {
+                bRes = [[UIApplication sharedApplication] isRegisteredForRemoteNotifications];
+            }
+            else
+            {
+                UIRemoteNotificationType type = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
+                
+                if(type == UIRemoteNotificationTypeNone)
+                {
+                    bRes = NO;
+                }
+            }
+            
+            if(bRes)
+            {
+                valueL.text = @"已开启";
+            }
+            else
+            {
+                valueL.text = @"已关闭";
+            }
+            
             
             UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 59.5, SCREEN_WIDTH, 0.5)];
             line.backgroundColor = LINE_COLOR;
@@ -119,11 +143,7 @@
             [switchCtrl addTarget:self action:@selector(changeVoiceSwitch:) forControlEvents:UIControlEventValueChanged];
             [cell.contentView addSubview:switchCtrl];
             
-            //            int i_online_status = [[[NSUserDefaults standardUserDefaults] objectForKey:@"i_online_status"] intValue];
-            //            if(i_online_status > 0)
-            //            {
-            //                [switchCtrl setOn:YES];
-            //            }
+            
             
         }
         else if(indexPath.row == 1)
@@ -316,7 +336,7 @@
         
         if(indexPath.row == 0)
         {
-           
+            
         }
         
     }
