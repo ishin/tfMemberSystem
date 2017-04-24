@@ -1,0 +1,410 @@
+@charset "utf-8";
+
+#TestInput
+{
+    position: absolute;
+    visibility: hidden;
+    height: auto;
+    width: auto;
+    white-space: nowrap; /* for at message */
+}
+
+[contenteditable=true]:empty:before{
+    content: attr(placeholder);
+    display: block; /* For Firefox */
+    color: #a9a9a9;
+    position:absolute;
+    top:6px;
+}
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html{
+
+    height: 100%;
+}
+body{
+    height: 100%;
+    /*min-width: 1000px;*/
+    /*background: url("img/webBg_new.jpg") no-repeat;*/
+    /*background-size: 100%;*/
+}
+.header, .box_hd, .LeftNav, .drag_area{
+    -webkit-app-region: drag;    /* for pc client */
+}
+button, input, select, textarea, #message-content, #Messages /* for pc client */
+{
+    -webkit-app-region: no-drag;
+}
+/** 清除内外边距 **/
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, /* structural elements 结构元素 */
+dl, dt, dd, ul, ol, li, /* list elements 列表元素 */
+pre, /* text formatting elements 文本格式元素 */
+form, fieldset, legend, button, input, textarea, /* form elements 表单元素 */
+th, td /* table elements 表格元素 */
+{
+    margin: 0;
+    padding: 0;
+}
+
+font {
+    font-size: 12px;
+}
+
+/** 设置默认字体 **/
+body,
+button, input, select, textarea,
+h1, h2, h3, h4, h5, h6 {
+    font-size: 14px;
+    font-family: 'PingFangSC-Medium', 'Microsoft YaHei', sans-serif;
+}
+
+address, cite, dfn, em, var {
+    font-style: normal;
+}
+
+/* 将斜体扶正 */
+code, kbd, pre, samp {
+    font-family: courier new, courier, monospace;
+}
+
+/* 统一等宽字体 */
+small {
+    font-size: 12px;
+}
+
+/* 小于 12px 的中文很难阅读，让 small 正常化 */
+
+/** 重置列表元素 **/
+ul, ol {
+    list-style: none;
+}
+
+/** 重置文本格式元素 **/
+a {
+    text-decoration: none;
+    outline: none;
+    cursor: pointer;
+}
+
+/* outline去除FF浏览器里的链接虚线 */
+a:hover, a:link, a:visited, a:focus, a:active {
+    text-decoration: none;
+}
+
+sup {
+    vertical-align: text-top;
+}
+
+/* 重置，减少对行高的影响 */
+sub {
+    vertical-align: text-bottom;
+}
+
+/** 重置表单元素 **/
+legend {
+    color: #000;
+}
+
+/* for ie6 */
+fieldset, img {
+    border: 0;
+}
+
+/* img 搭车：让链接里的 img 无边框 */
+button, input, select, textarea {
+    font-size: 100%;
+}
+
+/* 使得表单元素在 ie 下能继承字体大小 */
+/* 注：optgroup 无法扶正 */
+
+/** 重置表格元素 **/
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+input::-ms-clear{display:none;}
+
+/*样式重置*/
+.authorize-header{
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(to right, #30c0da 0%,#40d4a3 100%);
+    box-shadow: 0px 0px 10px #cbcbcb;
+    color: #ffffff;
+    font-size: 20px;
+}
+.authorize-header p{
+    width: 630px;
+    margin: 0px auto;
+    height: 100%;
+    /*background: palegoldenrod;*/
+    line-height: 50px;
+}
+.authorize-body {
+    height: calc(100% - 50px);
+    width: 100%;
+    overflow: hidden;
+}
+.authorize-body-content {
+    height: 450px;
+    width: 600px;
+    /*background: palegoldenrod;*/
+    margin: 0px auto;
+    margin-top: 50px;
+    overflow: hidden;
+}
+.authorize-login,.authorize-login-des{
+    float: left;
+}
+.authorize-login{
+    /*background-color: paleturquoise;*/
+    width: 270px;
+    height: 100%;
+    border-right: 1px solid #e6e6e6;
+}
+.authorize-login-des{
+    /*background: plum;*/
+    width: 325px;
+    height: 100%;
+}
+.authorize-login h1{
+    font-size: 24px;
+    text-indent: 50px;
+    margin-top: 40px;
+    margin-bottom: 30px;
+    font-weight: 200;
+}
+.authorize-login h2,.authorize-login-des h2{
+    font-size: 20px;
+    font-weight: 100;
+    text-align: center;
+}
+.authorize-login h2 span,.authorize-login-des h2 span{
+    color: #30c0da;
+}
+.login-tips{
+    color: #fc7a8c;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+.login-tips i{
+    height: 15px;
+    width: 15px;
+    background: #fc7a8c;
+    border-radius: 15px;
+    color: #ffffff;
+    display: inline-block;
+    font-style: normal;
+    text-align: center;
+    line-height: 15px;
+}
+input.authorize-user {
+    height: 38px;
+    text-indent: 42px;
+    font-size: 14px;
+    width: 240px;
+    border-radius: 4px;
+    border: 1px solid #dcdcdc;
+    margin-bottom: 12px;
+}
+input.authorize-psd {
+    height: 38px;
+    text-indent: 42px;
+    font-size: 14px;
+    width: 240px;
+    border-radius: 4px;
+    border: 1px solid #dcdcdc;
+    margin-bottom: 30px;
+}
+input.authorize-signin {
+    width: 240px;
+    height: 38px;
+    background: #30c0da !important;
+    color: white !important;
+    border: none;
+    border-radius: 2px;
+}
+.login-ap{
+    display: block;
+    margin-top: 31px;
+    margin: 0px auto;
+    width: 113px;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 20px;
+    color: #30c0da;
+}
+.authorize-login-des h2{
+    margin-top: 100px;
+    text-align: right;
+}
+div#checkAll {
+    /* height: 50px; */
+    /* line-height: 50px; */
+    margin-top: 30px;
+}
+.checkMem {
+    margin-top: 30px;
+}
+.checkDescribe {
+    margin-top: 50px;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+.chatLeftIcon{
+    background: url("img/chatLeftIcon.png") no-repeat;
+}
+
+
+.dialogCheckBox{
+    display: inline-block;
+    width: 20px;
+    height: 22px;
+    background-position: -532px -263px;
+    vertical-align: middle;
+    margin-left: 70px;
+}
+.CheckBoxChecked{
+    display: inline-block;
+    width: 20px;
+    height: 22px;
+    background-position: -532px -319px;
+    vertical-align: middle;
+}
+.authorize-submit{
+    position: relative;
+}
+
+label.label-user {
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    left: 10px;
+    background: url("img/IMsign.png") no-repeat -462px -52px;
+    top: 10px;
+}
+label.label-psd {
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    left: 10px;
+    background: url("img/IMsign.png") no-repeat -470px -127px;
+    top: 63px;
+}
+.chatHide{
+    display: none;.
+}
+@media screen and (max-width:750px){
+    body,html{
+        width: 100%;
+    }
+    .phoneHide{
+        display: none;
+    }
+    .chatHide{
+        display: block;
+    }
+    .authorize-header p {
+        width: auto;
+        text-indent: 15px;
+        font-size: 16px;
+    }
+    .authorize-body-content{
+        width: auto;
+        margin: 0px;
+        height: auto;
+    }
+    .authorize-login, .authorize-login-des{
+        float: none;
+    }
+    .authorize-login{
+        border: none;
+    }
+    .authorize-login h1{
+        margin-top: 25px;
+        text-indent: 0px;
+        font-size: 16px;
+        margin-bottom: 30px;
+    }
+    .authorize-login{
+        width: 343px;
+        margin: 0px auto;
+        position: relative;
+    }
+    input.authorize-user{
+        width: 100%;
+        border-bottom: none;
+        margin-bottom: 0px;
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+    input.authorize-psd{
+        width: 100%;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+    }
+    label.label-psd{
+        top: 48px;
+    }
+    input.authorize-signin{
+        width: 100%;
+    }
+    .authorize-login-des {
+        width: 343px;
+        height: 100%;
+        margin: 0px auto;
+    }
+    .authorize-login-des h2{
+        margin-top: 50px;
+        text-align: left;
+        font-size: 16px;
+        margin-bottom: 30px;
+    }
+    .checkMem{
+        height: 40px;
+        line-height: 40px;
+        background: #fff;
+        border: 1px solid #cccccc;
+        margin-top:0px;
+        color: #666666;
+    }
+    .checkMem:nth-of-type(1){
+        border-bottom: 0px;
+    }
+    .dialogCheckBox{
+        margin-left: 12px
+    }
+    .checkMem1{
+        border-bottom: none;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+    }
+    .checkMem2{
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+    .login-tips {
+        color: #fc7a8c;
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 30px;
+        position: absolute;
+        top: 39px;
+        z-index: 1000;
+        background: rgba(59, 59, 59, 0.95);
+        width: 101%;
+        height: 50px;
+        line-height: 50px;
+        color: white;
+        border-radius: 6px;
+    }
+    .login-tips i{
+        display: none;
+    }
+}

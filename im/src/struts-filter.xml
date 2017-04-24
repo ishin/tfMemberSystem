@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<constant name="struts.custom.i18n.resources" value="global" />
+
+	<!-- <package name="all" extends="struts-default"> -->
+	<package name="all" extends="ssl-default">
+
+		<interceptors>
+			<!-- 先定义拦截器 -->
+			<interceptor name="myInterceptor" class="com.sealtalk.action.filter.ValideFilter">
+				<!-- 指定系统初始化给拦截器的参数  -->
+				<!-- <param name="init">init</param> -->
+			</interceptor>
+
+			<!--加到自己设置的拦截器栈里边去 -->
+
+			<interceptor-stack name="imStack">
+				<interceptor-ref name="myInterceptor">
+					<param name="excludeMethods">
+						getBase,
+						login,loginForWeb,afterLogin,logOut,newPassword,testText,requestText,fogetPassword,attemptSession
+					</param>
+					<!-- <param name="includeMethods"></param> -->
+				</interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+		<!--
+			改变系统默认的拦截器,改成自己的默认拦截器,并且一个系统只能有一个默认的拦截器,这样这个拦截器栈会默认应用到所有的Action上去
+		-->
+
+
+		<default-interceptor-ref name="imStack"></default-interceptor-ref>
+
+		<!--
+			<default-interceptor-ref name="defaultStack"></default-interceptor-ref>
+		-->
+
+	</package>
+
+</struts>
+
+

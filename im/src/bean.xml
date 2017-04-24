@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+
+	<!-- dao -->
+	<bean id="friendDao" class="com.sealtalk.dao.friend.impl.FriendDaoImpl" autowire="byName" />
+	<bean id="dontDistrubDao" class="com.sealtalk.dao.fun.impl.DontDistrubDaoImpl" autowire="byName" />
+	<bean id="functionDao" class="com.sealtalk.dao.fun.impl.FunctionDaoImpl" autowire="byName" />
+	<bean id="msgTopDao" class="com.sealtalk.dao.fun.impl.MsgTopDaoImpl" autowire="byName" />
+	<bean id="groupDao" class="com.sealtalk.dao.group.impl.GroupDaoImpl" autowire="byName" />
+	<bean id="groupMemberDao" class="com.sealtalk.dao.group.impl.GroupMemberDaoImpl" autowire="byName" />
+	<bean id="mapDao" class="com.sealtalk.dao.map.impl.MapDaoImpl" autowire="byName" />
+	<bean id="groupMemeberDao" class="com.sealtalk.dao.group.impl.GroupMemberDaoImpl" autowire="byName" />
+	<bean id="grpDao" class="com.sealtalk.dao.adm.impl.GrpDaoImpl" autowire="byName" />
+	
+	<!-- service -->
+	<bean id="branchService" class="com.sealtalk.service.adm.impl.BranchServiceImpl" autowire="byName" >
+	</bean>
+	<bean id="privService" class="com.sealtalk.service.adm.impl.PrivServiceImpl" autowire="byName" >
+	</bean>
+	<bean id="friendService" class="com.sealtalk.service.friend.impl.FriendServiceImpl" autowire="byName" >
+		<property name="friendDao" ref="friendDao" />
+	</bean>
+	<bean id="functionService" class="com.sealtalk.service.fun.impl.FunctionServiceImpl" autowire="byName" >
+		<property name="dontDistrubDao" ref="dontDistrubDao" />
+		<property name="functionDao" ref="functionDao" />
+		<property name="msgTopDao" ref="msgTopDao" />
+	</bean>
+	<bean id="groupService" class="com.sealtalk.service.group.impl.GroupServiceImpl" autowire="byName" >
+		<property name="groupDao" ref="groupDao" />
+		<property name="groupMemberDao" ref="groupMemberDao" />
+		<property name="dontDistrubDao" ref="dontDistrubDao" />
+	</bean>
+	<bean id="mapService" class="com.sealtalk.service.map.impl.MapServiceImpl" autowire="byName" >
+		<property name="mapDao" ref="mapDao" />
+		<property name="groupMemeberDao" ref="groupMemeberDao" />
+		<property name="friendDao" ref="friendDao" />
+	</bean>
+	<bean id="memberService" class="com.sealtalk.service.member.impl.MemberServiceImpl" autowire="byName" >
+	</bean>
+	<bean id="msgService" class="com.sealtalk.service.msg.impl.MessageServiceImpl" autowire="byName" >
+	</bean>
+	<bean id="uploadService" class="com.sealtalk.service.upload.impl.UploadServiceImpl" autowire="byName" >
+	</bean>
+	<bean id="grpService" class="com.sealtalk.service.adm.impl.GrpServiceImpl" autowire="byName" >
+		<property name="grpDao" ref="grpDao" />
+	</bean>
+	
+	<!-- action -->
+	<bean id="branchAction" class="com.sealtalk.action.adm.BranchAction" scope="prototype" autowire="byName" >
+		<property name="branchService" ref="branchService" />
+	</bean>
+	<bean id="friendAction" class="com.sealtalk.action.friend.FriendAction" scope="prototype" autowire="byName" >
+		<property name="friendService" ref="friendService" />
+	</bean>
+	<bean id="functionAction" class="com.sealtalk.action.fun.FunctionAction" scope="prototype" autowire="byName" >
+		<property name="functionService" ref="functionService" />
+	</bean>
+	<bean id="groupAction" class="com.sealtalk.action.group.GroupAction" scope="prototype" autowire="byName" >
+		<property name="groupService" ref="groupService" />
+	</bean>
+	<bean id="mapAction" class="com.sealtalk.action.map.MapAction" scope="prototype" autowire="byName" >
+		<property name="mapService" ref="mapService" />
+	</bean>
+	<bean id="memberAction" class="com.sealtalk.action.member.MemberAction" scope="prototype" autowire="byName" >
+		<property name="memberService" ref="memberService" />
+	</bean>
+	<bean id="msgAction" class="com.sealtalk.action.msg.MessageAction" scope="prototype" autowire="byName" >
+		<property name="msgService" ref="msgService" />
+	</bean>
+	<bean id="systemAction" class="com.sealtalk.action.sys.SystemAction" scope="prototype" autowire="byName" >
+		<property name="memberService" ref="memberService" />	
+		<property name="branchService" ref="branchService" />	
+		<property name="privService" ref="privService" />	
+	</bean>
+	<bean id="uploadAction" class="com.sealtalk.action.upload.UploadAction" scope="prototype" autowire="byName" >
+		<property name="uploadService" ref="uploadService" />
+	</bean>
+	<bean id="grpAction" class="com.sealtalk.action.adm.GrpAction" scope="prototype" autowire="byName" >
+		<property name="grpService" ref="grpService" />
+	</bean>
+</beans>

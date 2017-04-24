@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<!-- ssl-default -->
+	<!-- struts-default -->
+
+	<package name="com.sealtalk.action.upload" extends="all">
+		<!-- 七牛相关 -->
+		<action name="qiniu" class="com.sealtalk.action.upload.QiNiuAboutAction">
+			<result name="loginPage">/page/web/signin.jsp</result>
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<!-- 上传管理 -->
+		<action name="upload" class="com.sealtalk.action.upload.UploadAction">
+			<interceptor-ref name="fileUpload">
+				<!--拦截器strut2自带的, 指定上传文件的格式,如果不符合规定，将会自动拦截下来 -->
+				<param name="allowedTypes">image/bmp,image/png,image/gif,image/jpeg,image/jpg</param>
+				<param name="maximumSize">20000000000</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack" />
+			<result name="loginPage">/page/web/signin.jsp</result>
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+
+	<package name="com.sealtalk.action.sys" extends="all">
+		<!-- 系统管理 -->
+		<action name="system" class="com.sealtalk.action.sys.SystemAction">
+			<result name="loginPage">/page/web/signin.jsp</result>
+			<result name="loginSuccess">/page/web/main.jsp</result>
+			<result name="forgetpwd" type="dispatcher">/page/web/forgotpassword.jsp
+			</result>
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+
+	<package name="com.sealtalk.action.msg" extends="all">
+		<!-- 消息管理 -->
+		<action name="msg" class="com.sealtalk.action.msg.MessageAction">
+			<result name="loginPage">/page/web/signin.jsp</result>
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<!-- 用户服务 -->
+		<action name="userservice" class="com.sealtalk.action.msg.UserServiceAction">
+			<result name="loginPage">/page/web/signin.jsp</result>
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+
+	<package name="com.sealtalk.action.member" extends="all">
+		<!-- 成员管理 -->
+		<action name="member" class="com.sealtalk.action.member.MemberAction">
+			<result name="loginPage">/page/web/signin.jsp</result>
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+
+	<package name="com.sealtalk.action.map" extends="all">
+		<!-- 地图-->
+		<action name="map" class="com.sealtalk.action.map.MapAction">
+			<result name="loginPage">/page/web/signin.jsp</result>
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+
+	<package name="com.sealtalk.action.fun" extends="all">
+		<!-- 辅助功能管理 -->
+		<action name="fun" class="com.sealtalk.action.fun.FunctionAction">
+			<result name="loginPage">/page/web/signin.jsp</result>
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+
+	<package name="com.sealtalk.action.friend" extends="all">
+		<!-- 联系人管理  -->
+		<action name="friend" class="com.sealtalk.action.friend.FriendAction">
+			<result name="loginPage">/page/web/signin.jsp</result>
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+
+	<constant name="struts.action.excludePattern" value="/admlogo, /admimp" />
+
+	<package name="com.sealtalk.action.adm" extends="all">
+		<!-- 组织机构 -->
+		<action name="branch" class="com.sealtalk.action.adm.BranchAction">
+			<result name="loginPage">/page/web/signin.jsp</result>
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<action name="adm" class="com.sealtalk.action.adm.AdmAction">
+			<result name="loginPage">/page/web/signin.jsp</result>
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<action name="grp" class="com.sealtalk.action.adm.GrpAction">
+			<result name="loginPage">/page/web/signin.jsp</result>
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+	<package name="com.sealtalk.action.group" extends="all">
+		<action name="group" class="com.sealtalk.action.group.GroupAction">
+			<result name="loginPage">/page/web/signin.jsp</result>
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+
+</struts>
+

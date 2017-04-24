@@ -1,0 +1,1399 @@
+.backstageMg{
+    width:340px;
+    padding-top:24px;
+}
+.backstageMg li{
+    margin-bottom:16px;
+    height:50px;
+}
+.backstageMg li:hover{
+    background: #f0fdff;
+}
+.backstageMg li.active{
+    background: #f0fdff;
+}
+.backstageMg li em{
+    float:left;
+    background: url('img/backstage.png')no-repeat;
+    width:26px;
+    height:26px;
+    margin:12px 18px 0 30px;
+}
+.backstageMg li .bMg-personalSet{
+    background-position: 0 0 ;
+}
+.backstageMg li .bMg-systemSet{
+    background-position: -47px 0 ;
+}
+.backstageMg li .bMg-changePw{
+    background-position: -91px 0 ;
+}
+.backstageMg li span{
+    font-size:14px;
+    color:rgb(51,51,51);
+    line-height:50px;
+    float:left;
+}
+.perSetBox-title{
+    line-height:60px;
+    border-bottom:1px solid #f0f0f0;
+    padding-left:42px;
+    font-size:16px;
+    color:rgb(51,51,51);
+}
+.perSetBox  .perSetBox-leftCont{
+     float:left;
+    height: 100%
+ }
+.perSetBox  .perSetBox-rightCont{
+    float:right;
+}
+.perSetBox-leftCont .perSetBox-contDetails{
+    padding: 34px 0 0 42px;
+    height: calc(100% - 80px);
+    overflow: auto;
+}
+.perSetBox-contDetails li{
+    line-height:34px;
+    font-size:13px;
+    margin-bottom:24px;
+    overflow: hidden;
+}
+.perSetBox-contDetails li span{
+    float:left;
+    width:100px;
+}
+.perSetBox-contDetails li p{
+   float:left;
+    line-height:34px;
+}
+.perSetBox-contDetails li .select{
+    -webkit-appearance:none;
+    appearance:none;
+    width:320px;
+    height:34px;
+    border:1px solid #e6e6e6;
+    padding-left:9px;
+    font-size:13px;
+    background: url('img/backstage.png')no-repeat 10px -49px;
+}
+.perSetBox-contDetails li input,.perSetBox-contDetails li select,.perSetBox-contDetails li textarea{
+    margin-left: -9px;
+}
+.perSetBox-contDetails li .perSetBox-editText{
+    width:320px;
+    height:32px;
+    border:1px solid #e6e6e6;
+    padding-left:9px;
+    font-size:13px;
+}
+.perSetBox-contDetails li .perSetBox-textarea{
+    width:400px;
+    height:192px;
+    border:1px solid #e6e6e6;
+    padding-left:9px;
+    resize:none;
+}
+.perSetBox-keep{
+    width:110px;
+    height:34px;
+    background: #30c0da;
+    font-size:13px;
+    color:#fff;
+    margin-left:142px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+.perSetBox-rightCont .perSetBox-head{
+    width:80px;
+    height:80px;
+    overflow: hidden;
+    border-radius:100%;
+    margin:60px 60px 16px 0;
+}
+.perSetBox-rightCont .perSetBox-modifyHead{
+    width:80px;
+    text-align: center;
+    font-size:14px;
+    margin-right:60px;
+    color:rgb(48,192,218);
+    cursor: pointer;
+}
+.systemSetVoice{
+    padding:100px 0 134px 0;
+    width:260px;
+    margin: 0 auto;
+}
+.systemSetVoice span{
+     float:left;
+    font-size:13px;
+    color:rgb(51,51,51);
+    line-height:32px;
+ }
+.systemSetVoice p{
+    margin-left:118px;
+    float:left;
+    height:32px;
+    width:64px;
+    background: url('img/backstage.png')no-repeat;
+    background-position: -75px -377px;
+    /*background: #40d4a3;
+    border-radius: 15px;*/
+    position: relative;
+}
+.infoLoading{
+    background: url('img/infoL.gif')no-repeat;
+    width:20px;
+    height:20px;
+    position: absolute;
+    left:-30px;
+    top:50%;
+    margin-top:-10px;
+    display: none;
+}
+.infoLoading.show{
+    display: block;
+}
+.systemSetVoice p.active{
+    background-position: 0 -377px;
+}
+.systemSetVoice p i{
+    float:left;
+    width:32px;
+    height:32px;
+    border-radius: 50%;
+    /*position: absolute;*/
+    /*width:28px;*/
+    /*height:28px;*/
+    /*background: #fff;*/
+    /*top:2px;*/
+    /*right:2px;*/
+    /*border-radius: 50%;*/
+}
+.groupInfo-memberAll{
+    /*max-height:495px;*/
+    overflow-y:auto;
+    height: calc(100% - 71px);
+}
+.systemSet-keep{
+    display: block;
+   /*margin-left:510px;*/
+    width:110px;
+    height:34px;
+    background: #30c0da;
+    color:#fff;
+    line-height: 34px;
+    text-align: center;
+    border-radius: 5px;
+    margin:0 auto;
+   /* margin-top:134px;*/
+}
+.changePassword{
+    padding-top:100px;
+}
+.changePassword>div{
+    width:420px;
+    margin:0 auto;
+}
+.changePassword span{
+    float:left;
+    /*padding-left:340px;*/
+    line-height: 34px;
+    font-size: 13px;
+    color:rgb(51,51,51);
+    width:100px;
+}
+.changePassword input{
+    float:left;
+    width:318px;
+    height:32px;
+    border:1px solid #e6e6e6;
+}
+.cp-oldPassword{
+
+}
+.cp-newPassword{
+    margin-bottom:4px;
+}
+.changePassword .cp-passwordSecurity{
+    margin-left:100px;
+    margin-bottom:16px;
+    float:left;
+}
+.oldPassworderror{
+    color:red;
+    font-size:12px;
+    /*margin-left:440px;*/
+    margin-bottom:20px;
+    height:20px;
+    line-height:20px;
+    float:left;
+    padding-left:100px;
+}
+.cp-passwordSecurity li{
+    float:left;
+    width:78px;
+    height:20px;
+    background: #e6e6e6;
+    margin-right:4px;
+}
+.cp-reNewPassword{
+    margin-bottom:60px;
+}
+.retMewPw{
+    float:left;
+    color:red;
+    font-size:12px;
+    padding-left:100px;
+    margin-bottom:40px;
+    height:20px;
+    line-height:20px;
+}
+.perSetBox-title span{
+    float:left;
+}
+.perSetBox-title .messageRecord{
+    float:right;
+    padding:14px 20px 0 0;
+}
+.messageRecord b{
+    display: inline-block;
+    background: url('img/backstage.png')no-repeat 0 -548px;
+    width:29px;
+    height:29px;
+}
+.messageRecord i{
+    background: url('img/backstage.png')no-repeat;
+    float:left;
+    width:20px;
+    height:29px;
+    cursor: pointer;
+}
+.messageRecord .mr-Location{
+   background-position: 0 -119px;
+}
+.messageRecord .mr-record{
+    margin:4px 0 0 30px;
+    width:30px;
+    height:20px;
+    background-position: 0 -156px;
+}
+.messageRecord .mr-record.active{
+    background-position: -50px -156px;
+}
+.mesContainer{
+    height:100%;
+}
+.mesContainer.mesContainer-translateL{
+    margin-right:341px;
+}
+.mr-Date{
+    padding:28px 0;
+    text-align: center;
+    font-size:12px;
+    line-height:12px;
+    color:rgb(204,204,204);
+}
+.mr-time{
+    text-align: center;
+    font-size:12px;
+    line-height:12px;
+    color:rgb(204,204,204);
+    padding-bottom:60px;
+}
+.group-addPerson{
+    text-align: center;
+    font-size:12px;
+    line-height:12px;
+    color:rgb(204,204,204);
+    padding-bottom:60px;
+}
+.group-addPerson i{
+    position: absolute;
+    left:-14px;
+    top:-1px;
+    width:14px;
+    height:14px;
+    background: url('img/backstage.png')no-repeat 0 -358px;
+}
+.group-addPerson span{
+    position: relative;
+    line-height:12px;
+    padding-left:8px;
+    font-size:12px;
+}
+.mr-chatContent li{
+    margin-bottom:18px;
+    position: relative;
+    }
+.mr-chatBox{
+    float:left;
+    background: #fff;
+    border:1px solid rgb(204,204,204);
+    padding:8px 10px;
+    position: relative;
+    border-radius: 5px;
+    margin:2px 36px 0 98px;
+    word-wrap: break-word;
+    word-break:break-all;
+    min-height: 26px;
+    max-width: 500px;
+}
+.mr-otherImg{
+    float:left;
+    background: #fff;
+    border:1px solid rgb(204,204,204);
+    padding:8px 10px;
+    position: relative;
+    border-radius: 5px;
+    margin:2px 36px 0 98px;
+    word-wrap: break-word;
+    word-break:break-all;
+    min-height: 26px;
+}
+/*.mr-chatContentL img{*/
+    /*position:absolute;*/
+    /*left:30px;*/
+    /*width:44px;*/
+    /*height:44px;*/
+    /*border-radius: 100%;*/
+/*}*/
+.mr-chatBox span{
+    font-size:14px;
+    line-height:24px;
+    color:rgb(51,51,51);
+}
+.mr-chatBox i{
+     position: absolute;
+    left:-7px;
+    top:16px;
+    background: url('img/backstage.png')no-repeat -149px -119px;
+    width:7px;
+    height:12px;
+}
+
+.mr-chatContentRFile .mr-ownChat{
+    border: 1px solid #b9c1ca;
+    border-radius: 5px;
+    /*overflow: hidden;*/
+    width: 268px;
+    padding: 8px;
+}
+.mr-ownImg{
+    word-wrap: break-word;
+    word-break:break-all;
+    float:right;
+    position: relative;
+    border:1px solid rgb(204,204,204);
+    padding:8px 10px;
+    margin-right:36px;
+    margin-left:36px;
+    border-radius: 5px;
+    min-height: 26px;
+}
+.downLoadFileInfo{
+    width:100%;
+    height:100%;
+    border: 1px solid #b9c1ca;
+    border-radius: 5px;
+    padding: 8px;
+    position: relative;
+}
+.file_typeHos img{
+    float: left;
+    width: 50px;
+    height: 50px;
+}
+.file_contentHos{
+    float: left;
+    margin-left: 20px;
+}
+.downLoadFileInfo .file_nameHos{
+    overflow: hidden;
+    /*line-height: 44px;*/
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 160px;
+}
+.mr-chatContentRFile img{
+    float: left;
+    width: 50px;
+    height: 50px;
+}
+.mr-chatContentRFile .file_content{
+    float: left;
+    margin-left: 20px;
+}
+/*.mr-chatContentRFile .mr-ownChat{*/
+    /*overflow: hidden;*/
+/*}*/
+.mr-chatContentRFile .file_name{
+    overflow: hidden;
+    /*line-height: 44px;*/
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 160px;
+}
+.mr-chatContentRFile .file_size{
+
+}
+.mr-chatContentRFile #up_process{
+    background: red;
+    height: 2px;
+    margin-top: 10px;
+    width: 150px;
+}
+.mr-chatContentRFile #up_precent{
+    height: 2px;
+    background: palegreen;
+}
+
+.mr-chatContentLFile .mr-ownChat{
+    border: 1px solid #b9c1ca;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 268px;
+    padding: 8px;
+    float: left;
+    margin: 2px 36px 0 98px;
+}
+.mr-chatContentLFile .headImg {
+    position: absolute;
+    left: 30px;
+    width: 44px;
+    height: 44px;
+    border-radius: 100%;
+}
+.mr-chatContentL .headImg {
+    position: absolute;
+    left: 30px;
+    width: 44px;
+    height: 44px;
+    border-radius: 100%;
+    float: left;
+}
+.mr-chatContentLFile .fileImg{
+    float: left;
+    width: 50px;
+    height: 50px;
+}
+.mr-chatContentLFile .mr-chatContentL img {
+    position: absolute;
+    left: 30px;
+    width: 44px;
+    height: 44px;
+    border-radius: 100%;
+}
+.mr-chatContentLFile .file_content{
+    float: left;
+    margin-left: 20px;
+}
+.mr-chatContentLFile .mr-chatBox{
+    border: 1px solid #b9c1ca;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 268px;
+    padding: 8px;
+}
+.mr-chatContentLFile .mr-chatBox span{
+    font-size: 14px;
+    line-height: 24px;
+    color: rgb(51,51,51);
+}
+.mr-chatContentLFile  .mr-chatBox i{
+    position: absolute;
+    left: -7px;
+    top: 16px;
+    background: url('img/backstage.png')no-repeat -149px -119px;
+    width: 7px;
+    height: 12px;
+}
+img.uploadImg {
+    float: right;
+    width: auto;
+    height: auto;
+    max-width: 500px;
+}
+img.uploadImgLeft {
+    float: left;
+    width: auto;
+    height: auto;
+    max-width: 500px;
+}
+span.sendStatus {
+    width:20px;
+    height:20px;
+    background: red;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 20px;
+    position: absolute;
+    left:-30px;
+    top:50%;
+    margin-top:-10px;
+    color:#fff;
+}
+.downLoadFile{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background:url('img/uploadbtn.png') no-repeat;
+    position: absolute;
+    right: 20px;
+    top: 17px;
+    border-radius: 30px;
+    background-size: 70px 70px;
+    background-position: -2px -38px;
+}
+span.msgUnread {
+    display: inline-block;
+    float: left;
+    height: 10px;
+    width: 10px;
+    /* margin-top: 20px; */
+    position: relative;
+    top: 20px;
+    border-radius: 10px;
+    background: red;
+    margin-right: 10px
+}
+p.voiceMsgContent {
+    height: 25px;
+    width: 30px;
+    background: url("img/backstage.png") no-repeat 0px -592px;
+    float: left;
+}
+p.voiceSecond {
+    height: 46px;
+    width: 40px;
+    /*background: paleturquoise;*/
+    float: left;
+    margin-left: -20px;
+    line-height: 46px;
+}
+p.voiceSecond2 {
+    height: 46px;
+    width: 40px;
+    /*background: paleturquoise;*/
+    float: left;
+    margin-left: 10px;
+    line-height: 46px;
+}
+.mr-chatContent li {
+    margin-bottom: 18px;
+    position: relative;
+    min-height: 46px;
+}
+.pageHostoryBox img{
+    max-width:260px;
+}
+button.downLoadFileMask {
+    display: inline-block;
+    width: 31px;
+    height: 30px;
+    background: transparent;
+    position: absolute;
+    right: 18px;
+    top: 17px;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+}
+button.downLoadFileMask:hover{
+    background-color: #3284ee;
+}
+button.downLoadFileMask:active{
+    outline: none;
+    border: none;
+}
+.downLoadFile:hover{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background:url('img/uploadbtn.png') no-repeat;
+    position: absolute;
+    right: 20px;
+    top: 17px;
+    border-radius: 30px;
+    background-size: 70px 70px;
+    background-position: -37px -38px;
+}
+p.converLimit {
+    display: inline-block;
+    float: right;
+    height: 20px;
+    width: 20px;
+    /* background: palegoldenrod; */
+    margin-top: 5px;
+    margin-right: -20px;
+    color: red;
+    font-weight: bolder;
+    font-size: 20px;
+}
+.mr-chatContentLFile .file_name{
+    overflow: hidden;
+    /* line-height: 44px; */
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 150px;
+}
+.mr-chatContentLFile .file_size{
+
+}
+.mr-chatContentLFile #down_process{
+    background: red;
+    height: 2px;
+    margin-top: 47px;
+    width: 150px;
+    margin-left: 70px;
+}
+.mr-chatContentLFile #down_precent{
+    height: 2px;
+    background: palegreen;
+}
+
+.mr-ownChat{
+    word-wrap: break-word;
+    word-break:break-all;
+   float:right;
+    position: relative;
+    border:1px solid rgb(204,204,204);
+    padding:8px 10px;
+    margin-right:36px;
+    margin-left:36px;
+    border-radius: 5px;
+    min-height: 26px;
+    max-width: 546px;
+}
+.mr-chatContentR .mr-ownChat{
+    background-color: #f5f5f5;
+
+}
+.mr-ownChat i{
+    position: absolute;
+    right:-7px;
+    top:16px;
+    background: url('img/backstage.png')no-repeat -177px -119px;
+    width:7px;
+    height:12px;
+}
+.mr-chatview{
+    overflow:auto;
+    height:calc(100% - 230px);
+    border-bottom:1px solid #f0f0f0;
+}
+.calendar-input{
+    cursor: pointer;
+    float:left;
+    width:98px;
+    height:30px;
+    border-radius: 5px 0 0 5px;
+}
+.mr-expresFile{
+    padding-left:28px;
+    padding-top:14px;
+}
+.mr-expresFile span{
+    float:left;
+   width:22px;
+    height:22px;
+    background: url('img/backstage.png')no-repeat -49px -123px;
+    margin-right:26px;
+    cursor: pointer;
+}
+.mr-expresFile i{
+    float:left;
+    background: url('img/backstage.png')no-repeat -100px -123px;
+    width:29px;
+    height:19px;
+}
+
+.mr-chateditBox{
+    position:relative;
+    height:170px;
+}
+.rongyun-emoji{
+    height: 200px;
+    width: 390px;
+    background: white;
+    position: absolute;
+    bottom: 170px;
+    border: 3px solid rgba(51, 51, 51, 0.29);
+    padding: 5px 10px;
+    overflow: hidden;
+    display: none;
+}
+.textarea{
+    /*background: palegoldenrod;*/
+    height: 60px;
+    margin-top: 2px;
+    overflow: auto;
+}
+.voiceDownLoad{
+    border: 1px solid #b9c1ca;
+    padding:8px 10px;
+    float:left;
+    border-radius: 5px;
+}
+.rongyun-emoji span{
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    /* background: palegreen; */
+    text-align: center;
+    /* vertical-align: middle; */
+    margin-top: 3px;
+}
+.rongyun-emoji>span:hover {
+    background: #dfdfdf;
+}
+.rongyun-emoji>span.active {
+    background: #dfdfdf;
+}
+.mr-chateditBox textarea{
+    margin-left:12px;
+    border:none;
+    resize: none;
+    font-size:14px;
+    line-height:40px;
+    color:rgb(51,51,51);
+    width:calc(100% - 28px);
+    height:84px;
+    outline: none;
+}
+.mr-chateditBox strong{
+    position: absolute;
+    right:16px;
+    bottom:16px;
+    text-align: center;
+    width:80px;
+    line-height: 32px;
+    color: #fff;
+    height:32px;
+    background: #30c0da;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+.personalData{
+    position:absolute;
+    right:0;
+    top:0;
+    width:341px;
+    height:100%;
+    border-left:1px solid #f0f0f0;
+}
+.personalData .infoDetails{
+    padding:0 5px;
+    height:60px;
+    border-bottom:1px solid #f0f0f0;
+}
+.infoDetails li{
+    float:left;
+    width:110px;
+    text-align: center;
+    line-height:58px;
+    height:58px;
+    font-size:16px;
+    color:rgb(128,128,128);
+    cursor: pointer;
+}
+.infoDetails li:hover{
+    border-bottom:2px solid #30c0da;
+    color:#30c0da;
+}
+.infoDetails li.active{
+    border-bottom:2px solid #30c0da;
+    color:#30c0da;
+}
+/*个人资料部分*/
+.infoDet-personal{
+    height:130px;
+    padding-top:46px;
+    border-bottom:1px solid #f0f0f0;
+}
+/*.infoDetails-data{*/
+    /*display:none;*/
+/*}*/
+.infoDetails-data.active{
+    display:block;
+}
+
+
+
+
+
+.infoDet-personal img{
+    float:left;
+    width:80px;
+    height:80px;
+    border-radius: 100%;
+    margin:0 18px 0 58px ;
+}
+.infoDet-personal .infoDet-text{
+    float:left;
+    padding-top:18px;
+}
+.infoDet-text .showPersonalInfo{
+    margin-left:0px !important;
+}
+.infoDet-text p{
+    font-size:16px;
+    color:rgb(51,51,51);
+    padding-bottom:8px;
+    height:16px;
+    line-height:16px;
+}
+.infoDet-text span{
+    float:left;
+    background: url('img/backstage.png')no-repeat;
+    width:20px;
+    height:20px;
+    margin-right:14px;
+}
+.infoDet-text .infoDet-postInfo{
+    background-position: 0 -201px;
+}
+.infoDet-text .infoDet-position{
+    background-position: -49px -201px;
+}
+.infoDet-text .infoDet-addPer{
+    background-position: -100px -201px;
+}
+.infoDetList{
+    padding-left:58px;
+}
+.infoDetList li{
+    padding-top:40px;
+    overflow: hidden;
+}
+.infoDetList li span{
+    float:left;
+    width:72px;
+    color:rgb(128,128,128);
+    font-size:14px;
+}
+.infoDetList li b{
+    float:left;
+    color:rgb(51,51,51);
+    font-size:14px;
+    width:180px;
+}
+.infoDet-recordAll{
+    border-bottom:1px solid #f0f0f0;
+    height:calc(100% - 122px);
+    overflow-y:auto;
+}
+.infoDet-search{
+    margin:22px 0 0 30px;
+    position: relative;
+}
+.infoDet-search.active{
+    margin-bottom:11px;
+}
+.infoDetailsBox{
+    height:calc(100% - 61px);
+}
+.group-data {
+    height: 100%;
+}
+.infoDet-search input{
+    width:239px;
+    height:34px;
+    border:1px solid #f0f0f0;
+    border-radius: 5px;
+    padding-left:39px;
+    outline: none;
+}
+.infoDet-search i{
+    position: absolute;
+    width:20px;
+    height:20px;
+    background: url('img/backstage.png')no-repeat -149px -201px;
+    left:10px;
+    top:8px;
+}
+.infoDet-chatRecord{
+    height:100%;
+}
+.infoDet-chatRecord.active{
+    height:100%;
+    display:block;
+}
+.infoDet-flieRecord{
+    height:100%;
+}
+.infoDet-flieRecord.active{
+    height:100%;
+    display:block;
+}
+.infoDet-chatRecord .infoDet-timeRecord{
+    display: block;
+    padding:17px 0 14px 30px;
+    font-size:12px;
+    color:rgb(128,128,128);
+    border-bottom:1px solid #f0f0f0;
+    margin-bottom:14px;
+}
+.infoDet-contentDet .infoDet-OthersSay{
+    padding-left:30px;
+}
+.infoDet-contentDet .infoDet-selfSay{
+    padding-left:30px;
+}
+.infoDet-contentDet .infoDet-OthersSay b{
+    display:block;
+    color:rgb(48,192,218);
+    font-size:12px;
+}
+.infoDet-contentDet .pageHostoryBox{
+    word-wrap: break-word;
+    word-break:break-all;
+    font-size:12px;
+    color:rgb(51,51,51);
+    line-height:16px;
+    padding:8px 30px 8px 24px;
+}
+.infoDet-selfSay b{
+    display:block;
+    color:rgb(64,212,163);
+    font-size:12px;
+}
+.infoDet-page{
+    height:48px;
+    padding-top:16px;
+}
+.infoDet-page section{
+    float:left;
+}
+.infoDet-page .example{
+    /*width:132px;*/
+    /*height:30px;*/
+    /*border:1px solid #f0f0f0;*/
+    /*margin-left:14px;*/
+    position: relative;
+    width:140px;
+    height:32px;
+    margin-left:14px;
+
+}
+/*.example .dateIcon{*/
+    /*position: absolute;*/
+    /*zoom:1;*/
+    /*right:-2px;*/
+    /*top:0;*/
+/*}*/
+.calendar-inputWrap{
+    overflow: hidden;
+}
+.calendar-icon{
+    cursor: pointer;
+    border-radius: 0 5px 5px 0;
+    float: left;
+    width:30px;
+    height:30px;
+    margin-left: -1px;
+    background:  #e6e6e6 url('img/backstage.png')no-repeat 0 -658px;
+}
+.infoDet-page .infoDet-pageQuery {
+    float:right;
+    padding-top:7px;
+    padding-right:12px;
+
+}
+.infoDet-pageQuery i{
+    cursor: pointer;
+    width:16px;
+    height:16px;
+    float:left;
+    background: url('img/backstage.png')no-repeat;
+    margin-left:20px;
+}
+.infoDet-pageQuery .infoDet-firstPage{
+    background-position: -27px -251px;
+}
+.infoDet-pageQuery .infoDet-firstPage.allowClick{
+    background-position: -27px -277px;
+}
+.infoDet-pageQuery .infoDet-prePage{
+    background-position: 0 -251px;
+}
+.infoDet-pageQuery .infoDet-prePage.allowClick{
+    background-position: 0 -277px;
+}
+.infoDet-pageQuery .infoDet-nextPage{
+    background-position: -96px -251px;
+}
+.infoDet-pageQuery .infoDet-nextPage.allowClick{
+    background-position: -96px -277px;
+}
+.infoDet-pageQuery .infoDet-lastPage{
+    background-position: -69px -251px;
+}
+.infoDet-pageQuery .infoDet-lastPage.allowClick{
+    background-position: -69px -277px;
+}
+/*聊天文件*/
+.chatFile li{
+    border-bottom:1px solid #f0f0f0;
+    height:58px;
+    background: #fff;
+    overflow: hidden;;
+}
+.chatFile li:hover{
+    background: #f0fdff;
+}
+.chatFile li i{
+    float:left;
+    background: url('img/backstage.png') no-repeat;
+    width:42px;
+    height:42px;
+    margin:8px 10px 0 14px;
+}
+.chatFile li p {
+    float:left;
+}
+.chatFile li p b{
+      display:block;
+      font-size:14px;
+      line-height:14px;
+      padding:18px 0 8px;
+      color:rgb(51,51,51);
+  }
+.chatFile li p b em{
+    float:left;
+    font-size: 14px;
+    line-height: 14px;
+    color: rgb(51, 51, 51);
+}
+.chatFile li p b .hosFileName {
+    float:left;
+    width:78px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.chatFile li p span{
+    display:block;
+    font-size:10px;
+    line-height:10px;
+    color:rgb(128,128,128);
+}
+.chatFile .chatFile-folder i{
+     background-position: -125px -304px;
+ }
+.chatFile .chatFile-zipFile i{
+    background-position: -181px -304px;
+}
+.chatFile .chatFile-img i{
+    background-position: 0 -304px;
+}
+.chatFile .chatFile-unknown i{
+    background-position: -69px -304px;
+}
+input.groupSetBox-name{
+    height: 20px;
+    vertical-align: middle;
+    line-height: 30px;
+    margin-top: -1px;
+}
+.chatFile li strong{
+    float:right;
+    padding-right:10px;
+    color:rgb(48,192,218);
+    line-height:58px;
+    font-size:14px;
+    position: relative;
+    cursor: pointer;
+}
+/*群组资料*/
+.groupInfo{
+    padding:26px 0 0 26px;
+    border-bottom:1px solid #f0f0f0;
+    height:194px;
+    overflow: hidden;
+}
+.groupInfo li{
+    overflow: hidden;
+}
+.groupInfo .groupInfo-name{
+    margin-bottom: 40px;
+}
+.groupInfo .groupInfo-setTime{
+
+}
+.groupInfo li span{
+    float:left;
+    font-size:14px;
+    line-height: 14px;
+    color:rgb(128,128,128);
+    width:102px;
+}
+.groupInfo li b{
+    float:left;
+    font-size:14px;
+    line-height: 14px;
+    color:rgb(51,51,51);
+    width:200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.groupInfo .groupInfo-Controller span{
+    line-height:44px;
+
+}
+.groupInfo .groupInfo-Controller{
+    margin:22px 0 18px;
+}
+.groupInfo li img{
+    float:left;
+    width:44px;
+    height:44px;
+    border-radius: 100%;
+}
+.groupInfo .groupInfo-disturb span{
+    line-height:24px;
+}
+.groupInfo .groupInfo-disturb .voiceSet{
+    cursor: pointer;
+    float:left;
+    background: url('img/voiceOpen.png') no-repeat;
+    /*background-position: -75px -413px;*/
+    width:67px;
+    height:38px;
+    background-size: 80%;
+}
+
+div#fileOperate {
+    /* height: 20px; */
+    /*width: 100%;*/
+    /* background: palegreen; */
+    margin-top: -10px;
+    margin-left: 70px;
+    display: inline-block;
+}
+
+div#personSettingId {
+    height: 100%;
+    /*background: palegoldenrod;*/
+}
+.perSetBox-content.clearfix {
+    overflow: auto;
+    min-height: 500px;
+    height: calc(100% - 62px);
+    /*background: paleturquoise;*/
+}
+
+#fileOperate span {
+    margin-right: 20px;
+    color: #30c0da;
+}
+
+.groupInfo .groupInfo-disturb p.active.active{
+    background: url('img/voiceClose.png') no-repeat;
+    background-size: 80%;
+
+}
+ul.chatFile {
+    margin-top: 10px;
+}
+.groupInfo .groupInfo-disturb p i{
+    float:left;
+    width:24px;
+    height:24px;
+    border-radius: 50%;
+}
+.groupInfo-memberList{
+    padding-left:26px;
+    height: calc(100% - 220px);
+}
+.groupInfo-number{
+    padding:24px 0;
+}
+.groupInfo-number span{
+    float:left;
+    line-height:20px;
+    font-size:14px;
+    color:rgb(128,128,128);
+}
+.groupInfo-number p{
+    float:right;
+    padding-right:20px;
+}
+.groupInfo-number p i{
+    cursor: pointer;
+    float:left;
+    width:20px;
+    height:20px;
+    background: url('img/backstage.png')no-repeat 0 -449px;
+    margin-left:14px;
+}
+.groupInfo-number p .groupInfo-noChat{
+  background-position: -27px -448px;
+}
+.groupInfo-memberAll li{
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.groupInfo-memberAll li img{
+    float:left;
+    width:44px;
+    height:44px;
+    border-radius: 100%;
+    margin-right:16px;
+}
+.groupInfo-memberAll li p{
+    float:left;
+    line-height:44px;
+    font-size:13px;
+    color:rgb(51,51,51);
+    max-width:180px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+#iqs_iframe{
+    width:100%;
+    height:100%;
+    position: absolute;
+    left:0;
+    top:0;
+}
+.groupDataBox{
+    width:256px;
+    height:154px;
+    background: #fff;
+    border:1px solid #e6e6e6;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    position: absolute;
+    left:300px;
+    top:100px;
+}
+.groupDataBox ul{
+    padding:6px 0 20px;
+}
+.groupDataBox ul li{
+    overflow: hidden;
+}
+.groupDataBox span{
+    float:left;
+    width:102px;
+    font-size:14px;
+    line-height: 14px;
+    color:rgb(128,128,128);
+    padding:15px 0 13px 22px;
+}
+.groupDataBox i .groupCreater {
+    float: left;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    /*background: paleturquoise;*/
+    padding:15px;
+}
+.groupDataBox b{
+    float:left;
+    font-size:14px;
+    line-height: 14px;
+    color:rgb(51,51,51);
+    padding:15px 0 13px 0;
+    width:100px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
+.groupDataBox i{
+    float:left;
+    width: auto;
+    height:44px;
+    border-radius:22px;
+    overflow: hidden;
+}
+.groupDataBox i img{
+    width: 44px;
+    height: 44px;
+    display: block;
+    float: left;
+    border-radius: 44px;
+}
+.groupMap{
+    height:100%;
+    width:100%;
+}
+.groupMap .groupMapBox{
+    width:100%;
+    height:calc(100% - 61px);
+    position: relative;
+}
+.groupMapMember{
+    position: absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:70px;
+    background: rgba(65,160,170,0.5);
+}
+.perPos{
+    width:54px;
+    height:66px;
+   background:url('img/backstage.png') no-repeat 0  -474px;
+    overflow: hidden;
+}
+.selfPrPos{
+    width:54px;
+    height:66px;
+    background:url('img/backstage.png') no-repeat -108px  -474px;
+    overflow: hidden;
+}
+.perPos.active{
+    background-position: -54px  -474px;
+}
+.selfPrPos img{
+    display: block;
+    width:44px;
+    height:44px;
+    border-radius: 100%;
+    margin-left:5px;
+    margin-top:5px;
+}
+.perPos img{
+    display: block;
+    width:44px;
+    height:44px;
+    border-radius: 100%;
+    margin-left:5px;
+    margin-top:5px;
+}
+#container{
+    width:100%;
+    height:100%;
+}
+.groupMapMember ul{
+    position: absolute;
+    display: inline-block;
+    height:70px;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+    overflow: hidden;
+
+}
+.groupMapMember ul li{
+    width:44px;
+    height:44px;
+    margin:13px 12px 0;
+    float:left;
+    border-radius: 50%;
+}
+.groupMapMember ul li img{
+    width:100%;
+    height:100%;
+    display: block;
+    border-radius: 100%;
+}

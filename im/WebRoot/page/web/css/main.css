@@ -1,0 +1,1456 @@
+@charset "utf-8";
+
+#TestInput
+{
+    position: absolute;
+    visibility: hidden;
+    height: auto;
+    width: auto;
+    white-space: nowrap; /* for at message */
+}
+
+[contenteditable=true]:empty:before{
+    content: attr(placeholder);
+    display: block; /* For Firefox */
+    color: #a9a9a9;
+    position:absolute;
+    top:6px;
+}
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html{
+
+    height: 100%;
+}
+body{
+    height: 100%;
+    min-width: 1000px;
+    background: #ebf0f5;
+    overflow: hidden;
+    /*background-size: 100%;*/
+}
+.header, .box_hd, .LeftNav, .drag_area{
+    -webkit-app-region: drag;    /* for pc client */
+}
+button, input, select, textarea, #message-content, #Messages /* for pc client */
+{
+    -webkit-app-region: no-drag;
+}
+/** 清除内外边距 **/
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, /* structural elements 结构元素 */
+dl, dt, dd, ul, ol, li, /* list elements 列表元素 */
+pre, /* text formatting elements 文本格式元素 */
+form, fieldset, legend, button, input, textarea, /* form elements 表单元素 */
+th, td /* table elements 表格元素 */
+{
+    margin: 0;
+    padding: 0;
+}
+
+font {
+    font-size: 12px;
+}
+
+/** 设置默认字体 **/
+body,
+button, input, select, textarea,
+h1, h2, h3, h4, h5, h6 {
+    font-size: 14px;
+    font-family:'Microsoft YaHei', sans-serif;
+    font-weight: normal;
+}
+
+address, cite, dfn, em, var ,i{
+    font-style: normal;
+}
+b,strong{
+    font-weight: normal;
+}
+/* 将斜体扶正 */
+code, kbd, pre, samp {
+    font-family: courier new, courier, monospace;
+}
+
+/* 统一等宽字体 */
+small {
+    font-size: 12px;
+}
+
+/* 小于 12px 的中文很难阅读，让 small 正常化 */
+
+/** 重置列表元素 **/
+ul, ol {
+    list-style: none;
+}
+
+/** 重置文本格式元素 **/
+a {
+    text-decoration: none;
+    outline: none;
+    cursor: pointer;
+}
+
+/* outline去除FF浏览器里的链接虚线 */
+a:hover, a:link, a:visited, a:focus, a:active {
+    text-decoration: none;
+}
+
+sup {
+    vertical-align: text-top;
+}
+
+/* 重置，减少对行高的影响 */
+sub {
+    vertical-align: text-bottom;
+}
+
+/** 重置表单元素 **/
+legend {
+    color: #000;
+}
+
+/* for ie6 */
+fieldset, img {
+    border: 0;
+}
+
+/* img 搭车：让链接里的 img 无边框 */
+button, input, select, textarea {
+    font-size: 100%;
+}
+
+/* 使得表单元素在 ie 下能继承字体大小 */
+/* 注：optgroup 无法扶正 */
+
+/** 重置表格元素 **/
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+}
+input::-ms-clear{display:none;}
+.clearfix:after{
+    display: block;
+    clear: both;
+    content: '';
+}
+.clearfix{
+    zoom:1;
+}
+/*
+	------------Reset   End--------------
+*/
+.chatHeader{
+    height: 50px;
+    width: 100%;
+    /*background: -moz-linear-gradient(top, #000000 0%, #ffffff 100%);*/
+    /*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#000000), color-stop(100%,#ffffff));*/
+    /*background: -webkit-linear-gradient(top, #000000 0%,#ffffff 100%);*/
+    /*background: -o-linear-gradient(top, #000000 0%,#ffffff 100%);*/
+    /*background: -ms-linear-gradient(top, #000000 0%,#ffffff 100%);*/
+    background: linear-gradient(to right, #30c0da 0%,#40d4a3 100%);
+    box-shadow: 0px 0px 10px #cbcbcb;
+}
+.chatHeaderMenu{
+    height: 100%;
+    display: inline-block;
+}
+.chatHeaderMenu li{
+    float: left;
+    width: 160px;
+    height: 100%;
+    line-height: 50px;
+    color: #ffffff;
+    text-align: center;
+    cursor: pointer;
+}
+.chatHeaderMenu li.active{
+    background: #1081bc;
+}
+/*.chatHeaderMenu li a{*/
+/*display: inline-block;*/
+/*height: 100%;*/
+/*width: 100%;*/
+
+/*}*/
+.chatBoxShadow{
+    box-shadow: 0px 0px 10px #e3e9f0;
+
+}
+
+.chatHeaderOper{
+    height: 100%;
+    float: right;
+    width: 300px;
+    /*background: papayawhip;*/
+    display: inline-block;
+    padding-right: 50px;
+}
+.chatHeaderOper li{
+    height: 100%;
+    width: 50px;
+    display: inline-block;
+    float: right;
+    margin-left: 20px;
+    cursor: pointer;
+}
+.chatHeaderOper li:nth-child(1){
+    background-position: -242px 0px;
+    /*background-color: palegreen;*/
+}
+.chatHeaderOper li:nth-child(2){
+    background-position: -115px 3px;
+    /*background-color: palevioletred;*/
+}
+.chatHeaderOper li:nth-child(3){
+    background-position: 9px 2px;
+    /*background-color: palegoldenrod;*/
+}
+
+.chatContent{
+    height: calc(100% - 50px);
+    /*width: 340px;*/
+    background: #ffffff;
+    position: relative;
+}
+
+.chatContent .chatMenu{
+    width: 336px;
+    padding: 0px 2px;
+    height: 70px;
+    border-bottom: 1px solid #e6e6e6;
+    /*background: paleturquoise;*/
+    overflow: hidden;
+}
+.chatContent .chatMenu li{
+    width: 112px;
+    height: 70px;
+    float: left;
+    cursor: pointer;
+}
+.chatLeftIcon{
+    background: url("img/chatLeftIcon.png") no-repeat;
+}
+.chatContent .chatMenu li:nth-child(1){
+    /*background-color: palevioletred;*/
+    background-position: 24px -47px;
+}
+.chatContent .chatMenu li:nth-child(2){
+    background-position: -162px -46px;
+}
+.chatContent .chatMenu li:nth-child(3){
+    background-position: -352px -45px;
+    /*background-color: palevioletred;*/
+
+}
+.chatContent .chatMenu li:nth-child(1).active{
+    background-position: 22px -113px;
+}
+.chatContent .chatMenu li:nth-child(2).active{
+    background-position: -164px -112px;
+}
+.chatContent .chatMenu li:nth-child(3).active{
+    background-position: -352px -110px;
+}
+.chatContent,.chatBoxOuter{
+    float: left;
+}
+.chatBoxOuter{
+    height: calc(100% - 50px);
+    width: calc(100% - 340px);
+    background: #ebf0f5;
+}
+
+
+.chatBox{
+    height: calc(100% - 60px);
+    width: calc(100% - 60px);
+    background: #ffffff;
+    /*box-shadow: 0px 0px 10px #e3e9f0;*/
+    margin: 0px auto;
+    margin-top: 30px;
+    max-width: 1100px;
+    min-width: 700px;
+    border-radius: 10px;
+    margin-left: 30px;
+
+}
+@media screen and (min-width: 1500px) {
+    .chatBox {
+        margin: 0px auto;
+        margin-top: 30px;
+    }
+}
+
+.chatHide{
+    display: none;
+}
+/*<!--消息-->*/
+.footerPlus{
+    height: 70px;
+    border-top: 1px solid #e6e6e6;
+    background-position: 143px -341px;
+    position: absolute;
+    /* border-top: 0px; */
+    width: 100%;
+    cursor: pointer;
+    bottom: 0px;
+    background-color: #ffffff;
+}
+.listCtrl{
+    cursor: pointer;
+}
+.newsTabContent{
+    height: calc(100% - 140px);
+}
+.groupChatList,.usualChatList,.newsChatList{
+    height: calc(100% - 30px);
+    width: 320px;
+    overflow-y: auto;
+    padding: 20px 10px 20px 10px;
+}
+.newsChatList{
+    padding-top: 10px;
+}
+.groupChatListUl{
+    padding: 13px 0px 35px 0px;
+}
+.groupChatListUl li{
+    height: 60px;
+    margin-right: 10px;
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+}
+.sendFeedBackL{
+    float: left;
+    display: inline-block;
+    height: 42px;
+    width: 42px;
+}
+.sendFeedBackR{
+    float: right;
+    display: inline-block;
+    height: 42px;
+    width: 42px;
+}
+.groupChatListUl li.active{
+    background: #f0fdff;
+}
+.groupChatListUl li.top{
+    background: #ebf0f5;
+}
+.groupChatListUl li div{
+    position: relative;
+    top: 10px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.groupChatListUl li .groupImg{
+    float: left;
+    margin-left: 10px;
+    height: 44px;
+    width: 44px;
+    border-radius: 44px;
+}
+button#downLoadFile {
+    position: absolute;
+    background: transparent;
+    width: 30px;
+    height: 30px;
+    /* background: url('img/uploadbtn.png') no-repeat; */
+    position: absolute;
+    right: 20px;
+    top: 17px;
+    border-radius: 30px;
+    border: 1px solid #d0d0d0;
+}
+button#downLoadFile:focus{
+    outline: none;
+}
+.groupChatList .triOpen,.usualChatList .triOpen{
+    height: 10px;
+    width: 10px;
+    display: inline-block;
+    background-position: -37px -307px;
+    /* background-color: palegreen; */
+    margin-left: 10px;
+}
+.groupChatList .triClose,.usualChatList .triClose{
+    height: 10px;
+    width: 10px;
+    display: inline-block;
+    background-position: -97px -304px;
+    /* background-color: palegreen; */
+    margin-left: 10px;
+}
+.groupChatList .discrib{
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.groupChatListUl li .notReadMsg{
+    position: absolute;
+    background: red;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    top: -3px;
+    left: 40px;
+    border-radius: 20px;
+    color: white;
+    text-align: center;
+    line-height: 20px;
+    transform: scale(0.7,0.7);
+}
+.groupChatListUl li .groupName{
+    display: inline-block;
+    height: 44px;
+    float: left;
+    text-indent: 18px;
+    font-size: 14px;
+    max-width: 160px;
+    overflow: hidden;
+    line-height: 44px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.groupChatListUl li .groupInlineNum{
+    float: left;
+    display: inline-block;
+    height: 44px;
+    width: 56px;
+    line-height: 44px;
+}
+
+
+.newsChatList .usualChatListUl li .groupName{
+    display: inline-block;
+    height: 44px;
+    float: left;
+    /* line-height: 44px; */
+    text-indent: 18px;
+    position: absolute;
+    top: 8px;
+    left: 50px;
+    font-size: 14px;
+    line-height: 12px;
+}
+.groupChatListUl li .usualLastMsg{
+    display: inline-block;
+    height: 25px;
+    float: left;
+    line-height: 27px;
+    position: absolute;
+    top: 25px;
+    left: 54px;
+    color: #666666;
+    font-size: 12px;
+    transform: scale(0.9,0.9);
+    overflow: hidden;
+    width: 300px;
+}
+.groupChatListUl li .lastTime{
+    float: right;
+    color: #666666;
+    transform: scale(0.8,0.8);
+    margin-top: 4px;
+}
+.operMenuList {
+    position: absolute;
+    height: 156px;
+    width: 226px;
+    bottom: 100px;
+    border: 1px solid #e6e6e6;
+    box-shadow: 0px 0px 10px #f1f4f6;
+    left: 56px;
+    display: none;
+    background: white;
+}
+.operMenuList ul{
+    margin: 26px;
+    /*background: palegoldenrod;*/
+}
+.operMenuList ul li{
+    height: 25px;
+    line-height: 25px;
+    padding-left: 34px;
+}
+/*.operMenuList ul li[displaylimit=false]{*/
+    /**/
+/*}*/
+.operMenuList ul li[displayLimit=false]{
+    color: rgba(0, 0, 0, 0.39);
+}
+.operMenuList ul li:nth-child(1){
+    background-position: -208px -212px;
+}
+.operMenuList ul li:nth-child(2){
+    background-position: -206px -251px ;
+    margin: 16px 0px;
+}
+.operMenuList ul li:nth-child(3){
+    background-position: -206px -293px ;
+}
+
+/*组织*/
+.orgnized{
+    width: 340px;
+    overflow: hidden;
+    /*overflow-y: scroll;*/
+}
+.serachMenber{
+    height: 66px;
+    width: 340px;
+    /*background: papayawhip;*/
+    overflow: hidden;
+}
+.serachMenber .searchInput{
+    height: 42px;
+    width: 320px;
+    background-color: #f5f5f5;
+    margin: 24px 0px 0px 10px;
+    /* margin-top: 24px; */
+    text-indent: 54px;
+    border: none;
+    cursor: pointer;
+    background-position: -281px -365px
+    /*background-position: -397px -365px;*/
+
+}
+.serachMenber .searchInput:focus{
+    outline: none;
+}
+.serachMenber .searchInput .defaultText{
+    display: block;
+    margin: 0px auto;
+    height: 42px;
+    width: 100px;
+    /* background: red; */
+    text-indent: 40px;
+    color: #333333;
+    line-height: 42px;
+
+}
+span.defaultText{
+    position: relative;
+    left: 156px;
+    top: -30px;
+    cursor: pointer;
+}
+.searchResult{
+    width: 318px;
+    border: 1px solid #e6e6e6;
+    box-shadow: 0px 0px 10px #e6e6e6;
+    position: absolute;
+    left: 10px;
+    top: 72px;
+    background: white;
+    z-index: 1;
+    display: none;
+}
+.searchResult .searchResultUL{
+    margin: 0px 6px;
+}
+
+
+.searchResult .searchResultUL li{
+    height: 42px;
+    line-height: 42px;
+    margin: 6px 0px;
+    text-indent: 11px;
+ }
+.searchResult .searchResultUL li:hover{
+    background-color: #f5f5f5;
+}
+.searchResult .searchResultUL li img{
+    height: 32px;
+    width: 32px;
+    float: left;
+    margin: 5px 0px 0px 5px;
+    border-radius: 32px;
+}
+.searchResultUL li.searchNoResult{
+    height: 132px;
+    position: relative;
+    background: url('img/noResult.png') no-repeat 125px 30px;
+}
+.searchResultUL li.searchNoResult:hover{
+    background-color: #ffffff ;
+    background-position: -927px -298px;
+}
+.searchResultUL li.searchNoResult span{
+    display: inline-block;
+    position: absolute;
+    /*background: paleturquoise;*/
+    bottom: 0px;
+    left: 100px;
+}
+/*定义滚动条宽高及背景，宽高分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar{
+    width: 4px;
+    height: 4px;
+    background-color: #f5f5f5;
+}
+/*定义滚动条的轨道，内阴影及圆角*/
+::-webkit-scrollbar-track{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    border-radius: 10px;
+    background-color: #f5f5f5;
+    box-shadow: none;
+}
+/*定义滑块，内阴影及圆角*/
+::-webkit-scrollbar-thumb{
+    /*width: 10px;*/
+    height: 20px;
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #b4b4b4;
+    box-shadow: none;
+}
+
+#message-content{
+    margin: 0px 12px;
+    outline: none;
+    border: none;
+    padding: 10px;
+    color: #000000;
+    background: white;
+}
+
+.organizationList{
+    padding: 19px 10px 19px 10px;
+    overflow: scroll;
+    height: calc(100% - 100px);
+}
+
+.organizationList li .groupImg{
+    float: left;
+    width: 32px;
+    margin-top: 5px;
+    height: 32px;
+    width: 32px;
+    border-radius: 32px;
+}
+.organizationList li .groupName{
+    display: inline-block;
+    height: 44px;
+    float: left;
+    line-height: 44px;
+    text-indent: 8px;
+}
+.organizationList li .positionName{
+    display: inline-block;
+    height: 44px;
+    float: left;
+    line-height: 44px;
+    text-indent: 8px;
+}
+.organizationList li {
+    cursor: pointer;
+    height: 46px;
+    /* margin-right: 10px; */
+    border-radius: 10px;
+    /* background: palegoldenrod; */
+    position: relative;
+    overflow: hidden;
+    margin-top: 10px;
+    /*margin-bottom: 10px;*/
+    padding-left: 14px;
+    padding-right: 22px;
+}
+.organizationList li.active{
+    background: #f0fdff;
+}
+.organizationList li div{
+    position: relative;
+    top: 1px;
+}
+.groupCollspanO{
+    float: right;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    /* background: red; */
+    margin-top: 10px;
+    background-position: -206px -339px;
+}
+.groupCollspanC{
+    float: right;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    /* background: red; */
+    margin-top: 10px;
+    background-position: -206px -373px;
+}
+.BreadcrumbsOuter{
+    width: 100%;
+    height: 60px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.seeOrgnizeTree{
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    /*background: red;*/
+    float: right;
+    margin-top: 17px;
+    margin-right: 60px;
+    background-position: -532px -145px;
+}
+.BreadcrumbsOuter .Breadcrumbs{
+    line-height: 60px;
+    margin-left: 42px;
+}
+.BreadcrumbsOuter .Breadcrumbs li{
+    float: left;
+    color: #a9a9a9;
+    /*line-height: 60px;*/
+}
+.BreadcrumbsOuter .Breadcrumbs li a{
+    font-size: 16px;
+    color: #30c0da;
+}
+.chatBox .orgNavClick1{
+    margin: 38px 42px;
+    overflow: hidden;
+    /*padding-top: 61px;*/
+}
+.chatBox .orgNavClick1 .orgNavTitle{
+    display: block;
+    font-size: 16px;
+    margin-bottom: 44px;
+    margin-top: 14px;
+}
+.chatBox .orgNavClick1>ul{
+    width: 100%;
+    overflow: hidden;
+    line-height: 80px;
+    margin-left: 22px;
+}
+.chatBox .orgNavClick1>ul>li{
+    float: left;
+    width: 33%;
+    margin-bottom: 60px;
+    overflow: hidden;
+    position: relative;
+    /*margin: 44px 0px 40px 0px;*/
+}
+.orgNavClick1 ul li img{
+    height: 80px;width: 80px;border-radius: 80px;
+}
+#bgCanvas{
+    width: 100%;
+    height: 100%;
+}
+
+.upload-img{
+    cursor: pointer;
+    position: absolute;
+    /* float: right; */
+    margin: 7px 20px 0 0;
+    overflow: hidden;
+    /* background: red; */
+    display: inline-block;
+    height: 20px;
+    width: 32px;
+    left: 75px;
+    top: 7px;
+}
+
+
+.comment-pic-upd{
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    z-index: 100;
+    width: 58px;
+    height: 58px;
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+    filter:alpha(opacity=0);
+    -moz-opacity:0;
+    -khtml-opacity: 0;
+    opacity:0;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+[contenteditable=true]:empty:before {
+    content: attr(placeholder);
+    display: block;
+    color: #a9a9a9;
+    position: absolute;
+    top: 46px;
+}
+
+.showPersonalInfo{
+    margin-left: 58px;
+    overflow: hidden;
+    /*background: red;*/
+    /*height: 100px;*/
+    width: auto;
+    /*margin-top: 20px;*/
+}
+.showPersonalInfo span{
+    position: relative;
+    top: -15px;
+    left: 18px;
+}
+.showImgInfo,.showImgInfo{
+    float: left;
+}
+.showImgInfo{
+    display: inline-block;
+    height: 80px;
+    width: 80px;
+    display: inline-block;
+}
+.showImgInfo img{
+    height: 80px;
+    width: 80px;
+    border-radius: 80px;
+}
+.personalOperaIcon{
+    height: 30px;
+    width: 130px;
+    /*background: plum;*/
+    position: absolute;
+    top: 18px;
+    padding-left: 18px;
+}
+.personalOperaIcon li,.selfImgOpera li,.showPerCainter li{
+    float: left;
+    width: 34px;
+    background-image: url("img/chatLeftIcon.png");
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+}
+/*.showPersonalInfo1 li{*/
+    /*width: 34px;*/
+    /*background-image: url("img/chatLeftIcon.png");*/
+    /*height: 30px;*/
+    /*line-height: 30px;*/
+/*}*/
+.personalInfoUl{
+
+}
+.sendMsg{
+    background-position: -398px -200px
+}
+.checkPosition{
+    background-position: -397px -258px;
+}
+.addConver{
+    background-position: -395px -323px;
+}
+
+.orgNavClick2{
+    height: 200px;width: 340px;
+    /*background: paleturquoise;*/
+    margin: 0px auto;
+    margin-top: 52px;
+    /*padding-top: 61px;*/
+}
+.selfImgInfo img{
+    margin-left:58px;
+    height: 80px;width: 80px;
+}
+.selfImgInfo{
+    overflow: hidden;
+    padding-bottom: 52px;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 20px;
+}
+.selfImgInfo img,.selfImgInfo div{
+    float: left;
+    width: 80px;
+    height: 80px;
+    border-radius: 80px;
+}
+.selfImgInfo div{
+    margin-left:18px;
+    width: 120px;
+}
+
+
+.mr-chatContent{
+    /*height: 100%;*/
+    width: 100%;
+}
+.selfImgInfo div .selfImgOpera{
+    overflow: hidden;
+}
+.selfImgInfo div .selfImgOpera li{
+    float: left;
+    cursor: pointer;
+}
+.selfImgInfo div p{
+    margin-top: 18px;
+}
+.selfImgOpera{
+    margin-top: 5px;;
+}
+.showPersonalInfo ul li{
+    overflow: hidden;
+    margin:20px 0px;
+    cursor: pointer;
+}
+.showPersonalInfo ul li div{
+    float: left;
+}
+.showPersonalInfo ul li div:nth-child(1){
+    width:70px;
+    color: #808080;
+}
+.showPersonalInfo ul li div:nth-child(2){
+    /*width:73px;*/
+    color: #1a1a1a;
+}
+.orgNavClick3{
+    width: 100%;
+    /* padding-top: 61px; */
+    /* background: palevioletred; */
+    height: calc(100% - 60px);
+    /*background: palegoldenrod;*/
+    overflow: scroll;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*组织结构*/
+/*.topOuter {*/
+/*height: 124px;*/
+/*width: 175px;*/
+/*background: white;*/
+/*}*/
+
+/*.outerVertical{*/
+/*width: 110px;*/
+/*height:225px;*/
+/*background: papayawhip;;*/
+/*}*/
+/*.outerHorizontal{*/
+/*height: 124px;*/
+/*width: 175px;*/
+/*background: palevioletred;*/
+/*}*/
+
+/*.innerHorizontal {*/
+/*height: 55px;*/
+/*border: 1px solid #30c0da;*/
+/*line-height: 55px;*/
+/*text-align: center;*/
+/*}*/
+/*.innerVertical {*/
+/*height: 175px;*/
+/*width:55px;*/
+/*border: 1px solid #30c0da;*/
+/*line-height: 55px;*/
+/*text-align: center;*/
+/*}*/
+/*.level1{*/
+/*overflow: hidden;*/
+/*}*/
+/*.level1 [level='1']{*/
+/*float: left;*/
+/*}*/
+
+/*.level2{*/
+/*overflow: hidden;*/
+/*}*/
+/*.level2 [level='2']{*/
+/*float: left;*/
+/*}*/
+
+
+/*.level3{*/
+/*overflow: hidden;*/
+/*}*/
+/*.level3 [level='3']{*/
+/*float: left;*/
+/*}*/
+
+/*.level4{*/
+/*overflow: hidden;*/
+/*}*/
+/*.level4 [level='4']{*/
+/*float: left;*/
+/*}*/
+
+
+.organizeListOuter>div{
+    position: absolute;
+    /* height: 30px; */
+    width: 100%;
+    /* top: -35px; */
+    margin: 0px auto;
+    /* left: 100px; */
+}
+.outerHorizontal{
+    height:56px;
+    background: pink;
+    width:174px;
+}
+.outerVertical{
+    height: 174px;
+    width: 56px;
+    background: papayawhip;
+}
+.organizeListOuter{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    /*background: papayawhip;*/
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*应用管理*/
+.setting{
+    height: 400px;
+    width:100%;
+    background: papayawhip;
+}
+/*弹窗*/
+.WindowMask,.WindowMask2{
+    height: 100%;
+    width: 100%;
+    position: absolute;top: 0px;left: 0px;
+    background: rgba(0,0,0,0.5);
+    display: none;
+}
+.WindowMask2{
+    //display: block;
+}
+.groupConvers{
+    height: 764px;
+    width: 866px;
+    background: #ffffff;
+    position: absolute;left: 50%;
+    top: 50%;
+    margin: -382px 0px 0px -433px;
+    border-radius: 10px;
+}
+.privateConvers{
+    height: 764px;
+    width: 444px;
+    background: #ffffff;
+    position: absolute;left: 50%;
+    top: 50%;
+    margin: -382px 0px 0px -222px;
+    border-radius: 10px;
+}
+.privateConvers .selectedContactOuter{
+    display: none;
+}
+.myContextMenu{
+    position: absolute;
+    /*width: 96px;*/
+    top: 500px;
+    left: 500px;
+    background: white;
+    border: 1px solid #e6e6e6;
+    box-shadow: 0px 0px 10px #f1f4f6;
+}
+.contextTri{
+    position: absolute;
+    height: 10px;
+    width: 13px;
+    /* border: 10px solid #f0f0f0; */
+    /* border-top: 10px solid transparent; */
+    /* border-left: 10px solid transparent; */
+    /* border-bottom: 10px solid transparent; */
+    left: -7px;
+    top: 10px;
+    /*background-color: white;*/
+    background-position: -1076px -380px;
+}
+.myContextMenu ul{
+    margin-left:10px;
+    margin-right:10px;
+    /*background:paleturquoise;*/
+}
+.myContextMenu ul li{
+    margin: 10px auto;
+    cursor: pointer;
+    /*line-height:;*/
+}
+.myContextMenu ul li[displaylimit=false]{
+    color: rgba(0, 0, 0, 0.39);
+}
+.dialogFooter {
+    height: 70px;
+    /* background: palegoldenrod; */
+    text-align: right;
+    padding-right: 42px;
+}
+.dialogFooter input[type='button'] {
+    width: 108px;
+    height: 32px;
+    outline: none;
+    border: none;
+    /* background: white; */
+    border-radius: 4px;
+    margin-left: 20px;
+}
+
+.manageSure {
+    background: #30c0da;
+    border: 1px solid #30c0da !important;
+    color: white;
+}
+.manageCancle {
+    background: white;
+    border: 1px solid #30c0da !important;
+    color: #30c0da;
+}
+.dialogHeader{
+    font-size: 16px;
+    color: #000000;
+    /* background: #333333; */
+    /* text-align: center; */
+    height: 40px;
+    text-indent: 42px;
+    line-height: 56px;
+}
+.dialogBody{
+    height: 560px;
+    /* width: 100%; */
+    /* background: paleturquoise; */
+    padding: 50px 42px 45px 42px;
+    overflow: auto;
+}
+.dialogBody .outerTitle{
+    height: 32px;
+}
+.dialogBody .contactBox{
+    height: 500px;
+    border: 1px solid #e6e6e6;
+    position: relative;
+    overflow-y: scroll;
+}
+div.contactSearchResult{
+    text-align: center;
+}
+.contactSearchResult{
+    position: absolute;
+    top: 44px;
+    left: 0px;
+    background: white;
+    z-index: 9;
+    width: 100%;
+    border: 1px solid #f5f5f5;
+    box-shadow: 0px 0px 10px #f5f5f5;
+}
+.contactSearchResult li{
+    padding-left: 20px;
+    padding-left: 20px;
+    height: 33px;
+}
+.contactSearchResult li:hover{
+    background: #f4f4f4;
+}
+.contactBox .contactsSearch,.contactBox .selectedSearch{
+    height: 40px;
+    border-bottom: 1px solid #e6e6e6 !important;
+    border: none;
+    width: 100%;
+    text-indent: 42px;
+    background-position: -761px -340px;
+}
+.contactBox .contactsSearch:focus,.contactBox .selectedSearch:focus{
+    outline: none;
+    border: none;
+}
+.dialogClose {
+    display: inline-block;
+    padding: 10px 10px 3px;
+    position: absolute;
+    top: 0;
+    right: 15px;
+    font-size: 24px;
+    color: #a5a5a5;
+    /* background: #ff3300; */
+    cursor: pointer;
+}
+
+.contactListOuter,.selectedContactOuter{
+    width: 360px;
+    height: 532px;
+    /*background: plum;*/
+    float: left;
+}
+.selectedContactOuter{
+    margin-left:62px
+
+}
+.contactsList{
+    /*margin: 3px 12px;*/
+     padding: 3px 12px;
+    overflow: hidden;
+    height: calc(100% - 47px);
+    position: relative;
+}
+.contactsList ul li{
+    height: 30px;line-height: 30px;
+}
+.contactsList ul li div{
+    overflow: hidden;
+}
+.contactsList ul li div span{
+    float: left;
+    max-width: 270px;
+}
+.dialogCollspanO{
+    display: inline-block;
+    height: 20px;
+    width: 15px;
+    background-position: -774px -215px;
+}
+.dialogCollspan{
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+}
+.dialogCollspanC{
+    background-position: -774px -276px;
+}
+.groupConvers .dialogCheckBox{
+    display: inline-block;
+    width: 27px;
+    height: 23px;
+    background-position: -532px -258px;
+}
+.groupConvers .CheckBoxChecked {
+    display: inline-block;
+    width: 27px;
+    height: 23px;
+    background-position: -532px -314px;
+}
+.privateConvers .dialogCheckBox{
+    display: inline-block;
+    width: 20px;
+    height: 23px;
+    background-position: -774px -147px;
+}
+.privateConvers .department .CheckBoxChecked,.privateConvers .department .dialogCheckBox{
+    display: none;
+}
+.privateConvers .member .dialogCollspan{
+    display: none;
+}
+.privateConvers .CheckBoxChecked {
+    display: inline-block;
+    width: 20px;
+    height: 23px;
+    background-position: -777px -74px;
+}
+.selectedList{
+    margin-top: 4px;
+}
+.selectedList ul{
+
+}
+.selectedList ul li{
+    height: 32px;
+    text-indent: 14px;
+    line-height: 32px;
+}
+.selectedList ul li:hover{
+    background: #f0f6ff;
+ }
+.deleteMemberIcon{
+    height: 32px;
+    text-indent: 14px;
+    line-height: 32px;
+    width: 32px;
+    margin-left: 2px;
+    background-position: -1063px -152px;
+    display: inline-block;
+    float: right;
+    margin-right: 10px;
+}
+.transferInfoBox{
+    width: 782px;
+}
+.transferInfoBox thead,.transferInfoBox tbody{
+
+}
+.transferInfoBox thead tr {
+    background: #f5f5f5;
+    height: 50px;
+}
+.transferInfoBox thead tr th{
+    font-size: 16px;
+    font-weight: lighter;
+    text-align: left;
+    text-indent: 20px;
+}
+.transferInfoBox tbody tr{
+     height: 50px;
+     line-height: 50px;
+ }
+.transferInfoBox tbody tr:hover{
+   background: #f0fdff;
+}
+.transferInfoBox tbody tr td{
+    text-align: left;
+    font-size: 14px;
+    /*font-weight: lighter;*/
+    text-indent: 20px;
+}
+.transferInfoBox tbody tr td.operate span{
+    display: inline-block;height: 30px;width: 74px;
+    background: #ffa200;
+    line-height: 30px;
+    color: white;
+    border-radius: 4px;
+    text-align: center;
+    text-indent: 0px;
+}
+.transferInfoBox tbody tr td.operate span.active{
+    background: #c4c4c4;
+}
+.transferImg{
+    width: 27px;
+    height: 27px;
+    border-radius: 27px;
+    margin-right: 10px;
+}
+/*鼠标悬停联系人*/
+.memberHover{
+    position: absolute !important;
+    top: 0px;
+    left: 0px;
+    background: #ffffff;
+    z-index: 999;
+    height: 304px;
+    width: 261px;
+    border: 1px solid #e6e6e6;
+    box-shadow: 0px 0px 10px #e6e6e6;
+    /* display: none; */
+    padding-top: 24px;
+}
+.memberInfoHover{
+    padding: 0px 26px;
+}
+.memberInfoHover li:nth-child(2),.memberInfoHover li:nth-child(3),.memberInfoHover li:nth-child(4){
+    height: 44px;
+}
+.memberInfoHover .showPersonalInfo span{
+    position: relative;
+    top: 15px;
+    left: 18px;
+    height: 82px;
+    display: inline-block;
+    color: black;
+    line-height: inherit;
+}
+.memberInfoHover .personalOperaIcon{
+    height: 30px;
+    width: 142px;
+    position: absolute;
+    top: 39px;
+}
+.memberInfoHover li span{
+    display: inline-block;
+    /*height: 44px;*/
+    color: #808080;
+    line-height: 49px;
+}
+.memberInfoHover li span:nth-child(1){
+    margin-right: 20px;
+}
+.usualChatListUl{
+    padding: 3px 0px 35px 0px;
+}
+
+
+
+span.onlineStatus.phoneOnline {
+     display: inline-block;
+     height: 20px;
+     float: left;
+     line-height: 16px;
+     text-align: center;
+     /* border: 1px solid peru; */
+     position: absolute;
+     top: 14px;
+     width: 14px;
+     background: plum;
+ }
+span.onlineStatus.memberbusy {
+    display: inline-block;
+    height: 20px;
+    float: left;
+    line-height: 16px;
+    text-align: center;
+    /* border: 1px solid peru; */
+    position: absolute;
+    top: 14px;
+    width: 14px;
+    background: palegreen;
+}
+.department span.onlineStatus{
+    display: none;
+}
+
+span.sendSuccess{
+    background: url("img/chatLeftIcon.png") no-repeat right top;
+    height: 20px;
+    width: 30px;
+    /*background: papayawhip;*/
+    display: none;
+    float: right;
+    margin-top: 20px;
+}
+.mr-chatContentL span.sendSuccess,.mr-chatContentLFile span.sendSuccess{
+    height: 20px;
+    width: 30px;
+    display: none;
+
+    /*background: papayawhip;*/
+    float: left;
+    margin-top: 20px;
+}
+.imgToGrey{
+    -webkit-filter: grayscale(1);/* Webkit */
+    filter:gray;/* IE6-9 */
+    filter: grayscale(1);/* W3C */
+}

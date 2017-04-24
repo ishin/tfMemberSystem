@@ -1,0 +1,28 @@
+.jOrgChart .down {
+    background-color: #30c0da;
+    margin: 0px auto;
+}
+.jOrgChart .line {
+    height: 20px;
+    width: 1px;
+}
+.jOrgChart .node {
+    background-color: #ffffff;
+    display: inline-block;
+    width: 56px;
+    height: 174px;
+    z-index: 10;
+    margin: 0px 24px;
+    border: 1px solid #30c0da;
+}
+.jOrgChart .left {
+    border-right: 1px solid #30c0da;
+    padding-right: 1px;
+}
+.jOrgChart .top {
+    border-top: 1px solid #30c0da;
+}
+.jOrgChart .right {
+    border-left: 1px solid #30c0da;
+    /*padding-left: -2px;*/
+}
