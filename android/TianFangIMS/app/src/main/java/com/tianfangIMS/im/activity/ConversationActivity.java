@@ -600,7 +600,7 @@ public class ConversationActivity extends BaseActivity implements View.OnClickLi
     //传递userinfo到位置共享
     private void JoinAMapShare() {
         Intent intent = null;
-        intent = new Intent(this, AMapShareActivity.class);
+        intent = new Intent(this, AMapShareLocationActivity.class);
         if (mConversationType == Conversation.ConversationType.GROUP) {
             intent.putExtra("conversationType", Conversation.ConversationType.GROUP);
         } else if (mConversationType == Conversation.ConversationType.PRIVATE) {

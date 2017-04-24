@@ -61,10 +61,12 @@ public class Group_AddTopContactsActivity extends BaseActivity implements Adapte
     private GroupTopContacts_GridView_Adapter groupTopContacts_gridView_adapter;
     private TopContactsListBean bean;
     private EditText et_search;
+    String sessionId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addtopcpntacts_activity);
+        sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
         mContext = this;
         setTitle("选择群组联系人");
         init();
@@ -94,6 +96,7 @@ public class Group_AddTopContactsActivity extends BaseActivity implements Adapte
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("account", UID)
                 .execute(new StringCallback() {
                     @Override
@@ -228,6 +231,7 @@ public class Group_AddTopContactsActivity extends BaseActivity implements Adapte
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", UID)
                 .params("groupids", aa)
                 .execute(new StringCallback() {

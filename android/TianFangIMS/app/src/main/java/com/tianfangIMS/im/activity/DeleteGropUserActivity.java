@@ -112,6 +112,7 @@ public class DeleteGropUserActivity extends BaseActivity implements AdapterView.
     }
 
     private void DelGroupUser() {
+        String sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
         String str = "";
         List<String> list = new ArrayList<String>();
         if (allChecked != null) {
@@ -125,6 +126,7 @@ public class DeleteGropUserActivity extends BaseActivity implements AdapterView.
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("groupids", str)
                 .params("groupid", GroupID)
                 .execute(new StringCallback() {

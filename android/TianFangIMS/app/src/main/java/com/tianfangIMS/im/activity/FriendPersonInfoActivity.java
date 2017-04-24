@@ -55,7 +55,7 @@ public class FriendPersonInfoActivity extends BaseActivity implements View.OnCli
     private FrameLayout fl_friendinfo_add, fl_friendinfo_delete;
     private String BigImagePath;
     private Button btn_sendMessage;
-
+    String sessionId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +63,7 @@ public class FriendPersonInfoActivity extends BaseActivity implements View.OnCli
         setLoactionButtonVisibility(View.INVISIBLE);
         setViewPagerTagVisibiliy(View.INVISIBLE);
         setPersonContactButtonVisibility(View.INVISIBLE);
+        sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
         mContext = this;
         init();
         userID = getIntent().getStringExtra("userId");
@@ -76,6 +77,7 @@ public class FriendPersonInfoActivity extends BaseActivity implements View.OnCli
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", userID)
                 .execute(new StringCallback() {
                     @Override
@@ -148,6 +150,7 @@ public class FriendPersonInfoActivity extends BaseActivity implements View.OnCli
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", UID)
                 .params("friendid", userID)
                 .execute(new StringCallback() {
@@ -185,6 +188,7 @@ public class FriendPersonInfoActivity extends BaseActivity implements View.OnCli
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("account", UID)
                 .params("friend", userInfoBean.getAccount())
                 .execute(new StringCallback() {

@@ -1,6 +1,7 @@
 package com.tianfangIMS.im.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,6 +28,7 @@ import com.tianfangIMS.im.ConstantValue;
 import com.tianfangIMS.im.R;
 import com.tianfangIMS.im.bean.OneGroupBean;
 import com.tianfangIMS.im.dialog.LoadDialog;
+import com.tianfangIMS.im.utils.NToast;
 
 import net.qiujuer.genius.blur.StackBlur;
 
@@ -70,11 +72,12 @@ public class IntercomFragment extends BaseFragment implements View.OnClickListen
     private String userid;
     private UserInfo userInfo;
     private TextView intercom_name;
-
+    String sessionId;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.intercom_layout, container, false);
+        sessionId = getActivity().getSharedPreferences("CompanyCode", Activity.MODE_PRIVATE).getString("CompanyCode", "");
         Intent intent = getActivity().getIntent();
         main_call_blur = (ImageView) view.findViewById(R.id.main_call_blur);
         main_call_header = (ImageView) view.findViewById(R.id.main_call_header);
@@ -116,6 +119,7 @@ public class IntercomFragment extends BaseFragment implements View.OnClickListen
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("groupid", userid)
                 .execute(new StringCallback() {
                     @Override
@@ -148,6 +152,7 @@ public class IntercomFragment extends BaseFragment implements View.OnClickListen
     private void getBitmap(String path) {
         OkGo.post(path)
                 .tag(this)
+                .headers("cookie",sessionId)
                 .execute(new BitmapCallback() {
 //                    @Override
 //                    public void onBefore(BaseRequest request) {
@@ -182,7 +187,6 @@ public class IntercomFragment extends BaseFragment implements View.OnClickListen
                 //抢麦成功
                 @Override
                 public void onReadyToSpeak(long maxDurationMillis) {
-//                    updateMicHolder(RongIMClient.getInstance().getCurrentUserId());
 
                 }
 
@@ -233,6 +237,9 @@ public class IntercomFragment extends BaseFragment implements View.OnClickListen
                 }
                 break;
             case R.id.main_call_flash:
+                pttClient.leaveSession();
+                main_call_talk.setImageResource(R.drawable.talk_voice_normal);
+                NToast.shortToast(getActivity(),"对讲已挂断");
                 break;
             case R.id.main_call_talk:
                 Toast.makeText(getActivity(), "点击了对讲", Toast.LENGTH_SHORT).show();
@@ -249,13 +256,11 @@ public class IntercomFragment extends BaseFragment implements View.OnClickListen
         pttClient.joinSession(mConversationType, userid, new JoinSessionCallback() {
             @Override
             public void onSuccess(List<String> list) {
-                Log.e("OnSuccess", "测试对讲连接成功");
                 main_call_talk.setImageResource(R.mipmap.talk_voice_green_connect);
                 pttClient.setPttSessionStateListener(getInstance());
                 PTTSession pttSession = pttClient.getCurrentPttSession();
                 participants = pttSession.getParticipantIds();
                 pttClient = PTTClient.getInstance();
-                Log.e("你好", "::" + list);
                 main_call_talk.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {

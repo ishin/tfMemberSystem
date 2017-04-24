@@ -103,11 +103,13 @@ public class AMapShareActivity extends BaseActivity implements LocationSource, A
     Double latitude;
     Double longitude;
     int type = 0;
-
+    String sessionId;
+    private Marker mLocationMarker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.amapshare_layout);
+        sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
         //这里以ACCESS_COARSE_LOCATION为例
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -194,6 +196,7 @@ public class AMapShareActivity extends BaseActivity implements LocationSource, A
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", userID)
                 .params("targetid", mTargetId)
                 .params("type", type)
@@ -212,10 +215,8 @@ public class AMapShareActivity extends BaseActivity implements LocationSource, A
                             if ((double) locationInfoMap.get("code") == 1.0) {
                                 Gson gson1 = new Gson();
                                 String s1 = locationInfoMap.get("text").toString();
-                                Log.e("code是多少：", ":" + s1);
                                 locationBeanList = gson1.fromJson(s1, new TypeToken<List<LocationBean>>() {
                                 }.getType());
-                                Log.e("LocationData：", "locationBeanList:" + locationBeanList);
                                 for (int i = 0; i < locationBeanList.size(); i++) {
                                     if (CommonUtil.StringToDouble(locationBeanList.get(i).getLatitude()) != 90.0 &&
                                             CommonUtil.StringToDouble(locationBeanList.get(i).getLongtitude()) != 180.0) {
@@ -243,11 +244,14 @@ public class AMapShareActivity extends BaseActivity implements LocationSource, A
 
     //绘制坐标原点
     private void DrawBlueLite(Double latitude, Double longitude, String userID, String url) {
+        if(mLocationMarker != null){
+            mLocationMarker.remove();
+        }
         View iconView = LayoutInflater.from(mContext).inflate(R.layout.view_infowindow, null);
         ImageView iv_amap_photo = (ImageView) iconView.findViewById(R.id.iv_amap_photo);
         ImageView locImageView = (ImageView) iconView.findViewById(R.id.iv_amap_mark);
         if (userID.equals(RongIMClient.getInstance().getCurrentUserId() + ".0")) {
-            locImageView.setImageResource(R.mipmap.amap_location_blue);//
+            locImageView.setImageResource(R.mipmap.amap_location_blue);
         } else {
             locImageView.setImageResource(R.mipmap.amap_location_other);
         }
@@ -260,10 +264,6 @@ public class AMapShareActivity extends BaseActivity implements LocationSource, A
                     .config(Bitmap.Config.ARGB_8888)
                     .error(R.mipmap.default_portrait)
                     .into(iv_amap_photo);
-//            Bitmap bm = ImageLoader.getInstance().loadImageSync(image);
-//            if (bm != null) {
-//                iv_amap_photo.setImageBitmap(bm);
-//            }
         }
         //设置中心点和缩放比例
         LatLng latLng = new LatLng(latitude, longitude);
@@ -405,6 +405,7 @@ public class AMapShareActivity extends BaseActivity implements LocationSource, A
         Log.e("计时器打印：", "精度：" + latitude + "--纬度" + longtitude + "---userID:" + userID);
         OkGo.post(ConstantValue.SUBLOCATION)
                 .tag(this)
+                .headers("cookie",sessionId)
                 .params("userid", userID)
                 .params("latitude", latitude)
                 .params("longitude", longtitude)
@@ -421,6 +422,7 @@ public class AMapShareActivity extends BaseActivity implements LocationSource, A
         userID = RongIMClient.getInstance().getCurrentUserId();
         OkGo.post(ConstantValue.SUBLOCATION)
                 .tag(this)
+                .headers("cookie",sessionId)
                 .params("userid", userID)
                 .params("latitude", 90)
                 .params("longitude", 180)

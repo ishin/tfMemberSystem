@@ -85,7 +85,7 @@ import okhttp3.Response;
  */
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, RongIM.UserInfoProvider, RongIM.GroupInfoProvider, IUnReadMessageObserver {
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "AMapShareLocationActivity";
     private LinearLayout ly_tab_menu_msg, ly_tab_menu_job, ly_tab_menu_contacts, ly_tab_menu_me;
     private TextView tv_tab_menu_msg, tv_tab_menu_job, tv_tab_menu_contacts, tv_tab_menu_me;
     private TextView tv_tab_menu_msg_num, tv_tab_menu_job_num, tv_tab_menu_contacts_num;
@@ -121,6 +121,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private UserInfo userInfo;
     private GroupUserInfo groupUserinfo;
     Intent mIntent;
+    String sessionId;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -151,6 +152,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             });
         }
         setContentView(R.layout.mian_activity);
+        sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
         GetFriendInfo();//持久化所有好友信息
         GetGroupInfo();//持久化所有群组信息
         setHeadVisibility(View.GONE);
@@ -283,11 +285,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", id)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
+                        Log.e("空之浮","---:"+s);
                         if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+
                             Gson gson = new Gson();
                             SetSyncUserBean syncUserBean = gson.fromJson(s, SetSyncUserBean.class);
                             if (syncUserBean.getCode().equals("200")) {
@@ -312,6 +317,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .cacheKey("getfriendinfo")
                 .execute(new StringCallback() {
                     @Override
@@ -348,6 +354,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", UID)
                 .execute(new StringCallback() {
                     @Override

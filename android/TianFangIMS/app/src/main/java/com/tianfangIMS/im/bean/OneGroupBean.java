@@ -42,7 +42,7 @@ public class OneGroupBean implements Serializable {
     }
 
     public static class Text implements Serializable {
-        private String mid;
+        private String id;
         private String account;
         private String fullname;
         private String logo;
@@ -67,7 +67,7 @@ public class OneGroupBean implements Serializable {
         private String annexlong;
         private String notice;
 
-        public Text(String account, String address, String annexlong, String birthday, String code, String createdate, String email, String fullname, String GID, String groupmax, String groupuse, String logo, String mid, String mobile, String name, String notice, String sex, String space, String spaceuse, String telephone, String token, String volume, String volumeuse, String workno) {
+        public Text(String account, String address, String annexlong, String birthday, String code, String createdate, String email, String fullname, String GID, String groupmax, String groupuse, String logo, String id, String mobile, String name, String notice, String sex, String space, String spaceuse, String telephone, String token, String volume, String volumeuse, String workno) {
             this.account = account;
             this.address = address;
             this.annexlong = annexlong;
@@ -80,7 +80,7 @@ public class OneGroupBean implements Serializable {
             this.groupmax = groupmax;
             this.groupuse = groupuse;
             this.logo = logo;
-            this.mid = mid;
+            this.id = id;
             this.mobile = mobile;
             this.name = name;
             this.notice = notice;
@@ -190,14 +190,6 @@ public class OneGroupBean implements Serializable {
             this.logo = logo;
         }
 
-        public String getMid() {
-            return mid;
-        }
-
-        public void setMid(String mid) {
-            this.mid = mid;
-        }
-
         public String getMobile() {
             return mobile;
         }
@@ -286,34 +278,12 @@ public class OneGroupBean implements Serializable {
             this.workno = workno;
         }
 
-        @Override
-        public String toString() {
-            return "Text{" +
-                    "account='" + account + '\'' +
-                    ", mid='" + mid + '\'' +
-                    ", fullname='" + fullname + '\'' +
-                    ", logo='" + logo + '\'' +
-                    ", telephone='" + telephone + '\'' +
-                    ", email='" + email + '\'' +
-                    ", address='" + address + '\'' +
-                    ", token='" + token + '\'' +
-                    ", sex='" + sex + '\'' +
-                    ", birthday='" + birthday + '\'' +
-                    ", workno='" + workno + '\'' +
-                    ", mobile='" + mobile + '\'' +
-                    ", groupmax='" + groupmax + '\'' +
-                    ", groupuse='" + groupuse + '\'' +
-                    ", GID='" + GID + '\'' +
-                    ", code='" + code + '\'' +
-                    ", name='" + name + '\'' +
-                    ", createdate='" + createdate + '\'' +
-                    ", volume='" + volume + '\'' +
-                    ", volumeuse='" + volumeuse + '\'' +
-                    ", space='" + space + '\'' +
-                    ", spaceuse='" + spaceuse + '\'' +
-                    ", annexlong='" + annexlong + '\'' +
-                    ", notice='" + notice + '\'' +
-                    '}';
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
         }
     }
 

@@ -47,12 +47,13 @@ public class MineTopContactsActivity extends BaseActivity implements AdapterView
     private TopContactsListBean bean;
     private EditText et_search;
     private ArrayList<String> ImgMsgList;
-
+    String sessionId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mine_topcontacts_activity);
         setTitle("选择常用联系人");
+        sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
         mContext = this;
         initView();
         GetLoginUserInfo();
@@ -77,6 +78,7 @@ public class MineTopContactsActivity extends BaseActivity implements AdapterView
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", ids)
                 .execute(new StringCallback() {
                     @Override
@@ -105,6 +107,7 @@ public class MineTopContactsActivity extends BaseActivity implements AdapterView
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("account", UID)
                 .execute(new StringCallback() {
                     @Override

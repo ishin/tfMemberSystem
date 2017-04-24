@@ -71,11 +71,13 @@ public class Contacts_DepartmentActivity extends BaseActivity implements View.On
     }
 
     private void setAdapterList() {
+        String sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
         OkGo.post(ConstantValue.DEPARTMENT)
                 .tag(this)
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .execute(new StringCallback() {
                     @Override
                     public void onBefore(BaseRequest request) {

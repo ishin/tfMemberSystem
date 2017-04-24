@@ -97,6 +97,7 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
     int oldLevel, selectedCount;
     private LinearLayout search_infoactivity;
     private EditText tv_search_icon;
+    String sessionId;
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -123,6 +124,7 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
         setTitle("选择所有联系人");
+        sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
         Groupid = getIntent().getStringExtra("Groupid");
         PrivateID = getIntent().getStringExtra("PrivateChat");
         ImageMessageList = getIntent().getStringArrayListExtra("ImageUri");
@@ -432,6 +434,7 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", UID)
                 .params("groupids", aa)
                 .execute(new StringCallback() {
@@ -478,6 +481,7 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", UID)
                 .params("groupids", aa)
                 .execute(new StringCallback() {
@@ -521,6 +525,7 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("groupids", ids)
                 .params("groupid", Groupid)
                 .execute(new StringCallback() {
@@ -540,7 +545,7 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
                             }.getType());
                             if ((Double) map.get("code") == 1.0) {
                                 Log.e("哈哈", "添加成员是否承诺" + map.get("code"));
-//                                startActivity(new Intent(mContext, MainActivity.class));
+//                                startActivity(new Intent(mContext, AMapShareLocationActivity.class));
                                 RongIM.getInstance().startGroupChat(mContext, Groupid, "");
                                 Log.e("哈哈", "添加成员是跳转是否执行" + map.get("code"));
                             }
