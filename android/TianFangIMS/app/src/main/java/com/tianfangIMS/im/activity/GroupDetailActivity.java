@@ -86,11 +86,12 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
     private RelativeLayout rl_movegroup;
     private ArrayList<GroupBean> GroupBeanList;
     private boolean flag;
-
+    String sessionId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.groupdetail_layout);
+        sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
         mContext = this;
         init();
         //群组会话界面点进群组详情
@@ -135,6 +136,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("groupid", fromConversationId)
                 .execute(new StringCallback() {
                     @Override
@@ -285,6 +287,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("groupid", fromConversationId)
                 .execute(new StringCallback() {
                     @Override
@@ -294,7 +297,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                             oneGroupBean = gson.fromJson(s, OneGroupBean.class);
                             IsLongGroupName(oneGroupBean.getText().getName());
                             LoginBean loginBean = gson.fromJson(CommonUtil.getUserInfo(mContext), LoginBean.class);
-                            if (oneGroupBean.getText().getMid().equals(loginBean.getText().getId())) {
+                            if (oneGroupBean.getText().getId().equals(loginBean.getText().getId())) {
                                 rl_movegroup.setVisibility(View.VISIBLE);
 
                                 rl_breakGroup.setVisibility(View.VISIBLE);
@@ -320,6 +323,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 //要退出群的ＩＤ
                 .params("groupids", userid)
                 //群组的ID
@@ -375,6 +379,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", userid)
                 .params("groupid", fromConversationId)
                 .execute(new StringCallback() {

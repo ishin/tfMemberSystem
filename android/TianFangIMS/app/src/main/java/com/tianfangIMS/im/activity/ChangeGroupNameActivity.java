@@ -81,6 +81,7 @@ public class ChangeGroupNameActivity extends BaseActivity implements View.OnClic
     }
 
     private void ChangeGroupName() {
+        String sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
         String groupname = et_changeName.getText().toString();
         String groupid = oneGroupBean.getText().getGID();
         OkGo.post(ConstantValue.CHANGEGROUPNAME)
@@ -88,6 +89,7 @@ public class ChangeGroupNameActivity extends BaseActivity implements View.OnClic
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("groupid", groupid)
                 .params("groupname", groupname)
                 .execute(new StringCallback() {

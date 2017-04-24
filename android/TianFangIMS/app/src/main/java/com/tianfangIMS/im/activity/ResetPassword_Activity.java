@@ -56,6 +56,7 @@ public class ResetPassword_Activity extends BaseActivity implements View.OnClick
     }
 
     private void resetPassWord(String old, String newpwd, String comparepwd) {
+        String sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
         Gson gson = new Gson();
         LoginBean loginBean = gson.fromJson(CommonUtil.getUserInfo(mContext), LoginBean.class);
         String account = loginBean.getText().getAccount();
@@ -64,6 +65,7 @@ public class ResetPassword_Activity extends BaseActivity implements View.OnClick
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("account", account)
                 .params("oldpwd", MD5.encrypt(old))
                 .params("newpwd", MD5.encrypt(newpwd))

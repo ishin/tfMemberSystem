@@ -114,7 +114,7 @@ public class AbutmentMemberAction extends BaseAction {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
-		returnToClient(result.toString());
+		returnToClient(result);
 		return "text";
 	}
 
@@ -155,7 +155,7 @@ public class AbutmentMemberAction extends BaseAction {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
-		returnToClient(result.toString());
+		returnToClient(result);
 		return "text";
 	}
 
@@ -195,7 +195,7 @@ public class AbutmentMemberAction extends BaseAction {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
-		returnToClient(result.toString());
+		returnToClient(result);
 		return "text";
 	}
 
@@ -234,7 +234,7 @@ public class AbutmentMemberAction extends BaseAction {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
-		returnToClient(result.toString());
+		returnToClient(result);
 		return "text";
 	}
 
@@ -272,7 +272,7 @@ public class AbutmentMemberAction extends BaseAction {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
-		returnToClient(result.toString());
+		returnToClient(result);
 		return "text";
 	}
 
@@ -311,7 +311,7 @@ public class AbutmentMemberAction extends BaseAction {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
-		returnToClient(result.toString());
+		returnToClient(result);
 		return "text";
 	}
 

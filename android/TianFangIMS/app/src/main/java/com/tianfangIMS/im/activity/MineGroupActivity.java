@@ -85,6 +85,7 @@ public class MineGroupActivity extends BaseActivity implements AdapterView.OnIte
     }
 
     private void GetGroupList() {
+        String sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
         Gson gson = new Gson();
         final LoginBean loginBean = gson.fromJson(CommonUtil.getUserInfo(mContext), LoginBean.class);
         String UID = loginBean.getText().getId();
@@ -93,6 +94,7 @@ public class MineGroupActivity extends BaseActivity implements AdapterView.OnIte
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", UID)
                 .execute(new StringCallback() {
                     @Override

@@ -68,11 +68,12 @@ public class Settings_Activity extends BaseActivity implements View.OnClickListe
     private List<TopFiveUserInfoBean> resultdata = new ArrayList<TopFiveUserInfoBean>(5);
     private SharedPreferences.Editor editor;
     private SharedPreferences sp;
-
+    String sessionId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_fragment);
+        sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
         mContext = this;
         setTitle("设置");
         init();
@@ -83,56 +84,6 @@ public class Settings_Activity extends BaseActivity implements View.OnClickListe
         boolean flag = sp.getBoolean("isOpen", false);
         sw_sttings_notfaction.setChecked(flag);
         Log.e("Settings_Activity", "悬浮球初始状态：" + flag);
-    }
-
-    public static boolean getAppOps(Context context) {
-        try {
-            Object object = context.getSystemService("appops");
-            if (object == null) {
-                return false;
-            }
-            Class localClass = object.getClass();
-            Class[] arrayOfClass = new Class[3];
-            arrayOfClass[0] = Integer.TYPE;
-            arrayOfClass[1] = Integer.TYPE;
-            arrayOfClass[2] = String.class;
-            Method method = localClass.getMethod("checkOp", arrayOfClass);
-            if (method == null) {
-                return false;
-            }
-            Object[] arrayOfObject1 = new Object[3];
-            arrayOfObject1[0] = Integer.valueOf(24);
-            arrayOfObject1[1] = Integer.valueOf(Binder.getCallingUid());
-            arrayOfObject1[2] = context.getPackageName();
-            int m = ((Integer) method.invoke(object, arrayOfObject1)).intValue();
-            return m == AppOpsManager.MODE_ALLOWED;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return false;
-    }
-
-    private void showDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
-        builder.setTitle("提示");
-        builder.setMessage("允许");
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        AlertDialog simpledialog = builder.create();
-        simpledialog.setCanceledOnTouchOutside(false);
-        simpledialog.setCancelable(false);
-        simpledialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        simpledialog.show();
     }
 
     private void init() {
@@ -244,7 +195,7 @@ public class Settings_Activity extends BaseActivity implements View.OnClickListe
                 startActivity(new Intent(this, ResetPassword_Activity.class));
                 break;
             case R.id.rl_setting_signout:
-                SignOutDialog signoutdialog = new SignOutDialog(mContext);
+                SignOutDialog signoutdialog = new SignOutDialog(mContext,sessionId);
                 signoutdialog.getWindow().setBackgroundDrawable(new ColorDrawable());
                 signoutdialog.show();
                 CommonUtil.SetCleanDialogStyle(signoutdialog);
@@ -264,6 +215,7 @@ public class Settings_Activity extends BaseActivity implements View.OnClickListe
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", id)
                 .execute(new StringCallback() {
                     @Override

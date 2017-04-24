@@ -63,13 +63,17 @@ public class AddTopContacts_Activity extends BaseActivity implements View.OnClic
     private List<AddFriendBean> allChecked;
     private Map<String, Boolean> checkedMap;
     private List<AddFriendRequestBean> ListRequestInfo = new ArrayList<AddFriendRequestBean>();
+    List<String> liststr = new ArrayList<>();//获取选中list的id
     HashMap<Integer, Boolean> prepare;
+    String sessionId;
 
     //    private LoginBean loginBean;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addtopcpntacts_activity);
+        Log.e("一创建怎么会有数据", "------:" + list);
+        sessionId = getSharedPreferences("CompanyCode", MODE_PRIVATE).getString("CompanyCode", "");
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         String flag = (String) bundle.get("MainPlusDialog");
@@ -117,11 +121,13 @@ public class AddTopContacts_Activity extends BaseActivity implements View.OnClic
     }
 
     private void ChangeListView(String GetSearch) {
+
         OkGo.post(ConstantValue.SEARCHFRIEND)
                 .tag(this)
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie", sessionId)
                 .params("account", GetSearch)
                 .execute(new StringCallback() {
                     @Override
@@ -190,23 +196,28 @@ public class AddTopContacts_Activity extends BaseActivity implements View.OnClic
         gv_addContacts.setStretchMode(GridView.NO_STRETCH);
         gv_addContacts.setNumColumns(size);
     }
+
     private void getCount() {
         checkedMap = addTopContactsAdapter.getCheckedMap();//获取选中的人，true是选中的，false是没选中的
-        List<String> bb = new ArrayList<>();
+        Log.e("选中的人", "----:" + checkedMap);
+        AddFriendBean testCheckBean = new AddFriendBean();
         allChecked = new ArrayList<AddFriendBean>();//创建一个存储选中的人的集合
         Iterator a = checkedMap.keySet().iterator();//先迭代出来
-        while (a.hasNext()){
-            bb.add(a.next().toString());
+        while (a.hasNext()) {
+            Log.e("是不是为空啊", "-----:" + a.next().toString());
+            String str = (String) a.next();
+            liststr.add(str);
         }
-
         for (int i = 0; i < checkedMap.size(); i++) {//循环获取选中人的集合
-
-            if (checkedMap.get(bb.get(i)) == null) {    //防止出现空指针,如果为空,证明没有被选中
+            if (checkedMap.get(liststr.get(i)) == null) {    //防止出现空指针,如果为空,证明没有被选中
                 continue;
-            } else if (checkedMap.get(bb.get(i))) {//判断是否有值，如果为空证明没有被选中
-                Log.e("checkedMap","-----:"+checkedMap.get(bb.get(i)));
-                AddFriendBean testCheckBean = list.get(i);
-                allChecked.add(testCheckBean);
+            } else if (checkedMap.get(liststr.get(i))) {//判断是否有值，如果为空证明没有被选中
+                for (int i1 = 0; i1 < list.size(); i1++) {
+                    if (liststr.get(i) == list.get(i1).getId()) {
+                        testCheckBean = list.get(i1);
+                        allChecked.add(testCheckBean);
+                    }
+                }
                 tv_addfriend_submit.setText("添加（" + (allChecked.size()) + "）");
             }
         }
@@ -218,26 +229,15 @@ public class AddTopContacts_Activity extends BaseActivity implements View.OnClic
         SettingGridView(allChecked);
         gv_addContacts.setAdapter(gridView_adapter);
         gridView_adapter.notifyDataSetChanged();
-
+        Log.e("选中的人", "checkAll----:" + allChecked);
         gv_addContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Map<String,Integer> posMap = new HashMap<String, Integer>();
-//                posMap.put(allChecked.get(position).getId(),position);
-                Log.e("打印数据集合","posMap---:"+allChecked.size());
-                /**
-                 * 通过for循环筛选出想要去掉的成员，就可以解决此bug
-                 */
-                allChecked.remove(position);
+//                allChecked.remove(allChecked.get(position).getId());
+                checkedMap.put(allChecked.remove(position).getId(), false);
+                Log.e("选中的人11", "checkedMap----:" + checkedMap);
                 addTopContactsAdapter.notifyDataSetChanged();
                 gridView_adapter.notifyDataSetChanged();
-//                for (int i = 0; i < checkedMap.size(); i++) {//循环获取选中人的集合
-//                    if (checkedMap.get(i) == null) {   //防止出现空指针,如果为空,证明没有被选中
-//                        continue;
-//                    } else if (checkedMap.get(i)) {//判断是否有值，如果为空证明没有被选中
-
-//                    }
-//                }
             }
         });
     }
@@ -257,6 +257,7 @@ public class AddTopContacts_Activity extends BaseActivity implements View.OnClic
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie", sessionId)
                 .params("account", UID)
                 .params("friend", str)
                 .execute(new StringCallback() {

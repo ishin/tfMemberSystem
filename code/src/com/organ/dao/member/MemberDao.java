@@ -223,5 +223,6 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	public TMember getMemberByEmail(String email);
 	public TMember searchSigleUserByOrgan(String name, String password,
 			int organId);
+	public TMember getSuperMember(int organId);
 } 
 

@@ -9,9 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.request.BaseRequest;
+import com.tianfangIMS.im.ConstantValue;
 import com.tianfangIMS.im.R;
 import com.tianfangIMS.im.activity.LoginActivity;
 import com.tianfangIMS.im.service.FloatService;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -22,10 +29,11 @@ import static android.content.Context.MODE_PRIVATE;
 public class SignOutDialog extends Dialog implements View.OnClickListener{
     private Context mContext;
     private RelativeLayout rl_dialog_signout,rl_dialog_signoutcancel;
-
-    public SignOutDialog(Context context) {
+    private String sessionId;
+    public SignOutDialog(Context context,String sessionId) {
         super(context);
         this.mContext = context;
+        this.sessionId = sessionId;
     }
 
     @Override
@@ -44,10 +52,31 @@ public class SignOutDialog extends Dialog implements View.OnClickListener{
         rl_dialog_signoutcancel.setOnClickListener(this);
     }
 
+    private void LogOut(){
+        OkGo.post(ConstantValue.LOGOUT)
+                .tag(this)
+                .connTimeOut(10000)
+                .readTimeOut(10000)
+                .writeTimeOut(10000)
+                .headers("cookie",sessionId)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onBefore(BaseRequest request) {
+                        super.onBefore(request);
+                        LoadDialog.show(mContext);
+                    }
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        LoadDialog.dismiss(mContext);
+                    }
+                });
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.rl_dialog_signout:
+                LogOut();
                 SharedPreferences sp = mContext.getSharedPreferences("config", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.clear();

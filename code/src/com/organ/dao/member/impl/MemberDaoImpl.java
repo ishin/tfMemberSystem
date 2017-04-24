@@ -748,4 +748,24 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements
 
 		return null;
 	}
+
+	@Override
+	public TMember getSuperMember(int organId) {
+		try {
+			Criteria ctr = getCriteria();
+			ctr.add(Restrictions.eq("superAdmin", 1));
+			ctr.add(Restrictions.eq("organId", organId));
+
+			List<TMember> list = ctr.list();
+
+			if (list.size() > 0) {
+				return (TMember) list.get(0);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 }
