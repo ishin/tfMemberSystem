@@ -7,7 +7,7 @@ import com.organ.model.TMemberRole;
 
 public interface MemberRoleDao extends IBaseDao<TMemberRole, Integer> {
 
-	public TMemberRole getRoleForId(int id);
+	public List<TMemberRole> getRoleForId(int id);
 
 	/**
 	 * 获取多个成员的角色
@@ -15,6 +15,8 @@ public interface MemberRoleDao extends IBaseDao<TMemberRole, Integer> {
 	 * @return
 	 */
 	public List<TMemberRole> getRolesForIds(Integer[] ids);
+
+	public List getMemberIdsByRoleIds(String string);
 
 
 }

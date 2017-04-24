@@ -100,15 +100,16 @@ function fToStep3(dom){
 function signin(){
     var accout = $('#username').val();
     var userpwd = hex_md5($('#pwdIn').val());
-    var data = {account:accout,userpwd:userpwd};
+    var organCode = $('#organCode').val();
+    var data = {account:accout,userpwd:userpwd,organCode:organCode};
     //验证
     sendAjax('system!afterLogin',data,function(datas){
-        //window.localStorage.datas=datas;
+
         var datas = JSON.parse(datas);
         if(datas &&	datas.code == 1){
             data.token = datas.text.token;
-            window.localStorage.account=JSON.stringify(data);
-            window.location.href = '12.jsp';
+            window.localStorage.account=JSON.stringify(datas.text);
+            window.location.href = 'page/cms/12.jsp';
         } else {
             new Window().alert({
                 title   : '',

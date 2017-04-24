@@ -30,27 +30,43 @@
 </div>
 
 <div class="infopanel21">
-	<div class="info">
+	<div class="info" style="overflow: scroll;">
 		<div class="infotitle">
 			<div class="title">成员身份权限</div>
 		</div>
 		<div class="col21">
 			<div class="col1">
 				<div class="line21">
-					<button id='addrole' class='cancel'><img src='images/addicon.png' style='margin:-2px 5px 0 0' />添加身份</button>
-					<button class='cancel' onclick='delrole()' style='width:64px;margin-left:5px'>删除</button>
+					<button id='addrole' class='cancel'><img src='images/addicon.png' style='' />添加身份</button>
+					<button class='cancel' onclick='delrole()' style='width:64px; margin-left:10px;'>删除</button>
 				</div>
-				<div class="line21" style="width:70%">
+				<div class="line21" style="height: calc(100% - 84px);">
 					<ul id='list21'>
 <!-- 				<li>组织管理员</li>
 						<li class="active">普通成员</li>
 					</ul>
  -->			</div>
 			</div>
-<jsp:include page="210.jsp" flush="true" />
-<jsp:include page="211.jsp" flush="true" />
-<jsp:include page="212.jsp" flush="true" />
-		</div>
+			<div class="infotitle">
+				<div class="infotab" style='font-size: 16px;'>
+					<div class="infotabi tabactive" onclick='showpage("210")' bindpage='210'>人员管理</div>
+					<%--<div class="infotabi" onclick='showpage("211")' bindpage='211'>IMS</div>--%>
+					<%--<div class="infotabi" onclick='showpage("213")' bindpage='213'>OA</div>--%>
+					<%--<div class="infotabi" onclick='showpage("214")' bindpage='214'>团餐SASS</div>--%>
+				</div>
+				<div class="infotabr" style='padding-top: 10px'>
+					<button id="editmember" class="addedit" style='width:100px'>新增/修改人员</button>
+				</div>
+			</div>
+			<jsp:include page="210.jsp" flush="true" />
+<%--<jsp:include page="211.jsp" flush="true" />--%>
+<%--<jsp:include page="211edit.jsp" flush="true" />--%>
+<%--<jsp:include page="213.jsp" flush="true" />--%>
+<%--<jsp:include page="213edit.jsp" flush="true" />--%>
+<%--<jsp:include page="214.jsp" flush="true" />--%>
+<%--<jsp:include page="214edit.jsp" flush="true" />--%>
+
+			</div>
 		<p>&nbsp;</p>
 	</div>
 </div>

@@ -33,9 +33,9 @@ $(document).ready(function(){
 	});
 	$('#save11branch').click(function() {
 		var branchparentid = $('#11branchbranchid').val();
-		var branchname = $('#branchname').val();
+		var branchname = $('#11branchname').val();
 		var branchmanagerid = $('#11branchmanagerid').val();
-
+		console.log('必填项不可为空');
 		if(!branchparentid||!branchname||!branchmanagerid){
 			new Window().alert({
 				title   : '',
@@ -65,18 +65,18 @@ $(document).ready(function(){
 	$('#11branchaddmember').click(function(){
 
 		//权限
-		if (has('rsgltj')) {
+		//if (has('rsgltj')) {
 			fillmember = 2;
 			$('#member').modal({
 				backdrop: false,
 				remote: '11_member.jsp'
 			});
-		}
-		else {
-			bootbox.alert({title:'提示', message:'您没有权限添加人员.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-		}
+		//}
+		//else {
+		//	bootbox.alert({title:'提示', message:'您没有权限添加人员.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//}
 	});
 });
 function cb_11_save_branch(data) {

@@ -35,16 +35,14 @@ public class AdmAction extends BaseAction {
 	}
 
 	public String getBase() {
-
 		JSONObject js = new JSONObject();
-
 		String privs = (String) this.getSessionAttribute("privs");
 		if (privs == null) {
 			SessionUser su = this.getSessionUser();
 			if (su == null) {
 				js.put("id", 0);
 			} else {
-				TMember m = branchService.getMemberByAccount(su.getAccount());
+				TMember m = branchService.getMemberByAccount(su.getAccount(), su.getOrganId());
 				this.setSessionAttribute("member", m);
 				privs = privService.getPrivStringByMember(m.getId());
 				this.setSessionAttribute("privs", privs);

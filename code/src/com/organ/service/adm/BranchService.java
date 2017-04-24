@@ -37,8 +37,8 @@ public interface BranchService {
 	 */
 	public String getMemberById(Integer memberId);
 	public List getMemberBranchById(Integer memberId);
-	public TMember getMemberByAccount(String account);
-	public TBranch getBranchByName(String name);	
+	public TMember getMemberByAccount(String account, int organId);
+	public TBranch getBranchByName(String name, int organId);	
 
 	/*
 	 * 取人员对象通过人员id
@@ -47,9 +47,9 @@ public interface BranchService {
 	/*
 	 * 取字典
 	 */
-	public String getRole();
+	public String getRole(Integer integer);
 	public String getSex();
-	public String getPosition();
+	public String getPosition(Integer integer);
 	
 	/*
 	 * 取部门人员通过部门人员id
@@ -84,21 +84,41 @@ public interface BranchService {
 
 	/**
 	 * 获取部门数据
+	 * @param integer 
 	 * @return
 	 */
-	public String getBranchTree();
+	public String getBranchTree(Integer integer);
 
 	/**
 	 * 获取部门+成员 数据
+	 * @param appId 
 	 * @return
 	 */
-	public String getBranchTreeAndMember();
+	public String getBranchTreeAndMember(String appId, Integer organId);
 
 	/**
 	 * 取部门下的成员
 	 * @param branchId
 	 * @return
 	 */
-	public String getBranchMember(String branchId);
+	public String getBranchMember(String branchId, String appId, Integer organId);
+	
+	/**
+	 * 获取部门成员
+	 * @param ids
+	 * @return
+	 */
+	public String getBranchMemberByMemberIds(String ids);
+	
+	/**
+	 * 获取成员
+	 * @param mobile  手机 
+	 * @param telPhone  电话 
+	 * @return
+	 */
+	public TMember getMemberByMobile(String mobile, String telPhone);
+	
+	public TMember getMemberByEmail(String parameter);
+	public String getSuperMember(int organId);
 	
 }

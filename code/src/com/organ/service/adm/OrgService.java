@@ -14,4 +14,13 @@ public interface OrgService {
 	public List getSubdustry(Integer industryId);
 	public TOrgan getInfo(Integer orgId);
 	public void save(TOrgan organ);
+	public String getInfos(String ids);
+	public String registOrgan(TOrgan organ);
+	/**
+	 * 获取组织列表
+	 * @return
+	 */
+	public String getList();
+	
+	public TOrgan getOrganByCode(String organCode);
 }

@@ -29,13 +29,13 @@ input, select, option {
 	height: 34px;
 }
 input, select, option, textarea {
-	border: 1px solid #ccc;
+	border: 1px solid #e6e6e6;
 	background-color: white;
-	padding: 0 0 0 5px;
+	padding: 0 0 0 10px;
 }
 input:focus {
 	outline: none;
-	padding: 0 0 0 10px;
+	/*padding: 0 0 0 10px;*/
 }
 /*自定义滚动条*/
 /*定义滚动条宽高及背景，宽高分别对应横竖滚动条的尺寸*/
@@ -60,6 +60,9 @@ input:focus {
 	background-color: #b4b4b4;
 	box-shadow: none;
 }
+/*.ui-icon, .ui-widget-content .ui-icon{*/
+	/*background-image: url("images/ui-icons_444444_256x240.png") !important;*/
+/*}*/
 .cancel {
 	background-color: #fff;
 	color: #30c0da;
@@ -138,21 +141,23 @@ input:focus {
 }
 .menupanel11 {
 	float: left;
-	width: 500px;
+	width: 750px;
 	box-shadow: 0px 0px 10px #cbcbcb;
 	background: white;
 }
 .sidebar11 {
 	float: left;
-	width: 200px;
+	width: 250px;
+	padding-top: 8px;
 /*	padding-top: 3%;
 	height: 830px;
-*/	border-right:1px solid #cbcbcb;	
+*/	border-right:1px solid #cbcbcb;
 }
 .menu {
-	padding: 15px 0;
-	margin-top: 15px;
+	margin-top: 16px;
 	cursor: pointer;
+	height: 50px;
+	line-height: 50px;
 }
 .menuicon {
 	margin: 0 8% 0 12%;
@@ -165,7 +170,7 @@ input:focus {
 /*}*/
 .organ {
 	float: left;
-	width: 300px;
+	width: 500px;
 	padding-top: 10px;
 }
 .organline {
@@ -269,7 +274,7 @@ input:focus {
 }
 div#container {
 	height: 100%;
-	background: #e8e8e8;
+	background: #ebf0f5;
 	overflow: hidden;
 }
 .admadd {
@@ -285,26 +290,84 @@ div#container {
 }
 .infopanel11 {
 	float: left;
-	width: calc(100% - 600px);
+	width: calc(100% - 850px);
 	margin: 30px 50px;
 	background: white;
 	height: calc(100% - 125px);
 }
+ul.searchResultUL {
+	background: #fff;
+	position: relative;
+	padding: 6px 0px;
+	border: 1px solid #e6e6e6;
+	box-shadow: 0px 0px 10px #e6e6e6;
+	border-top: none;
+}
+ul.searchResultUL li {
+	height: 42px;
+	/*background: paleturquoise;*/
+	margin: 6px;
+	line-height: 42px;
+	text-indent: 10px;
+	border-radius: 5px;
+}
+
+.searchResultUL li.searchNoResult{
+	height: 132px;
+	position: relative;
+	background: url('img/noResult.png') no-repeat 125px 30px;
+}
+.searchResultUL li.searchNoResult:hover{
+	background-color: #ffffff ;
+	background: url('img/noResult.png') no-repeat 200px 30px;
+}
+.searchResultUL li.searchNoResult span{
+	display: inline-block;
+	position: absolute;
+	/* background: paleturquoise; */
+	bottom: 0px;
+	/* left: 100px; */
+	width: 100%;
+	text-align: center;
+}
+ul.searchResultUL li img {
+	margin-right: 10px;
+}
+
+ul.searchResultUL li:hover {
+	background: #f5f5f5;
+}
+form#memberform {
+	width: 800px;
+}
+form#branchform {
+	/* width: 500px; */
+	overflow: scroll;
+	overflow: auto;
+	/* overflow-x: auto; */
+ }
 .info {
 	width: 100%;
 	box-shadow: 0px 0px 10px #cbcbcb;
 	border-radius: 6px;
 	height: 100%;
+	/* min-width: 700px; */
+	background: #fff;
+	/*overflow: scroll;*/
 }
 .infotitle {
 	height: 50px;
 	width: 100%;
-	border-bottom: 1px solid #cbcbcb;
+	border-bottom: 1px solid #f0f0f0;
+	min-width: 800px;
 }
 .title {
 	float: left;
-	padding: 15px 0 0 30px;
+	/* padding: 15px 0 0 30px; */
 	font-size: 16px;
+	line-height: 50px;
+	text-indent: 42px;
+	color: #333333;
 }
 .dtitle {
 	font-size: 16px;
@@ -320,10 +383,17 @@ div#container {
 }
 .infotabi {
 	float: left;
-	padding: 15px 8px 14px 8px;
+	text-align: center;
+	width: 100px;
+	color: rgb(153,153,153);
+	cursor: pointer;
+	height: 50px;
+	line-height: 50px;
 }
 .tabactive {
+	color:rgb(40,192,210);
 	border-bottom: 2px solid rgb(48,192,218);
+	text-align:center;width:100px;
 }
 .line11 {
 	padding: 34px;
@@ -346,7 +416,7 @@ div#container {
 	margin-left: -4px;
 	height: 34px;
 	width: 20px;
-	border: 1px solid #ccc;
+	border: 1px solid #e6e6e6;
 	background: url("img/xiala-2.png") no-repeat;
 	background-position: 3px 13px;
 }
@@ -354,7 +424,7 @@ div#container {
 	margin-left: -2px;
 	height: 34px;
 	width: 20px;
-	border: 1px solid #ccc;
+	border: 1px solid #f0f0f0;
 	background: url("img/xiala-2.png") no-repeat;
 	background-position: 3px 13px;
 }
@@ -416,6 +486,7 @@ th {
 	width: 120px;
 	height: 30px;
 	text-align: center;
+	outline: none;
 }
 .makemain {
 	color: #fff;
@@ -433,10 +504,15 @@ th {
 	height: 50px;
 }
 .t210 tr {
-	height: 40px;
+	height: 50px;
+	line-height: 50px;
 }
 .t112 th, .t112 td {
 	padding: 0 0 0 20px;
+	max-width: 100px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .t210 th, .t210 td {
 	padding: 0 0 0 20px;
@@ -454,7 +530,7 @@ th {
 }
 .menupanel12 {
 	float: left;
-	width: 200px;
+	width: 250px;
 	box-shadow: 0px 0px 10px #cbcbcb;
 	background: white;
 	height: 100%;
@@ -462,17 +538,17 @@ th {
 .sidebar12 {
 	float: left;
 	width: 100%;
-	/* padding-top: 15px; */
+	padding-top: 8px;
 	/* height: 1520px; */
 	box-shadow: 0px 0px 10px #cbcbcb;
-	height: calc(100% - 50px);
+	height: calc(100% - 50px) !important;
 }
 #grouplist tr:hover{
 	background-color: #ebf0f5;
 }
 .infopanel12 {
 	float: left;
-	width: calc(100% - 300px);
+	width: calc(100% - 350px);
 	margin: 30px 50px;
 	min-width: 500px;
 	height: calc(100% - 120px);
@@ -552,7 +628,7 @@ th {
 }
 .infopanel21 {
 	float: left;
-	width: calc(100% - 300px);
+	width: calc(100% - 350px);
 	margin: 30px 50px 30px 50px;
 	background: white;
 	height: calc(100% - 125px);
@@ -561,13 +637,21 @@ th {
 	margin: 10px 0 0 0;
 	width: 100%;
 	height: calc(100% - 50px);
+	min-width: 900px;
+	position: relative;
+	/* padding-right: 62px; */
+	/* padding-left: 62px; */
+	/*overflow: scroll;*/
 }
 .col21 .col1 {
 	width: 25%;
 	float: left;
+	height: calc(100% - 10px);
+	/*min-width: 230px;*/
+	padding-left: 62px;
 }
 .col21 .col2 {
-	width: 75%;
+	width: calc(75% - 62px);
 	float: left;
 	/* overflow: scroll; */
 	height: 100%;
@@ -576,7 +660,7 @@ th {
 	color: rgb(48,192,218);
 	background-color: rgb(229,252,255);
 }
-div#list211 {
+div#list211,div#list213,div#list214,div#list211edit,div#list213edit,div#list214edit {
 	overflow-y: scroll;
 	width: 100%;
 	height: calc(100% - 64px);
@@ -587,14 +671,21 @@ div#list211 {
 	width: calc(100% - 10px) !important;
 }
 .line21 {
-	margin: 20px 0 20px 40px;
+	margin: 20px 0 20px 0px;
 }
 .line21 ul {
-	background-color: #ccc;
+	/*background-color: #ccc;*/
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	overflow-y: auto;
 }
 .line21 li {
 	padding: 10px 0 10px 20px;
 	cursor: pointer;
+	/*height: 40px;*/
+	/*width: 186px !important;*/
+	width: calc(100% - 10px) !important;
 	
 }
 .line21 .active {
@@ -602,17 +693,33 @@ div#list211 {
 }
 .col21 .infotitle {
 	height: 50px;
-	width: 92%;
+	width: calc(75% - 100px);
+	/* margin-left: 30px; */
+	border-bottom: 1px solid #f0f0f0;
+	FLOAT: left;
+	 overflow: hidden;
+	 overflow-x: auto;
+	min-width: auto;
+	margin-right: 62px;
 	margin-left: 30px;
-	border-bottom: 1px solid #cbcbcb;
 }
 .col21 .infotab {
 	float: left;
 	padding: 0;
 }
+.collHide{
+	position: relative;
+}
 .infotabr {
 	float: right;
-	padding: 15px 0 14px 8px;
+	/* padding: 15px 0px 14px 8px; */
+	position: absolute;
+	/* z-index: 28; */
+	/* background: palevioletred; */
+	position: absolute;
+	/* right: -140px; */
+	/* top: -52px; */
+	right: 72px;
 }
 .line211 {
 	padding: 20px 0 15px 50px;
@@ -843,14 +950,13 @@ div#list211 {
 	line-height: 36px;
 }
 .memberlist_21 {
-	/*overflow-y: auto; */
 	border: 1px solid #ccc;
 	margin: -1px 0 0 0;
 	padding: 5px 0 0 0;
 	height: 400px;
+	overflow: hidden;
+	overflow-y: scroll;
 }
-
-
 
 .searchArea {
 	width: 100%;
@@ -920,7 +1026,7 @@ button.pagingJump {
 	display:none;
 	z-index:1;
 }
-.dialogApp{
+.dialogApp2{
 	display:none;
 	height: 521px;
 	width: 622px;
@@ -928,7 +1034,29 @@ button.pagingJump {
 	background: white;
 	left: 50%;
 	top: 50%;
-	margin: -188px 0px 0px -311px;
+	margin: -260px 0px 0px -311px;
+	border-radius: 10px;
+	z-index:2;
+}
+span#appsecret {
+	text-indent: 10px;
+	display: inline-block;
+	max-width: 409px;
+	/* overflow: hidden; */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+.dialogApp1{
+	display:none;
+	height: 400px;
+	width: 622px;
+	position: absolute;
+	background: white;
+	left: 50%;
+	top: 50%;
+	margin: -200px 0px 0px -311px;
 	border-radius: 10px;
 	z-index:2;
 }
@@ -943,6 +1071,7 @@ button.pagingJump {
 	margin: -188px 0px 0px -311px;
 	border-radius: 10px;
 	z-index:2;
+
 }
 .dialogAuth .dialogHeader ,.dialogApp .dialogHeader{
 	height: 60px;
@@ -971,8 +1100,11 @@ span.closeX {
 	/*background: palegoldenrod;*/
 	padding: 0px 50px;
 }
-.dialogApp .dialogBody{
-	height:360px;
+.dialogApp2 .dialogBody{
+	 height:360px;
+ }
+.dialogApp1 .dialogBody{
+	height:223px;
 }
 .dialogBody ul li{
 	height:70px;
@@ -998,7 +1130,7 @@ button.canclaDia {
 	color: #30c0da;
 	margin-left: 20px;
 }
-span.plusAuth {
+span.plusAuth,span.plusApp {
 	display: inline-block;
 	height: 30px;
 	width: 30px;
@@ -1031,4 +1163,14 @@ span.plusAuth {
 }
 select.category{
 	width: 318px;;
+}
+
+#list210 tr td img{
+	display: none;
+}
+#list210 tr:hover td img{
+	display: block;
+}
+#list210 tr:hover{
+	background: #f0fdff;
 }

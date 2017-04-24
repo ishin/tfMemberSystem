@@ -1,76 +1,87 @@
 package com.organ.service.adm.impl;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.organ.common.Tips;
 import com.organ.dao.adm.BranchDao;
 import com.organ.dao.adm.BranchMemberDao;
 import com.organ.dao.adm.MemberRoleDao;
 import com.organ.dao.adm.PositionDao;
+import com.organ.dao.appinfoconfig.AppInfoConfigDao;
+import com.organ.dao.auth.AppSecretDao;
 import com.organ.dao.member.MemberDao;
+import com.organ.model.AppSecret;
 import com.organ.model.ImpUser;
 import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
 import com.organ.model.TMember;
 import com.organ.model.TMemberRole;
 import com.organ.model.TPosition;
+import com.organ.model.UserSysRelation;
 import com.organ.service.adm.BranchService;
+import com.organ.utils.JSONUtils;
+import com.organ.utils.LogUtils;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PinyinGenerator;
 import com.organ.utils.StringUtils;
 import com.organ.utils.TextHttpSender;
 import com.organ.utils.TimeGenerator;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 public class BranchServiceImpl implements BranchService {
 
+	private static final Logger logger = Logger.getLogger(BranchServiceImpl.class);
+	
 	private BranchDao branchDao;
 	private MemberDao memberDao;
 	private BranchMemberDao branchMemberDao;
 	private MemberRoleDao memberRoleDao;
 	private PositionDao positionDao;
+	private AppSecretDao appSecretDao;
+	private AppInfoConfigDao appinfoconfigDao;
 	
-	public BranchDao getBranchDao() {
-		return branchDao;
+	public void setAppSecretDao(AppSecretDao appSecretDao) {
+		this.appSecretDao = appSecretDao;
 	}
 	public void setBranchDao(BranchDao branchDao) {
 		this.branchDao = branchDao;
 	}
-	public MemberDao getMemberDao() {
-		return memberDao;
-	}
 	public void setMemberDao(MemberDao memberDao) {
 		this.memberDao = memberDao;
-	}
-	public BranchMemberDao getBranchMemberDao() {
-		return branchMemberDao;
 	}
 	public void setBranchMemberDao(BranchMemberDao branchMemberDao) {
 		this.branchMemberDao = branchMemberDao;
 	}
-	public MemberRoleDao getMemberRoleDao() {
-		return memberRoleDao;
-	}
 	public void setMemberRoleDao(MemberRoleDao memberRoleDao) {
 		this.memberRoleDao = memberRoleDao;
-	}
-	public PositionDao getPositionDao() {
-		return positionDao;
 	}
 	public void setPositionDao(PositionDao positionDao) {
 		this.positionDao = positionDao;
 	}
 
+	@Override
+	public TMember getMemberByMobile(String mobile, String telPhone) {
+		return memberDao.getMemberByMobile(mobile, telPhone);
+	}
+	@Override
+	public TMember getMemberByEmail(String email) {
+		return memberDao.getMemberByEmail(email);
+	}
+	
+	public void setAppinfoconfigDao(AppInfoConfigDao appinfoconfigDao) {
+		this.appinfoconfigDao = appinfoconfigDao;
+	}
 	/*
 	 * (non-Javadoc)
 	 * @see com.sealtalk.service.adm.BranchService#getOrganTree(java.lang.Integer)
@@ -90,7 +101,7 @@ public class BranchServiceImpl implements BranchService {
 			Object[] br = (Object[])it.next();
 			jo.put("id", br[0]);
 			jo.put("pid", 0);
-			jo.put("name", "<img src='page/admin/images/orga.png' style='padding-right: 10px'>" + br[1]);
+			jo.put("name", "<img src='images/orga.png' height='28px' style='padding-right: 10px'>" + br[1]);
 			jo.put("flag", 0);
 			jl.add(jo);
 		}
@@ -103,7 +114,7 @@ public class BranchServiceImpl implements BranchService {
 			Object[] br = (Object[])it.next();
 			jo.put("id", br[0]);
 			jo.put("pid", (Integer)br[1] == 0 ? organId : br[1]);
-			jo.put("name", "<img src='page/admin/images/work.png' style='padding-right: 10px'>" + br[2]);
+			jo.put("name", "<img src='images/work.png' height='28px' style='padding-right: 10px'>" + br[2]);
 			jo.put("flag", 1);
 			jo.put("isParent", "true");
 			jl.add(jo);
@@ -117,7 +128,7 @@ public class BranchServiceImpl implements BranchService {
 			Object[] br = (Object[])it.next();
 			jo.put("id", br[0]);
 			jo.put("pid", br[1]);
-			jo.put("name", "<img src='page/admin/images/memb.png' style='padding-right: 10px'>" + br[2]);
+			jo.put("name", "<img src='images/memb.png' height='28px' style='padding-right: 10px'>" + br[2]);
 			jo.put("flag", 2);
 			jl.add(jo);
 		}
@@ -241,7 +252,6 @@ public class BranchServiceImpl implements BranchService {
 			js.add(j);
 		}
 		jo.put("branchmember", js);
-		
 		return jo.toString();
 	}
 	
@@ -251,9 +261,9 @@ public class BranchServiceImpl implements BranchService {
 	 * by alopex
 	 */
 	@Override
-	public TMember getMemberByAccount(String account) {
+	public TMember getMemberByAccount(String account, int organId) {
 		
-		return memberDao.getOneMember(account);
+		return memberDao.getOneMember(account, organId);
 	}
 
 	/*
@@ -262,9 +272,9 @@ public class BranchServiceImpl implements BranchService {
 	 * by alopex
 	 */
 	@Override
-	public TBranch getBranchByName(String name) {
+	public TBranch getBranchByName(String name, int organId) {
 		
-		return branchDao.getOneOfBranch(name);
+		return branchDao.getOneOfBranch(name, organId);
 	}
 
 	@Override
@@ -291,11 +301,11 @@ public class BranchServiceImpl implements BranchService {
 	 * by alopex
 	 */
 	@Override
-	public String getRole() {
+	public String getRole(Integer organId) {
 
 		ArrayList<JSONObject> jl = new ArrayList<JSONObject>();
 
-		List list = branchDao.getRole();
+		List list = branchDao.getRole(organId);
 		Iterator it = list.iterator();
 		
 		while(it.hasNext()) {
@@ -339,11 +349,11 @@ public class BranchServiceImpl implements BranchService {
 	 * by alopex
 	 */
 	@Override
-	public String getPosition() {
+	public String getPosition(Integer organId) {
 
 		ArrayList<JSONObject> jl = new ArrayList<JSONObject>();
 
-		List list = branchDao.getPosition();
+		List list = branchDao.getPosition(organId);
 		Iterator it = list.iterator();
 		
 		while(it.hasNext()) {
@@ -366,7 +376,6 @@ public class BranchServiceImpl implements BranchService {
 
 	@Override
 	public Integer saveMember(TMember member) {
-		
 		memberDao.saveOrUpdate(member);
 		return member.getId();
 	}
@@ -550,7 +559,7 @@ public class BranchServiceImpl implements BranchService {
 			m.setSex(user.getSex().equals("男") ? "1" : "2");
 			m.setTelephone(user.getTelephone());
 			m.setEmail(user.getEmail());
-			m.setAccount(pinyin2account(m.getPinyin()));
+			m.setAccount(pinyin2account(m.getPinyin(), organId));
 			m.setOrganId(organId);
 			m.setPassword(PasswordGenerator.getInstance().getMD5Str("111111"));
 			m.setGroupmax(0);
@@ -571,13 +580,13 @@ public class BranchServiceImpl implements BranchService {
 		it = ua.iterator();
 		while(it.hasNext()) {
 			ImpUser user = it.next();
-			TBranch br = this.getBranchByName(user.getBranch());
+			TBranch br = this.getBranchByName(user.getBranch(),organId);
 			if (br == null) {
 				br = new TBranch();
 				br.setName(user.getBranch());
 				br.setOrganId(organId);
 				br.setParentId(0);
-				TMember m = memberDao.getMemberByName(user.getManager());
+				TMember m = memberDao.getMemberByName(user.getManager(), organId);
 				if (m == null) {
 					br.setManagerId(0);
 				}
@@ -620,15 +629,15 @@ public class BranchServiceImpl implements BranchService {
 		
 	}
 
-	private String pinyin2account(String pinyin) {
+	private String pinyin2account(String pinyin, int organId) {
 	
-		TMember m = memberDao.getOneMember(pinyin);
+		TMember m = memberDao.getOneMember(pinyin, organId);
 		if (m == null) return pinyin;
 		
 		int i = 0;
 		while (true) {
 			String account = pinyin + String.valueOf(i);
-			m = memberDao.getOneMember(account);
+			m = memberDao.getOneMember(account, organId);
 			if (m == null) return account;
 			i++;
 		}
@@ -693,9 +702,9 @@ public class BranchServiceImpl implements BranchService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String getBranchTree() {
+	public String getBranchTree(Integer organId) {
 		
-		List list = branchDao.getBranchTree();
+		List list = branchDao.getBranchTree(organId);
 		Iterator it = list.iterator();
 		ArrayList<JSONObject> jl = new ArrayList<JSONObject>();
 		
@@ -712,9 +721,8 @@ public class BranchServiceImpl implements BranchService {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
-	public String getBranchTreeAndMember() {
-		List list = branchDao.getBrancTreeAndMember();
+	public String getBranchTreeAndMember(String appId, Integer organId) {
+		List list = branchDao.getBrancTreeAndMember(organId);
 		
 		JSONArray ja = new JSONArray();
 		
@@ -723,6 +731,39 @@ public class BranchServiceImpl implements BranchService {
 		
 		try {
 			if (list != null) {
+				AppSecret as = appSecretDao.getAppSecretByAppId(appId);
+				int appRecordId = 0;
+				if (as != null) {
+					appRecordId = as.getId();
+				}
+				List memberIds = null;
+				
+				if (appRecordId != 0) {
+					List roleIds = appinfoconfigDao.getRoleIdsByAppId(appRecordId);
+					
+					StringBuilder sb = new StringBuilder();
+					List exist = new ArrayList();
+					
+					if (roleIds != null) {
+						int len = roleIds.size();
+						for(int i = 0; i < len; i++) {
+							if (!exist.contains(roleIds.get(i))) {
+								sb.append(roleIds.get(i)).append(",");
+								exist.add(roleIds.get(i));
+							}
+						}
+					}
+					String sbStr = sb.toString();
+					
+					if (sbStr.endsWith(",")) {
+						sbStr = sbStr.substring(0, sbStr.length() - 1);
+					}
+					
+					if (sbStr.length() > 0) {
+						memberIds = memberRoleDao.getMemberIdsByRoleIds(sbStr);
+					}
+				}
+				
 				for(int i = 0; i < list.size(); i++) {
 					Object[] o = (Object[])list.get(i);
 					JSONObject jm = new JSONObject();
@@ -738,47 +779,53 @@ public class BranchServiceImpl implements BranchService {
 						jm.put("email", isBlank(o[12]));
 						jm.put("address", isBlank(o[13]));
 						jm.put("token", isBlank(o[14]));
-						jm.put("sex", isBlank(o[15]));
-						jm.put("birthday", isBlank(o[16]));
-						jm.put("workno", isBlank(o[17]));
-						jm.put("mobile", isBlank(o[18]));
-						jm.put("groupmax", isBlank(o[19]));
-						jm.put("groupuse", isBlank(o[20]));
-						jm.put("intro", isBlank(o[21]));
-						jm.put("postitionid", isBlank(o[22]));
-						jm.put("postitionname", isBlank(o[23]));
-						jm.put("sexid", isBlank(o[24]));
-						jm.put("sexname", isBlank(o[25]));
-						jm.put("organid", isBlank(o[26]));
-						jm.put("organname", isBlank(o[27]));
+						jm.put("birthday", isBlank(o[15]));
+						jm.put("workno", isBlank(o[16]));
+						jm.put("mobile", isBlank(o[17]));
+						jm.put("intro", isBlank(o[18]));
+						jm.put("postitionid", isBlank(o[19]));
+						jm.put("postitionname", isBlank(o[20]));
+						jm.put("sexid", isBlank(o[21]));
+						jm.put("sexname", isBlank(o[22]));
+						jm.put("organid", isBlank(o[23]));
+						jm.put("organname", isBlank(o[24]));
 						jm.put("branchid", isBlank(o[4]));
 						jm.put("branchname", isBlank(o[6]));
+						jm.put("superior", isBlank(o[7]));			//直接领导人
+						
+						boolean status = false;
+						
+						if (!StringUtils.getInstance().isNull(o[7]) && memberIds != null) {
+							status = memberIds.contains(Integer.parseInt(isBlank(o[7])));
+						}
+						
+						jm.put("accessStatus", status);
 						
 						if (!branchList.contains(o[4])) {
 							String pid = isBlank(o[5]);
 							JSONObject jb = new JSONObject();
 							jb.put("flag", 0);
 							jb.put("id", isBlank(o[4]));
-							jb.put("pid", pid.equals("0") ? isBlank(o[26]) : pid);
+							jb.put("pid", pid.equals("0") ? isBlank(o[23]) : pid);
 							jb.put("name", isBlank(o[6]));
 							ja.add(jb);
 							branchList.add(o[4]);
 						}
 					} else {
-						if (!organList.contains(o[26])) {		//组织
-							JSONObject jor = new JSONObject();
-							jor.put("id", isBlank(o[26]));
-							jor.put("pid", 0);
-							jor.put("name", isBlank(o[27]));
-							jor.put("flag", 0);
-							ja.add(jor);
-							organList.add(o[26]);
-						}
 						String pid = isBlank(o[5]);
 						jm.put("id", isBlank(o[4]));
-						jm.put("pid", pid.equals("0") ? isBlank(o[26]) : pid);
+						jm.put("pid", pid.equals("0") ? isBlank(o[23]) : pid);
 						jm.put("name", isBlank(o[6]));
 						jm.put("flag", 0);  
+					}
+					if (!organList.contains(o[23])) {		//组织
+						JSONObject jor = new JSONObject();
+						jor.put("id", isBlank(o[23]));
+						jor.put("pid", 0);
+						jor.put("name", isBlank(o[24]));
+						jor.put("flag", -1);
+						ja.add(jor);
+						organList.add(o[23]);
 					}
 					ja.add(jm);
 				}
@@ -793,19 +840,51 @@ public class BranchServiceImpl implements BranchService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Override
-	public String getBranchMember(String branchId) {
+	public String getBranchMember(String branchId, String appId, Integer organId) {
 		String result = null;
 		boolean status = true;
 		
 		if (StringUtils.getInstance().isBlank(branchId)) {
 			status = false;
+		} else if (organId == 0) {
+			status = false;
 		} else {
-			List list = branchDao.getBranchMember(branchId);
+			List list = branchDao.getBranchMember(branchId, organId);
 			JSONArray ja = new JSONArray();
 			
 			try {
 				if( list != null) {
+					AppSecret as = appSecretDao.getAppSecretByAppId(appId);
+					int appRecordId = 0;
+					if (as != null) {
+						appRecordId = as.getId();
+					}
+					List memberIds = null;
+					if (appRecordId != 0) {
+						List roleIds = appinfoconfigDao.getRoleIdsByAppId(appRecordId);
+						List exist = new ArrayList();
+						StringBuilder sb = new StringBuilder();
+						
+						if (roleIds != null) {
+							int len = roleIds.size();
+							for(int i = 0; i < len; i++) {
+								if (!exist.contains(roleIds.get(i))) {
+									sb.append(roleIds.get(i)).append(",");
+									exist.add(roleIds.get(i));
+								}
+							}
+						}
+						String sbStr = sb.toString();
+						
+						if (sbStr.endsWith(",")) {
+							sbStr = sbStr.substring(0, sbStr.length() - 1);
+						}
+						
+	
+						if (sbStr.length() > 0) {
+							memberIds = memberRoleDao.getMemberIdsByRoleIds(sbStr);
+						}
+					}
 					for(int i = 0; i < list.size(); i++) {
 						Object[] o = (Object[])list.get(i);
 					
@@ -829,6 +908,15 @@ public class BranchServiceImpl implements BranchService {
 							jm.put("groupuse", isBlank(o[13]));
 							jm.put("intro", isBlank(o[14]));
 							jm.put("postitionname", isBlank(o[16]));
+							jm.put("superior", isBlank(o[7]));			//直接领导人
+							
+							boolean acStatus = false;
+							
+							if (!StringUtils.getInstance().isNull(o[17]) && memberIds != null) {
+								acStatus = memberIds.contains(Integer.parseInt(isBlank(o[17])));
+							}
+							
+							jm.put("accessStatus", acStatus);
 							ja.add(jm); 
 							jm = null;
 						}
@@ -856,4 +944,80 @@ public class BranchServiceImpl implements BranchService {
 		return o == null ? "" : o + "";
 	}
 	
+	@Override
+	public String getBranchMemberByMemberIds(String ids) {
+		JSONObject jo = new JSONObject();
+		try {
+			List list = branchMemberDao.getBranchMemberByMemberIds(ids);
+			
+			JSONArray ja = JSONUtils.getInstance().objToJSONArray(list);
+			
+			if (list != null) {
+				jo.put("code", 1);
+				jo.put("text", ja.toString());
+			} else {
+				jo.put("code", 0);
+				jo.put("text", Tips.FAIL.getText());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		return jo.toString();
+	}
+	@Override
+	public String getSuperMember(int organId) {
+		TMember tm = memberDao.getSuperMember(organId);
+		if (tm != null) {
+			int memberId = tm.getId();
+			JSONObject jo = JSONObject.fromObject(tm);
+			
+			/*
+			 * 取职务
+			 */
+			List list1 = memberDao.getMemberPosition(memberId);
+			Iterator it1 = list1.iterator();
+			if (it1.hasNext()) {
+				Object[] pos = (Object[])it1.next();
+				jo.put("positionId", pos[0]);
+				jo.put("branchId", pos[1]);
+				jo.put("branchMemberId", pos[2]);
+			}
+			
+			/*
+			 * 取角色
+			 */
+			List list2 = memberDao.getMemberRole(memberId);
+			Iterator it2 = list2.iterator();
+			if (it2.hasNext()) {
+				Object rol = (Object)it2.next();
+				jo.put("roleId", rol);
+			}
+			
+			/*
+			 * 取所在部门
+			 */
+			ArrayList<JSONObject> js = new ArrayList<JSONObject>();
+			List list3 = branchDao.getBranchMember(memberId);
+			Iterator it3 = list3.iterator();
+			while (it3.hasNext()) {
+				JSONObject j = new JSONObject();
+				Object[] bm = (Object[])it3.next();
+				j.put("branchmemberid", bm[0]);
+				j.put("branchname", bm[1] != null ? bm[1] : "（未分组人员）");
+				j.put("positionname", bm[2] == null ? "(未知职务)" : bm[2]);
+				j.put("ismaster", bm[3]);
+				js.add(j);
+			}
+			jo.put("branchmember", js);
+			return jo.toString();
+		} else {
+			JSONObject j = new JSONObject();
+			j.put("code", 0);
+			j.put("text", Tips.FAIL.getText());
+			return j.toString();
+		}
+		
+	}
+
 }

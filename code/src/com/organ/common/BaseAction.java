@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,8 @@ import org.directwebremoting.WebContextFactory;
 import com.opensymphony.xwork2.ActionSupport;
 import com.organ.model.SessionUser;
 import com.organ.model.TMember;
+import com.organ.utils.PasswordGenerator;
+import com.organ.utils.PropertiesUtils;
 import com.organ.utils.StringUtils;
 
 public class BaseAction extends ActionSupport implements ServletRequestAware,
@@ -54,9 +57,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 	 * 获取url参数。android请求用url方式传参
 	 * 
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
 	@SuppressWarnings("unchecked")
-	public Map getRequestParams() {
+	public Map getRequestParams(){
 		Map<String, String[]> map = request.getParameterMap();
 
 		for (Map.Entry<String, String[]> m : map.entrySet()) {
@@ -75,8 +79,9 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 	 * 参数长度
 	 * 
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
-	public int getRequestParamsLength() {
+	public int getRequestParamsLength() throws UnsupportedEncodingException {
 		return this.getRequestParams().size();
 	}
 
@@ -85,9 +90,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 	 * 
 	 * @param key
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
 	@SuppressWarnings("unchecked")
-	public String[] getRequestParamsValue(String key) {
+	public String[] getRequestParamsValue(String key){
 		Map<String, String[]> map = request.getParameterMap();
 		String[] values = (String[]) map.get(key);
 
@@ -174,7 +180,11 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 		if (request == null) {
 			WebContext ctx = WebContextFactory.get();
 			HttpSession session = ctx.getSession(false);
+			String time = PropertiesUtils
+			.getStringByKey("session.inactiveInterval");
 			session.setAttribute(Constants.ATTRIBUTE_NAME_OF_SESSIONUSER, su);
+			session.setMaxInactiveInterval(StringUtils.getInstance().isBlank(
+					time) ? 86400 : Integer.parseInt(time));
 		} else {
 			request.getSession().setAttribute(
 					Constants.ATTRIBUTE_NAME_OF_SESSIONUSER, su);
@@ -199,6 +209,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 			WebContext ctx = WebContextFactory.get();
 			HttpSession session = ctx.getSession(false);
 			session.setAttribute(key, o);
+			String time = PropertiesUtils
+			.getStringByKey("session.inactiveInterval");
+			session.setMaxInactiveInterval(StringUtils.getInstance().isBlank(
+					time) ? 86400 : Integer.parseInt(time));
 		} else {
 			request.getSession().setAttribute(key, o);
 		}
@@ -274,6 +288,22 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 	 * userInfo.getAccountName(); }
 	 */
 
+	/**
+	 * 验证参数
+	 */
+	protected String valideParams(HttpServletRequest req, String[] params) {
+		String result = null;
+		
+		for(int i = 0; i < params.length; i++) {
+			String value = req.getParameter(params[i]);
+			if (StringUtils.getInstance().isBlank(value)) {
+				result = params[i] + " is null";
+				break;
+			}
+		}
+		
+		return result;
+	}
 	
 	
 	protected Integer getOrganId() {
@@ -290,5 +320,28 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 		returnToClient(jo.toString());
 		return "text";
 	}
+	
+	protected int getSessionUserOrganId() {
+		SessionUser su = this.getSessionUser();
+		return su.getOrganId();
+	}
+	protected String getSessionUserName() {
+		SessionUser su = this.getSessionUser();
+		return su.getFullname();
+	}
 
+	/**
+	 * 验证参数有效性
+	 * @param timeStamp
+	 * @param validTime
+	 * @param key
+	 * @return
+	 */
+	protected boolean validParams(JSONObject params) {
+		String timeStamp = params.getString("timestamp");
+		String key = PropertiesUtils.getStringByKey("param.key");
+		String validTime = PropertiesUtils.getStringByKey("param.validtime");
+		long validTimeLong = validTime != null ? Long.parseLong(validTime) : 0;
+		return PasswordGenerator.getInstance().valideMd5(params, timeStamp, validTimeLong, key);
+	}
 }

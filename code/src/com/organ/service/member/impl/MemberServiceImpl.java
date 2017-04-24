@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.util.ArrayUtil;
 
 import net.sf.json.JSONArray;
@@ -18,6 +19,7 @@ import com.organ.model.TMember;
 import com.organ.model.TextCode;
 import com.organ.service.member.MemberService;
 import com.organ.utils.JSONUtils;
+import com.organ.utils.LogUtils;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PinyinGenerator;
 import com.organ.utils.PropertiesUtils;
@@ -27,31 +29,30 @@ import com.organ.utils.TimeGenerator;
 
 public class MemberServiceImpl implements MemberService {
 
+	private static final Logger logger = Logger.getLogger(MemberServiceImpl.class);
+	
 	@Override
-	public TMember searchSigleUser(String name, String password) {
+	public TMember searchSigleUser(String name, String password, int organId) {
 		TMember memeber = null;
 
 		try {
-			// password = PasswordGenerator.getInstance().getMD5Str(password);
-			// //前端加密
-			memeber = memberDao.searchSigleUser(name, password);
+			memeber = memberDao.searchSigleUserByOrgan(name, password, organId);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		return memeber;
 	}
 
 	@Override
-	public boolean updateUserPwdForAccount(String account, String newPwd) {
+	public boolean updateUserPwdForAccount(String account, String newPwd, int organId) {
 		boolean status = false;
 
 		try {
-			// String md5Pwd =
-			// PasswordGenerator.getInstance().getMD5Str(newPwd);
-
-			status = memberDao.updateUserPwdForAccount(account, newPwd);
+			status = memberDao.updateUserPwdForAccount(account, newPwd, organId);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
 		return status;
@@ -65,6 +66,7 @@ public class MemberServiceImpl implements MemberService {
 			status = memberDao.updateUserPwdForPhone(phone, newPwd);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
 		return status;
@@ -97,8 +99,6 @@ public class MemberServiceImpl implements MemberService {
 					jo.put("birthday", isBlank(member[9]));
 					jo.put("workno", isBlank(member[10]));
 					jo.put("mobile", isBlank(member[11]));
-					// jo.put("groupmax", isBlank(member[12]));
-					// jo.put("groupuse", isBlank(member[13]));
 					jo.put("intro", isBlank(member[12]));
 					jo.put("branchid", isBlank(member[13]));
 					jo.put("branchname", isBlank(member[14]));
@@ -110,6 +110,7 @@ public class MemberServiceImpl implements MemberService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		return jo.toString();
 	}
@@ -122,6 +123,7 @@ public class MemberServiceImpl implements MemberService {
 			row = memberDao.updateUserTokenForId(userId, token);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
 		return row;
@@ -129,11 +131,11 @@ public class MemberServiceImpl implements MemberService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String searchUser(String account) {
+	public String searchUser(String account, int organId) {
 		JSONArray ja = new JSONArray();
 
 		try {
-			List members = memberDao.searchUser(account);
+			List members = memberDao.searchUser(account, organId);
 
 			if (members == null) {
 				JSONObject jo = new JSONObject();
@@ -165,18 +167,20 @@ public class MemberServiceImpl implements MemberService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		return ja.toString();
 	}
 
 	@Override
-	public boolean valideOldPwd(String account, String oldPwd) {
+	public boolean valideOldPwd(String account, String oldPwd, int organId) {
 		boolean b = false;
 
 		try {
-			b = memberDao.valideOldPwd(account, oldPwd);
+			b = memberDao.valideOldPwd(account, oldPwd, organId);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		return b;
 	}
@@ -202,6 +206,7 @@ public class MemberServiceImpl implements MemberService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
 		return code;
@@ -219,6 +224,7 @@ public class MemberServiceImpl implements MemberService {
 			textCodeDao.saveTextCode(stc);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 	}
 
@@ -254,6 +260,7 @@ public class MemberServiceImpl implements MemberService {
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			}
 		}
 
@@ -261,6 +268,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	@Deprecated
 	public boolean updateUserPwd(String account, String newPwd) {
 		boolean status = false;
 
@@ -270,6 +278,7 @@ public class MemberServiceImpl implements MemberService {
 			status = memberDao.updateUserPwd(account, md5Pwd);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
 		return status;
@@ -299,6 +308,7 @@ public class MemberServiceImpl implements MemberService {
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			}
 		}
 
@@ -333,16 +343,17 @@ public class MemberServiceImpl implements MemberService {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		return null;
 	}
 
 	@Override
-	public String getAllMemberInfo() {
+	public String getAllMemberInfo(int organId) {
 		JSONObject jo = new JSONObject();
 
 		try {
-			List<TMember> memberList = memberDao.getAllMemberInfo();
+			List<TMember> memberList = memberDao.getAllMemberInfo(organId);
 
 			if (memberList != null) {
 				int memberLen = memberList.size();
@@ -364,13 +375,14 @@ public class MemberServiceImpl implements MemberService {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
 		return jo.toString();
 	}
 
 	@Override
-	public String getAllMemberOnLineStatus(String userIds) {
+	public String getAllMemberOnLineStatus(int organId, String userIds) {
 		JSONObject jo = new JSONObject();
 
 		try {
@@ -378,7 +390,7 @@ public class MemberServiceImpl implements MemberService {
 
 			if (StringUtils.getInstance().isBlank(userIds)) {
 				idList = new ArrayList<String>();
-				List<TMember> memberList = memberDao.getAllMemberInfo();
+				List<TMember> memberList = memberDao.getAllMemberInfo(organId);
 				if (memberList != null) {
 					int memberLen = memberList.size();
 					for (int i = 0; i < memberLen; i++) {
@@ -412,28 +424,269 @@ public class MemberServiceImpl implements MemberService {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		return jo.toString();
 	}
 
 	@Override
-	public String getMultipleMemberForAccounts(String mulMemberStr) {
-		//List<TMember> memberList = memberDao.getMultipleMemberForAccounts(mulMemberStr);
-		return null;
+	public String getMultipleMemberForAccounts(String mulMemberStr, int organId) {
+		String[] mulMemberStrs = null;
+		String ret = null;
+		JSONObject jo = new JSONObject();
+		
+		if (!StringUtils.getInstance().isBlank(mulMemberStr)) {
+			mulMemberStr = StringUtils.getInstance().replaceChar(mulMemberStr, "]", "");
+			mulMemberStr = StringUtils.getInstance().replaceChar(mulMemberStr, "[", "");
+			mulMemberStr = StringUtils.getInstance().replaceChar(mulMemberStr, "\"", "");
+			mulMemberStrs = mulMemberStr.split(",");
+			List<TMember> memberList = memberDao.getMultipleMemberForAccounts(mulMemberStrs, organId);
+			int[] ids = null;
+			
+			if (memberList != null) {
+				int len = memberList.size();
+				ids = new int[len];
+				for (int i = 0; i < len; i++) {
+					TMember t = memberList.get(i);
+					ids[i] = t.getId();
+				}
+				jo.put("code", 1);
+				jo.put("text", ids);
+			} else {
+				jo.put("code", 0);
+				jo.put("text", Tips.NULLGROUPMEMBER.getText());
+			}
+		} else {
+			jo.put("code", 0);
+			jo.put("text", Tips.NULLUSER.getText());
+		}
+		ret = jo.toString();
+		return ret;
 	}
 	
 	@Override
-	public int countMember() {
+	public int countMember(int organId) {
 		try {
-			int count = memberDao.getMemberCount();
+			int count = memberDao.getMemberCount(organId);
 			return count;
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
 		return 0;
 	}
 
+	@Override
+	public String getMemberIdsByAccount(String names, int organId) {
+		String code = "0";
+		String text = null;
+		JSONObject ret = new JSONObject();
+		
+		try {
+			if (StringUtils.getInstance().isBlank(names)) {
+				text = Tips.WRONGPARAMS.getText();
+			} else {
+				String[] namesArr = StringUtils.getInstance().strToArray(names);
+				List list = memberDao.getMemberIdsByAccount(namesArr, organId);
+				
+				if (list != null) {
+					code = "1";
+					text = list.toString();
+				} else {
+					text = Tips.NULLID.getText();
+				}
+			}
+			
+			ret.put("code", code);
+			ret.put("text", text);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		
+		return ret.toString();
+	}
+	
+	@Override
+	public String isUsedPic(String userId, String picName) {
+		JSONObject jo = new JSONObject();
+		
+		try {
+			int userIdInt = Integer.parseInt(userId);
+			boolean used = memberDao.isUsedPic(userIdInt, picName);
+			jo.put("code", 1);
+			jo.put("text", used);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		
+		return jo.toString();
+	}
+	
+	@Override
+	public String getMemberIdForAccount(String account, int organId) {
+		JSONObject jo = new JSONObject();
+		
+		try {
+			int id = memberDao.getMemberIdForAccount(account, organId);
+			jo.put("code", 1);
+			jo.put("text", id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		return jo.toString();
+	}
+	
+	@Override
+	public String getMultipleMemberForIds(String ids) {
+		JSONObject jo = new JSONObject();
+		
+		try {
+			String[] idArr = StringUtils.getInstance().strToArray(ids);
+			int len = idArr.length;
+			Integer[] idIntArr = new Integer[len];
+			
+			for(int i = 0; i < len; i++) {
+				idIntArr[i] = Integer.parseInt(idArr[i]);
+			}
+			
+			List<TMember> list = memberDao.getMultipleMemberForIds(idIntArr);
+			List<JSONObject> lj = new ArrayList<JSONObject>();
+			
+ 			if (list != null) {
+				for (int i = 0; i < list.size(); i++) {
+					JSONObject tm = JSONUtils.getInstance().modelToJSONObj(list.get(i));
+					tm.remove("password");
+					lj.add(tm);
+				}
+ 			}
+ 			
+			if (list != null) {
+				jo.put("code", 1);
+				jo.put("text", lj.toString());
+			} else {
+				jo.put("code", 0);
+				jo.put("text", Tips.FAIL.getText());
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		return jo.toString();
+	}
+	
+	@Override
+	public String getMemberForId(String userId) {
+		JSONObject jo = new JSONObject();
+		
+		try {
+			int userIdInt = Integer.parseInt(userId);
+			TMember tm = memberDao.getMemberForId(userIdInt);
+			JSONObject j = JSONUtils.getInstance().modelToJSONObj(tm);
+			j.remove("password");
+			if (tm != null) {
+				jo.put("code", 1);
+				jo.put("text", j.toString());
+			} else {
+				jo.put("code", 0);
+				jo.put("text", Tips.FAIL.getText());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		
+		return jo.toString();
+	}
+	
+	@Override
+	public String getLimitMemberIds(String mapMax, int organId) {
+		JSONObject jo = new JSONObject();
+		
+		try {
+			int mapMaxInt = Integer.parseInt(mapMax);
+			List<TMember> tm = memberDao.getLimitMemberIds(mapMaxInt, organId);
+			List<JSONObject> ret = new ArrayList<JSONObject>();
+			
+			if (tm != null) {
+				for(int i = 0; i < tm.size(); i++) {
+					ret.add(JSONUtils.getInstance().modelToJSONObj(tm.get(i)));
+				}
+				jo.put("code", 1);
+				jo.put("text", ret.toString());
+			} else {
+				jo.put("code", 0);
+				jo.put("text", Tips.FAIL.getText());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		
+		return jo.toString();
+	}
+	
+
+	@Override
+	public String getMemberParam(String id, String ps) {
+		JSONObject jo = new JSONObject();
+		String code = "0";
+		String text = null;
+		
+		try {
+			if (!StringUtils.getInstance().isBlank(id) && !StringUtils.getInstance().isBlank(ps)) {
+				id = StringUtils.getInstance().replaceChar(id, "[", "");
+				id = StringUtils.getInstance().replaceChar(id, "]", "");
+				id = StringUtils.getInstance().replaceChar(id, "\"", "");
+				String[] pss = StringUtils.getInstance().strToArray(ps);
+
+				List memList = memberDao.getMemberParam(id, pss);
+				JSONArray ja = new JSONArray();
+				
+				if (memList != null) {
+					code = "1";
+					for(int i = 0; i < memList.size(); i++) {
+						JSONObject t = new JSONObject();
+						Object[] o = (Object[]) memList.get(i);
+						t.put("userID", o[0]);
+						for(int k = 1; k < pss.length; k++) {
+							t.put(pss[k], o[k]);
+						}
+						ja.add(t);
+					}
+					text = ja.toString();
+				} else {
+					text = Tips.FAIL.getText();
+				}
+			}
+			
+			jo.put("code", code);
+			jo.put("text", text);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		
+		return jo.toString();
+	}
+
+	@Override
+	public TMember getSuperAdmin(String account, String userpwd, int organId) {
+		TMember memeber = null;
+
+		try {
+			memeber = memberDao.getSuperAdmin(account, userpwd, organId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		return memeber;
+	}
+	
 	private String isBlank(Object o) {
 		return o == null ? "" : o + "";
 	}

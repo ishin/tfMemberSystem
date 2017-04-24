@@ -13,7 +13,7 @@ public class MemberRoleDaoImpl extends BaseDao<TMemberRole, Integer> implements 
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public TMemberRole getRoleForId(int id) {
+	public List<TMemberRole> getRoleForId(int id) {
 		try {
 			
 			Criteria ctr = getCriteria();
@@ -22,7 +22,7 @@ public class MemberRoleDaoImpl extends BaseDao<TMemberRole, Integer> implements 
 			List<TMemberRole> list = ctr.list();
 			
 			if (list.size() > 0) {
-				return list.get(0);
+				return list;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -44,6 +44,18 @@ public class MemberRoleDaoImpl extends BaseDao<TMemberRole, Integer> implements 
 			if (list.size() > 0) {
 				return list;
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
+	@Override
+	public List getMemberIdsByRoleIds(String ids) {
+		try {
+			String hql = "select member_id from t_member_role where role_id in (" + ids + ")";
+			return runSql(hql);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

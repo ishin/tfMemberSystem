@@ -15,11 +15,12 @@ public class PrivDaoImpl extends BaseDao<TPriv, Integer> implements PrivDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TPriv> getPrivByUrl(String[] url) {
+	public List<TPriv> getPrivByUrl(String[] url, int organId) {
 		try {
 			
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.in("url", url));
+			ctr.add(Restrictions.eq("organId", organId));
 			
 			List<TPriv> list = ctr.list();
 			
@@ -44,6 +45,7 @@ public class PrivDaoImpl extends BaseDao<TPriv, Integer> implements PrivDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
+	@Deprecated
 	public List<TPriv> getAllPriv() {
 		String sql = (new StringBuilder("from TPriv t order by t.parentId asc")).toString();
 		Query query = this.getSession().createQuery(sql);

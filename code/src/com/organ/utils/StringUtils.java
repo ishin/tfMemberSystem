@@ -1,6 +1,7 @@
 package com.organ.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -180,4 +181,38 @@ public class StringUtils {
 		return sb.toString();
 	}
 	
+	/**
+	 * 数组字符串转数组
+	 * @param str "[x,x,x]"
+	 * @return
+	 */
+	public String[] strToArray(String str) {
+		str = str.replace("[", "");
+		str = str.replace("]", "");
+		str = str.replace("\"", "");
+		String[] arr = str.split(",");
+		
+		for(int i = 0; i < arr.length; i++) {
+			arr[i].trim();
+		}
+		return arr;
+	}
+	// 判断一个字符串是否都为数字  
+	public static boolean isDigit(String strNum) {
+		 return strNum.matches("[0-9]{1,}"); 
+	}
+
+	/**
+	 * 按字母表顺序排序
+	 * @param pStr
+	 * @return
+	 */
+	public String sortByChars(String pStr) {
+		if (pStr != null) {
+			char[] c = pStr.toCharArray();
+			Arrays.sort(c);
+			return new String(c);
+		}
+		return null;
+	}
 }

@@ -16,7 +16,7 @@ import com.organ.service.auth.AppSecretService;
  * @date 2017/03/08
  */
 public class AppSecretAction extends BaseAction {
-
+	
 	private static final long serialVersionUID = 1L;
 	
 	/**
@@ -157,8 +157,8 @@ public class AppSecretAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getRealToken() throws ServletException {
-		String result = appSecretService.getRealToken(secret, authToken);
-		returnToClient(result.toString());
+		String result = appSecretService.getRealToken(secret, authToken, companyId);
+		returnToClient(result);
 		return "text";
 	}
 	
@@ -170,7 +170,7 @@ public class AppSecretAction extends BaseAction {
 	public String getAuthResource() throws ServletException {
 		System.out.println("getAuthResource() visitToken: " + visitToken);
 		String result = appSecretService.getAuthResource(visitToken);
-		returnToClient(result.toString());
+		returnToClient(result);
 		return "text";
 	}
 	
@@ -191,6 +191,7 @@ public class AppSecretAction extends BaseAction {
 	private String userName;	//用户名
 	private String userPwd;		//用户密码
 	private String userId;		//成员id
+	private String companyId;	//系统标识
 	
 	
 	public void setUserId(String userId) {
@@ -199,10 +200,6 @@ public class AppSecretAction extends BaseAction {
 
 	public void setIsOpen(String isOpen) {
 		this.isOpen = isOpen;
-	}
-
-	public String getInfo() {
-		return info;
 	}
 
 	public void setInfo(String info) {
@@ -221,40 +218,20 @@ public class AppSecretAction extends BaseAction {
 		this.url = url;
 	}
 	
-	public String getUnAuthToken() {
-		return unAuthToken;
-	}
-	
 	public void setUnAuthToken(String unAuthToken) {
 		this.unAuthToken = unAuthToken;
 	}
 	
-	public String getAuthToken() {
-		return authToken;
-	}
-
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken;
-	}
-
-	public String getVisitiToken() {
-		return visitToken;
 	}
 
 	public void setVisitToken(String visitToken) {
 		this.visitToken = visitToken;
 	}
 
-	public String getUserName() {
-		return userName;
-	}
-
 	public void setUserName(String userName) {
 		this.userName = userName;
-	}
-
-	public String getUserPwd() {
-		return userPwd;
 	}
 
 	public void setAppName(String appName) {
@@ -263,6 +240,10 @@ public class AppSecretAction extends BaseAction {
 
 	public void setUserPwd(String userPwd) {
 		this.userPwd = userPwd;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}
 
 	private AppSecretService appSecretService;

@@ -1,15 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %> 
-<div class="col2" id='210'>
-	<div class="infotitle">
-		<div class="infotab" style='font-size: 16px;'>
-			<div class="infotabi tabactive" style='color:rgb(40,192,210);text-align:center;width:100px;padding-bottom:11px'>人员管理</div>
-			<div class="infotabi" style='color:rgb(153,153,153);text-align:center;width:100px;cursor:pointer' onclick='showpage("211")'>所有权限</div>
-		</div>
-		<div class="infotabr" style='padding-top: 10px'>
-			<button id="editmember" class='addedit' style='width:100px'>新增/修改人员</button>
-		</div>
-	</div>
-	<div style="width:100%;padding-left:30px;">
+<div class="col2 collHide" id='210'>
+	<%--<div class="infotitle">--%>
+		<%--<div class="infotab" style='font-size: 16px;'>--%>
+			<%--<div class="infotabi tabactive" style=''>人员管理</div>--%>
+			<%--<div class="infotabi" onclick='showpage("211")'>IMS</div>--%>
+			<%--<div class="infotabi" onclick='showpage("213")'>OA</div>--%>
+			<%--<div class="infotabi" onclick='showpage("214")'>团餐SASS</div>--%>
+		<%--</div>--%>
+		<%--<div class="infotabr" style='padding-top: 10px'>--%>
+			<%--<button id="editmember" style='width:100px'>新增/修改人员</button>--%>
+		<%--</div>--%>
+	<%--</div>--%>
+	<div style="width:100%;margin-left:30px;">
 		<table class="t210">
 			<thead>
 				<tr>

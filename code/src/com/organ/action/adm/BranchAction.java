@@ -8,39 +8,34 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.servlet.ServletException;
 
-import com.googlecode.sslplugin.annotation.Secured;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import com.organ.common.AuthTips;
 import com.organ.common.BaseAction;
-import com.organ.dao.adm.BranchMemberDao;
+import com.organ.model.AppSecret;
 import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
 import com.organ.model.TMember;
 import com.organ.model.TMemberRole;
 import com.organ.service.adm.BranchService;
+import com.organ.service.msg.MessageService;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PinyinGenerator;
 import com.organ.utils.StringUtils;
 import com.organ.utils.TextHttpSender;
 import com.organ.utils.TimeGenerator;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
-import com.bcloud.msg.http.HttpSender;
-
 /**
  * @author alopex
  *
  */
-
+	
 public class BranchAction extends BaseAction {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 		
 	/*
@@ -76,6 +71,14 @@ public class BranchAction extends BaseAction {
 		String branchId = this.request.getParameter("id");
 		
 		String result = branchService.getBranchById(Integer.valueOf(branchId));
+		returnToClient(result);
+		
+		return "text";
+	}
+	
+	public String getSuperMember() throws ServletException {
+		int organId = getSessionUserOrganId();
+		String result = branchService.getSuperMember(organId);
 		returnToClient(result);
 		
 		return "text";
@@ -143,7 +146,7 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getRole() throws ServletException {
 		
-		String result = branchService.getRole();
+		String result = branchService.getRole(this.getOrganId());
 		returnToClient(result);
 		
 		return "text";
@@ -155,22 +158,46 @@ public class BranchAction extends BaseAction {
 		
 		return "text";
 	}
+	
 	public String getPosition() throws ServletException {
 		
-		String result = branchService.getPosition();
+		String result = branchService.getPosition(this.getOrganId());
 		returnToClient(result);
 		
 		return "text";
 	}
 	
+	/**
+	 * 保存部门,专为外部接口使用
+	 * @throws SevletException
+	 */
+	public String saveBranchExtra() throws ServletException {
+		String result = null;
+		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
+		
+		if (as != null) {
+			result = this.saveBranch();
+		} else {
+			JSONObject jo = new JSONObject();
+			jo.put("code", 0);
+			jo.put("text", AuthTips.WORNGAPPID.getText());
+			result = jo.toString();
+		}
+		
+		returnToClient(result);
+		return "text";
+	}
+	
+	
 	public String saveBranch() throws ServletException {
 		
 		TBranch branch = null;
 		String id = this.request.getParameter("branchid");
+		int organId = getSessionUserOrganId();
 		if (id != null) {
 			branch = branchService.getBranchObjectById(Integer.parseInt(id));
 			if (!branch.getName().equalsIgnoreCase(this.request.getParameter("branchname"))) {
-				if (branchService.getBranchByName(this.request.getParameter("branchname")) != null) {
+				if (branchService.getBranchByName(this.request.getParameter("branchname"), organId) != null) {
 					JSONObject jo = new JSONObject();
 					jo.put("branchid", 0);
 					returnToClient(jo.toString());
@@ -179,7 +206,7 @@ public class BranchAction extends BaseAction {
 			}
 		}
 		else {
-			if (branchService.getBranchByName(this.request.getParameter("branchname")) != null) {
+			if (branchService.getBranchByName(this.request.getParameter("branchname"), organId) != null) {
 				JSONObject jo = new JSONObject();
 				jo.put("branchid", 0);
 				returnToClient(jo.toString());
@@ -212,38 +239,77 @@ public class BranchAction extends BaseAction {
 		JSONObject jo = new JSONObject();
 		jo.put("branchid", branchId);
 		
-		returnToClient(jo.toString());
-
-		return "text";
+		if (appId == null && secret == null) {
+			returnToClient(jo.toString());
+			return "text";
+		} else {
+			return jo.toString();
+		}
 	}
 	
 	
 	public String saveMember() throws ServletException {
-		
 		TMember member = null;
 		String id = this.request.getParameter("memberid");
+		int organId = getSessionUserOrganId();
+		boolean sms = false;
+		JSONObject jo = new JSONObject();
+		
+		String email = this.request.getParameter("memberemail");
+		
 		if (id != null && !"".equals(id)) {
 			member = branchService.getMemberObjectById(Integer.parseInt(id));
 			if (!member.getAccount().equalsIgnoreCase(this.request.getParameter("memberaccount"))) {
-				if (branchService.getMemberByAccount(this.request.getParameter("memberaccount")) != null) {
-					JSONObject jo = new JSONObject();
+				if (branchService.getMemberByAccount(this.request.getParameter("memberaccount"), organId) != null) {
+					JSONObject jo1 = new JSONObject();
 					jo.put("memberid", 0);
+					returnToClient(jo1.toString());
+					return "text";
+				}
+			}
+			if (!member.getMobile().equalsIgnoreCase(this.request.getParameter("membermobile")) ||
+					!member.getTelephone().equalsIgnoreCase(this.request.getParameter("membertelephone"))) {
+				if (branchService.getMemberByMobile(this.request.getParameter("membermobile"), 
+						this.request.getParameter("membertelephone")) != null) {
+					JSONObject jo1 = new JSONObject();
+					jo.put("memberid", -1);
 					returnToClient(jo.toString());
 					return "text";
 				}
 			}
-		}
-		else {
-			if (branchService.getMemberByAccount(this.request.getParameter("memberaccount")) != null) {
-				JSONObject jo = new JSONObject();
+			if (!member.getEmail().equalsIgnoreCase(this.request.getParameter("memberemail"))) {
+				if (branchService.getMemberByEmail(this.request.getParameter("memberemail")) != null) {
+					JSONObject jo1 = new JSONObject();
+					jo.put("memberid", -2);
+					returnToClient(jo.toString());
+					return "text";
+				}
+			}
+		} else {
+			if (branchService.getMemberByAccount(this.request.getParameter("memberaccount"), organId) != null) {
+				JSONObject jo1 = new JSONObject();
 				jo.put("memberid", 0);
-				returnToClient(jo.toString());
+				returnToClient(jo1.toString());
+				return "text";
+			}
+			if (branchService.getMemberByMobile(this.request.getParameter("membermobile"), 
+					this.request.getParameter("membertelephone")) != null) {
+				JSONObject jo1 = new JSONObject();
+				jo.put("memberid", -1);
+				returnToClient(jo1.toString());
+				return "text";
+			}
+			if (!StringUtils.getInstance().isBlank(email) && branchService.getMemberByEmail(email) != null) {
+				JSONObject jo1 = new JSONObject();
+				jo.put("memberid", -2);
+				returnToClient(jo1.toString());
 				return "text";
 			}
 			member = new TMember();
 			member.setGroupmax(0);
 			member.setGroupuse(0);
 			member.setPassword(PasswordGenerator.getInstance().getMD5Str("111111"));
+			sms = true;
 		}
 		if (this.request.getParameter("memberaccount") != null)
 			member.setAccount(this.request.getParameter("memberaccount"));
@@ -323,10 +389,11 @@ public class BranchAction extends BaseAction {
 		}
 		
 		//发短信
-		String msg = "您的IMS产品帐号" + member.getAccount() + ", 密码111111.";
-		TextHttpSender.getInstance().sendText(member.getMobile(), msg);
+		if (sms) {
+			String msg = "您的IMS产品帐号" + member.getAccount() + ", 密码111111.";
+			TextHttpSender.getInstance().sendText(member.getMobile(), msg);
+		}
 		
-		JSONObject jo = new JSONObject();
 		jo.put("memberid", memberId);
 		
 		returnToClient(jo.toString());
@@ -414,6 +481,28 @@ public class BranchAction extends BaseAction {
 		return "text";
 	}
 	
+	/**
+	 * 删除指定部门数据，专为外部接口使用
+	 * @return
+	 * @throws ServletException
+	 */
+	public String delExtra() throws ServletException {
+		String result = null;
+		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
+		
+		if (as != null) {
+			result = this.del();
+		} else {
+			JSONObject jo = new JSONObject();
+			jo.put("code", 0);
+			jo.put("text", AuthTips.WORNGAPPID.getText());
+			result = jo.toString();
+		}
+		
+		returnToClient(result);
+		return "text";
+	}
+	
 	public String del() throws ServletException {
 		
 		Integer id = Integer.parseInt(this.request.getParameter("id"));
@@ -433,8 +522,12 @@ public class BranchAction extends BaseAction {
 		
 		JSONObject jo = new JSONObject();
 		jo.put("id", id);
-		returnToClient(jo.toString());
-		return "text";
+		if (appId == null && secret == null) {
+			returnToClient(jo.toString());
+			return "text";
+		} else {
+			return jo.toString();
+		}
 	}
 
 	public String mov() throws ServletException {
@@ -497,7 +590,7 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchTree() throws ServletException {
 		
-		String result = branchService.getBranchTree();
+		String result = branchService.getBranchTree(this.getOrganId());
 		returnToClient(result);
 		
 		return "text";
@@ -509,7 +602,35 @@ public class BranchAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getBranchTreeAndMember() throws ServletException {
-		String result = branchService.getBranchTreeAndMember();
+		String result = branchService.getBranchTreeAndMember(appId, this.getOrganId());
+			
+		returnToClient(result);
+		
+		return "text";
+	}
+	
+	/**
+	 * 获取组织架构及成员，专为外部接口提供
+	 * @return
+	 * @throws ServletException
+	 */
+	public String getBranchTreeAndMembers() throws ServletException {
+		String result = null;
+		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
+		
+		if (as != null) {
+			int oid = 0;
+			if (!StringUtils.getInstance().isBlank(companyId)) {
+				oid = Integer.parseInt(companyId);
+			}
+			
+			result = branchService.getBranchTreeAndMember(appId, oid);
+		} else {
+			JSONObject jo = new JSONObject();
+			jo.put("code", 0);
+			jo.put("text", AuthTips.WORNGAPPID.getText());
+			result = jo.toString();
+		}
 			
 		returnToClient(result);
 		
@@ -518,21 +639,47 @@ public class BranchAction extends BaseAction {
 	
 	/**
 	 * 取得指定部门的成员
-	 * @return
+	 * @returen
 	 * @throws ServletException
 	 */
 	public String getBranchMember() throws ServletException {
 		
-		String result = branchService.getBranchMember(branchId);
+		String result = branchService.getBranchMember(branchId, appId, this.getOrganId());
 		
 		returnToClient(result);
 		return "text";
 	}
 	
+	/**
+	 * 取得指定部门的成员,专为外部接口提供
+	 * @return
+	 * @throws ServletException
+	 */
+	public String getBranchMembers() throws ServletException {
+		String result = null;
+		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
+		
+		if (as != null) {
+			int oid = 0;
+			if (!StringUtils.getInstance().isBlank(companyId)) {
+				oid = Integer.parseInt(companyId);
+			}
+			result = branchService.getBranchMember(branchId, appId, oid);
+		} else {
+			JSONObject jo = new JSONObject();
+			jo.put("code", 0);
+			jo.put("text", AuthTips.WORNGAPPID.getText());
+			result = jo.toString();
+		}
+		returnToClient(result);
+		return "text";
+	}
+	
 	private BranchService branchService;
+	private MessageService msgService;
 
-	public BranchService getBranchService() {
-		return branchService;
+	public void setMsgService(MessageService msgService) {
+		this.msgService = msgService;
 	}
 
 	public void setBranchService(BranchService branchService) {
@@ -540,9 +687,20 @@ public class BranchAction extends BaseAction {
 	}
 	
 	private String branchId;
+	private String appId;
+	private String secret;
+	private String companyId;
+	
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
 
-	public String getBranchId() {
-		return branchId;
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
+
+	public void setSecret(String secret) {
+		this.secret = secret;
 	}
 
 	public void setBranchId(String branchId) {

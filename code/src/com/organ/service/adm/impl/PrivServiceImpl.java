@@ -6,22 +6,27 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.json.JSONObject;
+
 import com.organ.dao.adm.MemberRoleDao;
 import com.organ.dao.adm.PrivDao;
 import com.organ.dao.adm.RoleDao;
 import com.organ.dao.adm.RolePrivDao;
+import com.organ.model.AppSecret;
 import com.organ.model.TMemberRole;
 import com.organ.model.TPriv;
 import com.organ.model.TRole;
+import com.organ.model.TRoleAppSecret;
 import com.organ.model.TRolePriv;
 import com.organ.service.adm.PrivService;
+import com.organ.utils.JSONUtils;
 
 public class PrivServiceImpl implements PrivService {
 
-	RoleDao roleDao;
-	PrivDao privDao;
-	RolePrivDao rolePrivDao;
-	MemberRoleDao memberRoleDao;
+	private RoleDao roleDao;
+	private PrivDao privDao;
+	private RolePrivDao rolePrivDao;
+	private MemberRoleDao memberRoleDao;
 	
 	public RoleDao getRoleDao() {
 		return roleDao;
@@ -50,9 +55,9 @@ public class PrivServiceImpl implements PrivService {
 	}
 
 	@Override
-	public List getRoleList() {
+	public List getRoleList(int organId) {
 		
-		return roleDao.find("from TRole order by listorder desc");
+		return roleDao.find("from TRole where organId=" + organId + " order by listorder desc");
 	}
 
 	@Override
@@ -80,18 +85,17 @@ public class PrivServiceImpl implements PrivService {
 	}
 
 	@Override
-	public Integer saveRole(Integer roleId, String roleName, String privs) {
+	public Integer saveRole(Integer roleId, String roleName, String privs, int organId) {
 
 		TRole role = roleDao.get(roleId);
 		if (role == null) {
 			role = new TRole();
 			role.setName(roleName);
+			role.setOrganId(organId);
 			role.setListorder(roleDao.getMax("listorder", "from TRole") + 1);
 			roleDao.save(role);
 		}
-		
 		rolePrivDao.delete("delete from TRolePriv where roleId = " + role.getId());
-		
 		String[] pa = privs.split(",");
 		Integer i = pa.length;
 		while(i-- > 0) {
@@ -150,74 +154,140 @@ public class PrivServiceImpl implements PrivService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List getRoleIdForId(int id) {
-		TMemberRole tmList = memberRoleDao.getRoleForId(id);
-		/*List<TPriv> privList = privDao.getAllPriv();
+		List<TMemberRole> tmList = memberRoleDao.getRoleForId(id);
 		
-		for(int i = 0; i < privList.size();i++) {
-			System.out.println(privList.get(i).getId());
-		}
-		
-		//处理父级权限标识返回
-		Map<String, List<String>> map = new HashMap<String, List<String>>();
-		if (privList != null) {
-			
-			for(int i = 0; i < privList.size(); i++) {
-				List<String> list = new ArrayList<String>();
-				TPriv t = privList.get(i);
-				
-				map.put(t.getId() + "", list);
-			}
-		}
-		
-		for(Map.Entry<String, List<String>> m: map.entrySet()) {
-			System.out.println(m.getKey() + ": " + m.getValue().toString());
-		}
-		*/
 		ArrayList<String> priList = new ArrayList<String>();	
-		
-		priList.add("rsglck");
-		priList.add("rsgltj");
-		priList.add("rsgljcxx");
-		priList.add("rsglxgmm");
-		priList.add("rsglyd");
-		priList.add("rsglsc");
-		priList.add("bmglck");
-		priList.add("bmgltj");
-		priList.add("bmglxg");
-		priList.add("bmglyd");
-		priList.add("bmglsc");
-		priList.add("zzxxglck");
-		priList.add("zzxxglxg");
+
 		priList.add("qzglck");
 		priList.add("qzgljs");
 		priList.add("qzglxg");
-		priList.add("qxglck");
-		priList.add("qxgltj");
-		priList.add("qxglxg");
-		priList.add("qxglsc");
 	
-		if (tmList != null) {
-			int roleId = tmList.getRoleId();
-			List<Object[]> list = roleDao.getPrivilegeById(roleId);
+		if (tmList != null && tmList.size() > 0) {
+			int tmlen = tmList.size();
+			Integer[] roleIdList = new Integer[tmlen];
+			for(int i = 0; i < tmList.size(); i++) {
+				TMemberRole tr = tmList.get(i);
+				roleIdList[i] = tr.getRoleId();
+			}
+			List<Object[]> list = roleDao.getPrivilegeByRoleIds(roleIdList);
+			List<Object[]> alList = new ArrayList<Object[]>();
 			
 			if (list != null) {
 				int len = list.size();
-				boolean b = false;
+				ArrayList<String> listmp = new ArrayList<String>(); 
 				
 				for(int i = 0; i < len; i++) {
 					Object[] o = list.get(i);
+					if(!listmp.contains(o[1])) {
+						alList.add(o);
+						listmp.add((String)o[1]);
+					}
+				}
+				
+				for(int i = 0; i < alList.size(); i++) {
+					Object[] o = alList.get(i);
 					if (priList.contains(o[1])) {
-						list.add(new Object[]{1,"htgl"});
+						alList.add(new Object[]{1,"htgl"});
 						break;
 					}
-					//System.out.println(o[0] + "_" + o[1]);
 				}
 			} 
 			
-			return list;
+			return alList;
 		}
 		
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	@Deprecated
+	public ArrayList<JSONObject> getInitLoginPriv() {
+		ArrayList<JSONObject> alj = new ArrayList<JSONObject>();
+
+		List<TPriv> privList = privDao.find("from TPriv T where T.id between 15 and 53");
+
+		if (privList != null) {
+			int len = privList.size();
+			
+			for (int i = 0; i < len; i++) {
+				JSONObject jo = new JSONObject();
+				TPriv tp = privList.get(i);
+				jo.put("privid", tp.getId());
+				jo.put("priurl",tp.getUrl());
+				alj.add(jo);
+			}
+			JSONObject jo = new JSONObject();
+			jo.put("privid", 1);
+			jo.put("priurl", "htgl");
+			alj.add(jo);
+		}
+		
+		return alj;
+	}
+	
+	@Override
+	public String getPrivByUrl(String[] strToArray, int organId) {
+		try {
+			List<TPriv> list = privDao.getPrivByUrl(strToArray, organId);
+			List<JSONObject> lj = new ArrayList<JSONObject>();
+			
+			if (list != null) {
+				for(int i = 0; i < list.size(); i++) {
+					lj.add(JSONUtils.getInstance().modelToJSONObj(list.get(i)));
+				}
+				return lj.toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Override
+	public String getRolePrivsByPrivs(String[] strToArray) {
+		try {
+			Integer[] p = new Integer[strToArray.length];
+			
+			for (int i = 0; i < strToArray.length; i++) {
+				p[i] = Integer.parseInt(strToArray[i]);
+			}
+			
+			List<TRolePriv> list = rolePrivDao.getRolePrivsByPrivs(p);
+			List<JSONObject> lj = new ArrayList<JSONObject>();
+			
+			if (list != null) {
+				for(int i = 0; i < list.size(); i++) {
+					lj.add(JSONUtils.getInstance().modelToJSONObj(list.get(i)));
+				}
+				return lj.toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	@Override
+	public String getRolesForIds(String[] strToArray) {
+		try {
+			Integer[] p = new Integer[strToArray.length];
+			
+			for (int i = 0; i < strToArray.length; i++) {
+				p[i] = Integer.parseInt(strToArray[i]);
+			}
+			
+			List<TMemberRole> list = memberRoleDao.getRolesForIds(p);
+			List<JSONObject> lj = new ArrayList<JSONObject>();
+			
+			if (list != null) {
+				for(int i = 0; i < list.size(); i++) {
+					lj.add(JSONUtils.getInstance().modelToJSONObj(list.get(i)));
+				}
+				return lj.toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

@@ -197,7 +197,7 @@ a.recoLogo {
 .sign-flow{
     width: 360px;
     margin: 0px auto;
-    margin-top: 120px;
+    margin-top: 44px;
 }
 .sign-flow .form-group.firstNone{
     margin-top: 0px;
@@ -217,11 +217,28 @@ a.recoLogo {
     left: 14px;
     top: 12px;
 }
+.sign-flow .form-group .organCode{
+    background: url("img/IMsign.png") no-repeat -819px -62px;
+
+}
+.sign-flow .form-group:hover .organCode {
+    background: url("img/IMsign.png") no-repeat -819px -12px;
+}
+
+
 .sign-flow .form-group .username{
-    background: url("img/IMsign.png") no-repeat -462px -52px;
+    background: url("img/IMsign.png") no-repeat -462px -51px;
+}
+
+.sign-flow .form-group:hover .username {
+    background: url("img/IMsign.png") no-repeat -462px -16px;
 }
 .sign-flow .form-group .pwdIn{
-    background: url("img/IMsign.png") no-repeat -470px -127px;
+    background: url("img/IMsign.png") no-repeat -464px -127px;
+}
+
+.sign-flow .form-group:hover .pwdIn{
+    background: url("img/IMsign.png") no-repeat -463px -86px;
 }
 .sign-flow .form-group input{
     height: 42px;

@@ -32,62 +32,66 @@ $(document).ready(function(){
 		var o = $.fn.zTree.getZTreeObj('tree11move');
 		o.selectNode(o.getNodeByParam('id', movnode.pid));
 	});
-	
+	//点击组织管理员
 	$('#zzgly').click(function(){
 		if (curpage != '110' && curmember == '10001') return;
 		if (curpage != '111') showpage('111');
 		curmember = '10001';
 
 		//权限
-		if (has('rsglck')) {
-			callajax("branch!getMemberById", {'id': curmember}, cb_111_112);
-		}
+		//if (has('rsglck')) {
+		callajax("branch!getMemberById", {'id': curmember}, cb_111_112);
+		//}
+		$('#membertitle').html('超级管理员信息');
+		//$("#memberroleid").find("option[value=1]").attr("selected",true);
+		$("#memberroleid").attr('disabled','disabled').css('background','#eee');
 		$('#shuoming').show();
 	});
+
 	$('.addbranch').click(function(){
 		
 		//权限
-		if (has('bmgltj')) {
+		//if (has('bmgltj')) {
 			$('#branch').modal({
 				backdrop: false,
 				remote: '11_branch.jsp'
 			});
-		}
-		else {
-			bootbox.alert({title:'提示', message:'您没有权限添加部门.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-		}
+		//}
+		//else {
+		//	bootbox.alert({title:'提示', message:'您没有权限添加部门.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//}
 	});
 	$('.addmember').click(function(){
 		
 		//权限
-		if (has('rsgltj')) {
+		//if (has('rsgltj')) {
 			$('#member').modal({
 				backdrop: false,
 				remote: '11_member.jsp'
 			});
-		}
-		else {
-			bootbox.alert({title:'提示', message:'您没有权限添加人员.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-		}
+		//}
+		//else {
+		//	bootbox.alert({title:'提示', message:'您没有权限添加人员.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//}
 	});
 	$('.addbatch').click(function(){
 		
 		//权限
-		if (has('rsgltj')) {
+		//if (has('rsgltj')) {
 			$('#imp').modal({
 				backdrop: false,
 				remote: '11_imp.jsp'
 			});
-		}
-		else {
-			bootbox.alert({title:'提示', message:'您没有权限批量导入成员.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-		}
+		//}
+		//else {
+		//	bootbox.alert({title:'提示', message:'您没有权限批量导入成员.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//}
 	});
 	
 	$('.downmov').click(function() {
@@ -120,18 +124,81 @@ $(document).ready(function(){
 		return false;
 	},function(){
 	});
-	
-	$('#search11').keyup(function(e) {
-		if ($(this).val() == '') {
-				$(this).addClass('organsearchnone');
-		}
-		else {
-			$(this).removeClass('organsearchnone');
-		}
-		if (e.keyCode == 13) {
-			searchnodes11 = dosearch('search11', 'tree11', searchnodes11);
+
+	//$('#organlineRes').delegate('.searchResult','mouseleave',function(){
+	//	var _this = $(this)
+    //
+	//	setTimeout(function(){
+	//		_this.remove();
+	//	},1000)
+	//})
+
+
+	//组织结构树中的搜索
+	$('#search11').focus(function(){
+		var _this = $(this);
+		$('.defaultText').hide();
+		_this.css({backgroundPosition:'-380px -365px'});
+		_this.unbind('keypress');
+		_this.on('input',function(){
+			console.log(111);
+			var inputVal = _this.val();
+			if(inputVal){
+				sendAjax('member!searchUser',{account:inputVal},function(data){
+					var datas = JSON.parse(data);
+					var parentDom = $('.orgnized');
+					if(datas.length==0){
+						//没有用户
+						if($('.searchResult').find('.searchNoResult').length==0){
+							$('.searchResult').remove();
+							var sHTML = '<div class="searchResult">'+
+								'<ul class="searchResultUL">'+
+								'<li class="searchNoResult">'+
+								'<span>没有搜索结果</span>'+
+								'</li>'+
+								'</ul>'+
+								'</div>';
+							_this.parent().append($(sHTML));
+							$('.searchResult').show();
+						}
+					}else if(datas.length!=0){
+						//生成搜索结果
+						$('.searchResult').remove();
+						var liHTML = '';
+
+						for(var i = 0;i<datas.length;i++){
+							var position = datas[i].position?'('+datas[i].positionname+')':'';
+							liHTML += '<li targetaccount="'+datas[i].account+'" targetid="'+datas[i].id+'"><img src="images/memb.png"/><span class="resultName">'+datas[i].name+position+'</span></li>'
+						}
+						var sHTML = ' <div class="searchResult">'+
+							'<ul class="searchResultUL">'+liHTML+
+							'</ul>'+
+							'</div>'
+						_this.parent().append($(sHTML));
+						$('.searchResult').show();
+					}else{
+						console.log(datas.text);
+					}
+
+				})
+			}
+		})
+	});
+
+
+
+	$('#organlineRes').delegate('.searchResultUL li','click',function(){
+		var searchKey = $(this).find('.resultName').html();
+		//if (e.keyCode == 13) {
+			searchnodes11 = dosearchUL('search11', 'tree11', searchnodes11,searchKey);
 			handletree11open();
-		}
+		//}
+		$('.searchResult').remove();
+	})
+
+
+	$('#search11').keyup(function(e) {
+
 	});
 	$('.btnadmin').hover(function(){
 		$(this).addClass('menuhover');
@@ -229,7 +296,7 @@ function cb_111_position(data) {
 	}
 }
 function loadmember(data) {
-	
+
 	$('#memberid').val(curmember);
 	$('#memberaccount').val(data.account);
 	$('#memberfullname').val(data.fullname);
@@ -260,7 +327,7 @@ function loadmember(data) {
 		$('#memberroleid').removeAttr('disabled');
 		var w = ((document.body.clientWidth * 0.61 * 0.92 - 68 * 2) / 2 - 94);
 	}
-	
+
 //	var w = ((document.body.clientWidth * 0.61 * 0.92 - 68 * 2) / 2 - $('#membertitle').css('width').replace('px',''));
 	$('.infotab').css('padding-left',  w + 'px');
 
@@ -335,26 +402,29 @@ var setting11 = {
 
 			if (treeNode.flag == 1) {
 				curbranch = treeNode.id;
-				
+
 				//权限
-				if (has('bmglck')) {
+				//if (has('bmglck')) {
 					if (curpage != '110') showpage('110');
 					callajax("branch!getBranchById", {'id': curbranch}, cb_110);
-				}
+				//}
 			}
 
 			if (treeNode.flag == 2) {
 				curmember = treeNode.id;
 
 				//权限
-				if (has('rsglck')) {
+				//if (has('rsglck')) {
 					if (curpage == '110') showpage('111');
-					if (curmember == '10001') 
+					if (curmember == '10001')
 						$('#shuoming').show();
 					else
 						$('#shuoming').hide();
+
+					$('#membertitle').html('员工信息');
+					$('#memberroleid').css('background','#fff');
 					callajax("branch!getMemberById", {'id': curmember}, cb_111_112);
-				}
+				//}
 			}
 		},
 		onRightClick: function(event, treeId, treeNode) {
@@ -365,25 +435,25 @@ var setting11 = {
 			$('#downbdiv').css('left', event.clientX);
 		},
 		beforeDrag: function(treeId, treeNodes) {
-			
+
 			if (treeNodes[0].flag == 0)	return false;
 			else if (treeNodes[0].flag == 1) {
-				if (!has('bmglyd')) return false;
+				//if (!has('bmglyd')) return false;
 			}
 			else if (treeNodes[0].flag == 2) {
-				if (!has('rsglyd')) return false;
+				//if (!has('rsglyd')) return false;
 			}
 		},
 		beforeDragOpen: function(treeId, treeNode) {
-			
+
 			$.fn.zTree.getZTreeObj(treeId).expandNode(treeNode, true);
 			handletree11open();
 			return false;
 		},
 		beforeDrop: function(treeId, treeNodes, targetNode, moveType, isCopy) {
-			
+
 			if (targetNode.flag == 2) return false;
-			
+
 			var data = {id: treeNodes[0].id, pid: treeNodes[0].pid, toid: targetNode.id};
 			callajax('branch!mov', data, function(data) {
 				callajax("branch!getOrganTree", "", function(data) {
@@ -571,36 +641,36 @@ function mov(tId) {
 
 	if (ns[0].flag == 0) {
 		bootbox.alert({title:'提示', message:'不能移动组织.', callback: function() {
-			$('#container').css('width', document.body.clientWidth + 'px');	
+			$('#container').css('width', document.body.clientWidth + 'px');
 		}});
 		return;
 	}
-	
+
 	//权限
 	else if (ns[0].flag == 1) {
-		if (!has('bmglyd')) {
-			bootbox.alert({title:'提示', message:'您没有权限移动部门.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-			return;
-		}
+		//if (!has('bmglyd')) {
+		//	bootbox.alert({title:'提示', message:'您没有权限移动部门.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//	return;
+		//}
 	}
 	else if (ns[0].flag == 2){
-		if (!has('rsglyd')) {
-			bootbox.alert({title:'提示', message:'您没有权限移动人员.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-			return;
-		}
+		//if (!has('rsglyd')) {
+		//	bootbox.alert({title:'提示', message:'您没有权限移动人员.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//	return;
+		//}
 	}
-	
+
 	movnode = ns[0];
-	
+
 	$('#move').modal({
 		backdrop: false,
 		remote: '11_move.jsp'
 	});
-	
+
 }
 function del(tId) {
 	$('.movdel').remove();
@@ -609,41 +679,41 @@ function del(tId) {
 
 	if (ns[0].flag == 0) {
 		bootbox.alert({title:'提示', message:'不能删除组织.', callback: function() {
-			$('#container').css('width', document.body.clientWidth + 'px');	
+			$('#container').css('width', document.body.clientWidth + 'px');
 		}});
 		return;
 	}
-	
+
 	if (ns[0].id == '10001') {
 		bootbox.alert({title:'提示', message:'不能删除组织管理员.', callback: function() {
-			$('#container').css('width', document.body.clientWidth + 'px');	
+			$('#container').css('width', document.body.clientWidth + 'px');
 		}});
 		return;
 	}
-	
+
 	//权限
 	else if (ns[0].flag == 1) {
-		if (!has('bmglsc')) {
-			bootbox.alert({title:'提示', message:'您没有权限删除部门.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-			return;
-		}
+		//if (!has('bmglsc')) {
+		//	bootbox.alert({title:'提示', message:'您没有权限删除部门.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//	return;
+		//}
 	}
 	else if (ns[0].flag == 2){
-		if (!has('rsglsc')) {
-			bootbox.alert({title:'提示', message:'您没有权限删除人员.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');	
-			}});
-			return;
-		}
+		//if (!has('rsglsc')) {
+		//	bootbox.alert({title:'提示', message:'您没有权限删除人员.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//	return;
+		//}
 	}
-	
+
 	bootbox.confirm({
 		title:'提示',
 		message:'确定删除 ' + ns[0].name.substr(iconlenth) + ' ?',
 		callback: function(result) {
-			alert(result);
+			//alert(result);
 			if (result == false) return;
 			if (hasChildBranch(ns[0].id)) {
 				bootbox.dialog({
@@ -660,14 +730,14 @@ function del(tId) {
 						}
 					},
 					callback: function() {
-						$('#container').css('width', document.body.clientWidth + 'px');	
+						$('#container').css('width', document.body.clientWidth + 'px');
 					}
 				});
 			}
 			else {
 				callajax('branch!del', {id: ns[0].id, r: 0}, cb_del_member);
 			}
-			$('#container').css('width', document.body.clientWidth + 'px');	
+			$('#container').css('width', document.body.clientWidth + 'px');
 		},
 	});
 }

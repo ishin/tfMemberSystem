@@ -13,10 +13,49 @@ var itemtemplate='<tr id="traid">'
 var grpid = 0;
 $(document).ready(function() {
 
+	$('#app').change(function(){
+		var curId = $(this).val();
+		var curApp = $(this).find('option[value='+curId+']').html();
+		callajax('limit!getPrivNamebyclass',{appName:curApp},changeLimit);
+	})
+
+	fillAppSelect()
+	$('.searchInput').off('focus');
+	$('.searchInput').focus(function(){
+		$(this).off('keypress');
+		$(this).keypress(function(event) {
+			if (event.which == 13) {
+				$('.searchBTN').click();
+			}
+		})
+	})
+
+
 	$('.certainAdd').click(function(){
 		var name = $('#name').val();
 		var parentId = $('#parentId').val();
-		var app = $('#app').val();
+		var app = $('#app').find("option:selected").text();
+		//获取到所有必填项
+		var allNecc = $(this).parents('.dialogAuth').find('[necc=true]');
+		if(allNecc.length!=0){
+			for(var i = 0;i<allNecc.length;i++){
+				if($(allNecc[i]).val()==''){
+					new Window().alert({
+						title   : '',
+						content : '有必填项未填写！',
+						hasCloseBtn : false,
+						hasImg : true,
+						textForSureBtn : false,
+						textForcancleBtn : false,
+						autoHide:true
+					});
+					return false;
+					break;
+
+				}
+			}
+		}
+
 		var text = $(this).parents('.dialogAuth').find('.diaTitle').text();
 		if(text=='新增权限'){
 			var data = {name:name,app:app,parentId:parentId}
@@ -26,6 +65,7 @@ $(document).ready(function() {
 			var data = {name:name,app:app,parentId:parentId,privId:privId}
 			callajax('limit!EditPriv', data, afterEditPriv);
 		}
+
 		$('.dialogMask').hide();
 		$('.dialogAuth').hide();
 	})
@@ -33,6 +73,9 @@ $(document).ready(function() {
 	$('.plusAuth').click(function(){
 		$('.dialogMask').show();
 		$('.dialogAuth').show();
+		$('#name').val('');
+		$('#parentId').find('option:nth-child(1)').attr("selected",true);
+		//$('#app').val('');
 		$('.dialogAuth').find('.diaTitle').html('新增权限');
 	})
 
@@ -51,6 +94,34 @@ $(document).ready(function() {
 
 });
 
+function fillAppSelect(){
+	callajax('appinfoconfig!getAppName','',fillApp);
+}
+function fillApp(data){
+	var sHTML = '';
+	var eApp = $('.dialogBody').find('#app')
+
+	var content = data.content;
+	for(var i = 0;i<content.length;i++){
+		sHTML += '<option value="'+content[i].id+'">'+content[i].appName+'</option>'
+	}
+	eApp.append($(sHTML));
+	$('#app').val(content[0].name);
+}
+function changeLimit(data,callback){
+	console.log(data);
+	var sHTML = '';
+	var content = data.content;
+	if(content){
+		for(var i = 0;i<content.length;i++){
+			var value =content[i].id;
+			var name = content[i].name;
+			sHTML += '<option value="'+value+'">'+name+'</option>';
+		}
+	}
+	$('#parentId').html(sHTML);
+	callback&&callback();
+}
 function afterAddPriv(data){
 	console.log(data);
 	loadpage(newPaging.args.current)
@@ -65,55 +136,97 @@ function afterEditPriv(data){
 function loadpage(pagenumber) {
 	$('#grouplist').empty();
 	var authName = $('.searchInput').val();
+
 	if(pagenumber){
 		var data = {name:authName,pageindex: pagenumber-1, pagesize: itemsperpage};
-
-		callajax('limit!SearchPriv', data, fShowTableNew);
 	}else{
 		var data = {name:authName,pageindex: 0, pagesize: itemsperpage};
-
-		callajax('limit!SearchPriv', data, fShowTable);
 	}
+	callajax('limit!SearchPriv', data, fShowTable);
 }
-function fShowTableNew(data){
-	var datas = data.content;
-	var LocalData = JSON.stringify(datas);
-	window.localStorage.tableData = LocalData;
-	for(var i = 0;i<datas.length;i++){
-		$('#grouplist').append(itemtemplate
-				.replace('code', datas[i].id)
-				.replace('name', datas[i].name)
-				.replace('classify', datas[i].category)
-				.replace('belong', datas[i].app)
-				.replace(/aid/g, datas[i].id)
-		);
-	}
-}
+//function fShowTableNew(data,pagenumber,authName){
+//	if(data){
+//		var datas = data.content;
+//		var LocalData = JSON.stringify(datas);
+//		window.localStorage.tableData = LocalData;
+//		if(datas){
+//			for(var i = 0;i<datas.length;i++){
+//				$('#grouplist').append(itemtemplate
+//						.replace('code', datas[i].id)
+//						.replace('name', datas[i].name)
+//						.replace('classify', datas[i].parent_name)
+//						.replace('belong', datas[i].app)
+//						.replace(/aid/g, datas[i].id)
+//				);
+//			}
+//		}else{
+//			pagenumber = pagenumber - 1
+//			newPaging.args.pageCount--;
+//			var data = {name:authName,pageindex:pagenumber, pagesize: itemsperpage};
+//			callajax('limit!SearchPriv', data, function(cb){
+//				fShowTableNew(cb,pagenumber)
+//			});
+//		}
+//	}
+//
+//
+//}
 function fShowTable(data) {
-
+	$('#grouplist').empty();
 	var i = data.length;
 	var count = data.count;
 	pagenumber = Math.ceil(count/itemsperpage);
-	window.newPaging = new Paging('.paging',
-		{
-			pageCount : pagenumber,
-			current : 1,
-			backFn : function(){
+
+	if($('.paging').find('.pageNum').length==0){
+		window.newPaging = new Paging('.paging',
+			{
+				pageCount : pagenumber,
+				current : 1,
+				backFn : function(){
+					loadpage(newPaging.args.current);
+				}
+			}
+		)
+	}else{
+		if(data&&!count){
+			newPaging.args.pageCount--;
+			if(newPaging.args.pageCount<newPaging.args.current) {
+				newPaging.args.current = newPaging.args.pageCount;
+			}
+			//重新fillPage并加载最后一页
+			newPaging.fillHtml($('.paging'),newPaging.args);
+			loadpage(newPaging.args.current);
+			return;
+		}else{
+			if(newPaging.args.pageCount<pagenumber){
+				newPaging.args.pageCount++;
+				newPaging.fillHtml($('.paging'),newPaging.args);
+			}else if(newPaging.args.pageCount>pagenumber){
+				newPaging.args.pageCount--;
+				newPaging.fillHtml($('.paging'),newPaging.args);
 				loadpage(newPaging.args.current);
+				return;
 			}
 		}
-	)
+	}
+
 	var datas = data.content;
 	var localData = JSON.stringify(datas);
-	window.localStorage.tableData = localData
-	for(var i = 0;i<datas.length;i++){
-		$('#grouplist').append(itemtemplate
-				.replace('code', datas[i].id)
-				.replace('name', datas[i].name)
-				.replace('classify', datas[i].category)
-				.replace('belong', datas[i].app)
-				.replace(/aid/g, datas[i].id)
-		);
+	window.localStorage.tableData = localData;
+	var pageNum = $('.pageNum.current').html();
+	if(!pageNum){
+		pageNum = 1;
+	}
+	if(datas){
+		for(var i = 0;i<datas.length;i++){
+			$('#grouplist').append(itemtemplate
+					.replace('code', (pageNum-1)*10+(i+1))
+					.replace('name', datas[i].name)
+					.replace('classify', datas[i].parent_name)
+					.replace('belong', datas[i].app)
+					.replace(/aid/g, datas[i].id)
+			);
+		}
 	}
 }
 function findInList(id){
@@ -128,15 +241,29 @@ function findInList(id){
 	return finalData;
 }
 function editAuth(id,curDom){
-	//var targetList = $(curDom).closest('tr');
 	var curList = findInList(id)
 	var dialogAuth = $('.dialogAuth');
 
 	$('.dialogMask').show();
 	dialogAuth.show();
 	dialogAuth.find('#name').val(curList.name);
-	dialogAuth.find('#parentId').val(curList.category);
-	dialogAuth.find('#app').val(curList.app);
+	//dialogAuth.find('#parentId').val(curList.category);
+	var options = dialogAuth.find('#app option');
+	for(var i = 0;i<options.length;i++){
+		if($(options[i]).html()==curList.app){
+			var curVal = $(options[i]).attr('value');
+			break;
+		}
+
+	}
+	dialogAuth.find('#app').val(curVal);
+
+	callajax('limit!getPrivNamebyclass',{appName:curList.app},function(cb){
+		changeLimit(cb,function(){
+			dialogAuth.find('#parentId').val(curList.parent_id);
+		})
+	});
+
 	dialogAuth.attr('bindid',id);
 	dialogAuth.find('.diaTitle').html('编辑权限');
 }

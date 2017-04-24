@@ -1,9 +1,7 @@
 package com.organ.action.sys;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.lang.ProcessBuilder.Redirect;
 
 import javax.servlet.ServletException;
 
@@ -16,7 +14,8 @@ import com.organ.common.Constants;
 import com.organ.common.Tips;
 import com.organ.model.SessionUser;
 import com.organ.model.TMember;
-import com.organ.service.adm.PrivService;
+import com.organ.model.TOrgan;
+import com.organ.service.adm.OrgService;
 import com.organ.service.member.MemberService;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.MathUtils;
@@ -32,7 +31,6 @@ import com.organ.utils.TimeGenerator;
  * @author hao_dy
  *
  */
-
 public class SystemAction extends BaseAction {
 	
 	private static final long serialVersionUID = -3901445181785461508L;
@@ -68,21 +66,31 @@ public class SystemAction extends BaseAction {
 			returnToClient(result.toString());
 			return "text";
 		}
+	
+		String organCode = this.request.getParameter("organCode");
 
-		/**
-		 * 初始化
-		 */
-		if (account.equals("Administrator")) {
-			int count = memberService.countMember();
-			if (count > 1) {
-				result.put("code", 0);
-				result.put("text", Tips.NOTINIT.getText());
-				returnToClient(result.toString());
-				return "text";
-			}
+		if (StringUtils.getInstance().isBlank(organCode)) {
+			result.put("code", 0);
+			result.put("text", Tips.NULLCODE.getText());
+			returnToClient(result.toString());
+			return "text";
+		}
+		organCode = organCode.toUpperCase();
+		
+		TOrgan organ = orgService.getOrganByCode(organCode);
+
+		int organId = 0;
+		
+		if (organ == null || organId == -1) {
+			result.put("code", 0);
+			result.put("text", Tips.NULLCODE.getText());
+			returnToClient(result.toString());
+			return "text";
 		}
 		
-		TMember member = memberService.searchSigleUser(account, userpwd);
+		organId = organ.getId();
+		
+		TMember member = memberService.getSuperAdmin(account, userpwd, organId);
 		
 		if(member == null) {
 			result.put("code", 0);
@@ -91,7 +99,7 @@ public class SystemAction extends BaseAction {
 			return "text";
 		}
 		
-		logger.debug("That logining account is " + account);
+		logger.debug("The logining account is " + account);
 		
 		String userId = "" + member.getId();
 		String name = member.getFullname();
@@ -103,7 +111,6 @@ public class SystemAction extends BaseAction {
 		
 		if (member.getCreatetokendate()!=null) {
 			firstTokenDate = member.getCreatetokendate();
-			System.out.println("afterLogin 180: " + firstTokenDate);
 		}
 		
 		long now = TimeGenerator.getInstance().getUnixTime();
@@ -129,6 +136,7 @@ public class SystemAction extends BaseAction {
 		} else {
 			token = member.getToken();
 		}
+		
 		logger.info(token);
 		
 		//设置用户session
@@ -137,33 +145,10 @@ public class SystemAction extends BaseAction {
 		su.setId(member.getId());
 		su.setAccount(member.getAccount());
 		su.setFullname(member.getFullname());
+		su.setOrganId(organId);
 		su.setToken(token);
 		setSessionUser(su);
-		/*
-		//2.设置权限
-		SessionPrivilege sp = new SessionPrivilege();
-		ArrayList<JSONObject> ja = new ArrayList<JSONObject>();
 		
-		if (!account.equals("Administrator")) {
-			List privList = privService.getRoleIdForId(member.getId());
-			
-			if (privList != null) {
-				Iterator it = privList.iterator();
-				
-				while(it.hasNext()) {
-					Object[] o = (Object[])it.next();
-					JSONObject js = new JSONObject();
-					js.put("privid", o[0]);
-					js.put("priurl", o[1]);
-					ja.add(js);
-				}
-			} 
-		} else {
-			ja = privService.getInitLoginPriv();
-		}
-	
-		sp.setPrivilige(ja);
-		setSessionAttribute(Constants.ATTRIBUTE_NAME_OF_SESSIONPRIVILEGE, sp);*/
 		JSONObject text = JSONUtils.getInstance().modelToJSONObj(member);
 		
 		text.remove("password");
@@ -171,7 +156,6 @@ public class SystemAction extends BaseAction {
 		text.remove("groupmax");
 		text.remove("groupuse");
 		text.put("token", token);
-		//text.put("priv", JSONUtils.getInstance().modelToJSONObj(sp));
 		
 		result.put("code", 1);
 		result.put("text", text.toString());
@@ -190,6 +174,8 @@ public class SystemAction extends BaseAction {
 	{
 		request.getSession().removeAttribute(Constants.ATTRIBUTE_NAME_OF_SESSIONUSER);
 		request.getSession().invalidate();
+		//response.sendRedirect("http://localhost:8080/organ/");
+		//request.getRequestDispatcher("/system!login").forward(request, response);
 		return "loginPage";
 	}
 	
@@ -289,7 +275,8 @@ public class SystemAction extends BaseAction {
 		JSONObject text = new JSONObject();
 		
 		if (!StringUtils.getInstance().isBlank(oldpwd)) {				//登陆后修改密码
-			boolean validOldPwd = memberService.valideOldPwd(account, oldpwd);
+			int organId = getSessionUserOrganId();
+			boolean validOldPwd = memberService.valideOldPwd(account, oldpwd, organId);
 			if (!validOldPwd) {
 				text.put("code", 0);
 				text.put("text", Tips.WRONGOLDPWD.getText());
@@ -324,9 +311,11 @@ public class SystemAction extends BaseAction {
 		
 		boolean status = true;
 		int flag = 0;
-				
+		int organId = 0;		
+		
 		if (!StringUtils.getInstance().isBlank(oldpwd)) {				//登陆后修改密码
-			boolean validOldPwd = memberService.valideOldPwd(account, oldpwd);
+			organId = getSessionUserOrganId();
+			boolean validOldPwd = memberService.valideOldPwd(account, oldpwd, organId);
 			flag = 1;		//后台修改
 			if (!validOldPwd) {
 				text.put("code", -1);
@@ -362,7 +351,7 @@ public class SystemAction extends BaseAction {
 			boolean updateState = false;
 			
 			if (flag == 1) {
-				updateState = memberService.updateUserPwdForAccount(account, newpwd);
+				updateState = memberService.updateUserPwdForAccount(account, newpwd, organId);
 			} else {
 				updateState = memberService.updateUserPwdForPhone(phone, newpwd);
 			}
@@ -380,55 +369,15 @@ public class SystemAction extends BaseAction {
 		return "text";
 	}
 	
-	/**
-	 * 跳转组织信息
-	 * @return
-	 * @throws ServletException
-	 */
-	public String organInfo() throws ServletException {
-		return "organInfo";
-	}
-	
-	/**
-	 * 群组管理 
-	 * @return
-	 * @throws ServletException
-	 */
-	public String groupManager() throws ServletException {
-		return "groupManager";
-	}
-	
-	/**
-	 * 跳转组织结构
-	 * @return
-	 * @throws ServletException
-	 */
-	public String organFrame() throws ServletException {
-		return "organFrame";
-	}
-	
-	/**
-	 * 高级设置 
-	 * @return
-	 * @throws ServletException
-	 */
-	public String highset() throws ServletException {
-		return "highset";
-	}
-	
 	private MemberService memberService;
-	private PrivService privService;
+	private OrgService orgService;
 	
 	public void setMemberService(MemberService memberService) {
 		this.memberService = memberService;
 	}
-	
-	public PrivService getPrivService() {
-		return privService;
-	}
 
-	public void setPrivService(PrivService privService) {
-		this.privService = privService;
+	public void setOrgService(OrgService orgService) {
+		this.orgService = orgService;
 	}
 
 	private String account;
@@ -437,84 +386,34 @@ public class SystemAction extends BaseAction {
 	private String newpwd;
 	private String textcode;
 	private String comparepwd;
-	private String dataSource;
 	private String phone;
-	private String token;
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
-	public String getAccount() {
-		return account;
-	}
-
+	
 	public void setAccount(String account) {
 		this.account = account;
-	}
-
-	public String getUserpwd() {
-		return userpwd;
 	}
 
 	public void setUserpwd(String userpwd) {
 		this.userpwd = userpwd;
 	}
 
-	public String getOldpwd() {
-		return oldpwd;
-	}
-
 	public void setOldpwd(String oldpwd) {
 		this.oldpwd = oldpwd;
-	}
-
-	public String getNewpwd() {
-		return newpwd;
 	}
 
 	public void setNewpwd(String newpwd) {
 		this.newpwd = newpwd;
 	}
 
-	public String getTextcode() {
-		return textcode;
-	}
-
 	public void setTextcode(String textcode) {
 		this.textcode = textcode;
-	}
-
-	public String getComparepwd() {
-		return comparepwd;
 	}
 
 	public void setComparepwd(String comparepwd) {
 		this.comparepwd = comparepwd;
 	}
 
-	public String getDataSource() {
-		return dataSource;
-	}
-
-	public void setDataSource(String dataSource) {
-		this.dataSource = dataSource;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
 	public void setPhone(String phone) {
 		this.phone = phone;
-	}
-
-	public MemberService getMemberService() {
-		return memberService;
 	}
 
 }

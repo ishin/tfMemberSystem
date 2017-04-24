@@ -11,8 +11,15 @@ $(document).ready(function(){
 	callajax('adm!getBase', '', cb_base);
 	
 	$('#idlogout').click(function() {
-		window.location.href = path + 'system!logOut';
-	});
+
+		sendAjax('system!logOut','',function(){
+			//if (window.Electron) {
+			//	var curWindow = window.Electron.remote.getCurrentWindow().reload();
+			//}else{
+				window.location.href = '../../system!login'
+			//}
+		})
+	})
 	
 	// 下拉相关
 	$('#container').click(function(){
@@ -40,6 +47,19 @@ $(document).ready(function(){
 		$(this).removeClass('menuhover');
 	});
 })
+function sendAjax(url,data,callback,callbackB){
+	$.ajax({
+		type: "POST",
+		url: url,
+		data:data,
+		success: function(data){
+			callback && callback(data);
+		},
+		error:function(){
+			callbackB&&callbackB();
+		}
+	})
+}
 function cb_base(data) {
 	
 	// 取权限失败返回登录界面
@@ -52,7 +72,8 @@ function cb_base(data) {
 }
 //判断是否有权限
 function has(priv) {
-	return (privs.indexOf(',' + priv + ',') > -1 ? true : false);
+	//privs = privs.text;
+	return (privs.text.indexOf(',' + priv + ',') > -1 ? true : false);
 }
 // 下拉相关
 function treeplace(oedit, otree) {
@@ -63,6 +84,20 @@ function treeplace(oedit, otree) {
 	});
 }
 
+
+function sendAjax(url,data,callback,callbackB){
+	$.ajax({
+		type: "POST",
+		url: url,
+		data:data,
+		success: function(data){
+			callback && callback(data);
+		},
+		error:function(){
+			callbackB&&callbackB();
+		}
+	})
+}
 //ajax
 function callajax(url, data, cb){
 	$.ajax({
@@ -93,6 +128,29 @@ function callajax(url, data, cb){
 function showdate(data) {
 	if (data.length == 0) return '';
 	return data.substr(0,4) + '-' + data.substr(4,2) + '-' + data.substr(6,2);
+}
+function dosearchUL(search, tree, nodes,searchKey) {
+	var i;
+	if (nodes != null) {
+		i = nodes.length;
+		while (i--) {
+			$('#' + nodes[i].tId + '_a').removeAttr('style');
+		}
+	}
+
+	var text = searchKey;
+	if (text == '') return;
+
+	var t = $.fn.zTree.getZTreeObj(tree);
+	t.expandAll(true);
+	nodes = t.getNodesByParamFuzzy('name', text);
+	i = nodes.length;
+	while (i--) {
+		$('#' + nodes[i].tId + '_a').attr('style', 'color: red');
+		t.expandNode(nodes[i].getParentNode(), true);
+	}
+
+	return nodes;
 }
 function dosearch(search, tree, nodes) {
 	var i;

@@ -13,9 +13,6 @@ import net.sf.json.JSONObject;
 
 public class PrivAction extends BaseAction {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	/**
@@ -23,9 +20,8 @@ public class PrivAction extends BaseAction {
 	 * @return
 	 */
 	public String getRoleList() {
-		
-		List list = privService.getRoleList();
-		
+		int organId = getSessionUserOrganId();
+		List list = privService.getRoleList(organId);
 		ArrayList<JSONObject> ja = new ArrayList<JSONObject>();
 		Iterator it = list.iterator();
 		while (it.hasNext()) {
@@ -110,7 +106,6 @@ public class PrivAction extends BaseAction {
 			js.put("roleid", o[4] == null ? "" : o[4]);
 			ja.add(js);
 		}
-		
 		returnToClient(ja.toString());
 		return "text";
 	}
@@ -134,13 +129,12 @@ public class PrivAction extends BaseAction {
 	 */
 	public String saveRole() {
 		
-		String id = this.request.getParameter("roleid");
+		String id = this.request.getParameter("roleId");
 		Integer roleId = (id == null ? 0 : Integer.parseInt(id));
 		String roleName = this.request.getParameter("rolename");
 		String privs = this.request.getParameter("privs");
-
-		roleId = privService.saveRole(roleId, roleName, privs);
-		
+		int organId = getSessionUserOrganId();
+		roleId = privService.saveRole(roleId, roleName, privs, organId);
 		return returnajaxid(roleId);
 	}
 
@@ -163,19 +157,12 @@ public class PrivAction extends BaseAction {
 	 * @return
 	 */
 	public String delRole() {
-		
 		Integer roleId = Integer.parseInt(this.request.getParameter("roleid"));
-		
 		privService.delRole(roleId);;
-		
 		return returnajaxid(0);
 	}
 	
 	PrivService privService;
-
-	public PrivService getPrivService() {
-		return privService;
-	}
 
 	public void setPrivService(PrivService privService) {
 		this.privService = privService;

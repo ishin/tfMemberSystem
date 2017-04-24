@@ -10,6 +10,7 @@ import com.organ.common.BaseDao;
 import com.organ.dao.auth.AppSecretDao;
 import com.organ.model.AppSecret;
 import com.organ.utils.LogUtils;
+import com.organ.dao.auth.impl.AppSecretDaoImpl;
 
 /**
  * 验证管理
@@ -18,7 +19,8 @@ import com.organ.utils.LogUtils;
  * @date 2017/03/08
  * @since jdk1.7
  */
-public class AppSecretDaoImpl extends BaseDao<AppSecret, Integer> implements AppSecretDao {
+public class AppSecretDaoImpl extends BaseDao<AppSecret, Integer> implements
+		AppSecretDao {
 	private static final Logger logger = Logger
 			.getLogger(AppSecretDaoImpl.class);
 
@@ -65,10 +67,11 @@ public class AppSecretDaoImpl extends BaseDao<AppSecret, Integer> implements App
 	}
 
 	@Override
-	public AppSecret getAppSecretBySecret(String secret) {
+	public AppSecret getAppSecretBySecret(String secret, Integer organId) {
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("secert", secret));
+			ctr.add(Restrictions.eq("organId", organId));
 
 			List<AppSecret> list = ctr.list();
 
@@ -88,7 +91,8 @@ public class AppSecretDaoImpl extends BaseDao<AppSecret, Integer> implements App
 	public AppSecret getAppSecretByAppIdAndSecret(String appId, String secret) {
 		try {
 			Criteria ctr = getCriteria();
-			ctr.add(Restrictions.and(Restrictions.eq("secert", secret), Restrictions.eq("appId", appId)));
+			ctr.add(Restrictions.and(Restrictions.eq("secert", secret),
+					Restrictions.eq("appId", appId)));
 
 			List<AppSecret> list = ctr.list();
 

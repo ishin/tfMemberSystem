@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:background="@color/White">
+
+        <CheckBox
+            android:id="@+id/cb_adddel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:button="@drawable/chenkbox_selector"
+            android:clickable="true"
+            android:focusable="false"
+            android:visibility="gone" />
+
+        <com.tianfangIMS.im.view.CircleImageViews
+            android:id="@+id/iv_movegroupuser_photo"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginLeft="25dp"
+            android:layout_toRightOf="@id/cb_addfrien"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            app:RCCornerRadius="3dp"
+            app:RCDefDrawable="@mipmap/me_icon_photo"
+            app:RCShape="circle" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="55dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_movegroupuser_departmentName"
+                style="@style/Contacts_company_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_person_departmentTxt"
+                style="@style/Contacts_company_txt_huise"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

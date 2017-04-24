@@ -38,7 +38,7 @@ $(document).ready(function(){
 				memberpositionid: $('#11memberpositionid').val(),
 				memberemail: $('#11memberemail').val(),
 				memberroleid: $('#11memberroleid').val(),
-				memberintro: $('#11memberintro').val()
+				memberintro: $('#11memberintro').val(),
 			};
 		callajax('branch!saveMember', data, cb_11_save_member);
 	});
@@ -47,6 +47,14 @@ function cb_11_save_member(data) {
 	if (data.memberid == '0') {
 		bootbox.alert({'title':'提示', 'message':'帐号已存在，请重新输入.', callback: function() {
 			$('#container').css('width', document.body.clientWidth + 'px');	
+		}});
+	}else if(data.memberid == '-1'){
+		bootbox.alert({'title':'提示', 'message':'手机号码已存在，请重新输入.', callback: function() {
+			$('#container').css('width', document.body.clientWidth + 'px');
+		}});
+	}else if(data.memberid == '-2'){
+		bootbox.alert({'title':'提示', 'message':'邮箱已存在，请重新输入.', callback: function() {
+			$('#container').css('width', document.body.clientWidth + 'px');
 		}});
 	}
 	else {

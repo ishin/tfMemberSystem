@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<!-- dao -->
+	<bean id="appSecretDao" class="com.organ.dao.auth.impl.AppSecretDaoImpl" autowire="byName" />
+	<bean id="memberDao" class="com.organ.dao.member.impl.MemberDaoImpl" autowire="byName" />
+	<bean id="memberRoleDaoImpl" class="com.organ.dao.adm.impl.MemberRoleDaoImpl" autowire="byName" />
+	<bean id="rolePrivDao" class="com.organ.dao.adm.impl.RolePrivDaoImpl" autowire="byName" />
+	<bean id="privDao" class="com.organ.dao.adm.impl.PrivDaoImpl" autowire="byName" />
+	<bean id="limitDao" class="com.organ.dao.limit.impl.LimitDaoImpl" autowire="byName" />
+	<bean id="appinfoconfigDao" class="com.organ.dao.appinfoconfig.impl.AppInfoConfigDaoImpl" autowire="byName" />
+	<bean id="textCodeDao" class="com.organ.dao.member.impl.TextCodeDaoImpl" autowire="byName" />
+	<bean id="branchDao" class="com.organ.dao.adm.impl.BranchDaoImpl" autowire="byName" />
+	<bean id="branchMemberDao" class="com.organ.dao.adm.impl.BranchMemberDaoImpl" autowire="byName" />
+	<bean id="memberRoleDao1" class="com.organ.dao.adm.impl.MemberRoleDaoImpl" autowire="byName" />
+	<bean id="roleDao" class="com.organ.dao.adm.impl.RoleDaoImpl" autowire="byName" />
+	<bean id="positionDao" class="com.organ.dao.adm.impl.PositionDaoImpl" autowire="byName" />
+	<bean id="orgDao" class="com.organ.dao.adm.impl.OrgDaoImpl" autowire="byName" />
+	<bean id="userValidDao" class="com.organ.dao.auth.impl.UserValidDaoImpl" autowire="byName" />
+	<bean id="memberRoleDao" class="com.organ.dao.adm.impl.MemberRoleDaoImpl" autowire="byName" />
+	<bean id="cutLogoTempDao" class="com.organ.dao.upload.impl.CutLogoTempDaoImpl" autowire="byName" />
+	
+	<bean id="roleappsecretDao" class="com.organ.dao.limit.impl.RoleAppSecretDaoImpl" autowire="byName" />
+	
+	<!-- service -->
+	<bean id="appSecretService" class="com.organ.service.auth.impl.AppSecretServiceImpl" autowire="byName" >
+		<property name="appSecretDao" ref="appSecretDao" />
+		<property name="memberDao" ref="memberDao" />
+		<property name="userValidDao" ref="userValidDao" />
+		<property name="appinfoconfigDao" ref="appinfoconfigDao" />
+		<property name="memberRoleDao" ref="memberRoleDao" />
+	</bean>
+	<bean id="limitService" class="com.organ.service.limit.impl.LimitServiceImpl" autowire="byName">
+		<property name="limitDao" ref="limitDao" />
+		<property name="roleappsecretDao" ref="roleappsecretDao" />
+	</bean>
+	<bean id="appInfoConfigService" class="com.organ.service.appinfoconfig.impl.AppInfoConfigServiceImpl" autowire="byName">
+		<property name="appInfoConfigDao" ref="appinfoconfigDao" />
+		<property name="userValidDao" ref="userValidDao" />
+		<property name="roleappsecretDao" ref="roleappsecretDao" />
+		<property name="limitDao" ref="limitDao" />
+	</bean>
+	<bean id="memberService" class="com.organ.service.member.impl.MemberServiceImpl" autowire="byName" >
+		<property name="memberDao" ref="memberDao" />
+		<property name="textCodeDao" ref="textCodeDao" />
+		<property name="branchMemberDao" ref="branchMemberDao" />
+	</bean>
+	<bean id="branchService" class="com.organ.service.adm.impl.BranchServiceImpl" autowire="byName" >
+		<property name="branchDao" ref="branchDao" />
+		<property name="memberDao" ref="memberDao" />
+		<property name="branchMemberDao" ref="branchMemberDao" />
+		<property name="memberRoleDao" ref="memberRoleDao1" />
+		<property name="positionDao" ref="positionDao" />
+		<property name="appinfoconfigDao" ref="appinfoconfigDao" />
+	</bean>
+	<bean id="privService" class="com.organ.service.adm.impl.PrivServiceImpl" autowire="byName" >
+		<property name="privDao" ref="privDao" />
+		<property name="roleDao" ref="roleDao" />
+		<property name="memberRoleDao" ref="memberRoleDao1" />
+		<property name="rolePrivDao" ref="rolePrivDao" />
+	</bean>
+	<bean id="positionService" class="com.organ.service.adm.impl.PositionServiceImpl" autowire="byName" >
+		<property name="positionDao" ref="positionDao" />
+	</bean>
+	<bean id="orgService" class="com.organ.service.adm.impl.OrgServiceImpl" autowire="byName" >
+		<property name="orgDao" ref="orgDao" />
+		<property name="memberDao" ref="memberDao" />
+		<property name="positionDao" ref="positionDao" />
+		<property name="branchDao" ref="branchDao" />
+		<property name="branchMemberDao" ref="branchMemberDao" />
+		
+	</bean>
+	<bean id="uploadService" class="com.organ.service.upload.impl.UploadServiceImpl" autowire="byName" >
+		<property name="memberDao" ref="memberDao" />
+		<property name="cutLogoTempDao" ref="cutLogoTempDao" />
+	</bean>
+	<bean id="msgService" class="com.organ.service.msg.impl.MessageServiceImpl" autowire="byName" >
+		<property name="appSecretDao" ref="appSecretDao" />
+		<property name="memberDao" ref="memberDao" />
+	</bean>
+	
+	<!-- action -->
+	<bean id="appSecretAction" class="com.organ.action.auth.AppSecretAction" scope="prototype" autowire="byName" >
+		<property name="appSecretService" ref="appSecretService" />
+	</bean>
+	<bean id="limitAction" class="com.organ.action.limit.LiMitAction" scope="prototype" autowire="byName">
+		<property name="limitService" ref="limitService" />
+	</bean>
+	<bean id="appinfoconfigAction" class="com.organ.action.appinfoconfig.AppInfoConfigAction"
+		scope="prototype" autowire="byName">
+		<property name="appInfoConfigService" ref="appInfoConfigService" />
+	</bean>
+	<bean id="memberAction" class="com.organ.action.member.MemberAction" scope="prototype" autowire="byName" >
+		<property name="memberService" ref="memberService" />
+	</bean>
+	<bean id="systemAction" class="com.organ.action.sys.SystemAction" scope="prototype" autowire="byName">
+		<property name="memberService" ref="memberService" />
+		<property name="orgService" ref="orgService" />
+	</bean>
+	<bean id="branchAction" class="com.organ.action.adm.BranchAction" scope="prototype" autowire="byName" >
+		<property name="branchService" ref="branchService" />
+	</bean>
+	<bean id="privAction" class="com.organ.action.adm.PrivAction" scope="prototype" autowire="byName" >
+		<property name="privService" ref="privService" />
+	</bean>
+	<bean id="posAction" class="com.organ.action.adm.PosAction" scope="prototype" autowire="byName" >
+		<property name="positionService" ref="positionService" />
+	</bean>
+	<bean id="orgAction" class="com.organ.action.adm.OrgAction" scope="prototype" autowire="byName" >
+		<property name="orgService" ref="orgService" />
+	</bean>
+	<bean id="admAction" class="com.organ.action.adm.AdmAction" scope="prototype" autowire="byName" >
+		<property name="branchService" ref="branchService" />
+		<property name="privService" ref="privService" />
+	</bean>
+	<bean id="abutmentMemberAction" class="com.organ.action.abutment.AbutmentMemberAction" scope="prototype" autowire="byName" >
+		<property name="memberService" ref="memberService" />
+		<property name="uploadService" ref="uploadService" />
+		<property name="branchService" ref="branchService" />
+	</bean>
+	<bean id="abutmentAuthAction" class="com.organ.action.abutment.AbutmentAuthAction" scope="prototype" autowire="byName" >
+		<property name="appSecretService" ref="appSecretService" />
+	</bean>
+	<bean id="abutmentPrivilegeAction" class="com.organ.action.abutment.AbutmentPrivilegeAction" scope="prototype" autowire="byName" >
+		<property name="privService" ref="privService" />
+	</bean>
+	<bean id="msgAction" class="com.organ.action.msg.MessageAction" scope="prototype" autowire="byName" >
+		<property name="msgService" ref="msgService" />
+	</bean>
+	
+</beans>
