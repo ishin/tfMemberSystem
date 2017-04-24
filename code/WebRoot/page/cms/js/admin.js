@@ -16,7 +16,7 @@ $(document).ready(function(){
 			//if (window.Electron) {
 			//	var curWindow = window.Electron.remote.getCurrentWindow().reload();
 			//}else{
-				window.location.href = '../../system!login'
+			window.location.href = '../../system!login'
 			//}
 		})
 	})
