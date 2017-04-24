@@ -40,7 +40,7 @@ $(document).ready(function(){
 
 		//权限
 		//if (has('rsglck')) {
-		callajax("branch!getMemberById", {'id': curmember}, cb_111_112);
+		callajax("branch!getSuperMember", '', cb_111_112);
 		//}
 		$('#membertitle').html('超级管理员信息');
 		//$("#memberroleid").find("option[value=1]").attr("selected",true);
@@ -125,13 +125,13 @@ $(document).ready(function(){
 	},function(){
 	});
 
-	//$('#organlineRes').delegate('.searchResult','mouseleave',function(){
-	//	var _this = $(this)
-    //
-	//	setTimeout(function(){
-	//		_this.remove();
-	//	},1000)
-	//})
+	$('#organlineRes').delegate('.searchResult','mouseleave',function(){
+		var _this = $(this)
+
+		setTimeout(function(){
+			_this.remove();
+		},1000)
+	})
 
 
 	//组织结构树中的搜索

@@ -30,7 +30,7 @@
 </div>
 
 <div class="infopanel21">
-	<div class="info" style="overflow: scroll;">
+	<div class="info" style="overflow: auto;">
 		<div class="infotitle">
 			<div class="title">成员身份权限</div>
 		</div>
