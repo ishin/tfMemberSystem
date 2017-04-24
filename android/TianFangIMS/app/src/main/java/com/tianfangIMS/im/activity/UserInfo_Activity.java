@@ -50,13 +50,14 @@ public class UserInfo_Activity extends BaseActivity implements View.OnClickListe
     private TextView friendinfo_email, tx_frienduserinfo_phonenumber, iv_friendinfo_phone,
             friendinfo_company, friendinfo_address, friendinfo_chanpin, friendinfo_jingli;
     private ImageView iv_userinfo_photo;
-
+    String sessionId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.userinfo_fragment);
         mContext = this;
         setTitle("个人信息");
+        sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
         init();
         GetUserInfo();
         settingImagePicker();
@@ -113,6 +114,7 @@ public class UserInfo_Activity extends BaseActivity implements View.OnClickListe
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", ids)
                 .execute(new StringCallback() {
                     @Override
@@ -166,6 +168,7 @@ public class UserInfo_Activity extends BaseActivity implements View.OnClickListe
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", uid)
                 .params("file", imageItem)
                 .execute(new StringCallback() {

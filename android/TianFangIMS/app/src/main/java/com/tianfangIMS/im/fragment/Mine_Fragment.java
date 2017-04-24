@@ -1,5 +1,6 @@
 package com.tianfangIMS.im.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -79,11 +80,12 @@ public class Mine_Fragment extends BaseFragment implements View.OnClickListener,
     HashMap<Integer, Boolean> prepare;
     DeparmentLevelAdatper adatper;
     private String BigImagePath;
-
+    String sessionId;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.me_fragment, container, false);
+        sessionId = getActivity().getSharedPreferences("CompanyCode", Activity.MODE_PRIVATE).getString("CompanyCode", "");
         initView(view);
         GetData();
         return view;
@@ -131,6 +133,7 @@ public class Mine_Fragment extends BaseFragment implements View.OnClickListener,
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", ids)
                 .execute(new StringCallback() {
                     @Override
@@ -175,6 +178,7 @@ public class Mine_Fragment extends BaseFragment implements View.OnClickListener,
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .execute(new StringCallback() {
                     @Override
                     public void onBefore(BaseRequest request) {

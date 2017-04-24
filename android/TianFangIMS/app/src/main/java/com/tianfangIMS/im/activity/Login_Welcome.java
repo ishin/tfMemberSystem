@@ -10,11 +10,24 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.request.BaseRequest;
+import com.tianfangIMS.im.ConstantValue;
 import com.tianfangIMS.im.R;
+import com.tianfangIMS.im.dialog.LoadDialog;
+
+import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 
 /**
@@ -24,15 +37,18 @@ import com.tianfangIMS.im.R;
 
 public class Login_Welcome extends Activity {
     private Context mContext;
-
+    private String isSession;
+    private String sessionId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sessionId = getSharedPreferences("CompanyCode", MODE_PRIVATE).getString("CompanyCode", "");
         //隐藏标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //定义全屏参数
         int flag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
         mContext = this;
+        IsSession();
         //获取当前窗体
         Window window = Login_Welcome.this.getWindow();
         //设置当前窗体为全屏显示
@@ -49,7 +65,32 @@ public class Login_Welcome extends Activity {
         }
     }
 }
+    private void IsSession() {
+        OkGo.post(ConstantValue.ISSESSION)
+                .tag(this)
+                .connTimeOut(10000)
+                .readTimeOut(10000)
+                .writeTimeOut(10000)
+                .headers("cookie", sessionId)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onBefore(BaseRequest request) {
+                        super.onBefore(request);
+                        LoadDialog.show(mContext);
+                    }
 
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        LoadDialog.dismiss(mContext);
+                        if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                            Gson gson = new Gson();
+                            Map<String, Object> map = gson.fromJson(s, new TypeToken<Map<String, Object>>() {
+                            }.getType());
+                            isSession = map.get("status").toString();
+                        }
+                    }
+                });
+    }
     Runnable runnable = new Runnable() {
         @Override
         public void run() {

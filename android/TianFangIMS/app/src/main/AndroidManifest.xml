@@ -109,12 +109,6 @@
 
         </activity>
         <activity
-            android:name=".activity.MainActivity"
-            android:theme="@style/TranslucentTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden">
-
-        </activity>
-        <activity
             android:name=".activity.UserInfo_Activity"
             android:theme="@android:style/Theme.NoTitleBar">
 
@@ -134,6 +128,10 @@
             android:theme="@android:style/Theme.NoTitleBar">
 
         </activity>
+        <activity
+            android:name=".activity.MainActivity"
+            android:theme="@style/TranslucentTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".activity.MineGroupActivity"
             android:theme="@android:style/Theme.NoTitleBar">
@@ -179,13 +177,17 @@
             android:theme="@android:style/Theme.NoTitleBar">
 
         </activity>
-        <activity android:name=".activity.AddTopContacts_Activity" android:theme="@style/Anim_fade">
+        <activity
+            android:name=".activity.AddTopContacts_Activity"
+            android:theme="@style/Anim_fade">
 
         </activity>
         <activity android:name=".activity.MineTopContactsActivity">
 
         </activity>
-        <activity android:name=".activity.AddGroupActivity" android:theme="@style/Anim_fade">
+        <activity
+            android:name=".activity.AddGroupActivity"
+            android:theme="@style/Anim_fade">
 
         </activity>
         <activity android:name=".activity.SelectPhoteActivity" />
@@ -203,6 +205,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="com.android.action.MY_ACTION" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
                     android:host="com.tianfangIMS.im"
@@ -239,6 +242,7 @@
         <activity android:name=".activity.SearchAllContactsActivity" />
         <activity android:name=".activity.MoveGroupUserActivity" />
         <activity android:name=".activity.DeleteGropUserActivity" />
+        <activity android:name=".activity.AMapShareLocationActivity"/>
         <!-- GCM 配置结束 < -->
         <!--适配7.0调用相机问题-->
         <provider

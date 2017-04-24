@@ -10,7 +10,10 @@ public class ConstantValue {
 //    public static String Urls = "http://35.164.107.27:8080/im/";
 
     //天坊服务器120.26.42.225
-    public static String Urls = "http://120.26.42.225:8080/sealtalk/";
+//    public static String Urls = "http://120.26.42.225:8080/sealtalk/";
+    //天坊服务器--多公司地址
+    public static String Urls = "http://120.26.42.225:8080/im/";
+
 
     //多公司服务器
 //    public static String Urls = "http://42.62.4.82:8080/im/";
@@ -80,4 +83,8 @@ public class ConstantValue {
     public static final String GETLOCATION = Urls +"map!getLocation";//获取好友或者群组的坐标
 
     public static final String TRANSFERGROUP = Urls+"group!transferGroup";//转移群主
+
+    public static final String ISSESSION = Urls+"system!attemptSession";//判断session是否失效
+
+    public static final String LOGOUT = Urls+"system!logOut";//登出
 }

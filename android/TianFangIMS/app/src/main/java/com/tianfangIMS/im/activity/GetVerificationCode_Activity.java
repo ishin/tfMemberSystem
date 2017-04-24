@@ -46,12 +46,13 @@ public class GetVerificationCode_Activity extends Activity implements View.OnCli
     String newpwd;
     String renewpwd;
     String textcode;
-
+    String sessionId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.getcode_activity);
         mContext = this;
+        sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
         init();
         Intent intent = getIntent();
         PhoneNuber = intent.getStringExtra("PhoneNumber");
@@ -139,6 +140,7 @@ public class GetVerificationCode_Activity extends Activity implements View.OnCli
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("account", PhoneNuber)
                 .params("newpwd", newpwd)
                 .params("comparepwd", renewpwd)
@@ -203,6 +205,7 @@ public class GetVerificationCode_Activity extends Activity implements View.OnCli
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("phone",PhoneNuber)
                 .execute(new StringCallback() {
                     @Override

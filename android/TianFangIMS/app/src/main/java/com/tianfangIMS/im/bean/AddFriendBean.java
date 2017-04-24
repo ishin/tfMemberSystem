@@ -25,7 +25,7 @@ public class AddFriendBean implements Serializable {
     private String organname;
     private String sex;
     private boolean isChecked;
-
+    public AddFriendBean(){}
     public AddFriendBean(String account, String address, String birthday, String branchname, String email, String groupmax, String groupuse, String id, String intro, String logo, String mobile, String name, String organname, String positionname, String sex, String telephone, String workno,boolean isChecked) {
         this.account = account;
         this.address = address;

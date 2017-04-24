@@ -75,6 +75,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
     private String CompanyCode;
     private SharedPreferences daima_sp;
     private SharedPreferences.Editor daima_editor;
+    private String sessionId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +96,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("userid", id)
                 .execute(new StringCallback() {
                     @Override
@@ -243,8 +245,10 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
+                .headers("cookie",sessionId)
                 .params("account", et_login_user.getText().toString().trim())
                 .params("userpwd", MD5.encrypt(et_login_password.getText().toString().trim()))
+                .params("organCode",CompanyCode)
                 .execute(new StringCallback() {
                     @Override
                     public void onBefore(BaseRequest request) {
@@ -275,20 +279,21 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
                                         public void onSuccess(String s) {
                                             Log.e("RongIM", "onSuccess");
                                             LoadDialog.dismiss(mContext);
-
                                             SetSyncUserGroup(user);
                                             connectResultId = s;
 //                                            editor.putString("CompanyCode",CompanyCode);
                                             editor.putString("username", phoneString);
                                             editor.putString("userpass", passwordString);
-                                            daima_editor.putString("CompanyCode",CompanyCode);
                                             editor.apply();
-                                            daima_editor.apply();
                                             Toast.makeText(getApplicationContext(), "登陆成功", Toast.LENGTH_SHORT).show();
                                             Intent intent_login = new Intent();
                                             intent_login.setClass(LoginActivity.this, MainActivity.class);
                                             startActivity(intent_login);
-                                            Log.e("获取cookie：","----:"+OkGo.getInstance().getCookieJar().getCookieStore().getAllCookie());
+                                            String str = OkGo.getInstance().getCookieJar().getCookieStore().getAllCookie().subList(0,1).toString();
+                                            String aa = str.substring(2, str.indexOf(";"));
+                                            sessionId = aa.substring(aa.indexOf("=")+1,aa.length());
+                                            daima_editor.putString("CompanyCode",sessionId);
+                                            daima_editor.apply();
                                             finish();
                                         }
                                         @Override
