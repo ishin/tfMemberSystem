@@ -23,7 +23,6 @@
 	<bean id="positionDao" class="com.organ.dao.adm.impl.PositionDaoImpl" autowire="byName" />
 	<bean id="orgDao" class="com.organ.dao.adm.impl.OrgDaoImpl" autowire="byName" />
 	<bean id="userValidDao" class="com.organ.dao.auth.impl.UserValidDaoImpl" autowire="byName" />
-	<bean id="userSysRelationDao" class="com.organ.dao.auth.impl.UserSysRelationDaoImpl" autowire="byName" />
 	<bean id="memberRoleDao" class="com.organ.dao.adm.impl.MemberRoleDaoImpl" autowire="byName" />
 	<bean id="cutLogoTempDao" class="com.organ.dao.upload.impl.CutLogoTempDaoImpl" autowire="byName" />
 	
@@ -34,7 +33,8 @@
 		<property name="appSecretDao" ref="appSecretDao" />
 		<property name="memberDao" ref="memberDao" />
 		<property name="userValidDao" ref="userValidDao" />
-		<property name="userSysRelationDao" ref="userSysRelationDao" />
+		<property name="appinfoconfigDao" ref="appinfoconfigDao" />
+		<property name="memberRoleDao" ref="memberRoleDao" />
 	</bean>
 	<bean id="limitService" class="com.organ.service.limit.impl.LimitServiceImpl" autowire="byName">
 		<property name="limitDao" ref="limitDao" />
@@ -57,6 +57,7 @@
 		<property name="branchMemberDao" ref="branchMemberDao" />
 		<property name="memberRoleDao" ref="memberRoleDao1" />
 		<property name="positionDao" ref="positionDao" />
+		<property name="appinfoconfigDao" ref="appinfoconfigDao" />
 	</bean>
 	<bean id="privService" class="com.organ.service.adm.impl.PrivServiceImpl" autowire="byName" >
 		<property name="privDao" ref="privDao" />
@@ -100,6 +101,7 @@
 	</bean>
 	<bean id="systemAction" class="com.organ.action.sys.SystemAction" scope="prototype" autowire="byName">
 		<property name="memberService" ref="memberService" />
+		<property name="orgService" ref="orgService" />
 	</bean>
 	<bean id="branchAction" class="com.organ.action.adm.BranchAction" scope="prototype" autowire="byName" >
 		<property name="branchService" ref="branchService" />

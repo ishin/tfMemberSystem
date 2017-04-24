@@ -14,25 +14,27 @@ import com.organ.utils.StringUtils;
 import com.organ.utils.TimeGenerator;
 
 /**
- * @功能  成员数据管理层
+ * @功能 成员数据管理层
  * @author hao_dy
  * @date 2017/01/04
  * @since jdk1.7
  */
-public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDao {
+public class MemberDaoImpl extends BaseDao<TMember, Integer> implements
+		MemberDao {
 
 	@Override
-	public TMember getMemberByName(String name) {
+	public TMember getMemberByName(String name, Integer organId) {
 
 		Criteria ctr = getCriteria();
 		ctr.add(Restrictions.eq("fullname", name));
-		
+		ctr.add(Restrictions.eq("organId", organId));
+
 		List list = ctr.list();
-		
+
 		if (list.size() > 0) {
 			return (TMember) list.get(0);
 		}
-		
+
 		return null;
 	}
 
@@ -40,12 +42,11 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	public List getMemberPosition(Integer memberId) {
 
 		String sql = "select position_id, branch_id, id from t_branch_member"
-				+ " where member_id = " + memberId 
-				+ " order by is_master desc";
+				+ " where member_id = " + memberId + " order by is_master desc";
 		SQLQuery query = this.getSession().createSQLQuery(sql);
-		
+
 		List list = query.list();
-		
+
 		return list;
 	}
 
@@ -55,65 +56,72 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		String sql = "select role_id from t_member_role"
 				+ " where member_id = " + memberId;
 		SQLQuery query = this.getSession().createSQLQuery(sql);
-		
+
 		List list = query.list();
-		
+
 		return list;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public TMember searchSigleUser(String name, String password) {
-		
+	public TMember searchSigleUser(String name, String password, int organId) {
+
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("account", name));
 			ctr.add(Restrictions.eq("password", password));
-			
+			ctr.add(Restrictions.eq("organId", organId));
+
 			List list = ctr.list();
-			
+
 			if (list.size() > 0) {
 				return (TMember) list.get(0);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
 	@Override
-	public boolean updateUserPwdForAccount(String account, String md5Pwd) {
-		
-		String hql = "update TMember set password='" + md5Pwd + "' where account='" + account + "'";
-		
+	public boolean updateUserPwdForAccount(String account, String md5Pwd,
+			int organId) {
+
+		String hql = (new StringBuilder("update TMember set password='")
+				.append(md5Pwd).append("' where account='")
+				.append(account)
+				.append("' and organId=")
+				.append(organId)).toString();
+
 		boolean status = true;
-		
+
 		try {
 			executeUpdate(hql);
 		} catch (Exception e) {
 			status = false;
 			e.printStackTrace();
 		}
-		
+
 		return status;
 	}
-	
+
 	@Override
 	public boolean updateUserPwdForPhone(String phone, String md5Pwd) {
-		
-		String hql = "update TMember set password='" + md5Pwd + "' where mobile='" + phone + "'";
-		
+
+		String hql = "update TMember set password='" + md5Pwd
+				+ "' where mobile='" + phone + "'";
+
 		boolean status = true;
-		
+
 		try {
 			executeUpdate(hql);
 		} catch (Exception e) {
 			status = false;
 			e.printStackTrace();
 		}
-		
+
 		return status;
 	}
 
@@ -121,69 +129,71 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	@Override
 	public Object[] getOneOfMember(int id) {
 		try {
-			String hql = "select " +
-				"M.id MID," + 
-				"M.account," +
-				"M.fullname," +
-				"M.logo," +
-				"M.telephone," +
-				"M.email," +
-				"M.address," +
-				"M.token," +
-				"M.sex," +
-				"M.birthday," +
-				"M.workno," +
-				"M.mobile," +
-				//"M.groupmax," +
-				//"M.groupuse," +
-				"M.intro," +
-				"B.id BID," +
-				"B.name BNAME," +
-				"P.id PID," +
-				"P.name PNAME," +
-				"O.id OID," +
-				"O.name ONAME " +
-				"from t_member M left join t_branch_member BM on M.id=BM.member_id " +
-				"left join t_branch B on BM.branch_id=B.id " +
-				"left join t_position P on BM.position_id=P.id " +
-				"inner join t_organ O on M.organ_id=O.id " +
-				"where M.id=" + id + " and BM.is_master=1";
+			String hql = "select "
+					+ "M.id MID,"
+					+ "M.account,"
+					+ "M.fullname,"
+					+ "M.logo,"
+					+ "M.telephone,"
+					+ "M.email,"
+					+ "M.address,"
+					+ "M.token,"
+					+ "M.sex,"
+					+ "M.birthday,"
+					+ "M.workno,"
+					+ "M.mobile,"
+					+
+					// "M.groupmax," +
+					// "M.groupuse," +
+					"M.intro,"
+					+ "B.id BID,"
+					+ "B.name BNAME,"
+					+ "P.id PID,"
+					+ "P.name PNAME,"
+					+ "O.id OID,"
+					+ "O.name ONAME "
+					+ "from t_member M left join t_branch_member BM on M.id=BM.member_id "
+					+ "left join t_branch B on BM.branch_id=B.id "
+					+ "left join t_position P on BM.position_id=P.id "
+					+ "inner join t_organ O on M.organ_id=O.id "
+					+ "where M.id=" + id + " and BM.is_master=1";
 			System.out.println(hql);
 			SQLQuery query = this.getSession().createSQLQuery(hql);
-			
+
 			System.out.println("getOneOfMember->hql :" + hql);
-			
+
 			List list = query.list();
-			
+
 			if (list.size() > 0) {
 				return (Object[]) list.get(0);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TMember> getMultipleMemberForAccounts(String[] mulMemberStr) {
+	public List<TMember> getMultipleMemberForAccounts(String[] mulMemberStr, int organId) {
 		try {
-			
+
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.in("account", mulMemberStr));
-			
+			ctr.add(Restrictions.eq("organId", organId));
+
 			List<TMember> list = ctr.list();
-			
+
 			if (list.size() > 0) {
 				return list;
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
@@ -191,37 +201,38 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	@Override
 	public List<TMember> getMultipleMemberForIds(Integer[] ids) {
 		try {
-			
+
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.in("id", ids));
-			
+
 			List<TMember> list = ctr.list();
-			
+
 			if (list.size() > 0) {
 				return list;
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
 	@Override
 	public int updateUserTokenForId(String userId, String token) {
-		
+
 		try {
 			long now = TimeGenerator.getInstance().getUnixTime();
-			String hql = "update TMember mem set mem.token='" + token + "',createtokendate=" + now + " where id=" + userId;
-			
+			String hql = "update TMember mem set mem.token='" + token
+					+ "',createtokendate=" + now + " where id=" + userId;
+
 			int row = update(hql);
-			
+
 			return row;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return 0;
 	}
 
@@ -229,95 +240,104 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	@Override
 	public TMember getMemberForId(int id) {
 		try {
-			
+
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("id", id));
-			
+
 			List<TMember> list = ctr.list();
-			
+
 			if (list.size() > 0) {
 				return (TMember) list.get(0);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public int getMemberIdForAccount(String account) {
+	public int getMemberIdForAccount(String account, int organId) {
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("account", account));
-			
+			ctr.add(Restrictions.eq("organId", organId));
+
 			List<TMember> list = ctr.list();
-			
+
 			if (list.size() > 0) {
 				return list.get(0).getId();
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return 0;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List searchUser(String account) {
+	public List searchUser(String account, int organId) {
 		try {
-			String hql = "select " +
-				"M.id MID," + 
-				"M.account," +
-				"M.fullname," +
-				"M.logo," +
-				"M.telephone," +
-				"M.email," +
-				"M.address," +
-				"M.token," +
-				"M.sex," +
-				"M.birthday," +
-				"M.workno," +
-				"M.mobile," +
-				"M.groupmax," +
-				"M.groupuse," +
-				"M.intro," +
-				"B.name BNAME," +
-				"P.name PNAME," +
-				"O.name ONAME " +
-				"from t_member M left join t_branch_member BM on M.id=BM.member_id " +
-				"left join t_branch B on BM.branch_id=B.id " +
-				"left join t_position P on BM.position_id=P.id " +
-				"inner join t_organ O on M.organ_id=O.id " +
-				"where account like '%" + account + "%' or fullname like '%" + account + "%' or pinyin like '%" + account + "%' or allpinyin like '%" + account + "%'";
-			 
+			String hql = "select "
+					+ "M.id MID,"
+					+ "M.account,"
+					+ "M.fullname,"
+					+ "M.logo,"
+					+ "M.telephone,"
+					+ "M.email,"
+					+ "M.address,"
+					+ "M.token,"
+					+ "M.sex,"
+					+ "M.birthday,"
+					+ "M.workno,"
+					+ "M.mobile,"
+					+ "M.groupmax,"
+					+ "M.groupuse,"
+					+ "M.intro,"
+					+ "B.name BNAME,"
+					+ "P.name PNAME,"
+					+ "O.name ONAME "
+					+ "from t_member M left join t_branch_member BM on M.id=BM.member_id "
+					+ "left join t_branch B on BM.branch_id=B.id "
+					+ "left join t_position P on BM.position_id=P.id "
+					+ "inner join t_organ O on M.organ_id=O.id "
+					+ "where M.organ_id=" + organId
+					+ " and M.account like '%" + account
+					+ "%' or M.fullname like '%" + account
+					+ "%' or M.pinyin like '%" + account
+					+ "%' or M.allpinyin like '%" + account
+					+ "%'";
+
 			SQLQuery query = this.getSession().createSQLQuery(hql);
-			
+
 			List list = query.list();
-			
+
 			if (list.size() > 0) {
 				return list;
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public boolean valideOldPwd(String account, String oldPwd) {
+	public boolean valideOldPwd(String account, String oldPwd, int organId) {
 		try {
 			Criteria ctr = getCriteria();
-			ctr.add(Restrictions.and(Restrictions.eq("account", account), Restrictions.eq("password", oldPwd)));
-			
+			ctr.add(Restrictions.eq("account", account));
+			ctr.add(Restrictions.eq("password", oldPwd));
+			ctr.add(Restrictions.eq("organId", organId));
+
 			List<TMember> list = ctr.list();
-			
+
 			if (list.size() > 0) {
 				return true;
 			}
@@ -329,9 +349,10 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 
 	@Override
 	public int updateUserLogo(int userId, String picName) {
-		
+
 		try {
-			String hql = "update TMember mem set mem.logo='" + picName + "' where id=" + userId;
+			String hql = "update TMember mem set mem.logo='" + picName
+					+ "' where id=" + userId;
 			int ret = update(hql);
 			return ret;
 		} catch (Exception e) {
@@ -345,10 +366,11 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	public boolean isUsedPic(int userId, String picName) {
 		try {
 			Criteria ctr = getCriteria();
-			ctr.add(Restrictions.and(Restrictions.eq("id", userId), Restrictions.eq("logo", picName)));
-			
+			ctr.add(Restrictions.and(Restrictions.eq("id", userId),
+					Restrictions.eq("logo", picName)));
+
 			List<TMember> list = ctr.list();
-			
+
 			if (list.size() > 0) {
 				return true;
 			}
@@ -361,9 +383,9 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	@Override
 	public int updateMemeberInfoForWeb(int userId, String fullName, String sign) {
 		StringBuilder sbSql = new StringBuilder();
-		
+
 		sbSql.append("update TMember T set ");
-		
+
 		boolean bl = false;
 
 		if (!StringUtils.getInstance().isBlank(fullName)) {
@@ -374,9 +396,9 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 			bl = true;
 			sbSql.append(",T.intro='").append(sign).append("'");
 		}
-		
+
 		sbSql.append(" where id=").append(userId);
-		
+
 		if (bl) {
 			String hql = sbSql.toString();
 			System.out.println(hql);
@@ -386,18 +408,19 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 				e.printStackTrace();
 			}
 		}
-		
+
 		return 0;
 	}
-	
+
 	@Override
-	public int updateMemeberInfoForApp(int userId, String email, String mobile, String phone, String address) {
+	public int updateMemeberInfoForApp(int userId, String email, String mobile,
+			String phone, String address) {
 		StringBuilder sbSql = new StringBuilder();
-		
+
 		sbSql.append("update TMember T set ");
-		
+
 		boolean bl = false;
-		
+
 		if (!StringUtils.getInstance().isBlank(email)) {
 			bl = true;
 			sbSql.append("T.email='").append(email).append("'");
@@ -416,7 +439,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		}
 
 		sbSql.append(" where id=").append(userId);
-		
+
 		if (bl) {
 			String hql = sbSql.toString();
 			try {
@@ -425,70 +448,72 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 				e.printStackTrace();
 			}
 		}
-		
+
 		return 0;
 	}
-	
+
 	@Override
+	@Deprecated
 	public boolean updateUserPwd(String account, String md5Pwd) {
-		
-		String hql = "update TMember set password='" + md5Pwd + "' where account='" + account + "'";
-		
+
+		String hql = "update TMember set password='" + md5Pwd
+				+ "' where account='" + account + "'";
+
 		boolean status = true;
-		
+
 		try {
 			executeUpdate(hql);
 		} catch (Exception e) {
 			status = false;
 			e.printStackTrace();
 		}
-		
+
 		return status;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public TMember getOneMember(String account) {
+	public TMember getOneMember(String account, int organId) {
 		try {
-			
+
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("account", account));
-			
+			ctr.add(Restrictions.eq("organId", organId));
+
 			List<TMember> list = ctr.list();
-			
+
 			if (list.size() > 0) {
 				return (TMember) list.get(0);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
-	
-	
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TMember> getLimitMemberIds(int limit) {
-		String sql = (new StringBuilder("select new TMember(t.id) from TMember t")).toString();
-		
+	public List<TMember> getLimitMemberIds(int limit, int organId) {
+		String sql = (new StringBuilder(
+				"select new TMember(t.id) from TMember t where organId=").append(organId)).toString();
+
 		try {
 			Query query = getSession().createQuery(sql);
 			query.setFirstResult(0);
 			query.setMaxResults(limit);
-			
+
 			List<TMember> list = query.list();
-			
+
 			if (list.size() > 0) {
 				return list;
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
@@ -496,74 +521,76 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	@Override
 	public TMember getMemberByToken(String token) {
 		try {
-			String hql = (new StringBuilder("from TMember t where t.token='").append(token).append("'")).toString();
-			
+			String hql = (new StringBuilder("from TMember t where t.token='")
+					.append(token).append("'")).toString();
+
 			List<TMember> list = getSession().createQuery(hql).list();
-			
+
 			if (list.size() > 0) {
 				return (TMember) list.get(0);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<TMember> getAllMemberInfo(int organId) {
-		String sql = (new StringBuilder("from TMember t where t.organId=" + organId)).toString();
-		
+		String sql = (new StringBuilder("from TMember t where t.organId="
+				+ organId)).toString();
+
 		try {
 			Query query = getSession().createQuery(sql);
 			List<TMember> list = query.list();
-			
+
 			if (list.size() > 0) {
 				return list;
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
 	@Override
 	public Object[] getAuthResouce(int id) {
 		try {
-			String hql = "select " +
-				"M.fullname," +
-				"M.logo," +
-				"M.telephone," +
-				"M.email," +
-				"M.mobile," +
-				"S.name SNAME," +
-				"P.name PNAME," +
-				"O.name ONAME " +
-				"from t_member M left join t_branch_member BM on M.id=BM.member_id " +
-				"left join t_branch B on BM.branch_id=B.id " +
-				"left join t_position P on BM.position_id=P.id " +
-				"left join t_sex S on M.sex=S.id " +
-				"inner join t_organ O on M.organ_id=O.id " +
-				"where M.id=" + id + " and BM.is_master=1";
-			
+			String hql = "select "
+					+ "M.fullname,"
+					+ "M.logo,"
+					+ "M.telephone,"
+					+ "M.email,"
+					+ "M.mobile,"
+					+ "S.name SNAME,"
+					+ "P.name PNAME,"
+					+ "O.name ONAME "
+					+ "from t_member M left join t_branch_member BM on M.id=BM.member_id "
+					+ "left join t_branch B on BM.branch_id=B.id "
+					+ "left join t_position P on BM.position_id=P.id "
+					+ "left join t_sex S on M.sex=S.id "
+					+ "inner join t_organ O on M.organ_id=O.id "
+					+ "where M.id=" + id + " and BM.is_master=1";
+
 			SQLQuery query = this.getSession().createSQLQuery(hql);
-			
+
 			System.out.println("getAuthResouce->hql :" + hql);
-			
+
 			List list = query.list();
-			
+
 			if (list.size() > 0) {
 				return (Object[]) list.get(0);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
@@ -576,14 +603,15 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		}
 		return 0;
 	}
-	
+
 	@Override
-	public List getMemberIdsByAccount(String[] targetNames) {
+	public List getMemberIdsByAccount(String[] targetNames, int organId) {
 		try {
-			StringBuilder sql = new StringBuilder("select id from t_member where account in(");
+			StringBuilder sql = new StringBuilder(
+					"select id from t_member where organ_id=").append(organId).append(" and account in(");
 			int len = targetNames.length;
-			
-			for(int i = 0; i < len; i++) {
+
+			for (int i = 0; i < len; i++) {
 				sql.append("\"").append(targetNames[i]).append("\"");
 				if (i < len - 1) {
 					sql.append(",");
@@ -607,18 +635,18 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		try {
 			StringBuilder sql = new StringBuilder("select ");
 			int len = pss.length;
-			
-			for(int i = 0; i < len; i++) {
+
+			for (int i = 0; i < len; i++) {
 				sql.append(pss[i]);
 				if (i < len - 1) {
 					sql.append(",");
 				}
 			}
-			
+
 			sql.append(" from t_member where id in(");
 			sql.append(ids);
 			sql.append(")");
-			
+
 			SQLQuery query = this.getSession().createSQLQuery(sql.toString());
 			List list = query.list();
 
@@ -631,65 +659,113 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public TMember getSuperAdmin(String account, String password) {
+	public TMember getSuperAdmin(String account, String password, int organId) {
 
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("account", account));
 			ctr.add(Restrictions.eq("password", password));
+			ctr.add(Restrictions.eq("organId", organId));
 			ctr.add(Restrictions.eq("superAdmin", 1));
-			
-			List list = ctr.list();
-			
+
+			List<TMember> list = ctr.list();
+
 			if (list.size() > 0) {
 				return (TMember) list.get(0);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public TMember getMemberByMobile(String mobile, String telPhone) {
 		try {
-			
+
 			Criteria ctr = getCriteria();
-			ctr.add(Restrictions.or(Restrictions.eq("mobile", mobile), Restrictions.eq("telephone", telPhone)));
-			
+			ctr.add(Restrictions.or(Restrictions.eq("mobile", mobile),
+					Restrictions.eq("telephone", telPhone)));
+
 			List<TMember> list = ctr.list();
-			
+
 			if (list.size() > 0) {
 				return (TMember) list.get(0);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public TMember getMemberByEmail(String email) {
+		try {
+
+			Criteria ctr = getCriteria();
+			ctr.add(Restrictions.eq("email", email));
+
+			List<TMember> list = ctr.list();
+
+			if (list.size() > 0) {
+				return (TMember) list.get(0);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public TMember searchSigleUserByOrgan(String name, String password,
+			int organId) {
+		try {
+			Criteria ctr = getCriteria();
+			ctr.add(Restrictions.eq("account", name));
+			ctr.add(Restrictions.eq("password", password));
+			ctr.add(Restrictions.eq("organId", organId));
+
+			List<TMember> list = ctr.list();
+
+			if (list.size() > 0) {
+				return (TMember) list.get(0);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return null;
 	}
 
 	@Override
-	public TMember getMemberByEmail(String email) {
+	public TMember getSuperMember(int organId) {
 		try {
-			
 			Criteria ctr = getCriteria();
-			ctr.add(Restrictions.eq("email", email));
-			
+			ctr.add(Restrictions.eq("superAdmin", 1));
+			ctr.add(Restrictions.eq("organId", organId));
+
 			List<TMember> list = ctr.list();
-			
+
 			if (list.size() > 0) {
 				return (TMember) list.get(0);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 }

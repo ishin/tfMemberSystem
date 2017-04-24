@@ -30,7 +30,7 @@
 </div>
 
 <div class="infopanel21">
-	<div class="info">
+	<div class="info" style="overflow: scroll;">
 		<div class="infotitle">
 			<div class="title">成员身份权限</div>
 		</div>
@@ -38,9 +38,9 @@
 			<div class="col1">
 				<div class="line21">
 					<button id='addrole' class='cancel'><img src='images/addicon.png' style='' />添加身份</button>
-					<button class='cancel' onclick='delrole()' style='width:64px;    margin-top: 10px;'>删除</button>
+					<button class='cancel' onclick='delrole()' style='width:64px; margin-left:10px;'>删除</button>
 				</div>
-				<div class="line21" style="width:70%;height: calc(100% - 84px);">
+				<div class="line21" style="height: calc(100% - 84px);">
 					<ul id='list21'>
 <!-- 				<li>组织管理员</li>
 						<li class="active">普通成员</li>

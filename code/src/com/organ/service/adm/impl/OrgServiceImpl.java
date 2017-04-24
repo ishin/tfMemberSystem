@@ -134,17 +134,17 @@ public class OrgServiceImpl implements OrgService {
 			
 			if (organId != 0) {
 				//初始化成员
-				String account = organ.getTelephone();
+				//String account = organ.getTelephone();
+				String account = "admin";
 			
-				if (memberDao.getOneMember(account) != null) {
+				if (memberDao.getOneMember(account, organId) != null) {
 					j.put("code", 0);
 					j.put("text", Tips.EXISTACCOUNT.getText());
 				} else {
-				
 					String organName = organ.getName();
 					String name = organName + "-InitMember";
+					String pwd = PasswordGenerator.getInstance().makePwd();
 					TMember tm = new TMember();
-					
 					tm.setAccount(account);
 					tm.setFullname(name);
 					tm.setPinyin(PinyinGenerator.getPinYinHeadChar(name));
@@ -158,10 +158,10 @@ public class OrgServiceImpl implements OrgService {
 					tm.setAddress("");
 					tm.setGroupmax(0);
 					tm.setGroupuse(0);
-					tm.setIntro(organName + "初始账号");
+					tm.setIntro(organName + "InitMember");
 					tm.setOrganId(organId);
 					tm.setAllpinyin(PinyinGenerator.getPinYin(name));
-					tm.setPassword(PasswordGenerator.getInstance().getMD5Str("111111"));
+					tm.setPassword(PasswordGenerator.getInstance().getMD5Str(pwd));
 					tm.setSuperAdmin(1);
 					memberDao.save(tm);
 					
@@ -216,11 +216,11 @@ public class OrgServiceImpl implements OrgService {
 					*/
 					
 					j.put("account", tm.getAccount());
-					j.put("pwd", "11111");
+					j.put("pwd", pwd);
 					j.put("organId", organId);
 					j.put("organCode", organ.getCode());
-					String msg = organName + "注册成功,初始账号：" + account + ";初始密码111111;公司ID:" + organId + ";公司码:"+organ.getCode();
-					TextHttpSender.getInstance().sendText(account, msg);
+					//String msg = organName + "注册成功,初始账号：" + account + ";初始密码"+pwd+";公司ID:" + organId + ";公司码:"+organ.getCode();
+					//TextHttpSender.getInstance().sendText(account, msg);
 				}
 				ret = j.toString();
 			}
@@ -252,6 +252,11 @@ public class OrgServiceImpl implements OrgService {
 			e.printStackTrace();
 		}
 		return jo.toString();
+	}
+
+	@Override
+	public TOrgan getOrganByCode(String organCode) {
+		return orgDao.getOrganByCode(organCode);
 	}
 
 }

@@ -32,11 +32,11 @@ public class MemberServiceImpl implements MemberService {
 	private static final Logger logger = Logger.getLogger(MemberServiceImpl.class);
 	
 	@Override
-	public TMember searchSigleUser(String name, String password) {
+	public TMember searchSigleUser(String name, String password, int organId) {
 		TMember memeber = null;
 
 		try {
-			memeber = memberDao.searchSigleUser(name, password);
+			memeber = memberDao.searchSigleUserByOrgan(name, password, organId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
@@ -45,11 +45,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public boolean updateUserPwdForAccount(String account, String newPwd) {
+	public boolean updateUserPwdForAccount(String account, String newPwd, int organId) {
 		boolean status = false;
 
 		try {
-			status = memberDao.updateUserPwdForAccount(account, newPwd);
+			status = memberDao.updateUserPwdForAccount(account, newPwd, organId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
@@ -131,11 +131,11 @@ public class MemberServiceImpl implements MemberService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String searchUser(String account) {
+	public String searchUser(String account, int organId) {
 		JSONArray ja = new JSONArray();
 
 		try {
-			List members = memberDao.searchUser(account);
+			List members = memberDao.searchUser(account, organId);
 
 			if (members == null) {
 				JSONObject jo = new JSONObject();
@@ -173,11 +173,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public boolean valideOldPwd(String account, String oldPwd) {
+	public boolean valideOldPwd(String account, String oldPwd, int organId) {
 		boolean b = false;
 
 		try {
-			b = memberDao.valideOldPwd(account, oldPwd);
+			b = memberDao.valideOldPwd(account, oldPwd, organId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
@@ -268,6 +268,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	@Deprecated
 	public boolean updateUserPwd(String account, String newPwd) {
 		boolean status = false;
 
@@ -429,7 +430,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public String getMultipleMemberForAccounts(String mulMemberStr) {
+	public String getMultipleMemberForAccounts(String mulMemberStr, int organId) {
 		String[] mulMemberStrs = null;
 		String ret = null;
 		JSONObject jo = new JSONObject();
@@ -439,7 +440,7 @@ public class MemberServiceImpl implements MemberService {
 			mulMemberStr = StringUtils.getInstance().replaceChar(mulMemberStr, "[", "");
 			mulMemberStr = StringUtils.getInstance().replaceChar(mulMemberStr, "\"", "");
 			mulMemberStrs = mulMemberStr.split(",");
-			List<TMember> memberList = memberDao.getMultipleMemberForAccounts(mulMemberStrs);
+			List<TMember> memberList = memberDao.getMultipleMemberForAccounts(mulMemberStrs, organId);
 			int[] ids = null;
 			
 			if (memberList != null) {
@@ -477,7 +478,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public String getMemberIdsByAccount(String names) {
+	public String getMemberIdsByAccount(String names, int organId) {
 		String code = "0";
 		String text = null;
 		JSONObject ret = new JSONObject();
@@ -487,7 +488,7 @@ public class MemberServiceImpl implements MemberService {
 				text = Tips.WRONGPARAMS.getText();
 			} else {
 				String[] namesArr = StringUtils.getInstance().strToArray(names);
-				List list = memberDao.getMemberIdsByAccount(namesArr);
+				List list = memberDao.getMemberIdsByAccount(namesArr, organId);
 				
 				if (list != null) {
 					code = "1";
@@ -525,11 +526,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public String getMemberIdForAccount(String account) {
+	public String getMemberIdForAccount(String account, int organId) {
 		JSONObject jo = new JSONObject();
 		
 		try {
-			int id = memberDao.getMemberIdForAccount(account);
+			int id = memberDao.getMemberIdForAccount(account, organId);
 			jo.put("code", 1);
 			jo.put("text", id);
 		} catch (Exception e) {
@@ -599,16 +600,16 @@ public class MemberServiceImpl implements MemberService {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		
-		return null;
+		return jo.toString();
 	}
 	
 	@Override
-	public String getLimitMemberIds(String mapMax) {
+	public String getLimitMemberIds(String mapMax, int organId) {
 		JSONObject jo = new JSONObject();
 		
 		try {
 			int mapMaxInt = Integer.parseInt(mapMax);
-			List<TMember> tm = memberDao.getLimitMemberIds(mapMaxInt);
+			List<TMember> tm = memberDao.getLimitMemberIds(mapMaxInt, organId);
 			List<JSONObject> ret = new ArrayList<JSONObject>();
 			
 			if (tm != null) {
@@ -626,7 +627,7 @@ public class MemberServiceImpl implements MemberService {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 		
-		return null;
+		return jo.toString();
 	}
 	
 
@@ -674,11 +675,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public TMember getSuperAdmin(String account, String userpwd) {
+	public TMember getSuperAdmin(String account, String userpwd, int organId) {
 		TMember memeber = null;
 
 		try {
-			memeber = memberDao.getSuperAdmin(account, userpwd);
+			memeber = memberDao.getSuperAdmin(account, userpwd, organId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));

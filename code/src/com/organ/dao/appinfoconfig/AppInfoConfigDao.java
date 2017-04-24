@@ -10,7 +10,7 @@ public interface AppInfoConfigDao extends IBaseDao<AppSecret, Long>{
 	public List<AppSecret> getAppInfo(int userId, int organId, int pagesize,int pageindex);
 	
 	public int updatePriv(String appId,String secert,String callbackurl,String appname,int isopen, int organId);
-	public int getCount();
+	public int getCount(int organId);
 	
 	public int editApp(int id,String appId,String secert,String callbackurl,String appname,int isopen);
 	
@@ -21,4 +21,6 @@ public interface AppInfoConfigDao extends IBaseDao<AppSecret, Long>{
 	public List SearchAppInfoName(int organId);
 
 	public String getAppNameByID(int id);
+
+	public List getRoleIdsByAppId(int appRecordId);
 }

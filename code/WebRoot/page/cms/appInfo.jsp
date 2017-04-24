@@ -95,7 +95,82 @@
 
 </div>
 
-<div class="dialogApp">
+	<div class="dialogApp dialogApp2">
+	<div class="dialogHeader">
+	<p class="diaTitle">编辑应用</p>
+	<span class="closeX">&times;</span>
+	</div>
+	<div class="dialogBody">
+	<ul>
+	<li>
+	<span>应用名称：</span><span class="necc">*</span>
+	<input type="text" id="name" necc='true'/>
+	</li>
+	<li>
+	<span>appid：</span><span class="necc">*</span>
+	<span type="text" id="appid" class="dialogText"></span>
+	</li>
+	<li>
+	<span>appsecret：</span><span class="necc">*</span>
+	<span type="text" id="appsecret" class="dialogText"></span>
+	</li>
+	<li>
+	<span>backurl：</span><span class="necc">*</span>
+	<input type="text" id="backurl" necc='true'/>
+	</li>
+	<li id="isOpen">
+	<span>是否开启：</span><span class="necc">*</span>
+	<span class="radio chatLeftIcon dialogCheckBox CheckBoxChecked" value="1"></span>
+	<span class="dialogGroupName">开启</span>
+	<span class="radio chatLeftIcon dialogCheckBox" value="0"></span>
+	<span class="dialogGroupName">停用</span>
+	</li>
+	</ul>
+	</div>
+	<div class="dialogFooter">
+	<button class="certainAdd">确定</button>
+	<button class="canclaDia">取消</button>
+	</div>
+	</div>
+
+	<div class="dialogApp dialogApp1">
+	<div class="dialogHeader">
+	<p class="diaTitle">新增应用</p>
+	<span class="closeX">&times;</span>
+	</div>
+	<div class="dialogBody">
+	<ul>
+	<li>
+	<span>应用名称：</span><span class="necc">*</span>
+	<input type="text" id="name" necc='true'/>
+	</li>
+	<li style="display:none">
+	<span>appid：</span><span class="necc">*</span>
+	<input type="text" id="appid" necc='true'/>
+	</li>
+	<li style="display:none">
+	<span>appsecret：</span><span class="necc">*</span>
+	<input type="text" id="appsecret" necc='true'/>
+	</li>
+	<li>
+	<span>backurl：</span><span class="necc">*</span>
+	<input type="text" id="backurl" necc='true'/>
+	</li>
+	<li id="isOpen">
+	<span>是否开启：</span><span class="necc">*</span>
+	<span class="radio chatLeftIcon dialogCheckBox CheckBoxChecked" value="1"></span>
+	<span class="dialogGroupName">开启</span>
+	<span class="radio chatLeftIcon dialogCheckBox" value="0"></span>
+	<span class="dialogGroupName">停用</span>
+	</li>
+	</ul>
+	</div>
+	<div class="dialogFooter">
+	<button class="certainAdd">确定</button>
+	<button class="canclaDia">取消</button>
+	</div>
+	</div>
+<div class="dialogApp dialogApp1">
 	<div class="dialogHeader">
 		<p class="diaTitle">新增应用</p>
 		<span class="closeX">&times;</span>
@@ -106,14 +181,14 @@
 				<span>应用名称：</span><span class="necc">*</span>
 				<input type="text" id="name" necc='true'/>
 			</li>
-			<li>
-				<span>appid：</span><span class="necc">*</span>
-				<input type="text" id="appid" necc='true'/>
-			</li>
-			<li>
-				<span>appsecret：</span><span class="necc">*</span>
-				<input type="text" id="appsecret" necc='true'/>
-			</li>
+			<%--<li style="display:none">--%>
+				<%--<span>appid：</span><span class="necc">*</span>--%>
+				<%--<input type="text" id="appid" necc='true'/>--%>
+			<%--</li>--%>
+			<%--<li style="display:none">--%>
+				<%--<span>appsecret：</span><span class="necc">*</span>--%>
+				<%--<input type="text" id="appsecret" necc='true'/>--%>
+			<%--</li>--%>
 			<li>
 				<span>backurl：</span><span class="necc">*</span>
 				<input type="text" id="backurl" necc='true'/>

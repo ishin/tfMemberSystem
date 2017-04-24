@@ -8,8 +8,9 @@ import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
 import com.organ.common.AuthTips;
+import com.organ.dao.adm.MemberRoleDao;
+import com.organ.dao.appinfoconfig.AppInfoConfigDao;
 import com.organ.dao.auth.AppSecretDao;
-import com.organ.dao.auth.UserSysRelationDao;
 import com.organ.dao.auth.UserValidDao;
 import com.organ.dao.member.MemberDao;
 import com.organ.model.AppSecret;
@@ -18,18 +19,20 @@ import com.organ.model.TMember;
 import com.organ.model.UserSysRelation;
 import com.organ.model.UserValid;
 import com.organ.service.auth.AppSecretService;
+import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
+import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PropertiesUtils;
 import com.organ.utils.SecretUtils;
 import com.organ.utils.StringUtils;
 import com.organ.utils.TimeGenerator;
-import com.organ.service.auth.impl.AppSecretServiceImpl;
 
 public class AppSecretServiceImpl implements AppSecretService {
 	private static final Logger logger = Logger
 			.getLogger(AppSecretServiceImpl.class);
 
 	@Override
+	@Deprecated
 	public String getAppIDAndSecret() {
 		JSONObject jo = new JSONObject();
 		ArrayList<String> as = null;
@@ -59,6 +62,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 	}
 
 	@Override
+	@Deprecated
 	public String setAppIDAndSecretAndUrl(String appName, String appId,
 			String secret, String url, String isOpen) {
 		JSONObject jo = new JSONObject();
@@ -223,8 +227,9 @@ public class AppSecretServiceImpl implements AppSecretService {
 							if (now >= unAuthTokenTime) {
 								text = AuthTips.INVALTOKEN.getText();
 							} else {
+								int organId = as.getOrganId();
 								TMember tm = memberDao.searchSigleUser(
-										userName, userPwd);
+										userName, userPwd, organId);
 
 								if (tm != null) {
 									long authTokenTimeL = 0;
@@ -549,9 +554,32 @@ public class AppSecretServiceImpl implements AppSecretService {
 	 */
 	private boolean loginAbleStatus(Integer appId, Integer userId) {
 		try {
-			UserSysRelation usr = userSysRelationDao.getRelation(appId, userId);
+			List roleIds = appinfoconfigDao.getRoleIdsByAppId(appId);
+			
+			StringBuilder sb = new StringBuilder();
+			List exist = new ArrayList();
+			List memberIds = null;
+			
+			if (roleIds != null) {
+				int len = roleIds.size();
+				for(int i = 0; i < len; i++) {
+					if (!exist.contains(roleIds.get(i))) {
+						sb.append(roleIds.get(i)).append(",");
+						exist.add(roleIds.get(i));
+					}
+				}
+			}
+			String sbStr = sb.toString();
+			
+			if (sbStr.endsWith(",")) {
+				sbStr = sbStr.substring(0, sbStr.length() - 1);
+			}
+			
+			if (sbStr.length() > 0) {
+				memberIds = memberRoleDao.getMemberIdsByRoleIds(sbStr);
+			}
 
-			if (usr != null) {
+			if (memberIds != null && memberIds.contains(userId)) {
 				return true;
 			}
 		} catch (Exception e) {
@@ -564,14 +592,14 @@ public class AppSecretServiceImpl implements AppSecretService {
 	public String getAppSecretByAppIdAndSecret(String appId, String secret) {
 		JSONObject jo = new JSONObject();
 		String code = "0";
-		boolean text = false;
+		String text = null;
 		
 		try {
 			if (!StringUtils.getInstance().isBlank(appId) && !StringUtils.getInstance().isBlank(secret)) {
 				AppSecret as = appSecretDao.getAppSecretByAppIdAndSecret(appId, secret);
 				if (as != null) {
 					code = "1";
-					text = true;
+					text = JSONUtils.getInstance().modelToJSONObj(as).toString();
 				} 
 			}
 			jo.put("code", code);
@@ -587,12 +615,9 @@ public class AppSecretServiceImpl implements AppSecretService {
 		ArrayList<String> as = new ArrayList<String>();
 
 		try {
-			UUID uuid = UUID.randomUUID();
-			String uuidStr = uuid.toString();
-			uuidStr = StringUtils.getInstance().replaceChar(uuidStr, "-", "");
-			as.add(uuidStr);
-			uuidStr = new SecretUtils().encrypt(uuidStr);
-			as.add(uuidStr);
+			String id = PasswordGenerator.getInstance().createId(18);
+			as.add(id);
+			as.add(new SecretUtils().encrypt(id));
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
@@ -636,10 +661,15 @@ public class AppSecretServiceImpl implements AppSecretService {
 	private AppSecretDao appSecretDao;
 	private UserValidDao userValidDao;
 	private MemberDao memberDao;
-	private UserSysRelationDao userSysRelationDao;
+	private AppInfoConfigDao appinfoconfigDao;
+	private MemberRoleDao memberRoleDao;
 
-	public void setUserSysRelationDao(UserSysRelationDao userSysRelationDao) {
-		this.userSysRelationDao = userSysRelationDao;
+	public void setMemberRoleDao(MemberRoleDao memberRoleDao) {
+		this.memberRoleDao = memberRoleDao;
+	}
+
+	public void setAppinfoconfigDao(AppInfoConfigDao appinfoconfigDao) {
+		this.appinfoconfigDao = appinfoconfigDao;
 	}
 
 	public void setMemberDao(MemberDao memberDao) {

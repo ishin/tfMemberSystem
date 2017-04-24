@@ -46,14 +46,12 @@ Window.prototype = {
         }
 
         var mask = null;
-        if($('.window_mask',parent.document).length==0){
-            if(config.hasMask){
-                mask = $('<div class="window_mask" /*ondragover="allowDorp(event)" ondrop="drop(event)"*/></div>');
-                hasParent?mask.prependTo($("body", parent.document)):mask.prependTo($("body"));
-            }
-        }else{
-            //$('.window_mask',parent.document).remove();
+        $('.window_mask').empty().remove();
+        if(config.hasMask){
+            mask = $('<div class="window_mask" /*ondragover="allowDorp(event)" ondrop="drop(event)"*/></div>');
+            hasParent?mask.prependTo($("body", parent.document)):mask.prependTo($("body"));
         }
+
         var hasInput = '';
         var inputText = '';
         if(config.hasInput){

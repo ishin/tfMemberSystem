@@ -29,6 +29,7 @@ public class FKMultOrganAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
+	@SuppressWarnings("unchecked")
 	public String registOrgan() throws ServletException {
 		String result = null;
 		JSONObject jo = new JSONObject();
@@ -38,7 +39,20 @@ public class FKMultOrganAction extends BaseAction {
 		result = this.valideParams(this.request, mustParams);
 		
 		if (result == null) {
-			boolean valid = this.valideMd5();
+			String timeStamp = this.request.getParameter("timestamp");
+			String validTime = PropertiesUtils.getStringByKey("organ.validtime");
+			String key = PropertiesUtils.getStringByKey("organ.key");
+			long validTimeLong = validTime != null ? Long.parseLong(validTime) : 0;
+			Map<String, String[]> paramMap = this.request.getParameterMap();
+			JSONObject jsonParam = new JSONObject();
+
+			for(Map.Entry<String, String[]> m : paramMap.entrySet()) {
+				String mapKey = m.getKey();
+				String value = m.getValue()[0];
+				jsonParam.put(mapKey, value);
+			}
+			
+			boolean valid = PasswordGenerator.getInstance().valideMd5(jsonParam, timeStamp, validTimeLong, key);
 			
 			if (!valid) {
 				result = Tips.VALIDFAIL.getText();
@@ -91,6 +105,7 @@ public class FKMultOrganAction extends BaseAction {
 		return "text";
 	}
 	
+	@Deprecated
 	private boolean valideMd5() {
 		String timestamp = this.request.getParameter("timestamp");
 		String validTime = PropertiesUtils.getStringByKey("organ.validtime");

@@ -42,7 +42,7 @@ public class AdmAction extends BaseAction {
 			if (su == null) {
 				js.put("id", 0);
 			} else {
-				TMember m = branchService.getMemberByAccount(su.getAccount());
+				TMember m = branchService.getMemberByAccount(su.getAccount(), su.getOrganId());
 				this.setSessionAttribute("member", m);
 				privs = privService.getPrivStringByMember(m.getId());
 				this.setSessionAttribute("privs", privs);

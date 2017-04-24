@@ -67,7 +67,8 @@ public class MemberAction extends BaseAction {
 				jo.put("code", 0);
 				jo.put("text", Tips.NULLUSER);
 			} else {
-				result = memberService.searchUser(account);
+				int organId = getSessionUserOrganId();
+				result = memberService.searchUser(account, organId);
 			}
 			
 			logger.info(result);

@@ -29,13 +29,15 @@
 			<interceptor-stack name="myStack">
 				<interceptor-ref name="myInterceptor">
 					<param name="excludeMethods">
-						login,afterLogin,validAppIdAndSecretAb,getPrivStringByMemberAb,getRolesForIdsAb,getRolePrivsByPrivsAb,getPrivByUrlAb,
+						login,afterLogin,logOut,fogetPassword,requestText,testText,valideOldPwd,newPassword,
+						validAppIdAndSecretAb,getPrivStringByMemberAb,getRolesForIdsAb,getRolePrivsByPrivsAb,getPrivByUrlAb,
 						getInitLoginPrivAb,getRoleIdForIdAb,getBranchTreeAb,getBranchMemberAb,getBranchTreeAndMemberAb,getPositionAb,getInfosAb,
 						getBranchMemberByMemberIdsAb,getMemberByAccountAb,getMemberParamAb,getMemberByTokenAb,getLimitMemberIdsAb,getMemberForIdAb,
 						getMultipleMemberForIdsAb,getMemberIdForAccountAb,getUserLogosAb,isUsedPicAb,delUserLogosAb,saveTempPicAb,saveSelectedPicAb,
 						updateUserPwdForPhoneAb,updateUserPwdForAccountAb,valideOldPwdAb,getMemberIdsByAccountAb,saveTextCodeAb,getTextCodeAb,
 						updateUserTokenForIdAb,checkAccountAb,getMemberCountAb,getMultipleMemberForAccountsAb,getAllMemberOnLineStatusAb,
-						getAllMemberInfoAb,updateMemberInfoForAppAb,updateMemberInfoForWebAb,searchUserAb,getOneOfMemberAb,registOrgan
+						getAllMemberInfoAb,updateMemberInfoForAppAb,updateMemberInfoForWebAb,searchUserAb,getOneOfMemberAb,registOrgan,getOrganCodeAb,
+						httpUploadAb
 					</param>
 					<!-- <param name="includeMethods"></param> -->
 				</interceptor-ref>

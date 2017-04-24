@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
+import com.organ.model.TOrgan;
 import com.organ.service.adm.BranchService;
 import com.organ.service.adm.OrgService;
 import com.organ.utils.JSONUtils;
@@ -26,19 +27,29 @@ public class AbutmentBranchAction extends BaseAction {
 	 */
 	public String getBranchMemberAb() throws ServletException {
 		String result = null;
+		
 		try {
 			String params = getRequestDataByStream();
 			JSONObject jo = new JSONObject();
-
+			boolean s = true;
+			
 			if (params == null) {
+				s = false;
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String branchId = p.getString("branchId");
+					int organId = p.getInt("organId");
+					result = branchService.getBranchMember(branchId, null, organId);
+				}
+			}
+			
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
-			} else {
-				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String branchId = p.getString("branchId");
-				int organId = p.getInt("organId");
-				result = branchService.getBranchMember(branchId, null, organId);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -59,15 +70,23 @@ public class AbutmentBranchAction extends BaseAction {
 		try {
 			String params = getRequestDataByStream();
 			JSONObject jo = new JSONObject();
-
+			boolean s = true;
+			
 			if (params == null) {
+				s = false;
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					int organId = p.getInt("organId");
+					result = branchService.getBranchTreeAndMember(null, organId);
+				}
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
-			} else {
-				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				int organId = p.getInt("organId");
-				result = branchService.getBranchTreeAndMember(null, organId);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -84,20 +103,28 @@ public class AbutmentBranchAction extends BaseAction {
 	 */
 	public String getBranchTreeAb() throws ServletException {
 		String result = null;
+		
 		try {
 			String params = getRequestDataByStream();
 			JSONObject jo = new JSONObject();
-
+			boolean s = true;
+			
 			if (params == null) {
+				s = false;
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					int organId = p.getInt("organId");
+					result = branchService.getBranchTree(organId);
+				}
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
-			} else {
-				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				int organId = p.getInt("organId");
-				result = branchService.getBranchTree(organId);
 			}
-		
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
@@ -116,15 +143,22 @@ public class AbutmentBranchAction extends BaseAction {
 		try {
 			String params = getRequestDataByStream();
 			JSONObject jo = new JSONObject();
-
+			boolean s = true;
 			if (params == null) {
+				s = false;
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String ids = p.getString("ids");
+					result = orgService.getInfos(ids);
+				}
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
-			} else {
-				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String ids = p.getString("ids");
-				result = orgService.getInfos(ids);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -146,15 +180,23 @@ public class AbutmentBranchAction extends BaseAction {
 		try {
 			String params = getRequestDataByStream();
 			JSONObject jo = new JSONObject();
-
+			boolean s = true;
+			
 			if (params == null) {
+				s = false;
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String ids = p.getString("ids");
+					result = branchService.getBranchMemberByMemberIds(ids);
+				}
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
-			} else {
-				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				String ids = p.getString("ids");
-				result = branchService.getBranchMemberByMemberIds(ids);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -175,15 +217,23 @@ public class AbutmentBranchAction extends BaseAction {
 		try {
 			String params = getRequestDataByStream();
 			JSONObject jo = new JSONObject();
-
+			boolean s = true;
+			
 			if (params == null) {
+				s = false;
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					int organId = p.getInt("organId");
+					result = branchService.getPosition(organId);
+				}
+			}
+			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
 				result = jo.toString();
-			} else {
-				JSONObject p = JSONUtils.getInstance().stringToObj(params);
-				int organId = p.getInt("organId");
-				result = branchService.getPosition(organId);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -193,6 +243,30 @@ public class AbutmentBranchAction extends BaseAction {
 		return "text";
 	}
 
+	public String getOrganCodeAb() throws ServletException {
+		String result = "-1";
+		
+		try {
+			String params = getRequestDataByStream();
+			
+			if (params != null) {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				if (validParams(p)) {
+					String organCode = p.getString("organCode");
+					TOrgan to = orgService.getOrganByCode(organCode);
+					if (to != null) {
+						result = to.getId() + "";
+					}
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		returnToClient(result);
+		return "text";
+	}
+	
 	private BranchService branchService;
 	private OrgService orgService;
 

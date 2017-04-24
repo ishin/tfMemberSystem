@@ -34,7 +34,7 @@ $(document).ready(function() {
 	$('.certainAdd').click(function(){
 		var name = $('#name').val();
 		var parentId = $('#parentId').val();
-		var app = $('#app').val();
+		var app = $('#app').find("option:selected").text();
 		//获取到所有必填项
 		var allNecc = $(this).parents('.dialogAuth').find('[necc=true]');
 		if(allNecc.length!=0){
@@ -213,10 +213,14 @@ function fShowTable(data) {
 	var datas = data.content;
 	var localData = JSON.stringify(datas);
 	window.localStorage.tableData = localData;
+	var pageNum = $('.pageNum.current').html();
+	if(!pageNum){
+		pageNum = 1;
+	}
 	if(datas){
 		for(var i = 0;i<datas.length;i++){
 			$('#grouplist').append(itemtemplate
-					.replace('code', datas[i].id)
+					.replace('code', (pageNum-1)*10+(i+1))
 					.replace('name', datas[i].name)
 					.replace('classify', datas[i].parent_name)
 					.replace('belong', datas[i].app)

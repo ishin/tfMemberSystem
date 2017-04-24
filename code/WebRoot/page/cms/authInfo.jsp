@@ -31,7 +31,7 @@
 		<div class="menu" onclick='window.location.href="11.jsp";'><img src='images/organize.png' class='menuicon'>组织结构配置</div>
 		<div class="menu menuactive"><img src='images/authInfo.png' class='menuicon'>权限信息配置</div>
 		<div class="menu" onclick='window.location.href="21.jsp";'><img src='images/limitInfo.png' class='menuicon'>授权管理配置</div>
-		<div class="menu" onclick='window.location.href="appInfo.jsp";'><img src='images/group.png' class='menuicon'>应用信息配置</div>
+		<div class="menu" onclick='window.location.href="appInfo.jsp";'><img src='images/appInfo.png' class='menuicon'>应用信息配置</div>
 	</div>
 </div>
 <div class="infopanel12">

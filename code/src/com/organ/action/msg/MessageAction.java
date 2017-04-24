@@ -6,6 +6,7 @@ import net.sf.json.JSONObject;
 
 import com.organ.common.AuthTips;
 import com.organ.common.BaseAction;
+import com.organ.model.AppSecret;
 import com.organ.service.msg.MessageService;
 
 /**
@@ -29,10 +30,11 @@ public class MessageAction extends BaseAction {
 	public String sendSysMsg() throws ServletException {
 		String result = null;
 
-		boolean as = msgService.validAppIdAndSecret(appId, secret);
-		if (as) {
+		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
+		if (as != null) {
+			int organId = as.getOrganId();
 			result = msgService.sendSysMsg(fromId, targetIds, targetNames, msg,
-					extraMsg, pushContent, pushData, isPersisted, isCounted);
+					extraMsg, pushContent, pushData, isPersisted, isCounted, organId);
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", 0);
@@ -52,11 +54,12 @@ public class MessageAction extends BaseAction {
 	 */
 	public String sendPrivateMsg() throws ServletException {
 		String result = null;
-		boolean as = msgService.validAppIdAndSecret(appId, secret);
-		if (as) {
+		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
+		if (as != null) {
+			int organId = as.getOrganId();
 			result = msgService.sendPrivateMsg(fromId, targetIds, targetNames,
 					msg, extraMsg, pushContent, count, verifyBlacklist,
-					isPersisted, isCounted);
+					isPersisted, isCounted, organId);
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", 0);

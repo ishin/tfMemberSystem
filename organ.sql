@@ -36,9 +36,9 @@ CREATE TABLE `t_organ` (
   `englishname` VARCHAR(256),
   `logo` VARCHAR(256),
   `domain` VARCHAR(256),
-  `province_id` INT NOT NULL DEFAULT 0,
-  `city_id` INT NOT NULL DEFAULT 0,
-  `district_id` INT NOT NULL DEFAULT 0,
+  `province_id` INT DEFAULT 0,
+  `city_id` INT DEFAULT 0,
+  `district_id` INT DEFAULT 0,
   `postcode` VARCHAR(20),
   `contact` VARCHAR(256),
   `address` VARCHAR(1024),
@@ -46,15 +46,15 @@ CREATE TABLE `t_organ` (
   `fax` VARCHAR(50),
   `email` VARCHAR(256),
   `website` VARCHAR(256),
-  `inward_id` INT NOT NULL DEFAULT 0 COMMENT '企业性质',
-  `industry_id` INT NOT NULL DEFAULT 0 COMMENT '主营行业',
-  `subdustry_id` INT NOT NULL DEFAULT 0 COMMENT '主营行业',
-  `capital` INT NOT NULL DEFAULT 0 COMMENT '注册资金',
-  `membernumber` INT NOT NULL DEFAULT 0 COMMENT '成员个数',
-  `computernumber` INT NOT NULL DEFAULT 0 COMMENT '计算机台数',
+  `inward_id` INT NULL DEFAULT 0 COMMENT '企业性质',
+  `industry_id` INT NULL DEFAULT 0 COMMENT '主营行业',
+  `subdustry_id` INT NULL DEFAULT 0 COMMENT '主营行业',
+  `capital` INT NULL DEFAULT 0 COMMENT '注册资金',
+  `membernumber` INT NULL DEFAULT 0 COMMENT '成员个数',
+  `computernumber` INT  NULL DEFAULT 0 COMMENT '计算机台数',
   `ad` VARCHAR(1024) COMMENT '广告语',
   `intro` VARCHAR(1024),
-  `listorder` INT NOT NULL DEFAULT 0,
+  `listorder` INT DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
@@ -77,7 +77,7 @@ CREATE TABLE `t_branch` (
   `telephone` VARCHAR(50),
   `fax` VARCHAR(50),
   `intro` VARCHAR(1024),
-  `listorder` INT NOT NULL DEFAULT 0,
+  `listorder` INT NULL DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
@@ -105,9 +105,9 @@ CREATE TABLE `t_member` (
   `mobile` VARCHAR(50),
   `telephone` VARCHAR(50),
   `address` VARCHAR(1024),
-  `organ_id` INT NOT NULL DEFAULT 0,
-  `groupmax` INT NOT NULL DEFAULT 0 COMMENT '可建群数量',
-  `groupuse` INT NOT NULL DEFAULT 0 COMMENT '已建群数量',
+  `organ_id` INT DEFAULT 0,
+  `groupmax` INT DEFAULT 0 COMMENT '可建群数量',
+  `groupuse` INT DEFAULT 0 COMMENT '已建群数量',
   `intro` VARCHAR(1024),
   `superadmin` int(1) comment '是否可管理独立后台',
    PRIMARY KEY(id)
@@ -127,7 +127,7 @@ CREATE TABLE `t_branch_member` (
   `member_id` INT NOT NULL DEFAULT 0,
   `position_id` INT NOT NULL DEFAULT 0,
   `is_master` CHAR(1) DEFAULT '0' COMMENT '0非主要职能，1主要智能',
-  `listorder` INT NOT NULL DEFAULT 0,
+  `listorder` INT NULL DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
@@ -140,6 +140,7 @@ CREATE TABLE `t_branch_member` (
 CREATE TABLE `t_role` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(256),
+  `organid` int not null default 0,	
   `listorder` INT NOT NULL DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
@@ -156,10 +157,10 @@ CREATE TABLE `t_priv` (
   `name` VARCHAR(256),
   `category` CHAR(1) DEFAULT '0' COMMENT '种类：1权限，2层级限制',
   `grouping` CHAR(1) DEFAULT '0' COMMENT '0非分组记录，1分组记录',
-  `url` VARCHAR(512) COMMENT '按url控制权限',
-  `app` varchar(50) comment '所属应用',
-  `organid` int(11) default 0 comment '公司id',
-  `listorder` INT NOT NULL DEFAULT 0,
+  `url` VARCHAR(512) NOT NULL COMMENT '按url控制权限',
+  `app` varchar(50) NOT NULL comment '所属应用',
+  `organid` int(11) NOT NULL default 0 comment '公司id',
+  `listorder` INT DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
@@ -186,7 +187,7 @@ CREATE TABLE `t_member_role` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `member_id` INT NOT NULL DEFAULT 0,
   `role_id` INT NOT NULL DEFAULT 0,
-  `listorder` INT NOT NULL DEFAULT 0,
+  `listorder` INT DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
@@ -213,7 +214,7 @@ CREATE TABLE `t_position` (
 CREATE TABLE `t_province` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(256),
-  `listorder` INT NOT NULL DEFAULT 0,
+  `listorder` INT DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
@@ -227,7 +228,7 @@ CREATE TABLE `t_city` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `province_id` INT NOT NULL DEFAULT 0,
   `name` VARCHAR(256),
-  `listorder` INT NOT NULL DEFAULT 0,
+  `listorder` INT NULL DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
@@ -241,7 +242,7 @@ CREATE TABLE `t_district` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `city_id` INT NOT NULL DEFAULT 0,
   `name` VARCHAR(256),
-  `listorder` INT NOT NULL DEFAULT 0,
+  `listorder` INT NULL DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
@@ -254,7 +255,7 @@ CREATE TABLE `t_district` (
 CREATE TABLE `t_inward` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(256),
-  `listorder` INT NOT NULL DEFAULT 0,
+  `listorder` INT NULL DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
@@ -267,7 +268,7 @@ CREATE TABLE `t_inward` (
 CREATE TABLE `t_industry` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(256),
-  `listorder` INT NOT NULL DEFAULT 0,
+  `listorder` INT NULL DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
@@ -294,26 +295,11 @@ CREATE TABLE `t_subdustry` (
 CREATE TABLE `t_sex` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(256),
-  `listorder` INT NOT NULL DEFAULT 0,
+  `listorder` INT NULL DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
-
-
-
---
--- 表的结构 `t_contact`：联系人
---
-
-CREATE TABLE `t_contact` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `member_id` INT NOT NULL DEFAULT 0,
-  `contact_id` INT NOT NULL DEFAULT 0,
-  `contacttimes` INT NOT NULL DEFAULT 0 COMMENT '联系次数，一天内算一次',
-  `lastcontactdate` VARCHAR(8) COMMENT '最后联系日期',
-   PRIMARY KEY(id)
-) ENGINE=InnoDB;
 
 --
 -- 表的结构 `t_textcode`：手机验证码保存
@@ -366,19 +352,13 @@ CREATE TABLE `t_uservalid` (
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
----用户应用关系表
-CREATE TABLE `t_usersysrelation` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `userid` int DEFAULT 0,
-  `appid` int DEFAULT 0,
-   PRIMARY KEY(id)
-) ENGINE=InnoDB;
 
 ---角色应用关系表
 create table `t_role_appsecret` (
-	`id` int (11),
-	`role_id` int (11),
-	`appsecret_id` int (11)
+	`id` int NOT NULL AUTO_INCREMENT(11),
+	`role_id` int(11) default 0,
+	`appsecret_id` int(11) default 0,
+	PRIMARY KEY(id);	
 ); 
 
 

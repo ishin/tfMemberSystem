@@ -16,6 +16,7 @@ import net.sf.json.JSONObject;
 
 import com.organ.common.AuthTips;
 import com.organ.common.BaseAction;
+import com.organ.model.AppSecret;
 import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
 import com.organ.model.TMember;
@@ -70,6 +71,14 @@ public class BranchAction extends BaseAction {
 		String branchId = this.request.getParameter("id");
 		
 		String result = branchService.getBranchById(Integer.valueOf(branchId));
+		returnToClient(result);
+		
+		return "text";
+	}
+	
+	public String getSuperMember() throws ServletException {
+		int organId = getSessionUserOrganId();
+		String result = branchService.getSuperMember(organId);
 		returnToClient(result);
 		
 		return "text";
@@ -164,9 +173,9 @@ public class BranchAction extends BaseAction {
 	 */
 	public String saveBranchExtra() throws ServletException {
 		String result = null;
-		boolean as = msgService.validAppIdAndSecret(appId, secret);
+		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
 		
-		if (as) {
+		if (as != null) {
 			result = this.saveBranch();
 		} else {
 			JSONObject jo = new JSONObject();
@@ -184,10 +193,11 @@ public class BranchAction extends BaseAction {
 		
 		TBranch branch = null;
 		String id = this.request.getParameter("branchid");
+		int organId = getSessionUserOrganId();
 		if (id != null) {
 			branch = branchService.getBranchObjectById(Integer.parseInt(id));
 			if (!branch.getName().equalsIgnoreCase(this.request.getParameter("branchname"))) {
-				if (branchService.getBranchByName(this.request.getParameter("branchname")) != null) {
+				if (branchService.getBranchByName(this.request.getParameter("branchname"), organId) != null) {
 					JSONObject jo = new JSONObject();
 					jo.put("branchid", 0);
 					returnToClient(jo.toString());
@@ -196,7 +206,7 @@ public class BranchAction extends BaseAction {
 			}
 		}
 		else {
-			if (branchService.getBranchByName(this.request.getParameter("branchname")) != null) {
+			if (branchService.getBranchByName(this.request.getParameter("branchname"), organId) != null) {
 				JSONObject jo = new JSONObject();
 				jo.put("branchid", 0);
 				returnToClient(jo.toString());
@@ -231,23 +241,29 @@ public class BranchAction extends BaseAction {
 		
 		if (appId == null && secret == null) {
 			returnToClient(jo.toString());
+			return "text";
+		} else {
+			return jo.toString();
 		}
-
-		return "text";
 	}
 	
 	
 	public String saveMember() throws ServletException {
 		TMember member = null;
 		String id = this.request.getParameter("memberid");
+		int organId = getSessionUserOrganId();
 		boolean sms = false;
+		JSONObject jo = new JSONObject();
+		
+		String email = this.request.getParameter("memberemail");
+		
 		if (id != null && !"".equals(id)) {
 			member = branchService.getMemberObjectById(Integer.parseInt(id));
 			if (!member.getAccount().equalsIgnoreCase(this.request.getParameter("memberaccount"))) {
-				if (branchService.getMemberByAccount(this.request.getParameter("memberaccount")) != null) {
-					JSONObject jo = new JSONObject();
+				if (branchService.getMemberByAccount(this.request.getParameter("memberaccount"), organId) != null) {
+					JSONObject jo1 = new JSONObject();
 					jo.put("memberid", 0);
-					returnToClient(jo.toString());
+					returnToClient(jo1.toString());
 					return "text";
 				}
 			}
@@ -255,7 +271,7 @@ public class BranchAction extends BaseAction {
 					!member.getTelephone().equalsIgnoreCase(this.request.getParameter("membertelephone"))) {
 				if (branchService.getMemberByMobile(this.request.getParameter("membermobile"), 
 						this.request.getParameter("membertelephone")) != null) {
-					JSONObject jo = new JSONObject();
+					JSONObject jo1 = new JSONObject();
 					jo.put("memberid", -1);
 					returnToClient(jo.toString());
 					return "text";
@@ -263,30 +279,30 @@ public class BranchAction extends BaseAction {
 			}
 			if (!member.getEmail().equalsIgnoreCase(this.request.getParameter("memberemail"))) {
 				if (branchService.getMemberByEmail(this.request.getParameter("memberemail")) != null) {
-					JSONObject jo = new JSONObject();
+					JSONObject jo1 = new JSONObject();
 					jo.put("memberid", -2);
 					returnToClient(jo.toString());
 					return "text";
 				}
 			}
 		} else {
-			if (branchService.getMemberByAccount(this.request.getParameter("memberaccount")) != null) {
-				JSONObject jo = new JSONObject();
+			if (branchService.getMemberByAccount(this.request.getParameter("memberaccount"), organId) != null) {
+				JSONObject jo1 = new JSONObject();
 				jo.put("memberid", 0);
-				returnToClient(jo.toString());
+				returnToClient(jo1.toString());
 				return "text";
 			}
 			if (branchService.getMemberByMobile(this.request.getParameter("membermobile"), 
 					this.request.getParameter("membertelephone")) != null) {
-				JSONObject jo = new JSONObject();
+				JSONObject jo1 = new JSONObject();
 				jo.put("memberid", -1);
-				returnToClient(jo.toString());
+				returnToClient(jo1.toString());
 				return "text";
 			}
-			if (branchService.getMemberByEmail(this.request.getParameter("memberemail")) != null) {
-				JSONObject jo = new JSONObject();
+			if (!StringUtils.getInstance().isBlank(email) && branchService.getMemberByEmail(email) != null) {
+				JSONObject jo1 = new JSONObject();
 				jo.put("memberid", -2);
-				returnToClient(jo.toString());
+				returnToClient(jo1.toString());
 				return "text";
 			}
 			member = new TMember();
@@ -378,7 +394,6 @@ public class BranchAction extends BaseAction {
 			TextHttpSender.getInstance().sendText(member.getMobile(), msg);
 		}
 		
-		JSONObject jo = new JSONObject();
 		jo.put("memberid", memberId);
 		
 		returnToClient(jo.toString());
@@ -473,9 +488,9 @@ public class BranchAction extends BaseAction {
 	 */
 	public String delExtra() throws ServletException {
 		String result = null;
-		boolean as = msgService.validAppIdAndSecret(appId, secret);
+		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
 		
-		if (as) {
+		if (as != null) {
 			result = this.del();
 		} else {
 			JSONObject jo = new JSONObject();
@@ -509,9 +524,10 @@ public class BranchAction extends BaseAction {
 		jo.put("id", id);
 		if (appId == null && secret == null) {
 			returnToClient(jo.toString());
+			return "text";
+		} else {
+			return jo.toString();
 		}
-		
-		return "text";
 	}
 
 	public String mov() throws ServletException {
@@ -600,9 +616,9 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchTreeAndMembers() throws ServletException {
 		String result = null;
-		boolean as = msgService.validAppIdAndSecret(appId, secret);
+		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
 		
-		if (as) {
+		if (as != null) {
 			int oid = 0;
 			if (!StringUtils.getInstance().isBlank(companyId)) {
 				oid = Integer.parseInt(companyId);
@@ -641,9 +657,9 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchMembers() throws ServletException {
 		String result = null;
-		boolean as = msgService.validAppIdAndSecret(appId, secret);
+		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
 		
-		if (as) {
+		if (as != null) {
 			int oid = 0;
 			if (!StringUtils.getInstance().isBlank(companyId)) {
 				oid = Integer.parseInt(companyId);

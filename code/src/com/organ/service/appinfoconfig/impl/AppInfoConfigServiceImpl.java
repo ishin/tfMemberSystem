@@ -1,8 +1,10 @@
 package com.organ.service.appinfoconfig.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -12,6 +14,9 @@ import com.organ.dao.auth.UserValidDao;
 import com.organ.dao.limit.LimitDao;
 import com.organ.dao.limit.RoleAppSecretDao;
 import com.organ.service.appinfoconfig.AppInfoConfigService;
+import com.organ.utils.LogUtils;
+import com.organ.utils.SecretUtils;
+import com.organ.utils.StringUtils;
 
 public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 
@@ -61,7 +66,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 		try {
 			List appList = appInfoConfigDao.getAppInfo(userId, organId, pagesize,
 					pageindex);
-			int count = appInfoConfigDao.getCount();
+			int count = appInfoConfigDao.getCount(organId);
 			if (appList == null) {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
@@ -102,9 +107,27 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 	}
 
 	@Override
-	public String updatePriv(String appId, String secert, String callbackurl,
+	public String updatePriv(String callbackurl,
 			String appname, int isopen, int organId) {
-		return appInfoConfigDao.updatePriv(appId, secert, callbackurl, appname, isopen, organId) + "";
+		ArrayList<String> idsecret = makeAppId();
+		return appInfoConfigDao.updatePriv(idsecret.get(0), idsecret.get(1), callbackurl, appname, isopen, organId) + "";
+	}
+
+	private ArrayList<String> makeAppId() {
+		ArrayList<String> as = new ArrayList<String>();
+
+		try {
+			UUID uuid = UUID.randomUUID();
+			String uuidStr = uuid.toString();
+			uuidStr = StringUtils.getInstance().replaceChar(uuidStr, "-", "");
+			as.add(uuidStr);
+			uuidStr = new SecretUtils().encrypt(uuidStr);
+			as.add(uuidStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return as;
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %> 
 <script src="js/111_112.js"></script>
 <div class="infopanel11" id="111">
-	<div class="info">
+	<div class="info" style="overflow: scroll;">
 		<div class="infotitle">
 			<div class="title" id='membertitle'>成员信息</div>
 			<div class="infotab" style='font-size: 13px'>
@@ -70,7 +70,7 @@
 			<textarea id="memberintro" name="memberintro"></textarea>
 		</div>
 		</form>
-		<div id='shuoming' class="line111" style='margin: 0 0 30px 30px; padding-top: 0'>
+		<div id='shuoming' class="line111" style='margin: 0 0 30px 74px; padding-top: 0;color: #b3b3b3;'>
 			a) admin是系统自动为您分配的超级管理员。他可以进行组织架构、权限等后台管理操作。
 			<br>b) admin的初始密码为创建者手机号的前6位，为保障账号安全，请及时重置密码。
 		</div>

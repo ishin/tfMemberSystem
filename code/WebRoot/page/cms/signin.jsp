@@ -30,6 +30,12 @@
         <div class="rightBox ">
             <div class="sign-flow signinBox">
                 <div class="form-inline" name="formSignin" novalidate="novalidate">
+
+                    <div class="form-group firstNone">
+                        <label for="organCode" class="organCode"></label>
+                        <input type="text" placeholder="企业码" required="" class="" name="organCode" id="organCode" my-focus="">
+                    </div>
+
                     <div class="form-group firstNone">
                         <label for="username" class="username"></label>
                         <input type="text" name="account" placeholder="手机号" required="" class="form-control" name="accountNumber" ng-model="user.accountNumber" ng-pattern="/^1[3-9][0-9]{9,9}$/" id="username" my-focus="">
