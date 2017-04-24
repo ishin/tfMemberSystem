@@ -41,10 +41,15 @@
 +(void)saveMyAccount:(NSString *)account;
 +(NSString *)getAccount;
 
++(void)cachedOrgCode:(NSString *)orgCode;
++(NSString *)getCachedOrgCode;
 
 + (NSString *) getUserCountryCode;
 
-
++(void) saveLoginSession;
++(void) updateSession;
++(void) removeLoginSession;
++ (NSHTTPCookie*)getCookie;
 
 + (CGSize) testLabelTextSize:(NSString*)txt frame:(CGRect)frame font:(UIFont*)font;
 

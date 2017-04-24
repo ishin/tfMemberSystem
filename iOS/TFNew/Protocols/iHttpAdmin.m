@@ -7,7 +7,7 @@
 //
 
 #import "iHttpAdmin.h"
-
+#import "UserDefaultsKV.h"
 #import "Configure.h"
 
 #define  IPHOTO_TIMEOUT		60
@@ -21,10 +21,9 @@
 
 @synthesize errorCode_;
 @synthesize error_;
-@synthesize characterBuffer;
-@synthesize connection;
+@synthesize characterBuffer, connection;
 @synthesize delegate_;
-
+@synthesize _grapCookie;
 
 
 + (NSString*) escapeURIComponent:(NSString*)src {
@@ -46,11 +45,12 @@
 	if((self = [super init]))
 	{
 		delegate_ = nil;
+		//archiveParser_ = [[ArchiveParser alloc] init];
 		curPage = 1;
 		curCommentPage_ = 1;
 		curPublicPage = 1;
 		curMyCommentPage = 1;
-		
+		//[self loadInformation];
 	}
 	return self;
 }
@@ -100,10 +100,26 @@
 	[theRequest setHTTPMethod:@"GET"];
 	[theRequest setTimeoutInterval:IPHOTO_TIMEOUT];
     [theRequest setValue:@"IPHONE" forHTTPHeaderField:@"BrowserType"];
- 
+
+    if(!_grapCookie)
+    {
+        [UserDefaultsKV updateSession];
+        
+        NSHTTPCookie *cookie1 =  [UserDefaultsKV getCookie];
+        if(cookie1)
+        {
+            NSArray *cookies=[NSArray arrayWithObjects:cookie1,nil];
+            NSDictionary *headers=[NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
+            
+            [theRequest setValue:[headers objectForKey:@"Cookie"] forHTTPHeaderField:@"Cookie"];
+        }
+    }
     
-	self.connection = nil;
+    theRequest.HTTPShouldHandleCookies = YES;
     
+	if(connection){
+		self.connection = nil;
+	}
 	[characterBuffer setLength:0];
 	
     received_ = 0;
@@ -143,7 +159,22 @@
     [theRequest setHTTPMethod:method];
     [theRequest setTimeoutInterval:IPHOTO_TIMEOUT];
     [theRequest setValue:@"IPHONE" forHTTPHeaderField:@"BrowserType"];
+
+    if(!_grapCookie)
+    {
+        [UserDefaultsKV updateSession];
+        
+        NSHTTPCookie *cookie1 =  [UserDefaultsKV getCookie];
+        if(cookie1)
+        {
+            NSArray *cookies=[NSArray arrayWithObjects:cookie1,nil];
+            NSDictionary *headers=[NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
+            
+            [theRequest setValue:[headers objectForKey:@"Cookie"] forHTTPHeaderField:@"Cookie"];
+        }
+    }
     
+    theRequest.HTTPShouldHandleCookies = YES;
     
     if(connection){
         self.connection = nil;
@@ -178,6 +209,22 @@
     //[theRequest setValue:@"IPHONE" forHTTPHeaderField:@"BrowserType"];
     [theRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [theRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    if(!_grapCookie)
+    {
+        [UserDefaultsKV updateSession];
+        
+        NSHTTPCookie *cookie1 =  [UserDefaultsKV getCookie];
+        if(cookie1)
+        {
+            NSArray *cookies=[NSArray arrayWithObjects:cookie1,nil];
+            NSDictionary *headers=[NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
+            
+            [theRequest setValue:[headers objectForKey:@"Cookie"] forHTTPHeaderField:@"Cookie"];
+        }
+    }
+    
+    theRequest.HTTPShouldHandleCookies = YES;
     
     if(connection){
         self.connection = nil;
@@ -217,8 +264,6 @@
 	if(delegate_ && [delegate_ respondsToSelector:@selector(didReceiveStringData:)]){
 		[delegate_ didReceiveStringData:stringData];
 	}
-    
-    self.characterBuffer = nil;
 	[characterBuffer setLength:0];
 	
 	
@@ -234,7 +279,6 @@
 	received_ = 0;
 	total_ = 1;
     
-    self.characterBuffer = nil;
 	[characterBuffer setLength:0];
 	
 	
@@ -270,6 +314,22 @@
 	[theRequest setHTTPBody:elementData];
 	[theRequest setTimeoutInterval:IPHOTO_TIMEOUT];
     [theRequest setValue:@"IPHONE" forHTTPHeaderField:@"BrowserType"];
+    
+    if(!_grapCookie)
+    {
+        [UserDefaultsKV updateSession];
+        
+        NSHTTPCookie *cookie1 =  [UserDefaultsKV getCookie];
+        if(cookie1)
+        {
+            NSArray *cookies=[NSArray arrayWithObjects:cookie1,nil];
+            NSDictionary *headers=[NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
+            
+            [theRequest setValue:[headers objectForKey:@"Cookie"] forHTTPHeaderField:@"Cookie"];
+        }
+    }
+    
+    theRequest.HTTPShouldHandleCookies = YES;
     
 	if(connection){
 		self.connection = nil;
@@ -318,8 +378,23 @@
     [theRequest setValue:contentType forHTTPHeaderField:@"Content-Type"];
     [theRequest setValue:@"IPHONE" forHTTPHeaderField:@"BrowserType"];
     
-	
-	connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+    if(!_grapCookie)
+    {
+        [UserDefaultsKV updateSession];
+        
+        NSHTTPCookie *cookie1 =  [UserDefaultsKV getCookie];
+        if(cookie1)
+        {
+            NSArray *cookies=[NSArray arrayWithObjects:cookie1,nil];
+            NSDictionary *headers=[NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
+            
+            [theRequest setValue:[headers objectForKey:@"Cookie"] forHTTPHeaderField:@"Cookie"];
+        }
+    }
+    
+    theRequest.HTTPShouldHandleCookies = YES;
+    
+	self.connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
 	[self performSelectorOnMainThread:@selector(httpConnectStart) withObject:nil waitUntilDone:NO];
     
 	received_ = 0;
@@ -409,6 +484,7 @@
     [theRequest setValue:contentType forHTTPHeaderField:@"Content-Type"];
     //[theRequest setValue:@"IPHONE" forHTTPHeaderField:@"BrowserType"];
     
+
     
     self.connection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
     [self performSelectorOnMainThread:@selector(httpConnectStart) withObject:nil waitUntilDone:NO];

@@ -28,7 +28,7 @@
 #import "GlobalTouchButtonView.h"
 
 #import "ChatViewController.h"
-
+#import "TFMsgSound.h"
 
 #define RONG_CLOUD_KEY  @"m7ua80guyso7u"//@"k51hidw10345e"//@"e5t4ouvpe564a"//m7ua80guyso7u
 
@@ -108,6 +108,11 @@
     
    // [self umengTrack];
     
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"Voice_Switch_onoff"])
+    {
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:@"Voice_Switch_onoff"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
     
     _globalButton = [[GlobalTouchButtonView alloc] initWithFrame:CGRectMake(0, 0, 56, 56)];
     
@@ -123,6 +128,10 @@
    
     _membsChoosedPannel = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 125)];
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"group_membs_pannel.png"]];
+    CGRect rrc = bg.frame;
+    rrc.origin.x = SCREEN_WIDTH - rrc.size.width;
+    bg.frame = rrc;
+    
     [_membsChoosedPannel addSubview:bg];
     
     
@@ -443,8 +452,13 @@
    //[[RCPTTClient sharedPTTClient] setServerURL:@"http://35.164.107.27:8080/rce/restapi/ptt"];
     [[RCPTTClient sharedPTTClient] setServerURL:@"http://120.26.42.225:8080/rce/restapi/ptt"];
 
-    [[RCIMClient sharedRCIMClient] setServerInfo:@"103.36.132.10:80" fileServer:nil];
+    [[RCIMClient sharedRCIMClient] setServerInfo:@"103.36.132.10:80" fileServer:@"up.qbox.me/"];
     
+    
+    //设置系统音效
+    [TFMsgSound sharedInstanceForSound];
+    //设置系统震动
+    [TFMsgSound sharedInstanceForVibrate];
 }
 
 
@@ -693,6 +707,29 @@
     
     return completion(group);
     
+}
+
+
+-(BOOL)onRCIMCustomAlertSound:(RCMessage*)message{
+    
+    TFMsgSound *msVibrate = [TFMsgSound sharedInstanceForVibrate];
+    TFMsgSound *msSound = [TFMsgSound sharedInstanceForSound];
+    
+    
+    BOOL msgVoiceAlert = [[NSUserDefaults standardUserDefaults] boolForKey:@"Voice_Switch_onoff"];
+    if(msgVoiceAlert)
+    {
+        [msSound play];
+    }
+    
+    BOOL msgVibAlert = [[NSUserDefaults standardUserDefaults] boolForKey:@"Shake_Switch_onoff"];
+    if(msgVibAlert)
+    {
+        [msVibrate play];
+    }
+    
+    
+    return YES;
 }
 
 

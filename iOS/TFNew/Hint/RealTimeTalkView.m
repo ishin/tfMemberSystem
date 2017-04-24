@@ -8,7 +8,7 @@
 
 #import "RealTimeTalkView.h"
 #import "WSUser.h"
-#import <RongPTTKit/RongPTTKit.h>
+#import "RCPTT.h"
 //#import <RongPTTKit/RongPTTKit.h>
 #import <AVFoundation/AVFoundation.h>
 
@@ -97,21 +97,30 @@
         _nameL.textAlignment = NSTextAlignmentCenter;
         _nameL.textColor  = [UIColor whiteColor];
         
+        int sw = 168;
+        int offset = 0;
+        if(SCREEN_HEIGHT <= 600 )
+        {
+            sw = 148;
+            offset = 10;
+        }
+        
         _callBtn =  [UIButton buttonWithType:UIButtonTypeCustom];
-        _callBtn.frame = CGRectMake(0, 0, 168, 168);
+        _callBtn.frame = CGRectMake(0, 0, sw, sw);
         [self addSubview:_callBtn];
         [_callBtn setImage:[UIImage imageNamed:@"talk_voice_normal.png"] forState:UIControlStateNormal];
-        _callBtn.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*0.8);
+        _callBtn.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*0.8-offset);
         [_callBtn addTarget:self action:@selector(startRCPTT) forControlEvents:UIControlEventTouchDown];
         
         self._voiceBtn  =  [UIButton buttonWithType:UIButtonTypeCustom];
-        _voiceBtn.frame = CGRectMake(0, 0, 168, 168);
+        _voiceBtn.frame = CGRectMake(0, 0, sw, sw);
         [self addSubview:_voiceBtn];
         [_voiceBtn setImage:[UIImage imageNamed:@"talk_voice_normal.png"] forState:UIControlStateNormal];
-        _voiceBtn.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*0.8);
+        _voiceBtn.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT*0.8-offset);
         _voiceBtn.hidden = YES;
         [_voiceBtn addTarget:self action:@selector(voiceButtonTaped) forControlEvents:UIControlEventTouchDown];
         [_voiceBtn addTarget:self action:@selector(voiceButtonTapedStop) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchDragExit];
+        
         
         
         _offBtn =  [UIButton buttonWithType:UIButtonTypeCustom];

@@ -10,6 +10,7 @@
 
 @interface SigninViewController : BaseViewController<UITextFieldDelegate>
 {
+    UITextField *_orgCode;
     UITextField *_loginName;
     UITextField *_loginPwd;
     
