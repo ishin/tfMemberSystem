@@ -6,12 +6,14 @@ import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
 import com.organ.service.auth.AppSecretService;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
 
+@Secured 
 public class AbutmentAuthAction extends BaseAction {
 
 	private static final long serialVersionUID = 6187999207496183515L;

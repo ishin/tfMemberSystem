@@ -15,10 +15,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.model.TMember;
 import com.organ.model.TOrgan;
 import com.organ.utils.PinyinGenerator;
 
+@Secured
 @MultipartConfig
 public class LogoServlet extends HttpServlet {
 

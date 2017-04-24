@@ -10,6 +10,7 @@ import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
 import com.organ.service.member.MemberService;
@@ -20,7 +21,7 @@ import com.organ.service.member.MemberService;
  * @since jdk1.7
  * @date 2017/01/07
  */
-
+@Secured
 public class MemberAction extends BaseAction {
 
 	private static final long serialVersionUID = -9024506148523628104L;

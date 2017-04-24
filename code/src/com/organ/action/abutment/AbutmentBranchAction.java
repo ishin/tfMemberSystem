@@ -6,6 +6,7 @@ import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
 import com.organ.model.TOrgan;
@@ -14,6 +15,7 @@ import com.organ.service.adm.OrgService;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
 
+@Secured
 public class AbutmentBranchAction extends BaseAction {
 
 	private static final long serialVersionUID = 5967807252950908349L;

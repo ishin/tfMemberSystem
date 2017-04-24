@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
 import com.organ.service.auth.AppSecretService;
 
@@ -15,6 +16,7 @@ import com.organ.service.auth.AppSecretService;
  * @author hao_dy
  * @date 2017/03/08
  */
+@Secured
 public class AppSecretAction extends BaseAction {
 	
 	private static final long serialVersionUID = 1L;

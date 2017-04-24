@@ -9,6 +9,7 @@ import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
 import com.organ.common.Constants;
 import com.organ.common.Tips;
@@ -31,6 +32,7 @@ import com.organ.utils.TimeGenerator;
  * @author hao_dy
  *
  */
+@Secured
 public class SystemAction extends BaseAction {
 	
 	private static final long serialVersionUID = -3901445181785461508L;

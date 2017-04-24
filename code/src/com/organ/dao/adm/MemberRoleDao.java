@@ -14,7 +14,7 @@ public interface MemberRoleDao extends IBaseDao<TMemberRole, Integer> {
 	 * @param ids
 	 * @return
 	 */
-	public List<TMemberRole> getRolesForIds(Integer[] ids);
+	public List<TMemberRole> getMemberRolesByRoleIds(Integer[] ids);
 
 	public List getMemberIdsByRoleIds(String string);
 

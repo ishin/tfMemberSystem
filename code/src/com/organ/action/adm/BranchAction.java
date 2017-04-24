@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.organ.action.adm;
 
 import java.io.FileNotFoundException;
@@ -14,6 +11,7 @@ import javax.servlet.ServletException;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.AuthTips;
 import com.organ.common.BaseAction;
 import com.organ.model.AppSecret;
@@ -33,7 +31,8 @@ import com.organ.utils.TimeGenerator;
  * @author alopex
  *
  */
-	
+
+@Secured
 public class BranchAction extends BaseAction {
 
 	private static final long serialVersionUID = 1L;

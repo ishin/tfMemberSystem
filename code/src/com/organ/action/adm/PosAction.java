@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
 import com.organ.model.TMember;
 import com.organ.model.TPosition;
@@ -11,6 +12,7 @@ import com.organ.service.adm.PositionService;
 
 import net.sf.json.JSONObject;
 
+@Secured
 public class PosAction extends BaseAction {
 
 	/**

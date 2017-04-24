@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
 import com.organ.dao.appinfoconfig.AppInfoConfigDao;
 import com.organ.service.appinfoconfig.AppInfoConfigService;
@@ -16,6 +17,7 @@ import com.organ.service.appinfoconfig.AppInfoConfigService;
  * @author Lmy
  * 
  */
+@Secured
 public class AppInfoConfigAction extends BaseAction {
 
 	private static final long serialVersionUID = 3357825063940018758L;

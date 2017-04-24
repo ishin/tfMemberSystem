@@ -1,5 +1,6 @@
 package com.organ.action.adm;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
 import com.organ.model.SessionUser;
 import com.organ.model.TMember;
@@ -8,6 +9,7 @@ import com.organ.service.adm.PrivService;
 
 import net.sf.json.JSONObject;
 
+@Secured
 public class AdmAction extends BaseAction {
 
 	/**
