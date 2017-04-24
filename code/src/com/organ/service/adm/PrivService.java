@@ -41,6 +41,6 @@ public interface PrivService {
 	
 	public String getRolePrivsByPrivs(String[] strToArray);
 	
-	public String getRolesForIds(String[] strToArray);
+	public String getMemberRolesByRoleIds(String[] strToArray);
 	
 }

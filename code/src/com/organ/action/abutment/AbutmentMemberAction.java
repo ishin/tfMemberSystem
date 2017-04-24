@@ -11,6 +11,7 @@ import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
 import com.organ.model.TMember;
@@ -29,6 +30,7 @@ import com.organ.utils.StringUtils;
  * @date 2017/01/07
  */
 
+@Secured
 public class AbutmentMemberAction extends BaseAction {
 
 	private static final long serialVersionUID = -7324946068454866523L;

@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.gson.JsonIOException;
+import com.googlecode.sslplugin.annotation.Secured;
 import com.hp.hpl.sparta.Text;
 import com.organ.action.member.MemberAction;
 import com.organ.common.BaseAction;
@@ -28,6 +29,7 @@ import com.organ.service.limit.LimitService;
  * @author Lmy
  * 
  */
+@Secured
 public class LiMitAction extends BaseAction {
 
 	private static final long serialVersionUID = -8882273369530974698L;

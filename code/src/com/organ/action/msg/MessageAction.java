@@ -4,6 +4,7 @@ import javax.servlet.ServletException;
 
 import net.sf.json.JSONObject;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.AuthTips;
 import com.organ.common.BaseAction;
 import com.organ.model.AppSecret;
@@ -17,6 +18,7 @@ import com.organ.service.msg.MessageService;
  * @date 2017/01/12
  */
 
+@Secured
 public class MessageAction extends BaseAction {
 
 	private static final long serialVersionUID = -1948853366651740073L;

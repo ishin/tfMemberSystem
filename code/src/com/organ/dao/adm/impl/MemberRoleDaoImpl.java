@@ -33,7 +33,7 @@ public class MemberRoleDaoImpl extends BaseDao<TMemberRole, Integer> implements 
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TMemberRole> getRolesForIds(Integer[] ids) {
+	public List<TMemberRole> getMemberRolesByRoleIds(Integer[] ids) {
 		try {
 			
 			Criteria ctr = getCriteria();

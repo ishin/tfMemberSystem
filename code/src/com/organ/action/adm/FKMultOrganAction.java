@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 
 import net.sf.json.JSONObject;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
 import com.organ.model.TOrgan;
@@ -20,6 +21,7 @@ import com.organ.utils.TimeGenerator;
  * @author hao_dy
  *
  */
+@Secured
 public class FKMultOrganAction extends BaseAction {
 
 	private static final long serialVersionUID = 6961033310590131108L;

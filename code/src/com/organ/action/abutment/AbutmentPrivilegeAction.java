@@ -9,9 +9,11 @@ import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
 import com.organ.service.adm.PrivService;
+import com.organ.service.member.MemberService;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
 import com.organ.utils.StringUtils;
@@ -24,6 +26,7 @@ import com.organ.utils.StringUtils;
  * @date 2017/01/07
  */
 
+@Secured
 public class AbutmentPrivilegeAction extends BaseAction {
 
 	private static final long serialVersionUID = -140819709379846247L;
@@ -72,7 +75,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 		return "text";
 	}
 	
-	public String getRolesForIdsAb() throws ServletException {
+	public String getMemberRolesByRoleIdsAb() throws ServletException {
 		String result = null;
 		JSONObject jo = new JSONObject();
 		
@@ -87,14 +90,17 @@ public class AbutmentPrivilegeAction extends BaseAction {
 					s = false;
 				} else {
 					String ids = p.getString("ids");
-					String privList = privService.getRolePrivsByPrivs(StringUtils.getInstance().strToArray(ids));
+					String privList = privService.getMemberRolesByRoleIds(StringUtils.getInstance().strToArray(ids));
 					
 					if (privList != null) {
 						jo.put("code", 1);
 						jo.put("text", privList);
 					} else {
+						JSONArray ja = new JSONArray();
+						ja.add(Tips.FAIL.getText());
 						jo.put("code", 0);
-						jo.put("text", Tips.FAIL.getText());
+						jo.put("text", ja.toString());
+						
 					}
 				}
 			} else {
@@ -139,8 +145,10 @@ public class AbutmentPrivilegeAction extends BaseAction {
 						jo.put("code", 1);
 						jo.put("text", privList);
 					} else {
+						JSONArray ja = new JSONArray();
+						ja.add(Tips.FAIL.getText());
 						jo.put("code", 0);
-						jo.put("text", Tips.FAIL.getText());
+						jo.put("text", ja.toString());
 					}
 				}
 			} else {

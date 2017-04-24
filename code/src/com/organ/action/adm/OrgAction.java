@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
 import com.organ.model.TMember;
 import com.organ.model.TOrgan;
@@ -13,6 +14,7 @@ import com.organ.service.adm.OrgService;
 
 import net.sf.json.JSONObject;
 
+@Secured
 public class OrgAction extends BaseAction {
 
 	/**

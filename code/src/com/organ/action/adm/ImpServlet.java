@@ -13,12 +13,14 @@ import javax.servlet.http.Part;
 import org.hibernate.SessionFactory;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.Constants;
 import com.organ.service.adm.ImpService;
 
 import net.sf.json.JSONObject;
 
 @MultipartConfig
+@Secured
 public class ImpServlet extends HttpServlet {
 
 	/**

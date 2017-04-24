@@ -267,8 +267,9 @@ public class PrivServiceImpl implements PrivService {
 		}
 		return null;
 	}
+	
 	@Override
-	public String getRolesForIds(String[] strToArray) {
+	public String getMemberRolesByRoleIds(String[] strToArray) {
 		try {
 			Integer[] p = new Integer[strToArray.length];
 			
@@ -276,7 +277,7 @@ public class PrivServiceImpl implements PrivService {
 				p[i] = Integer.parseInt(strToArray[i]);
 			}
 			
-			List<TMemberRole> list = memberRoleDao.getRolesForIds(p);
+			List<TMemberRole> list = memberRoleDao.getMemberRolesByRoleIds(p);
 			List<JSONObject> lj = new ArrayList<JSONObject>();
 			
 			if (list != null) {
@@ -290,4 +291,5 @@ public class PrivServiceImpl implements PrivService {
 		}
 		return null;
 	}
+	
 }

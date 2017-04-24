@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
 import com.organ.model.TPriv;
 import com.organ.model.TRole;
@@ -11,6 +12,7 @@ import com.organ.service.adm.PrivService;
 
 import net.sf.json.JSONObject;
 
+@Secured
 public class PrivAction extends BaseAction {
 
 	private static final long serialVersionUID = 1L;
