@@ -13,7 +13,7 @@ import com.organ.service.auth.AppSecretService;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
 
-@Secured 
+
 public class AbutmentAuthAction extends BaseAction {
 
 	private static final long serialVersionUID = 6187999207496183515L;

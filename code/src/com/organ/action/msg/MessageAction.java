@@ -18,7 +18,7 @@ import com.organ.service.msg.MessageService;
  * @date 2017/01/12
  */
 
-@Secured
+
 public class MessageAction extends BaseAction {
 
 	private static final long serialVersionUID = -1948853366651740073L;
@@ -68,6 +68,20 @@ public class MessageAction extends BaseAction {
 			jo.put("text", AuthTips.WORNGAPPID.getText());
 			result = jo.toString();
 		}
+		returnToClient(result);
+		return "text";
+	}
+	
+	/**
+	 * 小灰条测试
+	 * @return
+	 * @throws ServletException
+	 */
+	public String sendGrayMsg() throws ServletException {
+		String result = null;
+
+		result = msgService.sendGrayMsg(fromId, targetIds);
+
 		returnToClient(result);
 		return "text";
 	}

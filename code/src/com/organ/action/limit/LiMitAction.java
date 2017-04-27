@@ -29,7 +29,7 @@ import com.organ.service.limit.LimitService;
  * @author Lmy
  * 
  */
-@Secured
+
 public class LiMitAction extends BaseAction {
 
 	private static final long serialVersionUID = -8882273369530974698L;

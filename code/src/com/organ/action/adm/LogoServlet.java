@@ -20,7 +20,7 @@ import com.organ.model.TMember;
 import com.organ.model.TOrgan;
 import com.organ.utils.PinyinGenerator;
 
-@Secured
+
 @MultipartConfig
 public class LogoServlet extends HttpServlet {
 

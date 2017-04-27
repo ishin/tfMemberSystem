@@ -21,7 +21,7 @@ import com.organ.utils.TimeGenerator;
  * @author hao_dy
  *
  */
-@Secured
+
 public class FKMultOrganAction extends BaseAction {
 
 	private static final long serialVersionUID = 6961033310590131108L;

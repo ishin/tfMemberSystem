@@ -14,7 +14,6 @@ import com.organ.dao.auth.UserValidDao;
 import com.organ.dao.limit.LimitDao;
 import com.organ.dao.limit.RoleAppSecretDao;
 import com.organ.service.appinfoconfig.AppInfoConfigService;
-import com.organ.utils.LogUtils;
 import com.organ.utils.SecretUtils;
 import com.organ.utils.StringUtils;
 

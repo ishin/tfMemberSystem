@@ -156,6 +156,19 @@ public class MessageServiceImpl implements MessageService {
 		return null;
 	}
 
+	public String sendGrayMsg(String fromId, String targetIds) {
+		targetIds = StringUtils.getInstance().replaceChar(targetIds, "[", "");
+		targetIds = StringUtils.getInstance().replaceChar(targetIds, "]", "");
+		targetIds = StringUtils.getInstance().replaceChar(targetIds, "\"", "");
+		System.out.println("targetIds: " + targetIds);
+		String sendGroupIds[] = targetIds.split(",");
+		String msg = "您已创建群聊，请在聊天中注意人身财产安全";
+		String extMsg = "请在聊天中注意人身财产安全";
+		RongCloudUtils.getInstance().sendGroupMsg(fromId,
+				sendGroupIds, msg, extMsg, 1, 1, 2);
+		return null;
+	}
+	
 	@Override
 	public AppSecret validAppIdAndSecret(String appId, String secret) {
 		try {

@@ -445,22 +445,21 @@ public class BranchServiceImpl implements BranchService {
 	}
 	@Override
 	public void delMember(Integer memberId) {
-		
 		branchMemberDao.executeUpdate("delete from TBranchMember where memberId = " + memberId);
 		memberRoleDao.executeUpdate("delete from TMemberRole where memberId = " + memberId);
 		memberDao.executeUpdate("delete from TMember where id = " + memberId);
 	}
+	
 	@Override
 	public void delBranch(Integer branchId, Integer r, Integer organId) {
-		
-		TBranch branch = branchDao.get(branchId);
+		TBranch branch = branchDao.get(branchId); 
 		
 		List list = branchMemberDao.getBranchMemberByBranch(branchId);
 		Iterator it = list.iterator();
 		while(it.hasNext()) {
 			TBranchMember bm = (TBranchMember)it.next();
 			List list2 = branchMemberDao.getBranchMemberByMember(bm.getMemberId());
-			if (list2.size() == 1) {
+			if (list2.size() == 1) {			//部门删除，成员父节点更新为公司
 				TBranchMember bm2 = (TBranchMember)list2.get(0);
 				bm2.setBranchId(organId);
 				branchMemberDao.saveOrUpdate(bm2);
@@ -469,7 +468,7 @@ public class BranchServiceImpl implements BranchService {
 				if (bm.getIsMaster().equals("1")) {
 					branchMemberDao.selectMaster(bm.getMemberId());
 				}
-				branchMemberDao.delete(bm);
+				branchMemberDao.delete("delete from TBranchMember where id="+bm.getId());
 			}
 		}
 		
@@ -480,6 +479,7 @@ public class BranchServiceImpl implements BranchService {
 			TBranch b = (TBranch)it3.next();
 			
 			if (r == 1) {
+				
 				this.delBranch(b.getId(), r, organId);
 			}
 			else {
@@ -487,8 +487,7 @@ public class BranchServiceImpl implements BranchService {
 				branchDao.saveOrUpdate(b);
 			}
 		}
-		
-		branchDao.delete(branch);
+		branchDao.delete("delete from TBranch where id=" + branch.getId());
 	}
 	@Override
 	public void movMember(Integer memberId, Integer pId, Integer toId) {

@@ -32,7 +32,7 @@ import com.organ.utils.TimeGenerator;
  *
  */
 
-@Secured
+
 public class BranchAction extends BaseAction {
 
 	private static final long serialVersionUID = 1L;
@@ -170,6 +170,7 @@ public class BranchAction extends BaseAction {
 	 * 保存部门,专为外部接口使用
 	 * @throws SevletException
 	 */
+	@Deprecated
 	public String saveBranchExtra() throws ServletException {
 		String result = null;
 		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
@@ -485,6 +486,7 @@ public class BranchAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
+	@Deprecated
 	public String delExtra() throws ServletException {
 		String result = null;
 		AppSecret as = msgService.validAppIdAndSecret(appId, secret);

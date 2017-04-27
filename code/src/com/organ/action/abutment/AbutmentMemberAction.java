@@ -30,7 +30,7 @@ import com.organ.utils.StringUtils;
  * @date 2017/01/07
  */
 
-@Secured
+
 public class AbutmentMemberAction extends BaseAction {
 
 	private static final long serialVersionUID = -7324946068454866523L;

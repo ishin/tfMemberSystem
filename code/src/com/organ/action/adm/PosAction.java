@@ -12,7 +12,7 @@ import com.organ.service.adm.PositionService;
 
 import net.sf.json.JSONObject;
 
-@Secured
+
 public class PosAction extends BaseAction {
 
 	/**

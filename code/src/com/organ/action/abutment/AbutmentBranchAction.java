@@ -15,7 +15,7 @@ import com.organ.service.adm.OrgService;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
 
-@Secured
+
 public class AbutmentBranchAction extends BaseAction {
 
 	private static final long serialVersionUID = 5967807252950908349L;

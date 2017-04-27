@@ -201,7 +201,7 @@ public class Example {
 		System.out.println("join:  " + groupJoinResult.toString());
 		
 		// 查询群成员方法 
-		GroupUserQueryReslut groupQueryUserResult = rongCloud.group.queryUser("20001");
+		GroupUserQueryReslut groupQueryUserResult = rongCloud.group.queryUser("19");
 		System.out.println("queryUser:  " + groupQueryUserResult.toString());
 		
 		// 退出群组方法（将用户从群中移除，不再接收该群组的消息.） 

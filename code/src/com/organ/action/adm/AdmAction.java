@@ -9,7 +9,7 @@ import com.organ.service.adm.PrivService;
 
 import net.sf.json.JSONObject;
 
-@Secured
+
 public class AdmAction extends BaseAction {
 
 	/**

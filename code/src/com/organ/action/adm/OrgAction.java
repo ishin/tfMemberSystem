@@ -14,7 +14,7 @@ import com.organ.service.adm.OrgService;
 
 import net.sf.json.JSONObject;
 
-@Secured
+
 public class OrgAction extends BaseAction {
 
 	/**

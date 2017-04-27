@@ -26,7 +26,6 @@ import com.organ.utils.StringUtils;
  * @date 2017/01/07
  */
 
-@Secured
 public class AbutmentPrivilegeAction extends BaseAction {
 
 	private static final long serialVersionUID = -140819709379846247L;
