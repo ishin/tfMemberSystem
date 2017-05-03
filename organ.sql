@@ -110,6 +110,7 @@ CREATE TABLE `t_member` (
   `groupuse` INT DEFAULT 0 COMMENT '已建群数量',
   `intro` VARCHAR(1024),
   `superadmin` int(1) comment '是否可管理独立后台',
+  `isdel` int(1) default 1,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 

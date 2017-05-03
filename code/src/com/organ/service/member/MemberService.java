@@ -217,4 +217,6 @@ public interface MemberService {
 	 * @return
 	 */
 	public TMember getSuperAdmin(String account, String userpwd, int organId);
+
+	public String logicDelMemberByUserIds(String userids);
 }

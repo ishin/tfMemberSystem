@@ -58,7 +58,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 
 		String sql = "select m.id, bm.branch_id as parent_id, m.fullname as name"
 				+ " from t_branch_member bm left join t_member m on bm.member_id = m.id"
-				+ " where m.organ_id = " + organId;
+				+ " where m.organ_id = " + organId + " and m.isdel=1";
 		return runSql(sql);
 	}
 
@@ -218,10 +218,10 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 				+ "right join t_organ TOR on TOR.id=BC.organ_id "
 				+ "left join t_member M on M.id=BM.member_id "
 				+ "left join t_position P on BM.position_id=P.id "
-				+ "left join t_sex S on M.sex=S.id";
+				+ "left join t_sex S on M.sex=S.id where M.isdel=1";
 				
 		if (organId != 0) {
-			sql += " where BC.organ_id=" + organId;
+			sql += " and BC.organ_id=" + organId;
 		}
 
 		System.out.println(sql);
@@ -249,7 +249,8 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 				+ "from t_branch_member BM "
 				+ "left join t_position P on BM.position_id=P.id "
 				+ "inner join t_member M on BM.member_id=M.id "
-				+ "left join t_sex S on S.id=M.sex " + "where M.organ_id="+organId+" and BM.branch_id="
+				+ "left join t_sex S on S.id=M.sex " + "where M.organ_id="+organId
+				+ " and M.isdel=1 and BM.branch_id="
 				+ branchId;
 
 		try {

@@ -3,17 +3,17 @@ package com.organ.action.member;
 import java.io.IOException;
 
 import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import net.sf.json.JSONObject;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
 import com.organ.service.member.MemberService;
+import com.organ.utils.StringUtils;
 
 /**
  * 成员action
@@ -25,7 +25,7 @@ import com.organ.service.member.MemberService;
 public class MemberAction extends BaseAction {
 
 	private static final long serialVersionUID = -9024506148523628104L;
-	private static final Logger logger = Logger.getLogger(MemberAction.class);
+	private static final Logger logger = LogManager.getLogger(MemberAction.class);
 	
 	/**
 	 * 获取单个成员信息
@@ -37,12 +37,12 @@ public class MemberAction extends BaseAction {
 		String result = null;
 		
 		try {
-			if (userid == null || "".equals(userid)) {
+			if (StringUtils.getInstance().isBlank(userid)) {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
 				jo.put("text", Tips.NULLUSER);
 			} else {
-				result = memberService.getOneOfMember(userid);
+				result = memberService.getOneOfMember(clearChar(userid));
 			}
 			
 			logger.info(result);
@@ -63,13 +63,13 @@ public class MemberAction extends BaseAction {
 		String result = null;
 		
 		try {
-			if (account == null || "".equals(account)) {
+			if (StringUtils.getInstance().isBlank(account)) {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
 				jo.put("text", Tips.NULLUSER);
 			} else {
 				int organId = getSessionUserOrganId();
-				result = memberService.searchUser(account, organId);
+				result = memberService.searchUser(clearChar(account), organId);
 			}
 			
 			logger.info(result);
@@ -91,7 +91,7 @@ public class MemberAction extends BaseAction {
 		String result = null;
 		
 		if (memberService != null) {
-			result = memberService.updateMemberInfoForWeb(userid, position, fullname,  sign);
+			result = memberService.updateMemberInfoForWeb(clearChar(userid), clearChar(position), clearChar(fullname),  clearChar(sign));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", 0);
@@ -105,7 +105,7 @@ public class MemberAction extends BaseAction {
 	
 	public String updateMemberInfoForApp() throws ServletException {
 		String result = "{}";
-		result = memberService.updateMemberForApp(userid, email, mobile, phone, address);
+		result = memberService.updateMemberForApp(clearChar(userid), clearChar(email), clearChar(mobile), clearChar(phone), clearChar(address));
 		returnToClient(result);
 		return "text";
 	}
@@ -129,7 +129,18 @@ public class MemberAction extends BaseAction {
 	 */
 	public String getAllMemberOnLineStatus() throws ServletException {
 		int organId = getSessionUserOrganId();
-		String result = memberService.getAllMemberOnLineStatus(organId, userids);
+		String result = memberService.getAllMemberOnLineStatus(organId, clearChar(userids));
+		returnToClient(result);
+		return "text";
+	}
+	
+	/**
+	 * 逻辑删除成员
+	 * @return
+	 * @throws ServletException
+	 */
+	public String logicDelMemberByUserIds() throws ServletException {
+		String result = memberService.logicDelMemberByUserIds(clearChar(userids));
 		returnToClient(result);
 		return "text";
 	}
@@ -142,15 +153,12 @@ public class MemberAction extends BaseAction {
 	
 	private String userid;
 	private String account;
-	private String sex;
 	private String fullname;
 	private String position;
-	private String branch;
 	private String email;
 	private String phone;
 	private String mobile;
 	private String sign;
-	private String logo;
 	private String address;
 	private String userids;
 
@@ -178,16 +186,8 @@ public class MemberAction extends BaseAction {
 		this.fullname = fullname;
 	}
 
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
-
 	public void setPosition(String position) {
 		this.position = position;
-	}
-
-	public void setBranch(String branch) {
-		this.branch = branch;
 	}
 
 	public void setEmail(String email) {
@@ -200,10 +200,6 @@ public class MemberAction extends BaseAction {
 	
 	public void setSign(String sign) {
 		this.sign = sign;
-	}
-
-	public void setLogo(String logo) {
-		this.logo = logo;
 	}
 
 }

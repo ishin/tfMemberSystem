@@ -6,10 +6,12 @@ import java.io.InputStream;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.log4j.Logger;
 
 import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
@@ -34,8 +36,7 @@ import com.organ.utils.StringUtils;
 public class AbutmentMemberAction extends BaseAction {
 
 	private static final long serialVersionUID = -7324946068454866523L;
-	private static final Logger logger = Logger
-			.getLogger(AbutmentMemberAction.class);
+	private static final Logger logger = LogManager.getLogger(AbutmentMemberAction.class);
 	
 	/**
 	 * 依据账号获取成员
@@ -50,6 +51,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject param = JSONUtils.getInstance().stringToObj(params);
 				if (!validParams(param)) {
@@ -75,7 +77,7 @@ public class AbutmentMemberAction extends BaseAction {
 		}
 		
 		result = jo.toString();
-
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -94,6 +96,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
 				if (!validParams(jo)) {
@@ -116,6 +119,7 @@ public class AbutmentMemberAction extends BaseAction {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -130,6 +134,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject param = JSONUtils.getInstance().stringToObj(params);
 				if (!validParams(param)) {
@@ -157,6 +162,7 @@ public class AbutmentMemberAction extends BaseAction {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -175,6 +181,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				if (!validParams(p)) {
@@ -197,6 +204,7 @@ public class AbutmentMemberAction extends BaseAction {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -215,6 +223,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				if (!validParams(p)) {
@@ -236,6 +245,7 @@ public class AbutmentMemberAction extends BaseAction {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -253,6 +263,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				if (!validParams(p)) {
@@ -274,6 +285,7 @@ public class AbutmentMemberAction extends BaseAction {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -290,6 +302,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				
@@ -313,6 +326,7 @@ public class AbutmentMemberAction extends BaseAction {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -330,6 +344,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				if (!validParams(p)) {
@@ -351,8 +366,11 @@ public class AbutmentMemberAction extends BaseAction {
 				result.put("text", Tips.WRONGPARAMS.getText());
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
+		
+		logger.info(result.toString());
 		returnToClient(result.toString());
 		return "text";
 	}
@@ -371,6 +389,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				
@@ -389,8 +408,10 @@ public class AbutmentMemberAction extends BaseAction {
 				result = jo.toString();
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -409,6 +430,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params == null) {
 				s = false;
 			} else {
@@ -431,9 +453,11 @@ public class AbutmentMemberAction extends BaseAction {
 				result = ja.toString();
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -451,6 +475,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
 				
@@ -479,6 +504,7 @@ public class AbutmentMemberAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -494,9 +520,9 @@ public class AbutmentMemberAction extends BaseAction {
 
 		try {
 			String params = getRequestDataByStream();
-			
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
 				
@@ -526,6 +552,7 @@ public class AbutmentMemberAction extends BaseAction {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -544,6 +571,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params == null) {
 				s = false;
 			} else {
@@ -564,8 +592,11 @@ public class AbutmentMemberAction extends BaseAction {
 				result = j.toString();
 			}
 		} catch(Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
+		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -583,6 +614,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (!params.equals("")) {
 				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
 				
@@ -605,6 +637,8 @@ public class AbutmentMemberAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
+		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -622,6 +656,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
 				
@@ -648,6 +683,8 @@ public class AbutmentMemberAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
+		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -666,6 +703,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
 				
@@ -690,6 +728,7 @@ public class AbutmentMemberAction extends BaseAction {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -708,6 +747,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject jo = JSONUtils.getInstance().stringToObj(params);
 				
@@ -733,6 +773,7 @@ public class AbutmentMemberAction extends BaseAction {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -750,6 +791,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (StringUtils.getInstance().isBlank(params)) {
 				s = false;
 			} else {
@@ -770,8 +812,11 @@ public class AbutmentMemberAction extends BaseAction {
 				result = jo.toString();
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
+		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -790,6 +835,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (StringUtils.getInstance().isBlank(params)) {
 				s = false;
 			} else {
@@ -809,9 +855,11 @@ public class AbutmentMemberAction extends BaseAction {
 				jo.put("text", Tips.WRONGPARAMS.getText());
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
+		logger.info(jo.toString());
 		returnToClient(jo.toString());
 		return "text";
 	}
@@ -830,6 +878,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (StringUtils.getInstance().isBlank(params)) {
 				s = false;
 			} else {
@@ -850,9 +899,11 @@ public class AbutmentMemberAction extends BaseAction {
 				jo.put("text", Tips.WRONGPARAMS.getText());
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
+		logger.info(jo.toString());
 		returnToClient(jo.toString());
 		return "text";
 	}
@@ -871,6 +922,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (StringUtils.getInstance().isBlank(params)) {
 				s = false;
 			} else {
@@ -893,9 +945,11 @@ public class AbutmentMemberAction extends BaseAction {
 			}
 			result = jo.toString();
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -914,6 +968,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (StringUtils.getInstance().isBlank(params)) {
 				s = false;
 			} else {
@@ -936,9 +991,11 @@ public class AbutmentMemberAction extends BaseAction {
 			}
 			result = jo.toString();
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -957,6 +1014,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (StringUtils.getInstance().isBlank(params)) {
 				s = false;
 			} else {
@@ -979,9 +1037,11 @@ public class AbutmentMemberAction extends BaseAction {
 			}
 			result = jo.toString();
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -1000,6 +1060,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (StringUtils.getInstance().isBlank(params)) {
 				s = false;
 			} else {
@@ -1019,9 +1080,11 @@ public class AbutmentMemberAction extends BaseAction {
 				result = jo.toString();
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -1040,6 +1103,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (StringUtils.getInstance().isBlank(params)) {
 				s = false;
 			} else {
@@ -1059,9 +1123,11 @@ public class AbutmentMemberAction extends BaseAction {
 				result = jo.toString();
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -1080,6 +1146,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (StringUtils.getInstance().isBlank(params)) {
 				s = false;
 			} else {
@@ -1099,9 +1166,11 @@ public class AbutmentMemberAction extends BaseAction {
 				result = jo.toString();
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -1120,6 +1189,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (StringUtils.getInstance().isBlank(params)) {
 				s = false;
 			} else {
@@ -1139,9 +1209,11 @@ public class AbutmentMemberAction extends BaseAction {
 				result = jo.toString();
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -1160,6 +1232,7 @@ public class AbutmentMemberAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (StringUtils.getInstance().isBlank(params)) {
 				s = false;
 			} else {
@@ -1178,9 +1251,11 @@ public class AbutmentMemberAction extends BaseAction {
 				result = jo.toString();
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -1197,6 +1272,7 @@ public class AbutmentMemberAction extends BaseAction {
 		InputStream input = request.getInputStream();
 		String realPath = request.getSession().getServletContext().getRealPath("/");  
 		String result = uploadService.httpUpload(fileName, input, realPath);
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}

@@ -163,6 +163,7 @@ public class OrgServiceImpl implements OrgService {
 					tm.setAllpinyin(PinyinGenerator.getPinYin(name));
 					tm.setPassword(PasswordGenerator.getInstance().getMD5Str(pwd));
 					tm.setSuperAdmin(1);
+					tm.setIsDel(1);
 					memberDao.save(tm);
 					
 					int memberId = 0;

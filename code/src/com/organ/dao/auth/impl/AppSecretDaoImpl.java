@@ -2,7 +2,8 @@ package com.organ.dao.auth.impl;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -10,7 +11,6 @@ import com.organ.common.BaseDao;
 import com.organ.dao.auth.AppSecretDao;
 import com.organ.model.AppSecret;
 import com.organ.utils.LogUtils;
-import com.organ.dao.auth.impl.AppSecretDaoImpl;
 
 /**
  * 验证管理
@@ -21,8 +21,7 @@ import com.organ.dao.auth.impl.AppSecretDaoImpl;
  */
 public class AppSecretDaoImpl extends BaseDao<AppSecret, Integer> implements
 		AppSecretDao {
-	private static final Logger logger = Logger
-			.getLogger(AppSecretDaoImpl.class);
+	private static final Logger logger = LogManager.getLogger(AppSecretDaoImpl.class);
 
 	@Override
 	public void setAppIDAndSecretAndUrl(AppSecret as) {

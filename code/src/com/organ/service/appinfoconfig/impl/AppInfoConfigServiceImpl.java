@@ -14,6 +14,8 @@ import com.organ.dao.auth.UserValidDao;
 import com.organ.dao.limit.LimitDao;
 import com.organ.dao.limit.RoleAppSecretDao;
 import com.organ.service.appinfoconfig.AppInfoConfigService;
+import com.organ.utils.LogUtils;
+import com.organ.utils.PasswordGenerator;
 import com.organ.utils.SecretUtils;
 import com.organ.utils.StringUtils;
 
@@ -116,12 +118,9 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 		ArrayList<String> as = new ArrayList<String>();
 
 		try {
-			UUID uuid = UUID.randomUUID();
-			String uuidStr = uuid.toString();
-			uuidStr = StringUtils.getInstance().replaceChar(uuidStr, "-", "");
-			as.add(uuidStr);
-			uuidStr = new SecretUtils().encrypt(uuidStr);
-			as.add(uuidStr);
+			String id = PasswordGenerator.getInstance().createId(18);
+			as.add(id);
+			as.add(new SecretUtils().encrypt(id));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -148,7 +147,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 				+ "";
 	}
 
-	@Override
+	@Override 
 	public String SearchApp(String name, int organId, String AppName, int pagesize,
 			int pageindex) {
 		JSONArray ja = new JSONArray();

@@ -7,20 +7,14 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
-import net.sf.json.JSONArray;
-
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.gson.JsonIOException;
-import com.googlecode.sslplugin.annotation.Secured;
-import com.hp.hpl.sparta.Text;
-import com.organ.action.member.MemberAction;
 import com.organ.common.BaseAction;
-import com.organ.common.Tips;
-import com.organ.dao.limit.LimitDao;
 import com.organ.service.limit.LimitService;
 
 /**
@@ -34,7 +28,7 @@ public class LiMitAction extends BaseAction {
 
 	private static final long serialVersionUID = -8882273369530974698L;
 	@SuppressWarnings("unused")
-	private static final Logger logger = Logger.getLogger(LiMitAction.class);
+	private static final Logger logger = LogManager.getLogger(LiMitAction.class);
 	private LimitService limitService;
 
 	public LimitService getLimitService() {
@@ -55,9 +49,9 @@ public class LiMitAction extends BaseAction {
 	 */
 	public String AddPriv() throws ServletException, JSONException,
 			UnsupportedEncodingException {
-		String pid = this.request.getParameter("parentId");
-		String name = this.request.getParameter("name");
-		String app = this.request.getParameter("app");
+		String pid = clearChar(this.request.getParameter("parentId"));
+		String name = clearChar(this.request.getParameter("name"));
+		String app = clearChar(this.request.getParameter("app"));
 		int organId = getSessionUserOrganId();
 		Integer intPid = pid == null ? null : Integer.parseInt(pid);
 		boolean falg = false;
@@ -94,7 +88,7 @@ public class LiMitAction extends BaseAction {
 	 * @throws JSONException
 	 */
 	public String DelPriv() throws ServletException, JSONException {
-		String id = this.request.getParameter("privId");
+		String id = clearChar(this.request.getParameter("privId"));
 		Integer intid = id == null ? null : Integer.parseInt(id);
 		boolean flag = false;
 		try {
@@ -134,10 +128,10 @@ public class LiMitAction extends BaseAction {
 		 * byte bufname[] = request.getParameter("name").getBytes("iso8859-1");
 		 * byte bufapp[] = request.getParameter("app").getBytes("iso8859-1");
 		 */
-		String id = this.request.getParameter("privId");
-		String pid = this.request.getParameter("parentId");
-		String name = this.request.getParameter("name");
-		String app = this.request.getParameter("app");
+		String id = clearChar(this.request.getParameter("privId"));
+		String pid = clearChar(this.request.getParameter("parentId"));
+		String name = clearChar(this.request.getParameter("name"));
+		String app = clearChar(this.request.getParameter("app"));
 		/*
 		 * String name = new String(bufname,"utf-8"); String app = new
 		 * String(bufapp,"utf-8");
@@ -180,16 +174,13 @@ public class LiMitAction extends BaseAction {
 
 	public String SearchPriv() throws ServletException, JSONException,
 			UnsupportedEncodingException {
-		String pagesize = this.request.getParameter("pagesize");
-		String pageindex = this.request.getParameter("pageindex");
-		String name = this.request.getParameter("name");
-		Integer intpagesize = pagesize == null ? null : Integer
-				.parseInt(pagesize);
-		Integer intpageindex = pageindex == null ? null : Integer
-				.parseInt(pageindex);
+		String pagesize = clearChar(this.request.getParameter("pagesize"));
+		String pageindex = clearChar(this.request.getParameter("pageindex"));
+		String name = clearChar(this.request.getParameter("name"));
+		Integer intpagesize = pagesize == null ? null : Integer.parseInt(pagesize);
+		Integer intpageindex = pageindex == null ? null : Integer.parseInt(pageindex);
 		int organId = getSessionUserOrganId();
-		String result = limitService
-				.searchPriv(organId, name, intpagesize, intpageindex);
+		String result = limitService.searchPriv(organId, name, intpagesize, intpageindex);
 		returnToClient(result);
 		return "text";
 	}
@@ -222,8 +213,8 @@ public class LiMitAction extends BaseAction {
 	}
 
 	public String getLimitByRole() throws ServletException, JSONException {
-		Integer roleid = Integer.parseInt(this.request.getParameter("roleid"));
-		String appName = this.request.getParameter("appname");
+		Integer roleid = Integer.parseInt(clearChar(this.request.getParameter("roleid")));
+		String appName = clearChar(this.request.getParameter("appname"));
 		
 		List list = limitService.getLimitbyRole(roleid, appName);
 		Iterator it = list.iterator();
@@ -247,7 +238,7 @@ public class LiMitAction extends BaseAction {
 		String result = null;
 		
 		try {
-			String appId = this.request.getParameter("appId");
+			String appId = clearChar(this.request.getParameter("appId"));
 			boolean b = com.organ.utils.StringUtils.getInstance().isBlank(appId);
 			Integer appIdInt = !b ? Integer.parseInt(appId) : 0;
 			int organId = getSessionUserOrganId();
@@ -261,7 +252,7 @@ public class LiMitAction extends BaseAction {
 	}
 
 	public String getPrivNamebyclass() throws ServletException, JSONException {
-		String appname = this.request.getParameter("appName");
+		String appname = clearChar(this.request.getParameter("appName"));
 		int organId = getSessionUserOrganId();
 		String result = limitService.getPrivNamebytwo(organId, appname);
 		returnToClient(result);
@@ -272,14 +263,13 @@ public class LiMitAction extends BaseAction {
 		// roleId, roleName, privs, appName
 		//String roleId = this.request.getParameter("roleid");
 		//Integer introleId = (roleId == null ? 0 : Integer.parseInt(roleId));
-		String roleIdStr = this.request.getParameter("roleid");
+		String roleIdStr = clearChar(this.request.getParameter("roleid"));
 		boolean b = StringUtils.isBlank(roleIdStr);
 		Integer roleId = (!b && !roleIdStr.equals("0")) ? Integer.parseInt(roleIdStr) : -1;
 		
-		String roleName = this.request.getParameter("roleName");
-		String privs = this.request.getParameter("privs");
-		Integer appsecretId = Integer.parseInt(this.request
-				.getParameter("appsecretId"));
+		String roleName = clearChar(this.request.getParameter("roleName"));
+		String privs = clearChar(this.request.getParameter("privs"));
+		Integer appsecretId = Integer.parseInt(clearChar(this.request.getParameter("appsecretId")));
 		int organId = getSessionUserOrganId();
 		boolean falg = false;
 		String result = "";
@@ -313,7 +303,7 @@ public class LiMitAction extends BaseAction {
 	 * @return
 	 */
 	public String delRole() {
-		Integer roleId = Integer.parseInt(this.request.getParameter("roleId"));
+		Integer roleId = Integer.parseInt(clearChar(this.request.getParameter("roleId")));
 		limitService.delRole(roleId);
 		return returnajaxid(0);
 	}

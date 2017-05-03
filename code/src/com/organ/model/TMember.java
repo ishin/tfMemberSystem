@@ -25,6 +25,7 @@ public class TMember implements java.io.Serializable {
 	private String token;
 	private Integer createtokendate;
 	private Integer superAdmin;
+	private Integer isDel;
 
 	public TMember() {
 	}
@@ -36,7 +37,7 @@ public class TMember implements java.io.Serializable {
 			String pinyin, String allpinyin, String workno, String sex, String birthday,
 			String logo, String email, String mobile, String telephone,
 			String address, Integer groupmax, Integer groupuse, String intro,
-			String token, Integer createtokendate, Integer superAdmin) {
+			String token, Integer createtokendate, Integer superAdmin, Integer isDel) {
 		this.account = account;
 		this.password = password;
 		this.fullname = fullname;
@@ -56,6 +57,7 @@ public class TMember implements java.io.Serializable {
 		this.token = token;
 		this.createtokendate = createtokendate;
 		this.superAdmin = superAdmin;
+		this.isDel = isDel;
 	}
 
 	public Integer getId() {
@@ -221,6 +223,10 @@ public class TMember implements java.io.Serializable {
 	public void setSuperAdmin(Integer superAdmin) {
 		this.superAdmin = superAdmin;
 	}
-	
-	
+	public Integer getIsDel() {
+		return isDel;
+	}
+	public void setIsDel(Integer isDel) {
+		this.isDel = isDel;
+	}
 }

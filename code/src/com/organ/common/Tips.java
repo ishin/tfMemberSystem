@@ -43,6 +43,7 @@ public enum  Tips {
 	NULLORGAN("未指定公司", "00037"),
 	EXISTACCOUNT("账号已存在", "00038"),
 	NULLCODE("需填写企业码", "00039"),
+	TIMEOUT("超时", "00040"),
 	OK("OK", "10000"),
 	FAIL("fail", "20000"),
 	NOTUPDATE("更新成功","1");

@@ -11,10 +11,7 @@ import net.sf.json.JSONObject;
 
 
 public class AdmAction extends BaseAction {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 5652521060219528842L;
 
 	private BranchService branchService;

@@ -244,54 +244,13 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
        return buff.toString().trim();
 	}
 	
-/*	
-	protected String getApplicaitonQueryFilter()
-	{
-		
-		String condition = "";
-		SessionUser su = getSessionUser();
-		if (su == null || su.isSuperAdmin())
-			return condition;
-		
-		List<String> applicaitonP = su.getApplicationIds();
-		if (applicaitonP == null || applicaitonP.isEmpty())
-			return condition;
-		return "('" + StringUtils.collectionToDelimitedString(applicaitonP, "','") + "')";
-	}
-	*/
-	
-	/*protected String getOrganizationQueryFilter()
-	{
-		
-		String condition = "";
-		SessionUser su = getSessionUser();
-		if (su == null || su.isSuperAdmin())
-			return condition;
-		
-		List<String> organizationP = su.getOrganizationIds();
-		if (organizationP == null || organizationP.isEmpty())
-			return condition;
-		return "('" + StringUtils.collectionToDelimitedString(organizationP, "','") + "')";
-	}*/
-	
-	
-	/** 获得当前登录管理员的accountID */
-	/*
-	 * protected String obtainLoginAccountId() { SessionUser userInfo =
-	 * getSessionUser(); return userInfo == null ? null :
-	 * userInfo.getAccountId(); }
-	 */
-
-	/*
-	 * protected String obtainLoginAccount() { SessionUser userInfo =
-	 * getSessionUser(); return userInfo == null ? null :
-	 * userInfo.getAccountName(); }
-	 */
-
 	/**
-	 * 验证参数
+	 * 验证参数是否为空
+	 * @param req
+	 * @param params
+	 * @return
 	 */
-	protected String valideParams(HttpServletRequest req, String[] params) {
+	protected String valideNullParams(HttpServletRequest req, String[] params) {
 		String result = null;
 		
 		for(int i = 0; i < params.length; i++) {
@@ -331,7 +290,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 	}
 
 	/**
-	 * 验证参数有效性
+	 * 验证加密参数有效性
 	 * @param timeStamp
 	 * @param validTime
 	 * @param key
@@ -343,5 +302,16 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 		String validTime = PropertiesUtils.getStringByKey("param.validtime");
 		long validTimeLong = validTime != null ? Long.parseLong(validTime) : 0;
 		return PasswordGenerator.getInstance().valideMd5(params, timeStamp, validTimeLong, key);
+	}
+
+	protected String failResult(String msg) {
+		JSONObject jo = new JSONObject();
+		jo.put("code", 0);
+		jo.put("text", msg);
+		return jo.toString();
+	}
+	
+	protected String clearChar(String str) {
+		return str != null ? str.replace("'", "") : str;
 	}
 }

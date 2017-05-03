@@ -10,6 +10,7 @@ import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+
 public class PasswordGenerator {
 
 	private PasswordGenerator() {
@@ -150,4 +151,34 @@ public class PasswordGenerator {
 		return true;
 	}
 	
+	/**
+	 * 生成参数sign
+	 * @param paramMap
+	 * @param timeStamp
+	 * @param validTime
+	 * @param key
+	 * @return
+	 */
+	public String makeSign(JSONObject param, String key, long timeStamp) {
+		StringBuilder sbp = new StringBuilder();
+		Iterator<String> it = param.keys();
+		
+		while(it.hasNext()) {
+			String jsonKey = it.next();
+			String jsonValue = param.getString(jsonKey);
+			sbp.append(jsonKey).append("=").append(jsonValue);
+		}
+		
+		String pStr = sbp.toString();
+		
+		pStr = StringUtils.getInstance().sortByChars(pStr);
+		System.out.println("sort1: " + pStr);
+		pStr = key + pStr + timeStamp;
+		System.out.println("sort2: " + pStr);
+		String caclSign = PasswordGenerator.getInstance().getMD5Str(sbp.toString());
+		
+		System.out.println("im sign: " + caclSign);
+		
+		return caclSign;
+	}
 }

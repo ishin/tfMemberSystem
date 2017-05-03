@@ -4,21 +4,37 @@ import java.util.List;
 
 import net.sf.json.JSONObject;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.organ.common.Tips;
 import com.organ.dao.auth.AppSecretDao;
 import com.organ.dao.member.MemberDao;
 import com.organ.model.AppSecret;
 import com.organ.service.msg.MessageService;
+import com.organ.utils.LogUtils;
 import com.organ.utils.RongCloudUtils;
 import com.organ.utils.StringUtils;
 
 public class MessageServiceImpl implements MessageService {
+	private static final Logger logger = LogManager.getLogger(MessageServiceImpl.class);
 
 	@Override
 	public String sendSysMsg(String fromId, String targetIds,
 			String targetNames, String msg, String extraMsg,
 			String pushContent, String pushData, String isPersisted,
 			String isCounted, int organId) {
+		
+		logger.info("fromId: " + fromId);
+		logger.info("targetIds: " + targetIds);
+		logger.info("targetNames: " + targetNames);
+		logger.info("msg: " + msg);
+		logger.info("extraMsg: " + extraMsg);
+		logger.info("pushContent: " + pushContent);
+		logger.info("pushData: " + pushData);
+		logger.info("isPersisted: " + isPersisted);
+		logger.info("isCounted: " + isCounted);
+		
 
 		try {
 			if (!StringUtils.getInstance().isBlank(fromId)
@@ -79,6 +95,7 @@ public class MessageServiceImpl implements MessageService {
 
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
@@ -91,6 +108,17 @@ public class MessageServiceImpl implements MessageService {
 			String pushContent, String count, String verifyBlacklist,
 			String isPersisted, String isCounted, int organId) {
 
+		logger.info("fromId: " + fromId);
+		logger.info("targetIds: " + targetIds);
+		logger.info("targetNames: " + targetNames);
+		logger.info("msg: " + msg);
+		logger.info("extraMsg: " + extraMsg);
+		logger.info("pushContent: " + pushContent);
+		logger.info("count: " + count);
+		logger.info("verifyBlackList: " + verifyBlacklist);
+		logger.info("isPersisted: " + isPersisted);
+		logger.info("isCounted: " + isCounted);
+		
 		try {
 			if (!StringUtils.getInstance().isBlank(fromId)
 					&& !StringUtils.getInstance().isBlank(msg)) {
@@ -150,6 +178,7 @@ public class MessageServiceImpl implements MessageService {
 
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
@@ -160,7 +189,7 @@ public class MessageServiceImpl implements MessageService {
 		targetIds = StringUtils.getInstance().replaceChar(targetIds, "[", "");
 		targetIds = StringUtils.getInstance().replaceChar(targetIds, "]", "");
 		targetIds = StringUtils.getInstance().replaceChar(targetIds, "\"", "");
-		System.out.println("targetIds: " + targetIds);
+		logger.info("targetIds: " + targetIds + ",fromId: " + fromId);
 		String sendGroupIds[] = targetIds.split(",");
 		String msg = "您已创建群聊，请在聊天中注意人身财产安全";
 		String extMsg = "请在聊天中注意人身财产安全";
@@ -171,6 +200,7 @@ public class MessageServiceImpl implements MessageService {
 	
 	@Override
 	public AppSecret validAppIdAndSecret(String appId, String secret) {
+		logger.info("appId: " + appId + ",secret: " + secret);
 		try {
 			AppSecret as = appSecretDao.getAppSecretByAppIdAndSecret(appId,
 					secret);

@@ -218,11 +218,13 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	 */
 	public TMember getSuperAdmin(String account, String account2, int organId);
 	
-	public TMember getMemberByMobile(String mobile, String telPhone);
+	public TMember getMemberByMobile(String mobile);
 	
 	public TMember getMemberByEmail(String email);
 	public TMember searchSigleUserByOrgan(String name, String password,
 			int organId);
 	public TMember getSuperMember(int organId);
+	public int logicDelMemberByUserIds(String userids);
+	public List<String> getNotDelIds(String userids);
 } 
 

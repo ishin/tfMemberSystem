@@ -38,7 +38,7 @@ public class AppSecretAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String setAppIDAndSecretAndUrl() throws ServletException {
-		String result = appSecretService.setAppIDAndSecretAndUrl(appName, appId, secret, url, isOpen);
+		String result = appSecretService.setAppIDAndSecretAndUrl(clearChar(appName), clearChar(appId), clearChar(secret), clearChar(url), clearChar(isOpen));
 		returnToClient(result);
 		return "text";
 	}
@@ -49,7 +49,7 @@ public class AppSecretAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getTempTokenSceneOne() throws ServletException,IOException, JSONException {
-		JSONObject result = appSecretService.getTempTokenSceneOne(appId);
+		JSONObject result = appSecretService.getTempTokenSceneOne(clearChar(appId));
 		//服务器主动跳转(前端异步提交时，不能正常跳转，会把页面返回去)
 		//如果使用服务器跳转，前端请使用form表单
 		/*if (result.getString("code").equals("500")) {
@@ -71,7 +71,7 @@ public class AppSecretAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getTempTokenSceneTwo() throws ServletException,IOException, JSONException {
-		JSONObject result = appSecretService.getTempTokenSceneOne(appId);
+		JSONObject result = appSecretService.getTempTokenSceneOne(clearChar(appId));
 		returnToClient(result.toString());
 		return "text";
 	}
@@ -93,7 +93,7 @@ public class AppSecretAction extends BaseAction {
 	 * @throws IOException 
 	 */
 	public String reqAuthorizeOne() throws ServletException, JSONException, IOException {
-		JSONObject result = appSecretService.reqAuthorizeOne(unAuthToken, userName, userPwd, appId, info);
+		JSONObject result = appSecretService.reqAuthorizeOne(clearChar(unAuthToken), clearChar(userName), clearChar(userPwd), clearChar(appId), clearChar(info));
 		//handleRedirect(result);
 		returnToClient(result.toString());
 		return "text";
@@ -108,7 +108,7 @@ public class AppSecretAction extends BaseAction {
 	 * @throws JSONException 
 	 */
 	public String reqAuthorizeTwo() throws ServletException, IOException, JSONException {
-		JSONObject result = appSecretService.reqAuthorizeTwo(getSessionUser(), appId, unAuthToken);
+		JSONObject result = appSecretService.reqAuthorizeTwo(getSessionUser(), clearChar(appId), clearChar(unAuthToken));
 		//handleRedirect(result);
 		
 		returnToClient(result.toString());
@@ -123,7 +123,7 @@ public class AppSecretAction extends BaseAction {
 	 * @throws JSONException
 	 */
 	public String reqAuthorizeTwoForApp() throws ServletException, IOException, JSONException {
-		JSONObject result = appSecretService.reqAuthorizeTwoForApp(userId, appId, unAuthToken);
+		JSONObject result = appSecretService.reqAuthorizeTwoForApp(clearChar(userId), clearChar(appId), clearChar(unAuthToken));
 		
 		returnToClient(result.toString());
 		return "text";
@@ -159,7 +159,7 @@ public class AppSecretAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getRealToken() throws ServletException {
-		String result = appSecretService.getRealToken(secret, authToken, companyId);
+		String result = appSecretService.getRealToken(clearChar(secret), clearChar(authToken), clearChar(companyId));
 		returnToClient(result);
 		return "text";
 	}
@@ -171,7 +171,7 @@ public class AppSecretAction extends BaseAction {
 	 */
 	public String getAuthResource() throws ServletException {
 		System.out.println("getAuthResource() visitToken: " + visitToken);
-		String result = appSecretService.getAuthResource(visitToken);
+		String result = appSecretService.getAuthResource(clearChar(visitToken));
 		returnToClient(result);
 		return "text";
 	}

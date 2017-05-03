@@ -34,15 +34,6 @@ public class PrivDaoImpl extends BaseDao<TPriv, Integer> implements PrivDao {
 		return null;
 	}
 
-	@Override
-	public List getMemberByPrivId(int[] privId) {
-		String sql = (new StringBuilder("select M.id mid,TRP.id trpid from t_member M left join t_member_role MR on M.id=MR.member_id left join t_role_priv TRP on TRP.role_id=MR.role_id and TRP.priv_id=").append(privId)).toString();
-		SQLQuery query = this.getSession().createSQLQuery(sql);
-		List list = query.list();
-		
-		return list;
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	@Deprecated

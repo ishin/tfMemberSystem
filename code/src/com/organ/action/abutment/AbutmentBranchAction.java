@@ -4,7 +4,8 @@ import javax.servlet.ServletException;
 
 import net.sf.json.JSONObject;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
@@ -19,8 +20,7 @@ import com.organ.utils.LogUtils;
 public class AbutmentBranchAction extends BaseAction {
 
 	private static final long serialVersionUID = 5967807252950908349L;
-	private static final Logger logger = Logger
-			.getLogger(AbutmentBranchAction.class);
+	private static final Logger logger = LogManager.getLogger(AbutmentBranchAction.class);
 
 	/**
 	 * 获取部门下的成员
@@ -34,6 +34,8 @@ public class AbutmentBranchAction extends BaseAction {
 			String params = getRequestDataByStream();
 			JSONObject jo = new JSONObject();
 			boolean s = true;
+			
+			logger.info(params);
 			
 			if (params == null) {
 				s = false;
@@ -57,6 +59,7 @@ public class AbutmentBranchAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
+		logger.info(result);
 		returnToClient(result);
 		return "text"; 
 	}
@@ -74,6 +77,7 @@ public class AbutmentBranchAction extends BaseAction {
 			JSONObject jo = new JSONObject();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params == null) {
 				s = false;
 			} else {
@@ -94,6 +98,8 @@ public class AbutmentBranchAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
+		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -111,6 +117,7 @@ public class AbutmentBranchAction extends BaseAction {
 			JSONObject jo = new JSONObject();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params == null) {
 				s = false;
 			} else {
@@ -131,6 +138,8 @@ public class AbutmentBranchAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
+		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -146,6 +155,8 @@ public class AbutmentBranchAction extends BaseAction {
 			String params = getRequestDataByStream();
 			JSONObject jo = new JSONObject();
 			boolean s = true;
+			
+			logger.info(params);
 			if (params == null) {
 				s = false;
 			} else {
@@ -166,6 +177,7 @@ public class AbutmentBranchAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -184,6 +196,7 @@ public class AbutmentBranchAction extends BaseAction {
 			JSONObject jo = new JSONObject();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params == null) {
 				s = false;
 			} else {
@@ -204,6 +217,7 @@ public class AbutmentBranchAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -221,6 +235,7 @@ public class AbutmentBranchAction extends BaseAction {
 			JSONObject jo = new JSONObject();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params == null) {
 				s = false;
 			} else {
@@ -241,6 +256,7 @@ public class AbutmentBranchAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -251,6 +267,7 @@ public class AbutmentBranchAction extends BaseAction {
 		try {
 			String params = getRequestDataByStream();
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				if (validParams(p)) {
@@ -262,9 +279,11 @@ public class AbutmentBranchAction extends BaseAction {
 				}
 			}
 		} catch(Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}

@@ -20,7 +20,6 @@ public class TextCodeDaoImpl extends BaseDao<TextCode, Long> implements TextCode
 	@Override
 	public TextCode getTextCode(String phone) {
 		try {
-
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("phoneNum", phone));
 			

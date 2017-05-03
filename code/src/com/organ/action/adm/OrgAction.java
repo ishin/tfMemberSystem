@@ -39,8 +39,7 @@ public class OrgAction extends BaseAction {
 
 	public String getCity() {
 
-		Integer provinceId = Integer.parseInt(this.request
-				.getParameter("provinceid"));
+		Integer provinceId = Integer.parseInt(clearChar(this.request.getParameter("provinceid")));
 		List list = orgService.getCity(provinceId);
 
 		handle(list);
@@ -50,7 +49,7 @@ public class OrgAction extends BaseAction {
 
 	public String getDistrict() {
 
-		Integer cityId = Integer.parseInt(this.request.getParameter("cityid"));
+		Integer cityId = Integer.parseInt(clearChar(this.request.getParameter("cityid")));
 		List list = orgService.getDistrict(cityId);
 
 		handle(list);
@@ -78,8 +77,7 @@ public class OrgAction extends BaseAction {
 
 	public String getSubdustry() {
 
-		Integer industryId = Integer.parseInt(this.request
-				.getParameter("industryid"));
+		Integer industryId = Integer.parseInt(clearChar(this.request.getParameter("industryid")));
 		List list = orgService.getSubdustry(industryId);
 
 		handle(list);
@@ -126,68 +124,63 @@ public class OrgAction extends BaseAction {
 	} 
 	public String save() {
 		Integer organId = this.getOrganId();
+		String code = clearChar(this.request.getParameter("code"));
+		String name = clearChar(this.request.getParameter("name"));
+		String shortName = clearChar(this.request.getParameter("shortname"));
+		String englishName = clearChar(this.request.getParameter("englishname"));
+		String ad = clearChar(this.request.getParameter("ad"));
+		String provinceId = clearChar(this.request.getParameter("provinceid"));
+		String cityId = clearChar(this.request.getParameter("cityid"));
+		String distrinctId = clearChar(this.request.getParameter("districtid"));
+		String contact = clearChar(this.request.getParameter("contact"));
+		String address = clearChar(this.request.getParameter("address"));
+		String telePhone = clearChar(this.request.getParameter("telephone"));
+		String fax = clearChar(this.request.getParameter("fax"));
+		String email = clearChar(this.request.getParameter("email"));
+		String postCode = clearChar(this.request.getParameter("postcode"));
+		String webSite = clearChar(this.request.getParameter("website"));
+		String inwardId = clearChar(this.request.getParameter("inwardid"));
+		String industryId = clearChar(this.request.getParameter("industryid"));
+		String subdustryId = clearChar(this.request.getParameter("subdustryid"));
+		String capital = clearChar(this.request.getParameter("capital"));
+		String memberNumber = clearChar(this.request.getParameter("membernumber"));
+		String computerNumber = clearChar(this.request.getParameter("computernumber"));
+		String intro = clearChar(this.request.getParameter("intro"));
+		String logo = clearChar(this.request.getParameter("logo"));
+		String listOrder = clearChar(this.request.getParameter("listorder"));
+		
 		TOrgan organ = new TOrgan();
 		organ.setId(organId);
-		organ.setCode(this.request.getParameter("code"));
-		organ.setName(this.request.getParameter("name"));
-		organ.setShortname(this.request.getParameter("shortname"));
-		organ.setEnglishname(this.request.getParameter("englishname"));
-		organ.setAd(this.request.getParameter("ad"));
-		organ.setProvinceId(StringUtils.isBlank(this.request
-				.getParameter("provinceid")) ? 0 : isNumber(this.request
-				.getParameter("provinceid")));
-		// cityid
-		organ.setCityId(StringUtils
-				.isBlank(this.request.getParameter("cityid")) ? 0
-				: isNumber(this.request.getParameter("cityid")));
-		// districtid
-		organ.setDistrictId(StringUtils.isBlank(this.request
-				.getParameter("districtid")) ? 0 : isNumber(this.request
-				.getParameter("districtid")));
-
-		organ.setContact(this.request.getParameter("contact"));
-		organ.setAddress(this.request.getParameter("address"));
-		organ.setTelephone(this.request.getParameter("telephone"));
-		organ.setFax(this.request.getParameter("fax"));
-		organ.setEmail(this.request.getParameter("email"));
-		organ.setPostcode(this.request.getParameter("postcode"));
-		organ.setWebsite(this.request.getParameter("website"));
-
-		// inwardid
-		organ.setInwardId(StringUtils.isBlank(this.request
-				.getParameter("inwardid")) ? 0 : isNumber(this.request
-				.getParameter("inwardid")));
-		// industryid
-		organ.setIndustryId(StringUtils.isBlank(this.request
-				.getParameter("industryid")) ? 0 : isNumber(this.request
-				.getParameter("industryid")));
-		// subdustryid
-		organ.setSubdustryId(StringUtils.isBlank(this.request
-				.getParameter("subdustryid")) ? 0 : isNumber(this.request
-				.getParameter("subdustryid")));
-		// capital
-		organ.setCapital(StringUtils.isBlank(this.request
-				.getParameter("capital")) ? 0 : isNumber(this.request
-				.getParameter("capital")));
-		// membernumber
-		organ.setMembernumber(StringUtils.isBlank(this.request
-				.getParameter("membernumber")) ? 0 : isNumber(this.request
-				.getParameter("membernumber")));
-		// computernumber
-		organ.setComputernumber(StringUtils.isBlank(this.request
-				.getParameter("computernumber")) ? 0 : isNumber(this.request
-				.getParameter("computernumber")));
-		organ.setIntro(this.request.getParameter("intro"));
-		organ.setLogo(this.request.getParameter("logo"));
-		organ.setListorder(Integer.parseInt(this.request
-				.getParameter("listorder")));
+		organ.setCode(code);
+		organ.setName(name);
+		organ.setShortname(shortName);
+		organ.setEnglishname(englishName);
+		organ.setAd(ad);
+		organ.setProvinceId(StringUtils.isBlank(provinceId) ? 0 : isNumber(provinceId));
+		organ.setCityId(StringUtils.isBlank(cityId) ? 0 : isNumber(cityId));
+		organ.setDistrictId(StringUtils.isBlank(distrinctId) ? 0 : isNumber(distrinctId));
+		organ.setContact(contact);
+		organ.setAddress(address);
+		organ.setTelephone(telePhone);
+		organ.setFax(fax);
+		organ.setEmail(email);
+		organ.setPostcode(postCode);
+		organ.setWebsite(webSite);
+		organ.setInwardId(StringUtils.isBlank(inwardId) ? 0 : isNumber(inwardId));
+		organ.setIndustryId(StringUtils.isBlank(industryId) ? 0 : isNumber(industryId));
+		organ.setSubdustryId(StringUtils.isBlank(subdustryId) ? 0 : isNumber(subdustryId));
+		organ.setCapital(StringUtils.isBlank(capital) ? 0 : isNumber(capital));
+		organ.setMembernumber(StringUtils.isBlank(memberNumber) ? 0 : isNumber(memberNumber));
+		organ.setComputernumber(StringUtils.isBlank(computerNumber) ? 0 : isNumber(computerNumber));
+		organ.setIntro(intro);
+		organ.setLogo(logo);
+		organ.setListorder(Integer.parseInt(listOrder));
 		orgService.save(organ);
 		return returnajaxid(organId);
 	}
 
 	// 判断传进来的参数是否为数字
 	private Integer isNumber(String name) {
-		System.err.println("name:" + name);
 		int num = 0;
 		boolean flag = com.organ.utils.StringUtils.isDigit(name);
 		if (flag) {

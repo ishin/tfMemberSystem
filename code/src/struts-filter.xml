@@ -32,7 +32,7 @@
 						updateUserPwdForPhoneAb,updateUserPwdForAccountAb,valideOldPwdAb,getMemberIdsByAccountAb,saveTextCodeAb,getTextCodeAb,
 						updateUserTokenForIdAb,checkAccountAb,getMemberCountAb,getMultipleMemberForAccountsAb,getAllMemberOnLineStatusAb,
 						getAllMemberInfoAb,updateMemberInfoForAppAb,updateMemberInfoForWebAb,searchUserAb,getOneOfMemberAb,registOrgan,getOrganCodeAb,
-						httpUploadAb,sendSysMsg,sendPrivateMsg,sendGrayMsg
+						httpUploadAb,sendSysMsg,sendPrivateMsg,sendGrayMsg,logicDelMemberByUserIds
 					</param>
 					<!-- <param name="includeMethods"></param> -->
 				</interceptor-ref>

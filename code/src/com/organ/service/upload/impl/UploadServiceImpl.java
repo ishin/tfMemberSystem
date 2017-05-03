@@ -9,18 +9,23 @@ import java.util.List;
 
 import net.sf.json.JSONObject;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.organ.common.Tips;
 import com.organ.dao.member.MemberDao;
 import com.organ.dao.upload.CutLogoTempDao;
 import com.organ.model.TCutLogoTemp;
 import com.organ.service.upload.UploadService;
 import com.organ.utils.FileUtil;
+import com.organ.utils.LogUtils;
 import com.organ.utils.PropertiesUtils;
 import com.organ.utils.StringUtils;
 import com.organ.utils.TimeGenerator;
 
 public class UploadServiceImpl implements UploadService {
-
+	private static final Logger logger = LogManager.getLogger(UploadServiceImpl.class);
+	
 	@Override
 	public String saveSelectedPic(String userId, String picName) {
 		JSONObject jo = new JSONObject();
@@ -32,6 +37,8 @@ public class UploadServiceImpl implements UploadService {
 			} else {
 				int userIdInt = Integer.parseInt(userId);
 				TCutLogoTemp cltList = cutLogoTempDao.getTempLogoForIdAndPicName(userIdInt, picName);
+				
+				logger.info("userId: " + userId + ",picName: " + picName);
 				
 				if (cltList != null && cltList.getLogoName().equals(picName)) {
 					int ret = memberDao.updateUserLogo(userIdInt, picName);
@@ -49,6 +56,7 @@ public class UploadServiceImpl implements UploadService {
 				}
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return jo.toString();
@@ -63,6 +71,7 @@ public class UploadServiceImpl implements UploadService {
  			jo.put("text", Tips.WRONGPARAMS.getText());
 		} else {
 			try {
+				logger.info("userId: " + userId + ",picName: " + picName);
 				int userIdInt = StringUtils.getInstance().strToInt(userId);
 				boolean used = memberDao.isUsedPic(userIdInt, picName);
 				
@@ -81,9 +90,11 @@ public class UploadServiceImpl implements UploadService {
 					}
 				}
 			} catch (Exception e) {
+				logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 				e.printStackTrace();
 			}
 		}
+		
 		return jo.toString();
 	}
 	
@@ -98,7 +109,8 @@ public class UploadServiceImpl implements UploadService {
 		} else {
 			try {
 				int userIdInt = StringUtils.getInstance().strToInt(userId);
-
+				
+				logger.info("userId: " + userId);
 				List<TCutLogoTemp> clTList = cutLogoTempDao.getUserLogos(userIdInt);
 				
 				if (clTList != null) {
@@ -115,6 +127,7 @@ public class UploadServiceImpl implements UploadService {
 					jo.put("text", Tips.NOLOGOERR.getText());
 				}
 			} catch (Exception e) {
+				logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 				e.printStackTrace();
 			}
 		}
@@ -124,6 +137,8 @@ public class UploadServiceImpl implements UploadService {
 	@Override
 	public String uploadUserLogNotCut(String userId, File imageFile, String realPath) {
 		JSONObject jo = new JSONObject();
+		
+		logger.info("userId:"+userId+",realPath:"+realPath);
 		
 		if (StringUtils.getInstance().isBlank(userId) || 
 				imageFile == null) {
@@ -160,13 +175,13 @@ public class UploadServiceImpl implements UploadService {
                 	 
                 	 cutLogoTempDao.saveTempPic(clte);
                 	 
+                	 logger.info("newName: " + newName);
                 	 this.saveSelectedPic(userId, newName);
                 	 
                 	jo.put("code", 1);
          			jo.put("text", clte.getLogoName());
 	             } catch (Exception e) {  
-	            	jo.put("code", 0);
-         			jo.put("text", Tips.FAIL.getText());
+	            	 logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 	                e.printStackTrace();  
 	            }  
 	        }
@@ -177,6 +192,8 @@ public class UploadServiceImpl implements UploadService {
 
 	@Override
 	public String saveTempPic(String userId, String logName) {
+		logger.info("userID: " + userId + ",logName: " + logName);
+		
 		try {
 			 TCutLogoTemp clte = new TCutLogoTemp();
         	 
@@ -187,6 +204,7 @@ public class UploadServiceImpl implements UploadService {
         	 
         	 this.saveSelectedPic(userId, logName);
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
@@ -198,6 +216,7 @@ public class UploadServiceImpl implements UploadService {
 		FileOutputStream fos = null;
 		JSONObject response = new JSONObject();
 		
+		logger.info("fileName: "+ fileName + ",realPath: " + realPath);
 		try {
 			if (!StringUtils.getInstance().isBlank(fileName)) {
 				String imgPath = PropertiesUtils.getStringByKey("cfg.uploaddir");
@@ -230,6 +249,7 @@ public class UploadServiceImpl implements UploadService {
 				response.put("text", Tips.FAIL.getText());
 			}
 		} catch (IOException e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			response.put("code", 0);
 			response.put("text", e.getMessage());
 		} finally {
@@ -241,6 +261,7 @@ public class UploadServiceImpl implements UploadService {
 					fos.close();
 				}
 			} catch (IOException e) {
+				logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 				e.printStackTrace();
 			}
 		}
