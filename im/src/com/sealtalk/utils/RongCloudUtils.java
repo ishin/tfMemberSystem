@@ -8,6 +8,7 @@ import io.rong.models.CheckOnlineReslut;
 import io.rong.models.CodeSuccessReslut;
 import io.rong.models.GagGroupUser;
 import io.rong.models.GroupInfo;
+import io.rong.models.GroupUserQueryReslut;
 import io.rong.models.ListGagGroupUserReslut;
 import io.rong.models.TokenReslut;
 
@@ -257,7 +258,6 @@ public class RongCloudUtils {
 	 */
 	public String sendGroupMsg(String fromId, String[] targetIds, String msg,
 			String extraMsg, int isPersisted, int isCounted, int type) {
-		JSONObject jo = new JSONObject();
 
 		try {
 			if (rongCloud == null) {
@@ -278,27 +278,17 @@ public class RongCloudUtils {
 						extraMsg);
 				break;
 			}
-			CodeSuccessReslut messagePublishSystemResult = rongCloud.message
-					.publishGroup(fromId, targetIds,
+			CodeSuccessReslut messagePublishSystemResult = rongCloud.message.publishGroup(fromId, targetIds,
 							messagePublishSystemTxtMessage, "thisisapush",
 							pushMsg.toString(), isPersisted, isCounted);
 
-			if (messagePublishSystemResult != null) {
-				System.out.println("sendGroupMsg->code: "
-						+ messagePublishSystemResult.toString());
-				jo.put("code", messagePublishSystemResult.getCode());
-				jo.put("text", "ok");
-			} else {
-				jo.put("code", 0);
-				jo.put("text", "fail");
-			}
+				//System.out.println("sendGroupMsg->code: "+ messagePublishSystemResult.toString());
+				return messagePublishSystemResult.getCode().toString();
 		} catch (Exception e) {
-			jo.put("code", 0);
-			jo.put("text", "fail");
 			e.printStackTrace();
 		}
 
-		return jo.toString();
+		return null;
 	}
 
 	/**
@@ -411,11 +401,9 @@ public class RongCloudUtils {
 					&& !StringUtils.getInstance().isBlank(groupId)
 					&& !StringUtils.getInstance().isBlank(groupName)) {
 
-				CodeSuccessReslut groupCreateResult = rongCloud.group.create(
-						userIds, groupId, groupName);
+				CodeSuccessReslut groupCreateResult = rongCloud.group.create(userIds, groupId, groupName);
 
-				System.out.println("-----------------------------: "
-						+ groupCreateResult.toString());
+				//System.out.println("-----------------------------: "+ groupCreateResult.toString());
 				if (groupCreateResult != null) {
 					result = groupCreateResult.getCode().toString();
 				}
@@ -674,6 +662,22 @@ public class RongCloudUtils {
 			e.printStackTrace();
 		}
 
+		return result;
+	}
+
+	public String queryGroupMember(String groupId) {
+		String result = null;
+		
+		try {
+			if (rongCloud == null) {
+				this.init();
+			}
+
+			GroupUserQueryReslut groupQueryUserResult = rongCloud.group.queryUser(groupId);
+			result = groupQueryUserResult.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return result;
 	}
 

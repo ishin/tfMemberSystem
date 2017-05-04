@@ -4,6 +4,7 @@
 
 
 var globalVar={
+    fileStroage:{},
     //系统声音
     SYSTEMSOUND:1,//系统声音
     MESSAGESOUND:1,//消息免打扰
@@ -27,6 +28,7 @@ var globalVar={
     defaultGroupLogo:'page/web/css/img/group_chart.jpg',
     defaultComLogo:'page/web/css/img/defaultComLogo.jpg',
     defaultDepLogo:'page/web/css/img/defaultDepLogo.jpg',
+    defaultSystemLogo:'page/web/css/img/defaultDepLogo.jpg',
     //
     refreshGroupOnline:30000,
     refreshPersonalOnline:30000,

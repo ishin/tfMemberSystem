@@ -448,6 +448,18 @@
     height: 2px;
     background: palegreen;
 }
+#down_process {
+    background: red;
+    height: 2px;
+    margin-top: 47px;
+    width: 150px;
+    margin-left: 70px;
+}
+#down_precent{
+    height: 2px;
+    background: palegreen;
+}
+
 
 .mr-chatContentLFile .mr-ownChat{
     border: 1px solid #b9c1ca;
@@ -579,6 +591,15 @@ p.voiceSecond2 {
     float: left;
     margin-left: 10px;
     line-height: 46px;
+}
+.mr-sysHistory {
+    position: relative;
+    height: calc(100% - 60px);
+    overflow: auto;
+}
+.mr-sysHistory li{
+    list-style: none;
+
 }
 .mr-chatContent li {
     margin-bottom: 18px;

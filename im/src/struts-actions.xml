@@ -145,6 +145,14 @@
 			</result>
 		</action>
 	</package>
-
+	<package name="com.sealtalk.action.extra" extends="all">
+		<!-- 外部请求 -->
+		<action name="extra" class="com.sealtalk.action.extra.ExtraAction">
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
 </struts>
 

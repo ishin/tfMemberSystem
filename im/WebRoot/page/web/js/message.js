@@ -198,9 +198,33 @@ $(function(){
                     break;
                 default :
             }
-        //}
-
         $('.myContextMenu').remove();
+    })
+
+    $('body').undelegate('#sysMsgMenu li','click');
+    $('body').delegate('#sysMsgMenu li','click',function(e){
+        $('.myContextMenu').remove();
+        var index = $(this).closest('ul').find('li').index($(this));
+        switch (index)
+        {
+            case 0:
+                //系统消息从消息列表删除
+                var $THIS=$(this);
+                new Window().alert({
+                    title   : '清空系统消息',
+                    content : '确定要清空系统消息么？',
+                    hasCloseBtn : true,
+                    hasImg : true,
+                    textForSureBtn : '确定',              //确定按钮
+                    textForcancleBtn : '取消',            //取消按钮
+                    handlerForCancle : null,
+                    handlerForSure : function(){
+                        removeSysConvers();
+
+                    }
+                });
+                break;
+        }
     })
 
     $('body').undelegate('#newsLeftClick li','click');
@@ -414,7 +438,13 @@ $(function(){
                     if(targeType == "PRIVATE"){
                         var arr = [{limit:'',value:sTopChat},{limit:'ltszwjsc',value:'发送文件'},{limit:'',value:'查看资料'},{limit:'ltszqzlt',value:'添加新成员'},{limit:'',value:'定位到所在组织'},{limit:'',value:'从消息列表删除'}];
 
-                    }else{
+                    }else if(targeType == "system"){
+                        var arr = [{limit:'',value:'清空系统消息'}];
+                        var sysId = 'sysMsgMenu';
+                        var style = 'left:'+left+'px;top:'+top+'px';
+                        fshowContexMenu(arr,style,sysId,'','','');
+                        return;
+                    }else {
                         var arr = [{limit:'',value:sTopChat},{limit:'ltszwjsc',value:'发送文件'},{limit:'',value:'查看资料'},{limit:'ltszqzlt',value:'添加新成员'},{limit:'aaaa',value:'定位到所在组织'},{limit:'',value:'从消息列表删除'}];
 
                     }
@@ -517,6 +547,11 @@ $(function(){
             $('#groupContainer #message-content').attr('placeholder','请输入文字...');
             $('#groupContainer #message-content').html('');
             conversationSelf(targetID,targeType,callback);
+        }else if(targeType=='system'){
+            $('.orgNavClick').addClass('chatHide');
+            $('.mesContainerSys').removeClass('chatHide');
+            conversationSys(targetID,targeType,callback);
+
         }else{
             $('.orgNavClick').addClass('chatHide');
             $('.mesContainerGroup').removeClass('chatHide');
@@ -524,6 +559,15 @@ $(function(){
             conversationGroup(targetID,targeType,groupName,callback);
         }
     }
+
+
+    //将系统消息从消息列表中删除
+    function removeSysConvers(){
+        localStorage.removeItem('systemMsg');
+        getConverList();
+        $('#sysContainer .mr-sysHistory').html('');
+    }
+
     //定位到所在组织
     function orginizPos(targetID,type){
         $('.chatHeaderMenu li')[1].click();
@@ -632,7 +676,7 @@ $(function(){
             var memship = $(this).attr('targetid');
             var top = e.clientY;
             //var arr = ['群成员管理','解散群','转让群'];
-            var arr = [{limit:'',value:'群成员管理'},{limit:'qzgljs',value:'解散群'},{limit:'qzxgqcjz',value:'转让群'}];
+            var arr = [{limit:'',value:'群成员管理'},{limit:'qzjsq',value:'解散群'},{limit:'qzxgqcjz',value:'转让群'}];
 
             var style = 'left:'+left+'px;top:'+top+'px';
             var id = 'groupLeftClick'
@@ -1313,19 +1357,22 @@ function getMemberFriends(account,callback){
         window.localStorage.MemberFriends = data;
         var $ParendtDom = $('.usualChatList').find('ul.groupChatListUl');
         var sHTML = '';
-        for(var i = 0;i<myData.text.length;i++){
-            var curData = myData.text[i];
-            var account = curData.account;
-            var fullname = curData.fullname;
-            var workno = curData.position?' ('+curData.position+')':''
-            var logo = curData.logo?globalVar.imgSrc+curData.logo:globalVar.defaultLogo;
-            sHTML += ' <li account="'+account+'" targetid="'+curData.id+'">'+
-            '<div>'+
-            '<img class="groupImg" src="'+logo+'" alt=""/>'+
-            '<span class="groupName">'+fullname+workno+'</span>'+
-            '</div>'+
-            '</li>';
+        if(myData.text){
+            for(var i = 0;i<myData.text.length;i++){
+                var curData = myData.text[i];
+                var account = curData.account;
+                var fullname = curData.fullname;
+                var workno = curData.position?' ('+curData.position+')':''
+                var logo = curData.logo?globalVar.imgSrc+curData.logo:globalVar.defaultLogo;
+                sHTML += ' <li account="'+account+'" targetid="'+curData.id+'">'+
+                '<div>'+
+                '<img class="groupImg" src="'+logo+'" alt=""/>'+
+                '<span class="groupName">'+fullname+workno+'</span>'+
+                '</div>'+
+                '</li>';
+            }
         }
+
         $ParendtDom.html(sHTML);
         callback&&callback();
     },function(){

@@ -12,12 +12,6 @@ public interface PrivService {
 	public List getRoleIdForId(int id);
 	
 	/**
-	 * 使用初始化账号登陆，获取满权限 
-	 * @return
-	 */
-	public String getInitLoginPriv();
-
-	/**
 	 * 获取权限
 	 * @param id
 	 * @return

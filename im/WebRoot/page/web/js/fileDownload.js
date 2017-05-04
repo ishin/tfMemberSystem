@@ -89,13 +89,21 @@ $(function(){
         if(!DownImgFlag){
             DownImgFlag = true;
             var url = $(this).attr('src');
+
             if(window.Electron){
-                var localPath = window.Electron.chkFileExists(url);
+                if(url.indexOf('token')!=-1){//有%
+                    checkUrl = fileFromApp(url);
+                }else if(url.indexOf('uniquetime')!=-1){
+                    checkUrl = fileFromPC(url)
+
+                }else{
+                    checkUrl = url
+                }
+
+                var localPath = window.Electron.chkFileExists(checkUrl);
                 if(localPath){//本地有这个文件
-                    if(url.indexOf('token')!=-1){//有%
-                        url = fileFromApp(url);
-                    }
-                    window.Electron.openFile(url);
+
+                    window.Electron.openFile(checkUrl);
                 }else{
                     //console.log('本地没有这个文件');
                     window.location.href = url;
@@ -123,6 +131,10 @@ $(function(){
             if(URL.indexOf('token')!=-1){//有%
                 URL = fileFromApp(URL);
             }
+            if(URL.indexOf('uniquetime')!=-1){//有%
+                URL = fileFromPC(URL)
+            }
+
             window.Electron.openFile(URL);
         }
     })
@@ -133,6 +145,9 @@ $(function(){
             var URL = $(this).parent().prev().attr('href');
             if(URL.indexOf('token')!=-1){//有%
                 URL = fileFromApp(URL);
+            }
+            if(URL.indexOf('uniquetime')!=-1){//有%
+                URL = fileFromPC(URL)
             }
             window.Electron.openFile(URL);
         }
@@ -149,12 +164,14 @@ $(function(){
     $('.infoDet-flieRecord .chatRecordSel').delegate('.hosOpenFile','click',function(){
         if(window.Electron){
             var URL = $(this).attr('data-url');
-            if(URL.indexOf('token%')!=-1){//有%
+            if(URL.indexOf('token')!=-1){//有%
                 URL = fileFromApp(URL);
+            }
+            if(URL.indexOf('uniquetime')!=-1){//有%
+                URL = fileFromPC(URL)
             }
             window.Electron.openFile(URL);
         }
-
     })
     $('.infoDet-flieRecord .chatRecordSel').undelegate('.hosOpenFloder','click');
     $('.infoDet-flieRecord .chatRecordSel').delegate('.hosOpenFloder','click',function(){
@@ -162,7 +179,6 @@ $(function(){
             var URL = $(this).attr('data-url');
             window.Electron.openFileDir(URL);
         }
-
     })
     $('.orgNavClick').undelegate('.voiceMsgContent','click');
     $('.orgNavClick').delegate('.voiceMsgContent','click',function(){
@@ -192,4 +208,25 @@ $(function(){
         }
     })
 })
+function fileFromPC(fileURL){
+    if(fileURL){
+        var UniqueName = fileURL.split('&uniquetime=')[0];
+        //var fileName = aURM.split('_');
+        //var UniqueName = fileName[fileName.length-1];
 
+        return UniqueName;
+    }else{
+        return "";
+    }
+}
+function fileNameFromPC(fileURL){
+    if(fileURL){
+        var UniqueName = fileURL.split('&uniquetime=')[1];
+        //var fileName = aURM.split('_');
+        //var UniqueName = fileName[fileName.length-1];
+
+        return UniqueName;
+    }else{
+        return "";
+    }
+}

@@ -8,8 +8,8 @@
 	<constant name="struts.i18n.encoding" value="UTF-8" />
 	<constant name="struts.custom.i18n.resources" value="global" />
 
-	<!-- <package name="all" extends="struts-default"> -->
-	<package name="all" extends="ssl-default">
+	<package name="all" extends="struts-default">
+	<!-- <package name="all" extends="ssl-default"> -->
 
 		<interceptors>
 			<!-- 先定义拦截器 -->
@@ -24,7 +24,8 @@
 				<interceptor-ref name="myInterceptor">
 					<param name="excludeMethods">
 						getBase,
-						login,loginForWeb,afterLogin,logOut,newPassword,testText,requestText,fogetPassword,attemptSession
+						login,loginForWeb,afterLogin,logOut,newPassword,testText,requestText,fogetPassword,attemptSession,
+						delByMemberIds
 					</param>
 					<!-- <param name="includeMethods"></param> -->
 				</interceptor-ref>

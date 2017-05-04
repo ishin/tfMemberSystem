@@ -93,4 +93,8 @@ public interface GroupMemberDao {
 	 */
 	public List<TGroupMember> getGroupMemberByGroupIds(Integer[] groupIds);
 
+	public int deleteRelationByIds(String ids);
+
+	public TGroupMember getGroupMemberById(Integer groupMemberId);
+
 }

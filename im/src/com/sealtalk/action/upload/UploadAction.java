@@ -4,14 +4,17 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-import com.googlecode.sslplugin.annotation.Secured;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.sealtalk.common.BaseAction;
 import com.sealtalk.service.upload.UploadService;
+import com.sealtalk.utils.LogUtils;
 
-@Secured
 public class UploadAction extends BaseAction {  
  
 	private static final long serialVersionUID = 74195611146343183L;
+	private static final Logger logger = LogManager.getLogger(UploadAction.class);
 	
 	/**
 	 * 选择头像
@@ -22,13 +25,14 @@ public class UploadAction extends BaseAction {
 		String result = null;
 		
 		try {
-			result = uploadService.saveSelectedPic(userid, picname);
+			result = uploadService.saveSelectedPic(clearChar(userid), clearChar(picname));
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
+		logger.info(result);
 		returnToClient(result);
-		
 		return "text";
 	}
 	
@@ -44,12 +48,12 @@ public class UploadAction extends BaseAction {
 		try {
 			//获取服务器的实际路径  
 		    String realPath = request.getSession().getServletContext().getRealPath("/");  
-			result = uploadService.cutImage(userid, x, y, width, height, degree, file, realPath);
-			
+			result = uploadService.cutImage(clearChar(userid), clearChar(x), clearChar(y), clearChar(width), clearChar(height), clearChar(degree), file, realPath);
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
-		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
     }  
@@ -63,7 +67,8 @@ public class UploadAction extends BaseAction {
 	public String uploadUserLogoNotCut() throws IOException, ServletException {  
 		//获取服务器的实际路径  
 	    String realPath = request.getSession().getServletContext().getRealPath("/");  
-		String result = uploadService.uploadUserLogNotCut(userid, file, realPath);
+		String result = uploadService.uploadUserLogNotCut(clearChar(userid), file, realPath);
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -77,11 +82,12 @@ public class UploadAction extends BaseAction {
 		String result = null;
 		
 		try {
-			result = uploadService.delUserLogos(userid, picname);
+			result = uploadService.delUserLogos(clearChar(userid), clearChar(picname));
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
-		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -95,10 +101,12 @@ public class UploadAction extends BaseAction {
 		String result = null;
 		
 		try {
-			result = uploadService.getUserLogos(userid);
+			result = uploadService.getUserLogos(clearChar(userid));
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}

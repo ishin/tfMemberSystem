@@ -20,12 +20,16 @@ $(document).ready(function(){
             var curValue = $(this).val();
             if(curValue!=lastValur){
                 //掉接口，修改群组名称
+
+
                 var groupid = $('#groupContainer').attr('targetid');
                 sendAjax('group!changeGroupName',{groupid:groupid,groupname:curValue},function(data){
                     var datas = JSON.parse(data);
                     if(datas&&datas.code==1){
-
+                        //修改群组列表里面的群组名称
                         $('.groupChatListUl').find('li.active .groupName').html(curValue);
+                        //修改最近联系人里的群组名称
+                        $('.newsChatList').find('li[targetid='+groupid+']').html(curValue);
                         new Window().alert({
                             title   : '',
                             content : '群组名称已修改！',
@@ -89,6 +93,9 @@ $(document).ready(function(){
             if(sURL.indexOf('token')!=-1){//有%
                 sURL = fileFromApp(sURL);
             }
+            if(sURL.indexOf('uniquetime')!=-1){//有%
+                sURL = getFileUniqueNameFromPC(sURL)
+            }
 
             var localPath = sURL?window.Electron.chkFileExists(sURL):'';
 
@@ -133,6 +140,9 @@ $(document).ready(function(){
                 var sURL = $(this).parent().find('.downLoadFile').attr('href');
                 if(sURL.indexOf('token')!=-1){//有%
                     var sURL = fileFromApp(sURL)
+                }
+                if(sURL.indexOf('uniquetime')!=-1){//有%
+                    var sURL = getFileUniqueNameFromPC(sURL)
                 }
                 var localPath = sURL?window.Electron.chkFileExists(sURL):'';
                 if(localPath){
@@ -1382,3 +1392,25 @@ function getHeadImgList(){
 
 
 
+function getFileUniqueNameFromPC(fileURL){
+    if(fileURL){
+        var UniqueName = fileURL.split('&uniquetime=')[0];
+        //var fileName = aURM.split('_');
+        //var UniqueName = fileName[fileName.length-1];
+
+        return UniqueName;
+    }else{
+        return "";
+    }
+}
+function getFileNameFromPC(fileURL){
+    if(fileURL){
+        var UniqueName = fileURL.split('&uniquetime=')[1];
+        //var fileName = aURM.split('_');
+        //var UniqueName = fileName[fileName.length-1];
+
+        return UniqueName;
+    }else{
+        return "";
+    }
+}

@@ -2,9 +2,10 @@ package com.sealtalk.action.group;
 
 import javax.servlet.ServletException;
 
-import net.sf.json.JSONObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import org.apache.log4j.Logger;
+import net.sf.json.JSONObject;
 
 import com.googlecode.sslplugin.annotation.Secured;
 import com.sealtalk.common.BaseAction;
@@ -17,11 +18,11 @@ import com.sealtalk.service.group.GroupService;
  * @since jdk1.7
  * @date 2017/01/07
  */
-@Secured
+
 public class GroupAction extends BaseAction {
 
 	private static final long serialVersionUID = 5512359170256277370L;
-	private static final Logger logger = Logger.getLogger(GroupAction.class);
+	private final static Logger logger = LogManager.getLogger("GroupAction.class");
 	
 	/**
 	 * 创建群组
@@ -33,7 +34,7 @@ public class GroupAction extends BaseAction {
 		
 	
 		if (groupService != null) {
-			result = groupService.createGroup(userid, groupids);
+			result = groupService.createGroup(clearChar(userid), clearChar(groupids));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", -1);
@@ -41,6 +42,7 @@ public class GroupAction extends BaseAction {
 			result = jo.toString();
 		}
 		
+		logger.info(result);
 		returnToClient(result);
 		
 		return "text";
@@ -55,7 +57,7 @@ public class GroupAction extends BaseAction {
 		String result = null;
 
 		if (groupService != null) {
-			result = groupService.joinGroup(groupids, groupid);
+			result = groupService.joinGroup(clearChar(groupids), clearChar(groupid));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", -1);
@@ -63,6 +65,7 @@ public class GroupAction extends BaseAction {
 			result = jo.toString();
 		}
 		
+		logger.info(result);
 		returnToClient(result);
 		
 		return "text";
@@ -77,14 +80,14 @@ public class GroupAction extends BaseAction {
 		String result = null;
 		
 		if (groupService != null) {
-			result = groupService.leftGroup(groupids, groupid);
+			result = groupService.leftGroup(clearChar(groupids), clearChar(groupid));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", -1);
 			jo.put("text", Tips.UNKNOWERR.getText());
 			result = jo.toString();
 		}
-		
+		logger.info(result);
 		returnToClient(result);
 		
 		return "text";
@@ -99,14 +102,14 @@ public class GroupAction extends BaseAction {
 		String result = null;
 		
 		if (groupService != null) {
-			result = groupService.dissLovedGroup(userid, groupid);
+			result = groupService.dissLovedGroup(clearChar(userid), clearChar(groupid));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", -1);
 			jo.put("text", Tips.UNKNOWERR.getText());
 			result = jo.toString();
 		}
-		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -120,7 +123,7 @@ public class GroupAction extends BaseAction {
 		String result = null;
 		
 		if (groupService != null) {
-			result = groupService.refreshGroup(groupid, groupname);
+			result = groupService.refreshGroup(clearChar(groupid), clearChar(groupname));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", -1);
@@ -128,6 +131,7 @@ public class GroupAction extends BaseAction {
 			result = jo.toString();
 		}
 		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -141,7 +145,7 @@ public class GroupAction extends BaseAction {
 		String result = null;
 		
 		if (groupService != null) {
-			result = groupService.listGroupMembers(groupid);
+			result = groupService.listGroupMembers(clearChar(groupid));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", -1);
@@ -149,6 +153,7 @@ public class GroupAction extends BaseAction {
 			result = jo.toString();
 		}
 		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	} 
@@ -163,14 +168,14 @@ public class GroupAction extends BaseAction {
 		
 		if (groupService != null) {
 			int organId = getSessionUserOrganId();
-			result = groupService.listGroupMemebersData(groupid, organId);
+			result = groupService.listGroupMemebersData(clearChar(groupid), organId);
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", -1);
 			jo.put("text", Tips.UNKNOWERR.getText());
 			result = jo.toString();
 		}
-		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	} 
@@ -184,14 +189,14 @@ public class GroupAction extends BaseAction {
 		String result = null;
 		
 		if (groupService != null) {
-			result = groupService.transferGroup(userid, groupid);
+			result = groupService.transferGroup(clearChar(userid), clearChar(groupid));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", -1);
 			jo.put("text", Tips.UNKNOWERR.getText());
 			result = jo.toString();
 		}
-		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -205,14 +210,14 @@ public class GroupAction extends BaseAction {
 		String result = null;
 		
 		if (groupService != null) {
-			result = groupService.syncUserGroup(userid);
+			result = groupService.syncUserGroup(clearChar(userid));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", -1);
 			jo.put("text", Tips.UNKNOWERR.getText());
 			result = jo.toString();
 		}
-		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -225,9 +230,9 @@ public class GroupAction extends BaseAction {
 	public String groupList() throws ServletException {
 		
 		String result = null;
-		result = groupService.getGroupList(userid);
+		result = groupService.getGroupList(clearChar(userid));
+		logger.info(result);
 		returnToClient(result);
-		
 		return "text";
 	}
 	
@@ -241,7 +246,7 @@ public class GroupAction extends BaseAction {
 		String result = null;
 		
 		if (groupService != null) {
-			result = groupService.groupListWithAction(userid);
+			result = groupService.groupListWithAction(clearChar(userid));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", -1);
@@ -249,6 +254,7 @@ public class GroupAction extends BaseAction {
 			result = jo.toString();
 		}
 		
+		logger.info(result);
 		returnToClient(result);
 		
 		return "text";	
@@ -264,7 +270,7 @@ public class GroupAction extends BaseAction {
 		String result = null;
 		
 		if (groupService != null) {
-			result = groupService.manageGroupMem(groupid, groupids);
+			result = groupService.manageGroupMem(clearChar(groupid), clearChar(groupids));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", -1);
@@ -285,7 +291,7 @@ public class GroupAction extends BaseAction {
 		String result = null;
 		
 		if (groupService != null) {
-			result = groupService.groupInfo(groupid);
+			result = groupService.groupInfo(clearChar(groupid));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", -1);
@@ -293,6 +299,7 @@ public class GroupAction extends BaseAction {
 			result = jo.toString();
 		}
 		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -306,14 +313,14 @@ public class GroupAction extends BaseAction {
 		String result = null;
 		
 		if (groupService != null) {
-			result = groupService.changeGroupName(groupid, groupname);
+			result = groupService.changeGroupName(clearChar(groupid), clearChar(groupname));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", -1);
 			jo.put("text", Tips.UNKNOWERR.getText());
 			result = jo.toString();
 		}
-		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -323,8 +330,8 @@ public class GroupAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String shutUpGroup() throws ServletException {
-		String result = groupService.shutUpGroup(userid, groupid);
-		
+		String result = groupService.shutUpGroup(clearChar(userid), clearChar(groupid));
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -335,8 +342,8 @@ public class GroupAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String unShutUpGroup() throws ServletException {
-		String result = groupService.unShutUpGroup(userid, groupid);
-		
+		String result = groupService.unShutUpGroup(clearChar(userid), clearChar(groupid));
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -347,8 +354,8 @@ public class GroupAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getShutUpGroupStatus() throws ServletException {
-		String result = groupService.getShutUpGroupStatus(groupid);
-		
+		String result = groupService.getShutUpGroupStatus(clearChar(groupid));
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -359,8 +366,8 @@ public class GroupAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getShutUpGroupMember() throws ServletException {
-		String result = groupService.getShutUpGroupMember(groupid);
-		
+		String result = groupService.getShutUpGroupMember(clearChar(groupid));
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -371,8 +378,8 @@ public class GroupAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getGroupOnLineMember() throws ServletException {
-		String result = groupService.getGroupOnLineMember(userid);
-		
+		String result = groupService.getGroupOnLineMember(clearChar(userid));
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}

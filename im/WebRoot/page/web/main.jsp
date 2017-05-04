@@ -39,6 +39,7 @@
     <script src="<%=request.getContextPath() %>/page/web/js/qiniu/init.js"></script>
 
     <script src="<%=request.getContextPath() %>/page/web/js/md5.js"></script>
+    <script src="<%=request.getContextPath() %>/page/web/js/main.js"></script>
     <%--<script src="http://cdn.ronghub.com/RongIMLib-2.2.4.min.js"></script>--%>
     <script src="http://cdn.ronghub.com/RongEmoji-2.2.4.min.js"></script>
     <script src="http://cdn.ronghub.com/RongIMVoice-2.2.4.min.js"></script>
@@ -48,7 +49,7 @@
     <script src="<%=request.getContextPath() %>/page/web/js/jquery.mousewheel.js"></script>
     <script src="<%=request.getContextPath() %>/page/web/js/perfect-scrollbar.js"></script>
     <script src="<%=request.getContextPath() %>/page/web/js/rongyun.js"></script>
-    <script src="<%=request.getContextPath() %>/page/web/js/main.js"></script>
+
     <script src="<%=request.getContextPath() %>/page/web/js/window.js"></script>
     <script src="<%=request.getContextPath() %>/page/web/js/seeOrgnizeTree.js"></script>
     <script src="<%=request.getContextPath() %>/page/web/js/pageObj.js"></script>
@@ -66,12 +67,13 @@
     <script src="<%=request.getContextPath() %>/page/web/js/bootstrap.min.js"></script>
     <script src="<%=request.getContextPath() %>/page/web/js/cropper.min.js"></script>
     <script src="<%=request.getContextPath() %>/page/web/js/clipImg.js"></script>
-    <script src="<%=request.getContextPath() %>/page/web/js/loginOA.js"></script>
+    <%--<script src="<%=request.getContextPath() %>/page/web/js/loginOA.js"></script>--%>
 
     </head>
     <%--${SessionPrivilege.map}--%>
     <%--${SessionUser.id}--%>
 <body userid="${SessionUser.id}" token="${SessionUser.token}" limit="${SessionPrivilege.map}" >
+
 	<!--
 	权限设置判断
 	<c:if test="${SessionPrivilege.map.rsglsc != null}">
@@ -265,6 +267,17 @@
             </div>
             <b class="systemSet-keep" id=" ">保存</b>
         </div>
+
+        <!--系统消息历史记录-->
+        <div class="mesContainerSys mesContainer orgNavClick chatHide" id="sysContainer">
+            <h3 class="perSetBox-title clearfix">
+                <span>张三</span>
+            </h3>
+
+            <div class="mr-chatContent mr-sysHistory">
+
+            </div>
+        </div>
         <!--geren消息记录-->
         <div class="mesContainerSelf mesContainer orgNavClick chatHide" id="perContainer">
             <h3 class="perSetBox-title clearfix">
@@ -304,38 +317,14 @@
                     <i class="mr-record" id="groupRecord"></i>
                 </div>
             </h3>
-            <%--<div class="mr-chatview">--%>
-                <%--<p class="mr-Date">-11月11日 星期五-</p>--%>
 
-                <%--<p class="mr-time">9:28</p>--%>
-
-                <%--<p class="group-addPerson clearfix">--%>
-                    <%--<span>谁将谁拉进群组<i></i></span>--%>
-                <%--</p>--%>
-                <%--<ul class="mr-chatContent">--%>
-                    <%--<li class="mr-chatContentL clearfix">--%>
-                        <%--<img src="page/web/css/img/1.jpg">--%>
-
-                        <%--<div class="mr-chatBox">--%>
-                            <%--<span>大家好</span>--%>
-                            <%--<i></i>--%>
-                        <%--</div>--%>
-                    <%--</li>--%>
-                    <%--<li class="mr-chatContentR clearfix">--%>
-                        <%--<div class="mr-ownChat">--%>
-                            <%--<span>大家好</span>--%>
-                            <%--<i></i>--%>
-                        <%--</div>--%>
-                    <%--</li>--%>
-                <%--</ul>--%>
-            <%--</div>--%>
             <div class="mr-chateditBox">
                 <div class="rongyun-emoji"></div>
                 <div class="mr-expresFile clearfix">
                     <span class="showEmoji"></span>
                     <i></i>
                     <div class="upload-img">
-                        <c:if test="${SessionPrivilege.map.ltszwjsc != null}">
+                        <c:if test="${SessionPrivilege.map.ltszwjsc != null&&SessionPrivilege.map.ltszqzlt != null}">
                             <input type="file" class="comment-pic-upd upload_file" id="upload_file"/>
                         </c:if>
                     </div>

@@ -10,6 +10,7 @@ import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+
 public class PasswordGenerator {
 
 	private PasswordGenerator() {
@@ -131,6 +132,54 @@ public class PasswordGenerator {
 		System.out.println("im sign: " + caclSign);
 		
 		return caclSign;
+	}
+	
+	/**
+	 * 验证参数有效性
+	 * @param paramMap
+	 * @param timeStamp
+	 * @return
+	 */
+	public boolean valideMd5(JSONObject params, String timeStamp, long validTime, String key) {
+		long now = TimeGenerator.getInstance().getUnixTime();
+		long maxTime = now + validTime;
+		long minTime = now - validTime;
+		
+		long timeStampLong = timeStamp != null ? Long.parseLong(timeStamp) : 0;
+		
+		if (timeStampLong < minTime || timeStampLong > maxTime) {
+			return false;
+		}
+		
+		String sign = null;
+		StringBuilder sbp = new StringBuilder();
+		Iterator<String> it = params.keys();
+		
+		while(it.hasNext()) {
+			String t = it.next();
+			String v = params.getString(t);
+			if (t.equals("sign")) {
+				sign = v;
+				continue;
+			}
+			if (t.equals("timestamp")) continue;
+			sbp.append(t).append("=").append(v);
+		}
+		String pStr = sbp.toString();
+		pStr = StringUtils.getInstance().sortByChars(pStr);
+		System.out.println("sort1: " + pStr);
+		pStr = key + pStr + timeStamp;
+		System.out.println("sort2: " + pStr);
+		
+		String caclSign = PasswordGenerator.getInstance().getMD5Str(sbp.toString());
+		
+		System.out.println("organ sign: " + caclSign);
+		
+		if (!caclSign.equals(sign)) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 }

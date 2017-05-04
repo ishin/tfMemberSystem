@@ -2,9 +2,10 @@ package com.sealtalk.action.member;
 
 import javax.servlet.ServletException;
 
-import net.sf.json.JSONObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import org.apache.log4j.Logger;
+import net.sf.json.JSONObject;
 
 import com.googlecode.sslplugin.annotation.Secured;
 import com.sealtalk.common.BaseAction;
@@ -20,11 +21,11 @@ import com.sealtalk.service.member.MemberService;
  * @since jdk1.7
  * @date 2017/01/07
  */
-@Secured
+
 public class MemberAction extends BaseAction {
 
 	private static final long serialVersionUID = -9024506148523628104L;
-	private static final Logger logger = Logger.getLogger(MemberAction.class);
+	private final static Logger logger = LogManager.getLogger("MemberAction.class");
 
 	/**
 	 * 获取单个成员信息
@@ -34,7 +35,7 @@ public class MemberAction extends BaseAction {
 	 */
 	public String getOneOfMember() throws ServletException {
 		String result = null;
-		result = memberService.getOneOfMember(userid);
+		result = memberService.getOneOfMember(clearChar(userid));
 		logger.info(result);
 		returnToClient(result);
 		return "text";
@@ -49,7 +50,7 @@ public class MemberAction extends BaseAction {
 	public String searchUser() throws ServletException {
 		String result = null;
 		int organId = getSessionUserOrganId();
-		result = memberService.searchUser(account, organId);
+		result = memberService.searchUser(clearChar(account), organId);
 		logger.info(result);
 		returnToClient(result);
 		return "text";
@@ -65,23 +66,24 @@ public class MemberAction extends BaseAction {
 		String result = null;
 
 		if (memberService != null) {
-			result = memberService.updateMemberInfoForWeb(userid, position,
-					fullname, sign);
+			result = memberService.updateMemberInfoForWeb(clearChar(userid), clearChar(position),
+					clearChar(fullname), clearChar(sign));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", 0);
 			jo.put("text", Tips.FAIL.getText());
 			result = jo.toString();
 		}
-
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
 
 	public String updateMemberInfoForApp() throws ServletException {
 		String result = "{}";
-		result = memberService.updateMemberForApp(userid, email, mobile, phone,
-				address);
+		result = memberService.updateMemberForApp(clearChar(userid), clearChar(email), clearChar(mobile), clearChar(phone),
+				clearChar(address));
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -95,6 +97,7 @@ public class MemberAction extends BaseAction {
 	public String getAllMemberInfo() throws ServletException {
 		int organId = getSessionUserOrganId();
 		String result = memberService.getAllMemberInfo(organId);
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -110,8 +113,9 @@ public class MemberAction extends BaseAction {
 		String result = "{}";
 		int organId = su.getOrganId();
 		if (su != null) {
-			result = memberService.getAllMemberOnLineStatus(organId, userids);
+			result = memberService.getAllMemberOnLineStatus(organId, clearChar(userids));
 		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}

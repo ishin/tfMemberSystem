@@ -1,6 +1,7 @@
 package com.sealtalk.service.member.impl;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -17,8 +18,7 @@ import com.sealtalk.utils.StringUtils;
 import com.sealtalk.utils.TimeGenerator;
 
 public class MemberServiceImpl implements MemberService {
-	private static final Logger logger = Logger
-			.getLogger(MemberServiceImpl.class);
+	private static final Logger logger = LogManager.getLogger(MemberServiceImpl.class);
 
 	@Override
 	public TMember searchSigleUser(String name, String password, int organId) {
@@ -206,6 +206,7 @@ public class MemberServiceImpl implements MemberService {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
+		logger.info(result);
 		return result;
 	}
 
@@ -375,6 +376,7 @@ public class MemberServiceImpl implements MemberService {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
+		logger.info(result);
 		return result;
 	}
 

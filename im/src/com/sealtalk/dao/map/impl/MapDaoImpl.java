@@ -2,67 +2,25 @@ package com.sealtalk.dao.map.impl;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
-import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
 
 import com.sealtalk.common.BaseDao;
 import com.sealtalk.dao.map.MapDao;
 import com.sealtalk.model.TMap;
+import com.sealtalk.utils.LogUtils;
 
 public class MapDaoImpl extends BaseDao<TMap, Long> implements MapDao {
-
-	@SuppressWarnings("unchecked")
-	@Override
-	@Deprecated
-	public Object[] getLocation(int targetId) {
-		try {
-			String hql = "select MEM.logo, MAP.latitude, MAP.longitude, MAP.subdate from t_member MEM inner join t_map MAP on MEM.id=MAP.user_id where MEM.id=" + targetId;
-			
-			SQLQuery query = getSession().createSQLQuery(hql);
-			
-			List list = query.list();
-			
-			if (list.size() > 0) {
-				return (Object[]) list.get(0);
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-
-
-	@SuppressWarnings("unchecked")
-	@Override
-
-	public List<Object[]> getLocationForMultId(String targetIdInt) {
-		try {
-			String hql = "select MEM.id, MEM.logo, MAP.latitude, MAP.longitude, MAP.subdate from t_member MEM inner join t_map MAP on MEM.id=MAP.user_id where MEM.id in(" + targetIdInt + ")";
-			
-			SQLQuery query = getSession().createSQLQuery(hql);
-			
-			List list = query.list();
-			
-			if (list.size() > 0) {
-				return list;
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-
-
+	private static final Logger logger = LogManager.getLogger(MapDaoImpl.class);
+	
 	@Override
 	public void saveLocation(TMap tm) {
 		try {
 			save(tm);
 		} catch(Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 	}
@@ -81,6 +39,7 @@ public class MapDaoImpl extends BaseDao<TMap, Long> implements MapDao {
 				return list.get(0);
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
@@ -105,6 +64,7 @@ public class MapDaoImpl extends BaseDao<TMap, Long> implements MapDao {
 			update(sbSql.toString());
 			
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
@@ -123,10 +83,24 @@ public class MapDaoImpl extends BaseDao<TMap, Long> implements MapDao {
 				return list;
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
 		return null;
+	}
+
+
+	@Override
+	public int deleteRelationByIds(String ids) {
+		try {
+			String hql = (new StringBuilder("delete from TMap where userId in (").append(ids).append(")")).toString();
+			return delete(hql);
+		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+			e.printStackTrace();
+		}
+		return 0;
 	}
 
 

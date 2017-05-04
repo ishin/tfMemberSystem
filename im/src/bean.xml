@@ -50,6 +50,14 @@
 	</bean>
 	<bean id="grpService" class="com.sealtalk.service.adm.impl.GrpServiceImpl" autowire="byName" >
 		<property name="grpDao" ref="grpDao" />
+		<property name="groupMemberDao" ref="groupMemberDao" />
+	</bean>
+	<bean id="extraService" class="com.sealtalk.service.extra.impl.ExtraServiceImpl" autowire="byName" >
+		<property name="dontDistrubDao" ref="dontDistrubDao" />
+		<property name="friendDao" ref="friendDao" />
+		<property name="groupMemberDao" ref="groupMemberDao" />
+		<property name="mapDao" ref="mapDao" />
+		<property name="msgTopDao" ref="msgTopDao" />
 	</bean>
 	
 	<!-- action -->
@@ -84,5 +92,8 @@
 	</bean>
 	<bean id="grpAction" class="com.sealtalk.action.adm.GrpAction" scope="prototype" autowire="byName" >
 		<property name="grpService" ref="grpService" />
+	</bean>
+	<bean id="extraAction" class="com.sealtalk.action.extra.ExtraAction" scope="prototype" autowire="byName" >
+		<property name="extraService" ref="extraService" />
 	</bean>
 </beans>

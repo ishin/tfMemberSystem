@@ -121,7 +121,7 @@ function jumpToBack(fresh){
             const BrowserWindow = window.Electron.remote.BrowserWindow;
             win = new BrowserWindow({ width: 1000, height: 700 })
             win.on('close', function () { win = null ;ifWinClose = true;});
-            win.loadURL('http://42.62.4.82:8080/im/page/admin/13.jsp');
+            win.loadURL(origin+'/im/page/admin/13.jsp');
             win.show();
             ifWinClose = false;
         }else{

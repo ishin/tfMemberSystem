@@ -2,17 +2,19 @@ package com.sealtalk.action.adm;
 
 import net.sf.json.JSONObject;
 
-import com.googlecode.sslplugin.annotation.Secured;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.sealtalk.common.BaseAction;
 import com.sealtalk.model.SessionUser;
 import com.sealtalk.model.TMember;
 import com.sealtalk.service.adm.BranchService;
 import com.sealtalk.service.adm.PrivService;
 
-@Secured
 public class AdmAction extends BaseAction {
 
 	private static final long serialVersionUID = 5652521060219528842L;
+	private static final Logger logger = LogManager.getLogger(AdmAction.class);
 
 	private BranchService branchService;
 	private PrivService privService;
@@ -36,6 +38,7 @@ public class AdmAction extends BaseAction {
 	public String getBase() {
 		JSONObject js = new JSONObject();
 		String privs = (String) this.getSessionAttribute("privs");
+		
 		if (privs == null) {
 			SessionUser su = this.getSessionUser();
 			if (su == null) {
@@ -52,8 +55,9 @@ public class AdmAction extends BaseAction {
 			js.put("id", 1);
 			js.put("privs", privs);
 		}
-
-		returnToClient(js.toString());
+		
+		logger.info(js.toString());
+ 		returnToClient(js.toString());
 
 		return "text";
 	}

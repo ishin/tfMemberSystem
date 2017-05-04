@@ -1,5 +1,6 @@
 package com.sealtalk.common;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +22,7 @@ import org.directwebremoting.WebContextFactory;
 import com.opensymphony.xwork2.ActionSupport;
 import com.sealtalk.model.SessionUser;
 import com.sealtalk.model.TMember;
+import com.sealtalk.utils.PasswordGenerator;
 import com.sealtalk.utils.PropertiesUtils;
 import com.sealtalk.utils.StringUtils;
 
@@ -221,6 +223,37 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 			return request.getSession().getAttribute(key);
 		}
 	}
+	
+	//获取HTTP请求的输入流,适用于http客户端后台请求数据
+	protected String getRequestDataByStream() throws IOException {
+        //已HTTP请求输入流建立一个BufferedReader对象
+        BufferedReader br =  request.getReader();
+        String buffer = null;
+        StringBuffer buff = new StringBuffer();
+        
+        while ((buffer = br.readLine()) != null) {
+              buff.append(buffer+"\n");
+        }
+        
+        br.close();
+        
+       return buff.toString().trim();
+	}
+	
+	/**
+	 * 验证加密参数有效性
+	 * @param timeStamp
+	 * @param validTime
+	 * @param key
+	 * @return
+	 */
+	protected boolean validParams(JSONObject params) {
+		String timeStamp = params.getString("timestamp");
+		String key = PropertiesUtils.getStringByKey("param.key");
+		String validTime = PropertiesUtils.getStringByKey("param.validtime");
+		long validTimeLong = validTime != null ? Long.parseLong(validTime) : 0;
+		return PasswordGenerator.getInstance().valideMd5(params, timeStamp, validTimeLong, key);
+	}
 
 	protected Integer getOrganId() {
 
@@ -239,7 +272,21 @@ public class BaseAction extends ActionSupport implements ServletRequestAware,
 
 	protected int getSessionUserOrganId() {
 		SessionUser su = this.getSessionUser();
-		return su.getOrganId();
+		if (su != null) {
+			return su.getOrganId();
+		}
+		return 0;
+	}
+	
+	protected String failResult(String msg) {
+		JSONObject jo = new JSONObject();
+		jo.put("code", 0);
+		jo.put("text", msg);
+		return jo.toString();
+	}
+	
+	protected String clearChar(String str) {
+		return str != null ? str.replace("'", "") : str;
 	}
 
 }

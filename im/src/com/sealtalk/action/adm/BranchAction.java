@@ -5,8 +5,11 @@ package com.sealtalk.action.adm;
 
 import javax.servlet.ServletException;
 
-import com.googlecode.sslplugin.annotation.Secured;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.sealtalk.common.BaseAction;
+import com.sealtalk.common.Tips;
 import com.sealtalk.service.adm.BranchService;
 
 /**
@@ -14,20 +17,25 @@ import com.sealtalk.service.adm.BranchService;
  *
  */
 
-@Secured
 public class BranchAction extends BaseAction {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 		
+	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LogManager.getLogger(BranchAction.class);
+
 	/*
 	 * 取部门树
 	 */
 	public String getBranchTree() throws ServletException {
 		int organId = getSessionUserOrganId();
-		String result = branchService.getBranchTree(organId);
+		String result = null;
+		
+		if (organId == 0) {
+			result = failResult(Tips.TIMEOUT.getText());
+		} else {
+			result = branchService.getBranchTree(organId);
+		}
+		
+		logger.info(result);
 		returnToClient(result);
 		
 		return "text";
@@ -40,8 +48,13 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchTreeAndMember() throws ServletException {
 		int organId = getSessionUserOrganId();
-		String result = branchService.getBranchTreeAndMember(organId);
-			
+		String result = null;
+		if (organId == 0) {
+			result = failResult(Tips.TIMEOUT.getText());
+		} else {
+			result = branchService.getBranchTreeAndMember(organId);
+		}
+		logger.info(result);
 		returnToClient(result);
 		
 		return "text";
@@ -55,19 +68,32 @@ public class BranchAction extends BaseAction {
 	public String getBranchMember() throws ServletException {
 		
 		int organId = getSessionUserOrganId();
-		String result = branchService.getBranchMember(branchId, organId);
-		
+	
+		String result = null;
+		if (organId == 0) {
+			result = failResult(Tips.TIMEOUT.getText());
+		} else {
+			result = branchService.getBranchMember(clearChar(branchId), organId);
+		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
 	
 	public String getPosition() throws ServletException {
 		int organId = getSessionUserOrganId();
-		String result = branchService.getPosition(organId);
+		String result = null;
+		if (organId != 0) {
+			result = branchService.getPosition(organId);
+		} else {
+			result = failResult(Tips.TIMEOUT.getText());	
+		}
+		logger.info(result);
 		returnToClient(result);
 		
 		return "text";
 	}
+	
 	
 	private BranchService branchService;
 

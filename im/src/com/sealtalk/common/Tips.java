@@ -40,6 +40,7 @@ public enum  Tips {
 	SEARCHFAIL("查询失败", "00034"),
 	NOTINIT("请使用正确的账号登陆", "00035"),
 	NULLCODE("需填写企业码", "00036"),
+	TIMEOUT("超时", "00037"),
 	OK("OK", "10000"),
 	FAIL("fail", "20000");
 	

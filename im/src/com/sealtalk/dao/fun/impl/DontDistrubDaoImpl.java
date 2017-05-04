@@ -2,13 +2,15 @@ package com.sealtalk.dao.fun.impl;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
 import com.sealtalk.common.BaseDao;
 import com.sealtalk.dao.fun.DontDistrubDao;
 import com.sealtalk.model.TDontDistrub;
-import com.sealtalk.model.TGroup;
+import com.sealtalk.utils.LogUtils;
 
 /**
  * 其它功能管理层
@@ -17,11 +19,14 @@ import com.sealtalk.model.TGroup;
  * @since jdk1.7
  */
 public class DontDistrubDaoImpl extends BaseDao<TDontDistrub, Long> implements DontDistrubDao {
+	private static final Logger logger = LogManager.getLogger(DontDistrubDaoImpl.class);
+	
 	@Override
 	public void setDontDistrub(TDontDistrub tf) {
 		try {
 			saveOrUpdate(tf);
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 	}
@@ -40,6 +45,7 @@ public class DontDistrubDaoImpl extends BaseDao<TDontDistrub, Long> implements D
 			}
 			
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
@@ -60,10 +66,24 @@ public class DontDistrubDaoImpl extends BaseDao<TDontDistrub, Long> implements D
 			}
 			
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
 		return null;
+	}
+
+	@Override
+	public int deleteByIds(String ids) {
+		try {
+			String hql = (new StringBuilder("delete from TDontDistrub where memberId in (").append(ids).append(")")).toString();
+			logger.info("deleteByIds sql: " + hql);
+			return delete(hql);
+		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+			e.printStackTrace();
+		}
+		return 0;
 	}
 	
 }
