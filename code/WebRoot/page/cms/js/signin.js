@@ -66,7 +66,7 @@ function fToStep3(dom){
         alert('两次密码不一致')
     }else{
         var account = $('.sealtalk-forgetpassword').attr('account');
-        sendAjax('system!newPassword',{newpwd:newPWD,comparepwd:comparePWD,account:account},function(data){
+        sendAjax('system!newPassword',{newpwd:newPWD,comparepwd:comparePWD,account:account,type:'web'},function(data){
             if(data){
                 var datas = JSON.parse(data);
                 if(datas.code=='1'){
@@ -130,7 +130,8 @@ function signin(){
 *
 */
 function fBackToSignin(){
-    window.location.href = 'system!login';
+    var origin = window.location.origin
+    window.location.href = origin+'/organ/system!login';
 }
 
 function addMD5(){

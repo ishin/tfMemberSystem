@@ -1,4 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %> 
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!doctype html>
 <html>
 <head>
@@ -9,6 +11,14 @@
 	<script src="js/window.js"></script>
 </head>
 <body>
+	<c:if test="${SessionUser == null}">
+	<script type="text/javascript">
+	var origin = window.location.origin
+	var pathName = window.location.pathname;
+	var p = pathName.split("/");
+	window.location.href=origin + "/" + p[1] + "/";
+	</script>
+	</c:if>
 <div class="dialogMask"></div>
 
 <div id='container'>
@@ -31,19 +41,20 @@
 		<div class="menu" onclick='window.location.href="authInfo.jsp";'><img src='images/authInfo.png' class='menuicon'>权限信息配置</div>
 		<div class="menu" onclick='window.location.href="21.jsp";'><img src='images/limitInfo.png' class='menuicon'>授权管理配置</div>
 		<div class="menu menuactive"><img src='images/appInfo.png' class='menuicon'>应用信息配置</div>
+		<div class="menu" onclick='window.location.href="23.jsp";'><img src='images/position.png' class='menuicon'>职务职位配置</div>
 	</div>
 </div>
 <div class="infopanel12">
 	<div class="info">
 		<div class="infotitle">
-			<div class="title">群组管理</div>
+			<div class="title">应用信息配置</div>
 		</div>
 		<div class="searchArea">
 			<input type="text" class="searchInput" placeholder="请输入权限名称"/>
 			<button class="searchBTN">搜索</button>
 			<span class="plusApp">+</span>
 		</div>
-		<div style="width:100%;padding:0 30px;">
+		<div style="width:100%;padding:0 30px;height: calc(100% - 200px);overflow: auto;">
 			<table class="t112">
 				<thead>
 					<tr>
