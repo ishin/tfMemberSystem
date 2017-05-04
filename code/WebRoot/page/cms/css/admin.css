@@ -33,6 +33,10 @@ input, select, option, textarea {
 	background-color: white;
 	padding: 0 0 0 10px;
 }
+textarea{
+	padding: 5px 0 0 10px !important;
+	line-height: 24px !important;
+}
 input:focus {
 	outline: none;
 	/*padding: 0 0 0 10px;*/
@@ -218,6 +222,7 @@ input:focus {
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	color: rgb(51,51,51);
+	outline: none;
 }
 .ztree * {
 	padding: 0;
@@ -294,6 +299,7 @@ div#container {
 	margin: 30px 50px;
 	background: white;
 	height: calc(100% - 125px);
+	overflow: hidden;
 }
 ul.searchResultUL {
 	background: #fff;
@@ -366,15 +372,20 @@ form#branchform {
 	/* padding: 15px 0 0 30px; */
 	font-size: 16px;
 	line-height: 50px;
-	text-indent: 42px;
+	text-indent: 30px;
 	color: #333333;
 }
 .dtitle {
 	font-size: 16px;
 }
 .dclose {
-	font-size: 20px;
 	cursor: pointer;
+	display: inline-block;
+	font-size: 25px;
+	color: #909090;
+	position: absolute;
+	right: 40px;
+	top: 10px;
 }
 .infotab {
 	float: left;
@@ -419,6 +430,9 @@ form#branchform {
 	border: 1px solid #e6e6e6;
 	background: url("img/xiala-2.png") no-repeat;
 	background-position: 3px 13px;
+}
+div#member{
+	overflow: auto;
 }
 #xiala13, #xiala12, #xiala11{
 	margin-left: -2px;
@@ -534,6 +548,8 @@ th {
 	box-shadow: 0px 0px 10px #cbcbcb;
 	background: white;
 	height: 100%;
+	position: relative;
+	z-index: 1;
 }
 .sidebar12 {
 	float: left;
@@ -554,6 +570,8 @@ th {
 	height: calc(100% - 120px);
 	background: white;
 	/*overflow-y: scroll;*/
+	border-radius: 6px;
+	overflow: hidden;
 }
 .col12 {
 	width: 100%;
@@ -592,12 +610,20 @@ th {
 .line12c {
 	margin: 20px 0px;
 }
-
+#positionlist{
+	margin: 30px 0px 40px 30px;
+	height: calc(100% - 150px);
+	overflow: auto;
+}
 .infopanel23 {
 	float: left;
-	width: 688px;/*42%;*/
-	height: 500px;
-	margin: 1% 0;
+	width: 688px;
+	height: calc(100% - 110px);
+	position: absolute;
+	left: 50%;
+	margin: 30px 0px 0px -219px;
+	z-index: 0;
+	/*background: palegoldenrod;*/
 }
 .line23 {
 	margin: 30px 0px 40px 30px;
@@ -632,6 +658,8 @@ th {
 	margin: 30px 50px 30px 50px;
 	background: white;
 	height: calc(100% - 125px);
+	border-radius: 6px;
+	overflow: hidden;
 }
 .col21 {
 	margin: 10px 0 0 0;
@@ -693,19 +721,26 @@ div#list211,div#list213,div#list214,div#list211edit,div#list213edit,div#list214e
 }
 .col21 .infotitle {
 	height: 50px;
-	width: calc(75% - 100px);
+	width: calc(75% - 203px);
 	/* margin-left: 30px; */
 	border-bottom: 1px solid #f0f0f0;
 	FLOAT: left;
-	 overflow: hidden;
-	 overflow-x: auto;
+	overflow: hidden;
+	overflow-x: auto;
 	min-width: auto;
-	margin-right: 62px;
+	margin-right: 101px;
 	margin-left: 30px;
 }
 .col21 .infotab {
 	float: left;
 	padding: 0;
+}
+button#addrole img {
+	display: inherit;
+	margin-left: -6px;
+	margin-top: -2px;
+	margin-right: 0px;
+	padding-right: 6px;
 }
 .collHide{
 	position: relative;
@@ -719,7 +754,7 @@ div#list211,div#list213,div#list214,div#list211edit,div#list213edit,div#list214e
 	position: absolute;
 	/* right: -140px; */
 	/* top: -52px; */
-	right: 72px;
+	right: 62px;
 }
 .line211 {
 	padding: 20px 0 15px 50px;
@@ -965,8 +1000,8 @@ div#list211,div#list213,div#list214,div#list211edit,div#list213edit,div#list214e
 .searchBTN{
 	vertical-align: middle;
 	margin-left: 30px;
-	text-indent: 10px;
-	background: #30c0da url("../images/cms_spring.png") no-repeat -65px 7px;
+	text-indent: 20px;
+	background: #30c0da url("../images/cms_spring.png") no-repeat -60px 7px;
 }
 input.searchInput {
 	width: 200px;
@@ -1038,15 +1073,26 @@ button.pagingJump {
 	border-radius: 10px;
 	z-index:2;
 }
-span#appsecret {
-	text-indent: 10px;
+.modal-open .modal{
+	overflow-x: hidden;
+	overflow-y: auto;
+	background: rgba(0,0,0,0.5);
+}
+.modal-backdrop.in{
+	opacity: 0;
+}
+.modal-content{
+	box-shadow: none !important;
+	border: none !important;
+}
+span.dialogText{
 	display: inline-block;
 	max-width: 409px;
-	/* overflow: hidden; */
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	vertical-align: middle;
+	text-indent: 10px;
 }
 .dialogApp1{
 	display:none;
@@ -1078,6 +1124,7 @@ span#appsecret {
 	width: 100%;
 	/*background: palegoldenrod;*/
 	display: inline-block;
+	position: relative;
 }
 p.diaTitle {
 	float: left;
@@ -1090,9 +1137,13 @@ p.diaTitle {
 	text-indent: 40px;
 }
 span.closeX {
+	cursor: pointer;
 	display: inline-block;
 	font-size: 25px;
 	color: #909090;
+	position: absolute;
+	right: 40px;
+	top: 10px;
 }
 .dialogAuth .dialogBody ,.dialogApp .dialogBody {
 	height: 220px;
@@ -1132,8 +1183,8 @@ button.canclaDia {
 }
 span.plusAuth,span.plusApp {
 	display: inline-block;
-	height: 30px;
-	width: 30px;
+	height: 32px;
+	width: 32px;
 	background: #30c0da;
 	float: right;
 	line-height: 27px;
@@ -1141,6 +1192,7 @@ span.plusAuth,span.plusApp {
 	color: white;
 	font-weight: bolder;
 	font-size: 30px;
+	border-radius: 5px;
 }
 .chatLeftIcon{
 	background: url("img/chatLeftIcon.png") no-repeat;

@@ -38,14 +38,14 @@
 
                     <div class="form-group firstNone">
                         <label for="username" class="username"></label>
-                        <input type="text" name="account" placeholder="手机号" required="" class="form-control" name="accountNumber" ng-model="user.accountNumber" ng-pattern="/^1[3-9][0-9]{9,9}$/" id="username" my-focus="">
+                        <input type="text" name="account" placeholder="用户名" required="" class="form-control" name="accountNumber" ng-model="user.accountNumber" ng-pattern="/^1[3-9][0-9]{9,9}$/" id="username" my-focus="">
                     </div>
                     <div class="form-group">
                         <label for="pwdIn" class="pwdIn"></label>
                         <input type="password" name="userpwd" placeholder="密码" required="" ng-pattern="/^[0-9a-zA-Z!@#$%^&amp;*(){}:&quot;|>?\[\];,.\/\-=_+]{6,16}$/" class="form-control-my ng-untouched ng-valid-pattern ng-dirty ng-valid-parse ng-valid ng-valid-required" name="passWord" ng-model="user.passWord" id="pwdIn" my-focus="">
                         </div>
                     <div class="bot clearfix">
-                        <a class="pull-right" href="<%=request.getContextPath() %>/system!fogetPassword" ui-sref="account.forgotpassword" id="forgetPwd" onclick="">忘记密码？</a>
+                        <a class="pull-right" href="<%=request.getContextPath() %>/page/cms/forgotpassword.jsp" ui-sref="account.forgotpassword" id="forgetPwd" onclick="">忘记密码？</a>
                     </div>
                     <div class="button-wrapper form-group">
                         <button class="sign-button submit" type="submit" onclick="signin()">登录</button>

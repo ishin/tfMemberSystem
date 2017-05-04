@@ -3,7 +3,7 @@ $(document).ready(function() {
 	$('.infopanel23').validVal();
 
 //	$('.infopanel23').css('margin-left', (document.body.clientWidth * 0.87) * 0.29);
-	$('.infopanel23').css('margin-left', ((document.body.clientWidth * 0.87 - 688) / 2 + 'px'));
+//	$('.infopanel23').css('margin-left', ((document.body.clientWidth * 0.87 - 688) / 2 + 'px'));
 	
 	callajax('pos!getList', '', cb_23);
 	
@@ -45,12 +45,12 @@ function cb_23_save(data) {
 	}
 }
 function star() {
-	$('#star').css('height', (Math.ceil($('#positionlist').children().length / 4) * 50 + 200) + 'px');
-	var infoh = $('.info').css('height').replace('px', '');
-	var ih = parseInt(infoh) + 40;
-	var h = document.body.clientHeight - 50;
-	var v = h > ih ? h : ih;
-	$('.sidebar12').css('height', v + 'px');
+	//$('#star').css('height', (Math.ceil($('#positionlist').children().length / 4) * 50 + 200) + 'px');
+	//var infoh = $('.info').css('height').replace('px', '');
+	//var ih = parseInt(infoh) + 40;
+	//var h = document.body.clientHeight - 50;
+	//var v = h > ih ? h : ih;
+	//$('.sidebar12').css('height', v + 'px');
 }
 function subbyte(str, len) {
 	if (bytelen(str) > len) {

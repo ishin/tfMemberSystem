@@ -30,7 +30,7 @@
 	<div class='h60px'></div>
 	<div>
 		<div class='dialogtitle'>权限配置：
-			<div id="21_list" class='toright' style='overflow-y: auto;border: 1px solid #ccc; width: 748px; height: 430px;'>
+			<div id="21_list" class='toright' style='overflow-y: auto;border: 1px solid #e6e6e6; width: 748px; height: 430px;'>
 <!-- 			<div class="line211d">后台管理</div>
 				<div class="line211ad">
 					<div class="line2111d"><input type="checkbox" />人事管理</div>
