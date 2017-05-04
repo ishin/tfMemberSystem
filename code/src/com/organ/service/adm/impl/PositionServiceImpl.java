@@ -36,39 +36,43 @@ public class PositionServiceImpl implements PositionService {
 		return positionDao.find("from TPosition where organId = " + organId + " order by listorder desc");
 	}
 	@Override
-	public String del(Integer id) {
-		JSONObject jo = new JSONObject();
-		
+	public int del(Integer id) {
+		int ret = 0;
 		try {
-			int count = branchMemberDao.getBranchMemberCountByPositionId(id);
+			/*int count = branchMemberDao.getBranchMemberCountByPositionId(id);
 			
 			if (count == 0) {
 				positionDao.deleteById(id);
-				jo.put("code", 1);
-				jo.put("text", Tips.OK.getText());
+				ret = id;
 			} else {
-				jo.put("code", 0);
-				jo.put("text", Tips.USEING.getText());
-			}
-		} catch(Exception e) {
+				ret = 0;
+			}*/
+			positionDao.deleteById(id);
+			ret = id;
+		} catch(Exception e) {	
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
-		return jo.toString();
+		return ret;
 	}
 	@Override
 	public TPosition save(String name, Integer organId) {
-		
-		List list = positionDao.find("from TPosition where name = '" + name + "' and organId="+organId);
-		if (list.size() > 0) return null;
-		
-		TPosition p = new TPosition();
-		p.setName(name);
-		p.setOrganId(organId);
-		p.setListorder(positionDao.getMax("listorder", "from TPosition where organId="+organId) + 1);
-		positionDao.save(p);
-		
-		return p;
+		try{
+			List list = positionDao.find("from TPosition where name = '" + name + "' and organId="+organId);
+			if (list.size() > 0) return null;
+			//Integer max = positionDao.getMax("listorder", "from TPosition where organId="+organId);
+			//max = max == null ? 0 : max;
+			TPosition p = new TPosition();
+			p.setName(name);
+			p.setOrganId(organId);
+			p.setListorder(0);
+			positionDao.save(p);
+			return p;
+		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }
