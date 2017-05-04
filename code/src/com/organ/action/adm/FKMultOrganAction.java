@@ -21,7 +21,7 @@ import com.organ.utils.TimeGenerator;
  * @author hao_dy
  *
  */
-@Secured
+
 public class FKMultOrganAction extends BaseAction {
 
 	private static final long serialVersionUID = 6961033310590131108L;
@@ -38,10 +38,10 @@ public class FKMultOrganAction extends BaseAction {
 		
 		String[] mustParams = {"name", "shortname", "provinceid", "cityid", "districtid", "contact", "address", "sign", "timestamp"};
 		
-		result = this.valideParams(this.request, mustParams);
+		result = this.valideNullParams(this.request, mustParams);
 		
 		if (result == null) {
-			String timeStamp = this.request.getParameter("timestamp");
+			String timeStamp = clearChar(this.request.getParameter("timestamp"));
 			String validTime = PropertiesUtils.getStringByKey("organ.validtime");
 			String key = PropertiesUtils.getStringByKey("organ.key");
 			long validTimeLong = validTime != null ? Long.parseLong(validTime) : 0;
@@ -61,29 +61,29 @@ public class FKMultOrganAction extends BaseAction {
 			} else {
 				TOrgan organ = new TOrgan();
 				
-				organ.setName(this.request.getParameter("name"));
-				organ.setShortname(this.request.getParameter("shortname"));
-				organ.setEnglishname(this.request.getParameter("englishname"));
-				organ.setAd(this.request.getParameter("ad"));
-				organ.setProvinceId(this.request.getParameter("provinceid") == "" ? 0 : Integer.parseInt(this.request.getParameter("provinceid")));
-				organ.setCityId(this.request.getParameter("cityid") == "" ? 0 : Integer.parseInt(this.request.getParameter("cityid")));
-				organ.setDistrictId(this.request.getParameter("districtid") == "" ? 0 : Integer.parseInt(this.request.getParameter("districtid")));
-				organ.setContact(this.request.getParameter("contact"));
-				organ.setAddress(this.request.getParameter("address"));
-				organ.setTelephone(this.request.getParameter("telephone"));
-				organ.setFax(this.request.getParameter("fax"));
-				organ.setEmail(this.request.getParameter("email"));
-				organ.setPostcode(this.request.getParameter("postcode"));
-				organ.setWebsite(this.request.getParameter("website"));
-				organ.setInwardId(this.request.getParameter("inwardid") == "" ? 0 : Integer.parseInt(this.request.getParameter("inwardid")));
-				organ.setIndustryId(this.request.getParameter("industryid") == "" ? 0 : Integer.parseInt(this.request.getParameter("industryid")));
-				organ.setSubdustryId(this.request.getParameter("subdustryid") == "" ? 0 : Integer.parseInt(this.request.getParameter("subdustryid")));
-				organ.setCapital(this.request.getParameter("capital") == "" ? 0 : Integer.parseInt(this.request.getParameter("capital")));
-				organ.setMembernumber(this.request.getParameter("membernumber") == "" ? 0 : Integer.parseInt(this.request.getParameter("membernumber")));
-				organ.setComputernumber(this.request.getParameter("computernumber") == "" ? 0 : Integer.parseInt(this.request.getParameter("computernumber")));
-				organ.setIntro(this.request.getParameter("intro"));
-				organ.setLogo(this.request.getParameter("logo"));
-				organ.setListorder(StringUtils.getInstance().isBlank(this.request.getParameter("listorder")) ? 0 : Integer.parseInt(this.request.getParameter("listorder")));
+				organ.setName(clearChar(this.request.getParameter("name")));
+				organ.setShortname(clearChar(this.request.getParameter("shortname")));
+				organ.setEnglishname(clearChar(this.request.getParameter("englishname")));
+				organ.setAd(clearChar(this.request.getParameter("ad")));
+				organ.setProvinceId(this.request.getParameter("provinceid") == "" ? 0 : Integer.parseInt(clearChar(this.request.getParameter("provinceid"))));
+				organ.setCityId(this.request.getParameter("cityid") == "" ? 0 : Integer.parseInt(clearChar(this.request.getParameter("cityid"))));
+				organ.setDistrictId(this.request.getParameter("districtid") == "" ? 0 : Integer.parseInt(clearChar(this.request.getParameter("districtid"))));
+				organ.setContact(clearChar(this.request.getParameter("contact")));
+				organ.setAddress(clearChar(this.request.getParameter("address")));
+				organ.setTelephone(clearChar(this.request.getParameter("telephone")));
+				organ.setFax(clearChar(this.request.getParameter("fax")));
+				organ.setEmail(clearChar(this.request.getParameter("email")));
+				organ.setPostcode(clearChar(this.request.getParameter("postcode")));
+				organ.setWebsite(clearChar(this.request.getParameter("website")));
+				organ.setInwardId(this.request.getParameter("inwardid") == "" ? 0 : Integer.parseInt(clearChar(this.request.getParameter("inwardid"))));
+				organ.setIndustryId(this.request.getParameter("industryid") == "" ? 0 : Integer.parseInt(clearChar(this.request.getParameter("industryid"))));
+				organ.setSubdustryId(this.request.getParameter("subdustryid") == "" ? 0 : Integer.parseInt(clearChar(this.request.getParameter("subdustryid"))));
+				organ.setCapital(this.request.getParameter("capital") == "" ? 0 : Integer.parseInt(clearChar(this.request.getParameter("capital"))));
+				organ.setMembernumber(this.request.getParameter("membernumber") == "" ? 0 : Integer.parseInt(clearChar(this.request.getParameter("membernumber"))));
+				organ.setComputernumber(this.request.getParameter("computernumber") == "" ? 0 : Integer.parseInt(clearChar(this.request.getParameter("computernumber"))));
+				organ.setIntro(clearChar(this.request.getParameter("intro")));
+				organ.setLogo(clearChar(this.request.getParameter("logo")));
+				organ.setListorder(StringUtils.getInstance().isBlank(this.request.getParameter("listorder")) ? 0 : Integer.parseInt(clearChar(this.request.getParameter("listorder"))));
 				
 				result = orgService.registOrgan(organ);
 			}
@@ -109,7 +109,7 @@ public class FKMultOrganAction extends BaseAction {
 	
 	@Deprecated
 	private boolean valideMd5() {
-		String timestamp = this.request.getParameter("timestamp");
+		String timestamp = clearChar(this.request.getParameter("timestamp"));
 		String validTime = PropertiesUtils.getStringByKey("organ.validtime");
 		
 		long validTimeLong = Long.parseLong(validTime);
@@ -122,7 +122,7 @@ public class FKMultOrganAction extends BaseAction {
 		if (timeStampLong < minTime || timeStampLong > maxTime) {
 			return false;
 		}
-		String sign = this.request.getParameter("sign");
+		String sign = clearChar(this.request.getParameter("sign"));
 		String key = PropertiesUtils.getStringByKey("organ.key");
 		
 		Map<String, String[]> paramMap = this.request.getParameterMap();

@@ -7,13 +7,12 @@ import javax.servlet.ServletException;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
 import com.organ.service.adm.PrivService;
-import com.organ.service.member.MemberService;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
 import com.organ.utils.StringUtils;
@@ -26,12 +25,10 @@ import com.organ.utils.StringUtils;
  * @date 2017/01/07
  */
 
-@Secured
 public class AbutmentPrivilegeAction extends BaseAction {
 
 	private static final long serialVersionUID = -140819709379846247L;
-	private static final Logger logger = Logger
-			.getLogger(AbutmentPrivilegeAction.class);
+	private static final Logger logger = LogManager.getLogger(AbutmentPrivilegeAction.class);
 	
 	
 	public String getPrivStringByMemberAb() throws ServletException {
@@ -42,6 +39,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				
@@ -71,6 +69,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -83,6 +82,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				
@@ -115,6 +115,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -132,6 +133,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				
@@ -163,6 +165,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -180,6 +183,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				
@@ -209,6 +213,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -226,6 +231,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 			String params = getRequestDataByStream();
 			boolean s = true;
 			
+			logger.info(params);
 			if (params != null) {
 				JSONObject p = JSONUtils.getInstance().stringToObj(params);
 				
@@ -255,21 +261,7 @@ public class AbutmentPrivilegeAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
-		returnToClient(result);
-		return "text";
-	}
-	
-	@Deprecated
-	public String getInitLoginPrivAb() throws ServletException {
-		String result = null;
-		
-		try {
-			List<JSONObject> privList = privService.getInitLoginPriv();
-			result = privList.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
-		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}

@@ -8,7 +8,8 @@ import java.util.List;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -29,7 +30,6 @@ import com.organ.model.TBranchMember;
 import com.organ.model.TMember;
 import com.organ.model.TMemberRole;
 import com.organ.model.TPosition;
-import com.organ.model.UserSysRelation;
 import com.organ.service.adm.BranchService;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
@@ -41,7 +41,7 @@ import com.organ.utils.TimeGenerator;
 
 public class BranchServiceImpl implements BranchService {
 
-	private static final Logger logger = Logger.getLogger(BranchServiceImpl.class);
+	private static final Logger logger = LogManager.getLogger(BranchServiceImpl.class);
 	
 	private BranchDao branchDao;
 	private MemberDao memberDao;
@@ -71,8 +71,8 @@ public class BranchServiceImpl implements BranchService {
 	}
 
 	@Override
-	public TMember getMemberByMobile(String mobile, String telPhone) {
-		return memberDao.getMemberByMobile(mobile, telPhone);
+	public TMember getMemberByMobile(String mobile) {
+		return memberDao.getMemberByMobile(mobile);
 	}
 	@Override
 	public TMember getMemberByEmail(String email) {
@@ -445,22 +445,21 @@ public class BranchServiceImpl implements BranchService {
 	}
 	@Override
 	public void delMember(Integer memberId) {
-		
 		branchMemberDao.executeUpdate("delete from TBranchMember where memberId = " + memberId);
 		memberRoleDao.executeUpdate("delete from TMemberRole where memberId = " + memberId);
 		memberDao.executeUpdate("delete from TMember where id = " + memberId);
 	}
+	
 	@Override
 	public void delBranch(Integer branchId, Integer r, Integer organId) {
-		
-		TBranch branch = branchDao.get(branchId);
+		TBranch branch = branchDao.get(branchId); 
 		
 		List list = branchMemberDao.getBranchMemberByBranch(branchId);
 		Iterator it = list.iterator();
 		while(it.hasNext()) {
 			TBranchMember bm = (TBranchMember)it.next();
 			List list2 = branchMemberDao.getBranchMemberByMember(bm.getMemberId());
-			if (list2.size() == 1) {
+			if (list2.size() == 1) {			//部门删除，成员父节点更新为公司
 				TBranchMember bm2 = (TBranchMember)list2.get(0);
 				bm2.setBranchId(organId);
 				branchMemberDao.saveOrUpdate(bm2);
@@ -469,7 +468,7 @@ public class BranchServiceImpl implements BranchService {
 				if (bm.getIsMaster().equals("1")) {
 					branchMemberDao.selectMaster(bm.getMemberId());
 				}
-				branchMemberDao.delete(bm);
+				branchMemberDao.delete("delete from TBranchMember where id="+bm.getId());
 			}
 		}
 		
@@ -480,6 +479,7 @@ public class BranchServiceImpl implements BranchService {
 			TBranch b = (TBranch)it3.next();
 			
 			if (r == 1) {
+				
 				this.delBranch(b.getId(), r, organId);
 			}
 			else {
@@ -487,8 +487,7 @@ public class BranchServiceImpl implements BranchService {
 				branchDao.saveOrUpdate(b);
 			}
 		}
-		
-		branchDao.delete(branch);
+		branchDao.delete("delete from TBranch where id=" + branch.getId());
 	}
 	@Override
 	public void movMember(Integer memberId, Integer pId, Integer toId) {
@@ -565,6 +564,8 @@ public class BranchServiceImpl implements BranchService {
 			m.setGroupmax(0);
 			m.setGroupuse(0);
 			m.setCreatetokendate(Integer.valueOf(String.valueOf(now)));
+			m.setIsDel(1);
+			m.setSuperAdmin(0);
 			memberDao.save(m);
 			user.setId(m.getId());
 

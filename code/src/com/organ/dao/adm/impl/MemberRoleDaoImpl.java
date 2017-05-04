@@ -63,4 +63,15 @@ public class MemberRoleDaoImpl extends BaseDao<TMemberRole, Integer> implements 
 		return null;
 	}
 
+	@Override
+	public int deleteRelationByIds(String userids) {
+		try {
+			String hql = (new StringBuilder("delete from TMemberRole where memberId in (").append(userids).append(")")).toString();
+			return delete(hql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
 }

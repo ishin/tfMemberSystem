@@ -14,6 +14,7 @@ import net.sf.json.JSONObject;
 import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.AuthTips;
 import com.organ.common.BaseAction;
+import com.organ.common.Tips;
 import com.organ.model.AppSecret;
 import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
@@ -32,7 +33,7 @@ import com.organ.utils.TimeGenerator;
  *
  */
 
-@Secured
+
 public class BranchAction extends BaseAction {
 
 	private static final long serialVersionUID = 1L;
@@ -42,8 +43,14 @@ public class BranchAction extends BaseAction {
 	 * by alopex
 	 */
 	public String getOrganTree() throws ServletException {
+		int id = this.getOrganId();
+		String result = null;
 		
-		String result = branchService.getOrganTree(this.getOrganId());
+		if (id == 0) {
+			result = failResult(Tips.TIMEOUT.getText());
+		} else {
+			result = branchService.getOrganTree(id);
+		}
 		returnToClient(result);
 		
 		return "text";
@@ -54,8 +61,14 @@ public class BranchAction extends BaseAction {
 	 * by alopex
 	 */
 	public String getOrganOnlyTree() throws ServletException {
+		int id = this.getOrganId();
+		String result = null;
 		
-		String result = branchService.getOrganOnlyTree(this.getOrganId());
+		if (id == 0) {
+			result = failResult(Tips.TIMEOUT.getText());
+		} else {
+			result = branchService.getOrganOnlyTree(id);
+		}
 		returnToClient(result);
 		
 		return "text";
@@ -67,9 +80,14 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchById() throws ServletException {
 		
-		String branchId = this.request.getParameter("id");
+		String branchId = clearChar(this.request.getParameter("id"));
+		String result = null;
 		
-		String result = branchService.getBranchById(Integer.valueOf(branchId));
+		if (StringUtils.getInstance().isBlank(branchId)) {
+			result = failResult(Tips.WRONGPARAMS.getText());
+		} else {
+			result = branchService.getBranchById(Integer.valueOf(branchId));
+		}
 		returnToClient(result);
 		
 		return "text";
@@ -89,7 +107,7 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getMemberById() throws ServletException {
 		
-		String memberId = this.request.getParameter("id");
+		String memberId = clearChar(this.request.getParameter("id"));
 		
 		String result = branchService.getMemberById(Integer.valueOf(memberId));
 		returnToClient(result);
@@ -103,7 +121,7 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchMemberById() throws ServletException {
 		
-		String branchMemberId = this.request.getParameter("branchmemberid");
+		String branchMemberId = clearChar(this.request.getParameter("branchmemberid"));
 		TBranchMember branchMember = branchService.getBranchMemberById(Integer.parseInt(branchMemberId));
 		
 		JSONObject jo = new JSONObject();
@@ -120,7 +138,7 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getMemberBranchById() throws ServletException {
 		
-		String memberId = this.request.getParameter("memberid");
+		String memberId = clearChar(this.request.getParameter("memberid"));
 		List list = branchService.getMemberBranchById(Integer.parseInt(memberId));
 		
 		ArrayList<JSONObject> joa = new ArrayList<JSONObject>();
@@ -170,9 +188,10 @@ public class BranchAction extends BaseAction {
 	 * 保存部门,专为外部接口使用
 	 * @throws SevletException
 	 */
+	@Deprecated
 	public String saveBranchExtra() throws ServletException {
 		String result = null;
-		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
+		AppSecret as = msgService.validAppIdAndSecret(clearChar(appId), clearChar(secret));
 		
 		if (as != null) {
 			result = this.saveBranch();
@@ -191,12 +210,21 @@ public class BranchAction extends BaseAction {
 	public String saveBranch() throws ServletException {
 		
 		TBranch branch = null;
-		String id = this.request.getParameter("branchid");
+		String id = clearChar(this.request.getParameter("branchid"));
+		String branchName = clearChar(this.request.getParameter("branchname"));
+		String branchAddress = clearChar(this.request.getParameter("branchaddress"));
+		String branchFax = clearChar(this.request.getParameter("branchfax"));
+		String branchIntro = clearChar(this.request.getParameter("branchintro"));
+		String branchManagerId = clearChar(this.request.getParameter("branchmanagerid"));
+		String branchParentId = clearChar(this.request.getParameter("branchparentid"));
+		String branchTelPhone = clearChar(this.request.getParameter("branchtelephone"));
+		String branchWebSite = clearChar(this.request.getParameter("branchwebsite"));
+		
 		int organId = getSessionUserOrganId();
 		if (id != null) {
 			branch = branchService.getBranchObjectById(Integer.parseInt(id));
-			if (!branch.getName().equalsIgnoreCase(this.request.getParameter("branchname"))) {
-				if (branchService.getBranchByName(this.request.getParameter("branchname"), organId) != null) {
+			if (!branch.getName().equalsIgnoreCase(branchName)) {
+				if (branchService.getBranchByName(clearChar(branchName), organId) != null) {
 					JSONObject jo = new JSONObject();
 					jo.put("branchid", 0);
 					returnToClient(jo.toString());
@@ -205,7 +233,7 @@ public class BranchAction extends BaseAction {
 			}
 		}
 		else {
-			if (branchService.getBranchByName(this.request.getParameter("branchname"), organId) != null) {
+			if (branchService.getBranchByName(branchName, organId) != null) {
 				JSONObject jo = new JSONObject();
 				jo.put("branchid", 0);
 				returnToClient(jo.toString());
@@ -214,22 +242,22 @@ public class BranchAction extends BaseAction {
 			branch = new TBranch();
 			branch.setListorder(0);
 		}
-		if (this.request.getParameter("branchaddress") != null)
-			branch.setAddress(this.request.getParameter("branchaddress"));
-		if (this.request.getParameter("branchfax") != null)
-			branch.setFax(this.request.getParameter("branchfax"));
-		if (this.request.getParameter("branchintro") != null)
-			branch.setIntro(this.request.getParameter("branchintro"));
-		if (this.request.getParameter("branchmanagerid") != null)
-			branch.setManagerId(Integer.parseInt(this.request.getParameter("branchmanagerid")));
-		if (this.request.getParameter("branchname") != null)
-			branch.setName(this.request.getParameter("branchname"));
-		if (this.request.getParameter("branchparentid") != null)
-			branch.setParentId(Integer.parseInt(this.request.getParameter("branchparentid")));
-		if (this.request.getParameter("branchtelephone") != null)
-			branch.setTelephone(this.request.getParameter("branchtelephone"));
-		if (this.request.getParameter("branchwebsite") != null)
-			branch.setWebsite(this.request.getParameter("branchwebsite"));
+		if (branchAddress != null)
+			branch.setAddress(branchAddress);
+		if (branchFax != null)
+			branch.setFax(branchFax);
+		if (branchIntro != null)
+			branch.setIntro(branchIntro);
+		if (branchManagerId != null)
+			branch.setManagerId(Integer.parseInt(branchManagerId));
+		if (branchName != null)
+			branch.setName(branchName);
+		if (branchParentId != null)
+			branch.setParentId(Integer.parseInt(branchParentId));
+		if (branchTelPhone != null)
+			branch.setTelephone(branchTelPhone);
+		if (branchWebSite != null)
+			branch.setWebsite(branchWebSite);
 
 		branch.setOrganId(this.getOrganId());
 		
@@ -249,58 +277,72 @@ public class BranchAction extends BaseAction {
 	
 	public String saveMember() throws ServletException {
 		TMember member = null;
-		String id = this.request.getParameter("memberid");
+		String id = clearChar(this.request.getParameter("memberid"));
+		String memberAccount = clearChar(this.request.getParameter("memberaccount"));
+		String memberMail = clearChar(this.request.getParameter("memberemail"));
+		String memberMobile = clearChar(this.request.getParameter("membermobile"));
+		String memberPhone = clearChar(this.request.getParameter("membertelephone"));
+		String memberAddress = clearChar(this.request.getParameter("memberaddress"));
+		String memberBirthday = clearChar(this.request.getParameter("memberbirthday"));
+		String memberFullName = clearChar(this.request.getParameter("memberfullname"));
+		String memberIntro = clearChar(this.request.getParameter("memberintro"));
+		String memberSex = clearChar(this.request.getParameter("membersex"));
+		String memberWorkNo = clearChar(this.request.getParameter("memberworkno"));
+		
 		int organId = getSessionUserOrganId();
 		boolean sms = false;
-		JSONObject jo = new JSONObject();
 		
-		String email = this.request.getParameter("memberemail");
+		JSONObject jo = new JSONObject();
 		
 		if (id != null && !"".equals(id)) {
 			member = branchService.getMemberObjectById(Integer.parseInt(id));
-			if (!member.getAccount().equalsIgnoreCase(this.request.getParameter("memberaccount"))) {
-				if (branchService.getMemberByAccount(this.request.getParameter("memberaccount"), organId) != null) {
+			String account = member.getAccount();
+			account = account == null ? "" : account;
+			if (!member.getAccount().equalsIgnoreCase(memberAccount)) {
+				if (branchService.getMemberByAccount(memberAccount, organId) != null) {
 					JSONObject jo1 = new JSONObject();
-					jo.put("memberid", 0);
+					jo1.put("memberid", 0);
 					returnToClient(jo1.toString());
 					return "text";
 				}
 			}
-			if (!member.getMobile().equalsIgnoreCase(this.request.getParameter("membermobile")) ||
-					!member.getTelephone().equalsIgnoreCase(this.request.getParameter("membertelephone"))) {
-				if (branchService.getMemberByMobile(this.request.getParameter("membermobile"), 
-						this.request.getParameter("membertelephone")) != null) {
+			String mobile = member.getMobile();
+			String telPhone = member.getTelephone();
+			mobile = mobile == null ? "" : mobile;
+			if (!mobile.equalsIgnoreCase(memberMobile)) {
+				if (branchService.getMemberByMobile(memberMobile) != null) {
 					JSONObject jo1 = new JSONObject();
-					jo.put("memberid", -1);
-					returnToClient(jo.toString());
+					jo1.put("memberid", -1);
+					returnToClient(jo1.toString());
 					return "text";
 				}
 			}
-			if (!member.getEmail().equalsIgnoreCase(this.request.getParameter("memberemail"))) {
-				if (branchService.getMemberByEmail(this.request.getParameter("memberemail")) != null) {
+			String email = member.getEmail();
+			email = email == null ? "" : email;
+			if (!member.getEmail().equalsIgnoreCase(memberMail)) {
+				if (branchService.getMemberByEmail(memberMail) != null) {
 					JSONObject jo1 = new JSONObject();
-					jo.put("memberid", -2);
-					returnToClient(jo.toString());
+					jo1.put("memberid", -2);
+					returnToClient(jo1.toString());
 					return "text";
 				}
 			}
 		} else {
-			if (branchService.getMemberByAccount(this.request.getParameter("memberaccount"), organId) != null) {
+			if (branchService.getMemberByAccount(memberAccount, organId) != null) {
 				JSONObject jo1 = new JSONObject();
-				jo.put("memberid", 0);
+				jo1.put("memberid", 0);
 				returnToClient(jo1.toString());
 				return "text";
 			}
-			if (branchService.getMemberByMobile(this.request.getParameter("membermobile"), 
-					this.request.getParameter("membertelephone")) != null) {
+			if (branchService.getMemberByMobile(memberMobile) != null) {
 				JSONObject jo1 = new JSONObject();
-				jo.put("memberid", -1);
+				jo1.put("memberid", -1);
 				returnToClient(jo1.toString());
 				return "text";
 			}
-			if (!StringUtils.getInstance().isBlank(email) && branchService.getMemberByEmail(email) != null) {
+			if (!StringUtils.getInstance().isBlank(memberMail) && branchService.getMemberByEmail(memberMail) != null) {
 				JSONObject jo1 = new JSONObject();
-				jo.put("memberid", -2);
+				jo1.put("memberid", -2);
 				returnToClient(jo1.toString());
 				return "text";
 			}
@@ -310,44 +352,46 @@ public class BranchAction extends BaseAction {
 			member.setPassword(PasswordGenerator.getInstance().getMD5Str("111111"));
 			sms = true;
 		}
-		if (this.request.getParameter("memberaccount") != null)
-			member.setAccount(this.request.getParameter("memberaccount"));
-		if (this.request.getParameter("memberaddress") != null)
-			member.setAddress(this.request.getParameter("memberaddress"));
-		if (this.request.getParameter("memberbirthday") != null) {
-			String bd = this.request.getParameter("memberbirthday");
+		if (memberAccount != null)
+			member.setAccount(memberAccount);
+		if (memberAddress != null)
+			member.setAddress(memberAddress);
+		if (memberBirthday != null) {
+			String bd = memberBirthday;
 			if (bd.length() == 10) {
 				member.setBirthday(bd.substring(0,4) + bd.substring(5,7) + bd.substring(8,10));
 			}
 		}
-		if (this.request.getParameter("memberemail") != null)
-			member.setEmail(this.request.getParameter("memberemail"));
-		if (this.request.getParameter("memberfullname") != null) {
-			member.setFullname(this.request.getParameter("memberfullname"));
-			member.setPinyin(PinyinGenerator.getPinYinHeadChar(this.request.getParameter("memberfullname")));
-			member.setAllpinyin(PinyinGenerator.getPinYin(this.request.getParameter("memberfullname")));
+		if (memberMail != null)
+			member.setEmail(memberMail);
+		if (memberFullName != null) {
+			member.setFullname(memberFullName);
+			member.setPinyin(PinyinGenerator.getPinYinHeadChar(memberFullName));
+			member.setAllpinyin(PinyinGenerator.getPinYin(memberFullName));
 		}
-		if (this.request.getParameter("memberintro") != null)
-			member.setIntro(this.request.getParameter("memberintro"));
-		if (this.request.getParameter("membermobile") != null)
-			member.setMobile(this.request.getParameter("membermobile"));
-		if (this.request.getParameter("membersex") != null)
-			member.setSex(this.request.getParameter("membersex"));
-		if (this.request.getParameter("membertelephone") != null)
-			member.setTelephone(this.request.getParameter("membertelephone"));
-		if (this.request.getParameter("memberworkno") != null)
-			member.setWorkno(this.request.getParameter("memberworkno"));
+		if (memberIntro != null)
+			member.setIntro(memberIntro);
+		if (memberMobile != null)
+			member.setMobile(memberMobile);
+		if (memberSex != null)
+			member.setSex(memberSex);
+		if (memberPhone != null)
+			member.setTelephone(memberPhone);
+		if (memberWorkNo != null)
+			member.setWorkno(memberWorkNo);
 		
 		member.setOrganId(this.getOrganId());
 
 		long now = TimeGenerator.getInstance().getUnixTime();
 		member.setCreatetokendate(Integer.valueOf(String.valueOf(now)));
+		member.setIsDel(1);
+		member.setSuperAdmin(0);
 		
 		Integer memberId = branchService.saveMember(member);
 
 		//部门职务
 		TBranchMember branchMember = null;
-		String branchmemberid = this.request.getParameter("branchmemberid");
+		String branchmemberid = clearChar(this.request.getParameter("branchmemberid"));
 		if ( branchmemberid != null && !"".equals(branchmemberid)) {
 			branchMember = branchService.getBranchMemberById(Integer.parseInt(branchmemberid));
 		}
@@ -357,14 +401,14 @@ public class BranchAction extends BaseAction {
 			branchMember.setIsMaster("1");
 		}
 		branchMember.setMemberId(memberId);
-		String memberbranchid = this.request.getParameter("memberbranchid");
+		String memberbranchid = clearChar(this.request.getParameter("memberbranchid"));
 		if ( memberbranchid!= null && !"".equals(memberbranchid)) {
 			branchMember.setBranchId(Integer.parseInt(memberbranchid));
 		}
 		else {
 			branchMember.setBranchId(0);
 		}
-		String memberpositionid = this.request.getParameter("memberpositionid");
+		String memberpositionid = clearChar(this.request.getParameter("memberpositionid"));
 		if ( memberpositionid != null && !"".equals(memberpositionid)) {
 			branchMember.setPositionId(Integer.parseInt(memberpositionid));
 		}
@@ -374,7 +418,7 @@ public class BranchAction extends BaseAction {
 		branchService.saveBranchMember(branchMember);
 		
 		//人员角色
-		String membberroleid = this.request.getParameter("memberroleid");
+		String membberroleid = clearChar(this.request.getParameter("memberroleid"));
 		if ( membberroleid != null && !"".equals(membberroleid)) {
 			TMemberRole memberRole = null;
 			memberRole = branchService.getMemberRoleByMemberId(memberId);
@@ -402,10 +446,10 @@ public class BranchAction extends BaseAction {
 	
 	public String savePosition() throws ServletException {
 
-		String branchmemberid = this.request.getParameter("branchmemberid");
-		String memberid = this.request.getParameter("memberid");
-		String branchid = this.request.getParameter("branchid");
-		String positionid = this.request.getParameter("positionid");
+		String branchmemberid = clearChar(this.request.getParameter("branchmemberid"));
+		String memberid = clearChar(this.request.getParameter("memberid"));
+		String branchid = clearChar(this.request.getParameter("branchid"));
+		String positionid = clearChar(this.request.getParameter("positionid"));
 
 		JSONObject jo = new JSONObject();
 		Integer result = 0;
@@ -440,7 +484,7 @@ public class BranchAction extends BaseAction {
 
 	public String delBranchMember() throws ServletException {
 
-		String branchmemberid = this.request.getParameter("branchmemberid");
+		String branchmemberid = clearChar(this.request.getParameter("branchmemberid"));
 		Integer result = branchService.delBranchMember(Integer.parseInt(branchmemberid));
 		
 		JSONObject jo = new JSONObject();
@@ -451,7 +495,7 @@ public class BranchAction extends BaseAction {
 	
 	public String setMaster() throws ServletException {
 		
-		String branchmemberid = this.request.getParameter("branchmemberid");
+		String branchmemberid = clearChar(this.request.getParameter("branchmemberid"));
 		branchService.setMaster(Integer.parseInt(branchmemberid));
 		
 		JSONObject jo = new JSONObject();
@@ -462,8 +506,8 @@ public class BranchAction extends BaseAction {
 	
 	public String reset() throws ServletException {
 		
-		String memberid = this.request.getParameter("memberid");
-		String newpassword = this.request.getParameter("newpassword");
+		String memberid = clearChar(this.request.getParameter("memberid"));
+		String newpassword = clearChar(this.request.getParameter("newpassword"));
 		
 		String md5password = PasswordGenerator.getInstance().getMD5Str(newpassword);
 		
@@ -485,9 +529,10 @@ public class BranchAction extends BaseAction {
 	 * @return
 	 * @throws ServletException
 	 */
+	@Deprecated
 	public String delExtra() throws ServletException {
 		String result = null;
-		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
+		AppSecret as = msgService.validAppIdAndSecret(clearChar(appId), clearChar(secret));
 		
 		if (as != null) {
 			result = this.del();
@@ -504,8 +549,8 @@ public class BranchAction extends BaseAction {
 	
 	public String del() throws ServletException {
 		
-		Integer id = Integer.parseInt(this.request.getParameter("id"));
-		Integer r = Integer.parseInt(this.request.getParameter("r"));
+		Integer id = Integer.parseInt(clearChar(this.request.getParameter("id")));
+		Integer r = Integer.parseInt(clearChar(this.request.getParameter("r")));
 		
 		// 删除组织
 		if (id < 101) {
@@ -531,9 +576,9 @@ public class BranchAction extends BaseAction {
 
 	public String mov() throws ServletException {
 		
-		Integer id = Integer.parseInt(this.request.getParameter("id"));
-		Integer pid = Integer.parseInt(this.request.getParameter("pid"));
-		Integer toid = Integer.parseInt(this.request.getParameter("toid"));
+		Integer id = Integer.parseInt(clearChar(this.request.getParameter("id")));
+		Integer pid = Integer.parseInt(clearChar(this.request.getParameter("pid")));
+		Integer toid = Integer.parseInt(clearChar(this.request.getParameter("toid")));
 
 		// 移动组织
 		if (id < 101) {
@@ -554,7 +599,7 @@ public class BranchAction extends BaseAction {
 	
 	public String impcheck() throws ServletException {
 		
-		String jtext = this.request.getParameter("jtext");
+		String jtext = clearChar(this.request.getParameter("jtext"));
 		JSONArray ja = JSONArray.fromObject(jtext);
 		
 		JSONObject js = branchService.testUsers(ja);
@@ -566,7 +611,7 @@ public class BranchAction extends BaseAction {
 	
 	public String impsave() throws ServletException, FileNotFoundException, IOException {
 
-		String jtext = this.request.getParameter("jtext");
+		String jtext = clearChar(this.request.getParameter("jtext"));
 		JSONArray ja = JSONArray.fromObject(jtext);
 
 		branchService.saveimp(ja, this.getOrganId());
@@ -601,7 +646,7 @@ public class BranchAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getBranchTreeAndMember() throws ServletException {
-		String result = branchService.getBranchTreeAndMember(appId, this.getOrganId());
+		String result = branchService.getBranchTreeAndMember(clearChar(appId), this.getOrganId());
 			
 		returnToClient(result);
 		
@@ -615,15 +660,15 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchTreeAndMembers() throws ServletException {
 		String result = null;
-		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
+		AppSecret as = msgService.validAppIdAndSecret(clearChar(appId), clearChar(secret));
 		
 		if (as != null) {
 			int oid = 0;
 			if (!StringUtils.getInstance().isBlank(companyId)) {
-				oid = Integer.parseInt(companyId);
+				oid = Integer.parseInt(clearChar(companyId));
 			}
 			
-			result = branchService.getBranchTreeAndMember(appId, oid);
+			result = branchService.getBranchTreeAndMember(clearChar(appId), oid);
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", 0);
@@ -643,7 +688,7 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchMember() throws ServletException {
 		
-		String result = branchService.getBranchMember(branchId, appId, this.getOrganId());
+		String result = branchService.getBranchMember(clearChar(branchId), clearChar(appId), this.getOrganId());
 		
 		returnToClient(result);
 		return "text";
@@ -656,14 +701,16 @@ public class BranchAction extends BaseAction {
 	 */
 	public String getBranchMembers() throws ServletException {
 		String result = null;
+		appId = clearChar(appId);
+		secret = clearChar(secret);
 		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
 		
 		if (as != null) {
 			int oid = 0;
 			if (!StringUtils.getInstance().isBlank(companyId)) {
-				oid = Integer.parseInt(companyId);
+				oid = Integer.parseInt(clearChar(companyId));
 			}
-			result = branchService.getBranchMember(branchId, appId, oid);
+			result = branchService.getBranchMember(clearChar(branchId), appId, oid);
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", 0);

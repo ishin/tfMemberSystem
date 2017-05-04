@@ -2,9 +2,11 @@ package com.organ.action.abutment;
 
 import javax.servlet.ServletException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.sf.json.JSONObject;
 
-import org.apache.log4j.Logger;
 
 import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
@@ -13,12 +15,11 @@ import com.organ.service.auth.AppSecretService;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
 
-@Secured 
+
 public class AbutmentAuthAction extends BaseAction {
 
 	private static final long serialVersionUID = 6187999207496183515L;
-	private static final Logger logger = Logger
-			.getLogger(AbutmentAuthAction.class);
+	private static final Logger logger = LogManager.getLogger(AbutmentAuthAction.class);
 	
 	
 	public String validAppIdAndSecretAb() throws ServletException {
@@ -26,6 +27,8 @@ public class AbutmentAuthAction extends BaseAction {
 		
 		try {
 			String params = getRequestDataByStream();
+			logger.info(params);
+			
 			JSONObject jo = new JSONObject();
 			boolean s = true;
 			
@@ -50,6 +53,7 @@ public class AbutmentAuthAction extends BaseAction {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}

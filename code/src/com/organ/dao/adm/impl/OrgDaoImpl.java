@@ -7,7 +7,6 @@ import org.hibernate.criterion.Restrictions;
 
 import com.organ.common.BaseDao;
 import com.organ.dao.adm.OrgDao;
-import com.organ.model.TMemberRole;
 import com.organ.model.TOrgan;
 
 public class OrgDaoImpl extends BaseDao<TOrgan, Integer> implements OrgDao {

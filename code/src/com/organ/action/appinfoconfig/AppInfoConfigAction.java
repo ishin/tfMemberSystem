@@ -17,7 +17,7 @@ import com.organ.service.appinfoconfig.AppInfoConfigService;
  * @author Lmy
  * 
  */
-@Secured
+
 public class AppInfoConfigAction extends BaseAction {
 
 	private static final long serialVersionUID = 3357825063940018758L;
@@ -29,9 +29,9 @@ public class AppInfoConfigAction extends BaseAction {
 	}
 
 	public String getAppInfo() throws ServletException, JSONException {
-		String pagesize = this.request.getParameter("pagesize");
-		String pageindex = this.request.getParameter("pageindex");
-		String userid = this.request.getParameter("userid");
+		String pagesize = clearChar(this.request.getParameter("pagesize"));
+		String pageindex = clearChar(this.request.getParameter("pageindex"));
+		String userid = clearChar(this.request.getParameter("userid"));
 		Integer intpagesize = pagesize == null ? null : Integer
 				.parseInt(pagesize);
 		Integer intpageindex = pageindex == null ? null : Integer
@@ -69,9 +69,9 @@ public class AppInfoConfigAction extends BaseAction {
 		// appname,int isopen
 		//String appId = this.request.getParameter("appId");
 		//String secert = this.request.getParameter("secert");
-		String callbackurl = this.request.getParameter("callbackurl");
-		String appname = this.request.getParameter("appname");
-		String isopen = this.request.getParameter("isopen");
+		String callbackurl = clearChar(this.request.getParameter("callbackurl"));
+		String appname = clearChar(this.request.getParameter("appname"));
+		String isopen = clearChar(this.request.getParameter("isopen"));
 		Integer intisopen = isopen == null ? null : Integer.parseInt(isopen);
 		int organId = getSessionUserOrganId();
 		boolean falg = false;
@@ -109,7 +109,7 @@ public class AppInfoConfigAction extends BaseAction {
 	 * @throws JSONException
 	 */
 	public String DelApp() throws ServletException, JSONException {
-		String id = this.request.getParameter("AppId");
+		String id = clearChar(this.request.getParameter("AppId"));
 		Integer intid = id == null ? null : Integer.parseInt(id);
 		boolean falg = false;
 		String result = null;
@@ -141,12 +141,12 @@ public class AppInfoConfigAction extends BaseAction {
 	}
 	
 	public String EditApp() throws ServletException,JSONException {
-		String id = this.request.getParameter("id");
-		String appId = this.request.getParameter("appId");
-		String secert = this.request.getParameter("secert");
-		String callbackurl = this.request.getParameter("callbackurl");
-		String appname = this.request.getParameter("appname");
-		String isopen = this.request.getParameter("isopen");
+		String id = clearChar(this.request.getParameter("id"));
+		String appId = clearChar(this.request.getParameter("appId"));
+		String secert = clearChar(this.request.getParameter("secert"));
+		String callbackurl = clearChar(this.request.getParameter("callbackurl"));
+		String appname = clearChar(this.request.getParameter("appname"));
+		String isopen = clearChar(this.request.getParameter("isopen"));
 		Integer intisopen = isopen == null ? null : Integer.parseInt(isopen);
 		Integer intid = id == null ? null : Integer.parseInt(id);
 		boolean flag = false;
@@ -176,10 +176,10 @@ public class AppInfoConfigAction extends BaseAction {
 	}
 	
 	public String SearchAppName() throws ServletException,JSONException{
-		String pagesize = this.request.getParameter("pagesize");
-		String pageindex = this.request.getParameter("pageindex");
-		String AppName = this.request.getParameter("AppName");
-		String userid = this.request.getParameter("userId");
+		String pagesize = clearChar(this.request.getParameter("pagesize"));
+		String pageindex = clearChar(this.request.getParameter("pageindex"));
+		String AppName = clearChar(this.request.getParameter("AppName"));
+		String userid = clearChar(this.request.getParameter("userId"));
 		Integer intpagesize = pagesize == null ? null : Integer
 				.parseInt(pagesize);
 		Integer intpageindex = pageindex == null ? null : Integer

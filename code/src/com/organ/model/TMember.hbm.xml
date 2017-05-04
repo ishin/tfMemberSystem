@@ -80,6 +80,9 @@
         <property name="superAdmin" type="java.lang.Integer">
             <column name="superadmin" length="1" />
         </property>
+        <property name="isDel" type="java.lang.Integer">
+            <column name="isdel" length="1" />
+        </property>
         
     </class>
 </hibernate-mapping>

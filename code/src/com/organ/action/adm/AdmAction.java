@@ -9,12 +9,9 @@ import com.organ.service.adm.PrivService;
 
 import net.sf.json.JSONObject;
 
-@Secured
-public class AdmAction extends BaseAction {
 
-	/**
-	 * 
-	 */
+public class AdmAction extends BaseAction {
+	
 	private static final long serialVersionUID = 5652521060219528842L;
 
 	private BranchService branchService;

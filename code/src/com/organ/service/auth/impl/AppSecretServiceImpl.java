@@ -2,9 +2,9 @@ package com.organ.service.auth.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import com.organ.common.AuthTips;
@@ -16,7 +16,6 @@ import com.organ.dao.member.MemberDao;
 import com.organ.model.AppSecret;
 import com.organ.model.SessionUser;
 import com.organ.model.TMember;
-import com.organ.model.UserSysRelation;
 import com.organ.model.UserValid;
 import com.organ.service.auth.AppSecretService;
 import com.organ.utils.JSONUtils;
@@ -28,8 +27,7 @@ import com.organ.utils.StringUtils;
 import com.organ.utils.TimeGenerator;
 
 public class AppSecretServiceImpl implements AppSecretService {
-	private static final Logger logger = Logger
-			.getLogger(AppSecretServiceImpl.class);
+	private static final Logger logger = LogManager.getLogger(AppSecretServiceImpl.class);
 
 	@Override
 	@Deprecated
@@ -123,7 +121,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 		String code = "500";
 		String text = null;
 
-		System.out.println("getTempTokenSceneOne appId: " + appId);
+		logger.info("getTempTokenSceneOne appId: " + appId);
 
 		try {
 			if (StringUtils.getInstance().isBlank(appId)) {
@@ -133,8 +131,6 @@ public class AppSecretServiceImpl implements AppSecretService {
 				appId = appId.trim();
 				AppSecret as = appSecretDao.getAppSecretByAppId(appId);
 
-				System.out.println("as= " + as);
-				
 				if (as == null) {
 					text = AuthTips.INVALIDAPPID.getText();
 				} else {
@@ -234,11 +230,6 @@ public class AppSecretServiceImpl implements AppSecretService {
 								if (tm != null) {
 									long authTokenTimeL = 0;
 									int infoInt = 3;
-									// if
-									// (StringUtils.getInstance().isBlank(info))
-									// {
-									// infoInt = Integer.parseInt(info);
-									// }
 									String authTokenTime = PropertiesUtils
 											.getStringByKey("auth.authtime");
 									appId += now;
@@ -260,13 +251,16 @@ public class AppSecretServiceImpl implements AppSecretService {
 													.getId()), Integer
 													.valueOf(tm.getId())));
 								} else {
+									logger.warn("member is null");
 									text = AuthTips.INVALUSER.getText();
 								}
 							}
 						} else {
+							logger.warn("uservalid is null");
 							text = AuthTips.INVALTOKEN.getText();
 						}
 					} else {
+						logger.warn("appsecret is null");
 						text = AuthTips.INVALIDAPPID.getText();
 					}
 				}
@@ -327,10 +321,12 @@ public class AppSecretServiceImpl implements AppSecretService {
 								text = realToken;
 							}
 						} else {
+							logger.warn("uservalid is null");
 							text = AuthTips.INVALTOKEN.getText();
 						}
 					}
 				} else {
+					logger.warn("appsecret is null");
 					text = AuthTips.WORNGSECRET.getText();
 				}
 			}
@@ -388,6 +384,8 @@ public class AppSecretServiceImpl implements AppSecretService {
 						code = "200";
 						text = jo.toString();
 					}
+				} else {
+					logger.warn("uservalid is null");
 				}
 			}
 			ret.put("code", code);
@@ -428,7 +426,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 								.getUserValidByUnAuthToken(unAuthToken);
 						long now = TimeGenerator.getInstance().getUnixTime();
 
-						if (as != null) {
+						if (uv != null) {
 							long unAuthTokenTime = uv.getUnAuthTokenTime();
 
 							if (now >= unAuthTokenTime) {
@@ -455,9 +453,11 @@ public class AppSecretServiceImpl implements AppSecretService {
 												.valueOf(su.getId())));
 							}
 						} else {
+							logger.warn("uservalid is null");
 							text = AuthTips.INVALIDAPPID.getText();
 						}
 					} else {
+						logger.warn("appsecret is null");
 						text = AuthTips.INVALIDAPPID.getText();
 					}
 				}
@@ -528,9 +528,11 @@ public class AppSecretServiceImpl implements AppSecretService {
 												.parseInt(userId)));
 							}
 						} else {
+							logger.warn("uservalid is null");
 							text = AuthTips.INVALIDAPPID.getText();
 						}
 					} else {
+						logger.warn("appsecret is null");
 						text = AuthTips.INVALIDAPPID.getText();
 					}
 				}
@@ -583,6 +585,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 				return true;
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));			
 			e.printStackTrace();
 		}
 		return false;

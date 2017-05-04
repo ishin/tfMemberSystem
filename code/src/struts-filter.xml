@@ -9,8 +9,8 @@
 	<constant name="struts.custom.i18n.resources" value="global" />
 	<!-- constant name="struts.multipart.maxSize" value="1000000000"/-->
 
-	<!-- <package name="all" extends="struts-default"> -->
-	<package name="all" extends="ssl-default">
+	<package name="all" extends="struts-default">
+	<!-- <package name="all" extends="ssl-default"> -->
 
 		<interceptors>
 			<!-- 先定义拦截器 -->
@@ -32,7 +32,7 @@
 						updateUserPwdForPhoneAb,updateUserPwdForAccountAb,valideOldPwdAb,getMemberIdsByAccountAb,saveTextCodeAb,getTextCodeAb,
 						updateUserTokenForIdAb,checkAccountAb,getMemberCountAb,getMultipleMemberForAccountsAb,getAllMemberOnLineStatusAb,
 						getAllMemberInfoAb,updateMemberInfoForAppAb,updateMemberInfoForWebAb,searchUserAb,getOneOfMemberAb,registOrgan,getOrganCodeAb,
-						httpUploadAb
+						httpUploadAb,sendSysMsg,sendPrivateMsg,sendGrayMsg,logicDelMemberByUserIds
 					</param>
 					<!-- <param name="includeMethods"></param> -->
 				</interceptor-ref>

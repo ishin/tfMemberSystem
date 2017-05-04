@@ -20,7 +20,7 @@ import com.organ.service.adm.ImpService;
 import net.sf.json.JSONObject;
 
 @MultipartConfig
-@Secured
+
 public class ImpServlet extends HttpServlet {
 
 	/**

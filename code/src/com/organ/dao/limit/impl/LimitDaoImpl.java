@@ -3,7 +3,8 @@ package com.organ.dao.limit.impl;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.SQLQuery;
 
 import com.organ.common.BaseDao;
@@ -11,12 +12,7 @@ import com.organ.dao.adm.PrivDao;
 import com.organ.dao.adm.RoleDao;
 import com.organ.dao.adm.RolePrivDao;
 import com.organ.dao.limit.LimitDao;
-import com.organ.dao.limit.RoleAppSecretDao;
-import com.organ.model.AppSecret;
 import com.organ.model.TPriv;
-import com.organ.model.TRole;
-import com.organ.model.TRoleAppSecret;
-import com.organ.model.TRolePriv;
 import com.organ.utils.PrivUrlNameUtil;
 
 public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
@@ -24,40 +20,19 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 	RoleDao roleDao;
 	PrivDao privDao;
 	RolePrivDao rolePrivDao;
-	RoleAppSecretDao roleappsecretDao;
 	@SuppressWarnings("unused")
-	private static final Logger logger = Logger.getLogger(LimitDaoImpl.class);
+	private static final Logger logger = LogManager.getLogger(LimitDaoImpl.class);
 
 	public RoleDao getRoleDao() {
 		return roleDao;
-	}
-
-	public void setRoleDao(RoleDao roleDao) {
-		this.roleDao = roleDao;
 	}
 
 	public PrivDao getPrivDao() {
 		return privDao;
 	}
 
-	public void setPrivDao(PrivDao privDao) {
-		this.privDao = privDao;
-	}
-
 	public RolePrivDao getRolePrivDao() {
 		return rolePrivDao;
-	}
-
-	public void setRolePrivDao(RolePrivDao rolePrivDao) {
-		this.rolePrivDao = rolePrivDao;
-	}
-
-	public RoleAppSecretDao getRoleappsecretDao() {
-		return roleappsecretDao;
-	}
-
-	public void setRoleappsecretDao(RoleAppSecretDao roleappsecretDao) {
-		this.roleappsecretDao = roleappsecretDao;
 	}
 
 	/**

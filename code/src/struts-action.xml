@@ -158,5 +158,14 @@
 			</result>
 		</action>
 	</package>
+	<package name="com.sealtalk.action.msg" extends="all">
+		<!-- 消息-->
+		<action name="msg" class="com.organ.action.msg.MessageAction">
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
 </struts>
 

@@ -4,24 +4,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.apache.poi.util.ArrayUtil;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.organ.common.SysInterface;
 import com.organ.common.Tips;
 import com.organ.dao.adm.BranchMemberDao;
-import com.organ.dao.adm.PositionDao;
+import com.organ.dao.adm.MemberRoleDao;
+import com.organ.dao.auth.UserValidDao;
 import com.organ.dao.member.MemberDao;
 import com.organ.dao.member.TextCodeDao;
 import com.organ.model.TMember;
 import com.organ.model.TextCode;
 import com.organ.service.member.MemberService;
+import com.organ.utils.HttpRequest;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
 import com.organ.utils.PasswordGenerator;
-import com.organ.utils.PinyinGenerator;
 import com.organ.utils.PropertiesUtils;
 import com.organ.utils.RongCloudUtils;
 import com.organ.utils.StringUtils;
@@ -29,12 +31,13 @@ import com.organ.utils.TimeGenerator;
 
 public class MemberServiceImpl implements MemberService {
 
-	private static final Logger logger = Logger.getLogger(MemberServiceImpl.class);
+	private static final Logger logger = LogManager.getLogger(MemberServiceImpl.class);
 	
 	@Override
 	public TMember searchSigleUser(String name, String password, int organId) {
 		TMember memeber = null;
 
+		logger.info("name:" + name + ",password: " + password);
 		try {
 			memeber = memberDao.searchSigleUserByOrgan(name, password, organId);
 		} catch (Exception e) {
@@ -48,6 +51,7 @@ public class MemberServiceImpl implements MemberService {
 	public boolean updateUserPwdForAccount(String account, String newPwd, int organId) {
 		boolean status = false;
 
+		logger.info("name:" + account + ",newPwd: " + newPwd);
 		try {
 			status = memberDao.updateUserPwdForAccount(account, newPwd, organId);
 		} catch (Exception e) {
@@ -62,6 +66,7 @@ public class MemberServiceImpl implements MemberService {
 	public boolean updateUserPwdForPhone(String phone, String newPwd) {
 		boolean status = false;
 
+		logger.info("phone:" + phone + ",newPwd: " + newPwd);
 		try {
 			status = memberDao.updateUserPwdForPhone(phone, newPwd);
 		} catch (Exception e) {
@@ -77,6 +82,7 @@ public class MemberServiceImpl implements MemberService {
 
 		JSONObject jo = new JSONObject();
 
+		logger.info("userID: " + userId);
 		try {
 			int userIdInt = StringUtils.getInstance().strToInt(userId);
 
@@ -119,6 +125,8 @@ public class MemberServiceImpl implements MemberService {
 	public int updateUserTokenForId(String userId, String token) {
 		int row = 0;
 
+		logger.info("userID: " + userId + ",token: " + token);
+		
 		try {
 			row = memberDao.updateUserTokenForId(userId, token);
 		} catch (Exception e) {
@@ -134,6 +142,7 @@ public class MemberServiceImpl implements MemberService {
 	public String searchUser(String account, int organId) {
 		JSONArray ja = new JSONArray();
 
+		logger.info("account: " + account + ",organId: " + organId);
 		try {
 			List members = memberDao.searchUser(account, organId);
 
@@ -189,6 +198,7 @@ public class MemberServiceImpl implements MemberService {
 	public String getTextCode(String phone) {
 		String code = null;
 
+		logger.info("phone: " + phone);
 		try {
 			TextCode tc = textCodeDao.getTextCode(phone);
 
@@ -203,6 +213,8 @@ public class MemberServiceImpl implements MemberService {
 				} else {
 					code = tc.getTextCode();
 				}
+			} else {
+				code = "-1";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -214,6 +226,9 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void saveTextCode(String phone, String code) {
+		
+		logger.info("phone: " + phone + ",code=" + code);
+		
 		try {
 			textCodeDao.deleteTextCode(phone);
 
@@ -232,6 +247,8 @@ public class MemberServiceImpl implements MemberService {
 	public String updateMemberInfoForWeb(String userId, String position,
 			String fullName, String sign) {
 
+		logger.info("userId: " + userId + ",position=" + position + ",fullName: " + fullName + ",sign:" + sign);
+		
 		JSONObject jo = new JSONObject();
 
 		if (StringUtils.getInstance().isBlank(userId)) {
@@ -287,6 +304,8 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public String updateMemberForApp(String userId, String email,
 			String mobile, String phone, String address) {
+		
+		logger.info("userId: " + userId + ",email=" + email + ",mobile: " + mobile + ",phone:" + phone + ",address:"+address);
 		JSONObject jo = new JSONObject();
 
 		if (StringUtils.getInstance().isBlank(userId)) {
@@ -318,6 +337,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public TMember getMemberByToken(String token) {
 
+		logger.info("token: " + token);
 		try {
 			if (!StringUtils.getInstance().isBlank(token)) {
 				TMember member = memberDao.getMemberByToken(token);
@@ -338,6 +358,8 @@ public class MemberServiceImpl implements MemberService {
 							|| tokenMaxAgeLong == 0) {
 						return member;
 					}
+				} else {
+					logger.info("member is null");
 				}
 			}
 
@@ -355,7 +377,7 @@ public class MemberServiceImpl implements MemberService {
 		try {
 			List<TMember> memberList = memberDao.getAllMemberInfo(organId);
 
-			if (memberList != null) {
+			if (memberList != null && memberList.size() > 0) {
 				int memberLen = memberList.size();
 
 				JSONArray ja = new JSONArray();
@@ -369,6 +391,7 @@ public class MemberServiceImpl implements MemberService {
 				jo.put("code", 1);
 				jo.put("text", ja.toString());
 			} else {
+				logger.warn("memberList is null");
 				jo.put("code", 0);
 				jo.put("text", Tips.NULLGROUPMEMBER.getText());
 			}
@@ -385,6 +408,7 @@ public class MemberServiceImpl implements MemberService {
 	public String getAllMemberOnLineStatus(int organId, String userIds) {
 		JSONObject jo = new JSONObject();
 
+		logger.info("userIds: " + userIds);
 		try {
 			ArrayList<String> idList = null;
 
@@ -435,6 +459,8 @@ public class MemberServiceImpl implements MemberService {
 		String ret = null;
 		JSONObject jo = new JSONObject();
 		
+		logger.info("mulMemberStr: " + mulMemberStr);
+		
 		if (!StringUtils.getInstance().isBlank(mulMemberStr)) {
 			mulMemberStr = StringUtils.getInstance().replaceChar(mulMemberStr, "]", "");
 			mulMemberStr = StringUtils.getInstance().replaceChar(mulMemberStr, "[", "");
@@ -483,6 +509,7 @@ public class MemberServiceImpl implements MemberService {
 		String text = null;
 		JSONObject ret = new JSONObject();
 		
+		logger.info("names: " + names);
 		try {
 			if (StringUtils.getInstance().isBlank(names)) {
 				text = Tips.WRONGPARAMS.getText();
@@ -512,6 +539,8 @@ public class MemberServiceImpl implements MemberService {
 	public String isUsedPic(String userId, String picName) {
 		JSONObject jo = new JSONObject();
 		
+		logger.info("picName: " + picName);
+		
 		try {
 			int userIdInt = Integer.parseInt(userId);
 			boolean used = memberDao.isUsedPic(userIdInt, picName);
@@ -529,6 +558,7 @@ public class MemberServiceImpl implements MemberService {
 	public String getMemberIdForAccount(String account, int organId) {
 		JSONObject jo = new JSONObject();
 		
+		logger.info("account: " + account);
 		try {
 			int id = memberDao.getMemberIdForAccount(account, organId);
 			jo.put("code", 1);
@@ -544,6 +574,7 @@ public class MemberServiceImpl implements MemberService {
 	public String getMultipleMemberForIds(String ids) {
 		JSONObject jo = new JSONObject();
 		
+		logger.info("ids: " + ids);
 		try {
 			String[] idArr = StringUtils.getInstance().strToArray(ids);
 			int len = idArr.length;
@@ -562,6 +593,8 @@ public class MemberServiceImpl implements MemberService {
 					tm.remove("password");
 					lj.add(tm);
 				}
+ 			} else {
+ 				logger.warn("list is null");
  			}
  			
 			if (list != null) {
@@ -583,6 +616,7 @@ public class MemberServiceImpl implements MemberService {
 	public String getMemberForId(String userId) {
 		JSONObject jo = new JSONObject();
 		
+		logger.info("userId: " + userId);
 		try {
 			int userIdInt = Integer.parseInt(userId);
 			TMember tm = memberDao.getMemberForId(userIdInt);
@@ -607,6 +641,7 @@ public class MemberServiceImpl implements MemberService {
 	public String getLimitMemberIds(String mapMax, int organId) {
 		JSONObject jo = new JSONObject();
 		
+		logger.info("mapMax: " + mapMax);
 		try {
 			int mapMaxInt = Integer.parseInt(mapMax);
 			List<TMember> tm = memberDao.getLimitMemberIds(mapMaxInt, organId);
@@ -637,6 +672,7 @@ public class MemberServiceImpl implements MemberService {
 		String code = "0";
 		String text = null;
 		
+		logger.info("id: " + id + ", ps: " + ps);
 		try {
 			if (!StringUtils.getInstance().isBlank(id) && !StringUtils.getInstance().isBlank(ps)) {
 				id = StringUtils.getInstance().replaceChar(id, "[", "");
@@ -660,6 +696,7 @@ public class MemberServiceImpl implements MemberService {
 					}
 					text = ja.toString();
 				} else {
+					logger.warn("memList is null");
 					text = Tips.FAIL.getText();
 				}
 			}
@@ -678,6 +715,8 @@ public class MemberServiceImpl implements MemberService {
 	public TMember getSuperAdmin(String account, String userpwd, int organId) {
 		TMember memeber = null;
 
+		logger.info("account: " + account + ", userpwd: " + userpwd);
+		
 		try {
 			memeber = memberDao.getSuperAdmin(account, userpwd, organId);
 		} catch (Exception e) {
@@ -687,6 +726,68 @@ public class MemberServiceImpl implements MemberService {
 		return memeber;
 	}
 	
+	@Override
+	public String logicDelMemberByUserIds(String userids) {
+		JSONObject jo = new JSONObject();
+		logger.info("userids: " + userids);
+		try {
+			if (StringUtils.getInstance().isBlank(userids)) {
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
+			} else {
+				userids = StringUtils.getInstance().replaceChar(userids, "\"", "");
+				userids = StringUtils.getInstance().replaceChar(userids, "[", "");
+				userids = StringUtils.getInstance().replaceChar(userids, "]", "");
+				String[] idArr = userids.split(",");
+				List<String> alDelIds = new ArrayList<String>();
+				
+				int ret = memberDao.logicDelMemberByUserIds(userids);
+				
+				if (ret != idArr.length) {
+					List<String> noDelIds = memberDao.getNotDelIds(userids);
+					
+					if (noDelIds != null) {
+						for(int i = 0; i < idArr.length; i++) {
+							if (!noDelIds.contains(idArr[i])) {
+								alDelIds.add(idArr[i]);
+							}
+						}
+					}
+				} 
+				StringBuilder delIds = new StringBuilder();
+				for (int i = 0; i < alDelIds.size(); i++) {
+					delIds.append(alDelIds.get(i));
+					if (i < alDelIds.size() - 1) {
+						delIds.append(",");
+					}
+				}
+				
+				int ret1 = branchMemberDao.delRelationByIds(userids);
+				int ret7 = memberRoleDao.deleteRelationByIds(userids);
+				int ret9 = userValidDao.deleteRelationByIds(userids);
+				
+				JSONObject params = new JSONObject();
+				params.put("userIds", userids);
+
+				String protocol = PropertiesUtils.getStringByKey("im.protocol");
+				String host = PropertiesUtils.getStringByKey("im.host");
+				String sys = PropertiesUtils.getStringByKey("im.sys");
+				String urlStr = protocol + "://" + host + "/" + sys + "/";
+
+				
+				String result = HttpRequest.getInstance().sendPost(
+						SysInterface.DELBYMEMIDS.getName(), params, urlStr, host);
+				
+				jo.put("code", 1);
+				jo.put("text", Tips.OK.getText());
+			}
+		} catch(Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+			e.printStackTrace();
+		}
+		return jo.toString();
+	}
+	
 	private String isBlank(Object o) {
 		return o == null ? "" : o + "";
 	}
@@ -694,6 +795,8 @@ public class MemberServiceImpl implements MemberService {
 	private TextCodeDao textCodeDao;
 	private MemberDao memberDao;
 	private BranchMemberDao branchMemberDao;
+	private MemberRoleDao memberRoleDao;
+	private UserValidDao userValidDao;
 
 	public void setBranchMemberDao(BranchMemberDao branchMemberDao) {
 		this.branchMemberDao = branchMemberDao;
@@ -713,6 +816,26 @@ public class MemberServiceImpl implements MemberService {
 
 	public MemberDao getMemberDao() {
 		return memberDao;
+	}
+
+	public MemberRoleDao getMemberRoleDao() {
+		return memberRoleDao;
+	}
+
+	public void setMemberRoleDao(MemberRoleDao memberRoleDao) {
+		this.memberRoleDao = memberRoleDao;
+	}
+
+	public UserValidDao getUserValidDao() {
+		return userValidDao;
+	}
+
+	public void setUserValidDao(UserValidDao userValidDao) {
+		this.userValidDao = userValidDao;
+	}
+
+	public BranchMemberDao getBranchMemberDao() {
+		return branchMemberDao;
 	}
 
 }

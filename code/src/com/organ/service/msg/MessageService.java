@@ -57,4 +57,7 @@ public interface MessageService {
 	 */
 	public AppSecret validAppIdAndSecret(String appId, String secret);
 
+	public String sendGrayMsg(String fromId, String targetIds);
+
+
 }

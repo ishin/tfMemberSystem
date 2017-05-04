@@ -12,7 +12,7 @@ import com.organ.service.adm.PositionService;
 
 import net.sf.json.JSONObject;
 
-@Secured
+
 public class PosAction extends BaseAction {
 
 	/**
@@ -46,7 +46,7 @@ public class PosAction extends BaseAction {
 	
 	public String del() {
 		
-		Integer id = Integer.parseInt(this.request.getParameter("id"));
+		Integer id = Integer.parseInt(clearChar(this.request.getParameter("id")));
 		
 		positionService.del(id);
 		
@@ -55,7 +55,7 @@ public class PosAction extends BaseAction {
 	
 	public String save() {
 
-		String name = this.request.getParameter("name");
+		String name = clearChar(this.request.getParameter("name"));
 		
 		TPosition p = positionService.save(name, this.getOrganId());
 		

@@ -116,7 +116,7 @@ public interface BranchService {
 	 * @param telPhone  电话 
 	 * @return
 	 */
-	public TMember getMemberByMobile(String mobile, String telPhone);
+	public TMember getMemberByMobile(String mobile);
 	
 	public TMember getMemberByEmail(String parameter);
 	public String getSuperMember(int organId);

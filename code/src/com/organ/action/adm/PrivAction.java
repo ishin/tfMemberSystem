@@ -12,7 +12,6 @@ import com.organ.service.adm.PrivService;
 
 import net.sf.json.JSONObject;
 
-@Secured
 public class PrivAction extends BaseAction {
 
 	private static final long serialVersionUID = 1L;
@@ -44,7 +43,7 @@ public class PrivAction extends BaseAction {
 	  */
 	public String getMemberCountByRole() {
 
-		Integer roleId = Integer.parseInt(this.request.getParameter("roleid"));
+		Integer roleId = Integer.parseInt(clearChar(this.request.getParameter("roleid")));
 
 		int c = privService.getMemberCountByRole(roleId);
 		
@@ -59,11 +58,11 @@ public class PrivAction extends BaseAction {
 	 * @return
 	 */
 	public String getMemberByRole() {
-		
-		Integer roleid = Integer.parseInt(this.request.getParameter("roleid"));
-		String p = this.request.getParameter("page");
+		String roleId = clearChar(this.request.getParameter("roleid"));
+		Integer roleid = Integer.parseInt(roleId);
+		String p = clearChar(this.request.getParameter("page"));
 		Integer page = p == null ? null : Integer.parseInt(p);
-		String s = this.request.getParameter("itemsperpage");
+		String s = clearChar(this.request.getParameter("itemsperpage"));
 		Integer itemsperpage = s == null ? null : Integer.parseInt(s);
 		
 		List list = privService.getMemberByRole(roleid, page, itemsperpage);
@@ -91,7 +90,7 @@ public class PrivAction extends BaseAction {
 	 */
 	public String getPrivByRole() {
 	
-		Integer roleid = Integer.parseInt(this.request.getParameter("roleid"));
+		Integer roleid = Integer.parseInt(clearChar(this.request.getParameter("roleid")));
 
 		// 返回权限列表，roleid表示该角色具有的权限
 		List list = privService.getPrivByRole(roleid);
@@ -118,7 +117,7 @@ public class PrivAction extends BaseAction {
 	 */
 	public String delMemberRole() {
 		
-		Integer id = Integer.parseInt(this.request.getParameter("id"));
+		Integer id = Integer.parseInt(clearChar(this.request.getParameter("id")));
 		
 		privService.delMemberRole(id);
 		
@@ -131,10 +130,10 @@ public class PrivAction extends BaseAction {
 	 */
 	public String saveRole() {
 		
-		String id = this.request.getParameter("roleId");
+		String id = clearChar(this.request.getParameter("roleId"));
 		Integer roleId = (id == null ? 0 : Integer.parseInt(id));
-		String roleName = this.request.getParameter("rolename");
-		String privs = this.request.getParameter("privs");
+		String roleName = clearChar(this.request.getParameter("rolename"));
+		String privs = clearChar(this.request.getParameter("privs"));
 		int organId = getSessionUserOrganId();
 		roleId = privService.saveRole(roleId, roleName, privs, organId);
 		return returnajaxid(roleId);
@@ -146,8 +145,8 @@ public class PrivAction extends BaseAction {
 	 */
 	public String saveRoleMember() {
 		
-		Integer roleId = Integer.parseInt(this.request.getParameter("roleid"));
-		String memberlist = this.request.getParameter("memberlist");
+		Integer roleId = Integer.parseInt(clearChar(this.request.getParameter("roleid")));
+		String memberlist = clearChar(this.request.getParameter("memberlist"));
 		
 		privService.saveRoleMember(roleId, memberlist);
 		
@@ -159,7 +158,7 @@ public class PrivAction extends BaseAction {
 	 * @return
 	 */
 	public String delRole() {
-		Integer roleId = Integer.parseInt(this.request.getParameter("roleid"));
+		Integer roleId = Integer.parseInt(clearChar(this.request.getParameter("roleid")));
 		privService.delRole(roleId);;
 		return returnajaxid(0);
 	}

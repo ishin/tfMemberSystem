@@ -5,7 +5,9 @@ import java.util.List;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import com.google.gson.JsonObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.organ.dao.adm.MemberRoleDao;
 import com.organ.dao.adm.PrivDao;
 import com.organ.dao.adm.RoleDao;
@@ -16,6 +18,7 @@ import com.organ.model.TRole;
 import com.organ.model.TRoleAppSecret;
 import com.organ.model.TRolePriv;
 import com.organ.service.limit.LimitService;
+import com.organ.utils.LogUtils;
 
 /**
  * 实现接口
@@ -24,7 +27,8 @@ import com.organ.service.limit.LimitService;
  * 
  */
 public class LimitServiceImpl implements LimitService {
-
+	private static final Logger logger = LogManager.getLogger(LimitServiceImpl.class);
+	
 	private LimitDao limitDao;
 	RoleDao roleDao;
 	PrivDao privDao;
@@ -77,18 +81,19 @@ public class LimitServiceImpl implements LimitService {
 
 	@Override
 	public String AddLimit(int parentId, String name, String app, int organId) {
+		logger.info("parentId: " + parentId + ",name: " + name + ",app: " + app);
 		return limitDao.updatePriv(parentId, name, app, organId) + "";
 	}
 
 	@Override
 	public String DelLimit(int privId) {
-		// TODO Auto-generated method stub
+		logger.info("privId: " + privId);
 		return limitDao.DeletePriv(privId) + "";
 	}
 
 	@Override
 	public String EditLimit(int priv_id, String pid, String name, String app) {
-		// TODO Auto-generated method stub
+		logger.info("priv_id: " + priv_id + ",pid: " + pid + ",name: " + name + ",app: " + app);
 		return limitDao.editPriv(priv_id, pid, name, app) + "";
 	}
 
@@ -97,8 +102,9 @@ public class LimitServiceImpl implements LimitService {
 	public String searchPriv(int organId, String Name, int pagesize, int pageindex) {
 		JSONArray ja = new JSONArray();
 		JSONObject jsonObject = new JSONObject();
+		
+		logger.info("Name: " + Name + ",pagesize: " + pagesize + ",pageindex: " + pageindex);
 		try {
-
 			List privlist = limitDao.searchPriv(organId, Name, pagesize, pageindex);
 			int count = limitDao.getSearchCount(organId, Name);
 			if (privlist == null) {
@@ -123,6 +129,7 @@ public class LimitServiceImpl implements LimitService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
 		return jsonObject.toString();
@@ -138,6 +145,7 @@ public class LimitServiceImpl implements LimitService {
 			int count = limitDao.getCount(organId);
 			return count;
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
@@ -147,7 +155,7 @@ public class LimitServiceImpl implements LimitService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List getLimitbyRole(Integer roleId, String appName) {
-		// TODO Auto-generated method stub
+		logger.info("roleId: " + roleId + ", appName: " + appName);
 		return limitDao.getLimitbyRole(roleId, appName);
 	}
 	
@@ -155,6 +163,9 @@ public class LimitServiceImpl implements LimitService {
 	public String getRoleList(Integer appId, int organId) {
 		JSONArray ja = new JSONArray();
 		JSONObject jsonObject = new JSONObject();
+		
+		logger.info("appId: " + appId);
+		
 		try {
 			List roles = limitDao.getRoleList(appId, organId);
 			if (roles == null) {
@@ -173,6 +184,7 @@ public class LimitServiceImpl implements LimitService {
 				}
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return jsonObject.toString();
@@ -182,6 +194,8 @@ public class LimitServiceImpl implements LimitService {
 	public String getPrivNamebytwo(int organId, String appName) {
 		JSONArray ja = new JSONArray();
 		JSONObject jsonObject = new JSONObject();
+		logger.info("appName: " + appName);
+		
 		try {
 			List names = limitDao.getPrivNamebytwo(organId, appName);
 			if (names == null) {
@@ -200,6 +214,7 @@ public class LimitServiceImpl implements LimitService {
 				}
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return jsonObject.toString();
@@ -208,6 +223,8 @@ public class LimitServiceImpl implements LimitService {
 	@Override
 	public String saveRolebyApp(Integer roleId, Integer appsecretId,
 			String roleName, String privs, int organId) {
+		
+		logger.info("roleId: " + roleId + ",appsecretId: " + appsecretId + ",roleName: " + roleName + ",privs: " + privs);
 		TRole role = roleDao.get(roleId);
 		if (role == null) {
 			role = new TRole();
@@ -241,6 +258,7 @@ public class LimitServiceImpl implements LimitService {
 
 	@Override
 	public void delRole(Integer roleId) {
+		logger.info("roleId: " + roleId);
 		rolePrivDao.delete("delete from TRolePriv where roleId = " + roleId);
 		memberRoleDao.delete("delete from TMemberRole where roleId = " + roleId);
 		roleappsecretDao.delete("delete from TRoleAppSecret where roleId = " + roleId);
