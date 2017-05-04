@@ -3,6 +3,7 @@ package com.organ.dao.adm.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -112,6 +113,11 @@ public class BranchMemberDaoImpl extends BaseDao<TBranchMember, Integer>
 			e.printStackTrace();
 		}
 		return 0;
+	}
+
+	@Override
+	public int getBranchMemberCountByPositionId(Integer id) {
+		return count("from TBranchMember t where positionId=" + id);
 	}
 
 }

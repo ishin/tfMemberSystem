@@ -4,10 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.organ.dao.appinfoconfig.AppInfoConfigDao;
 import com.organ.dao.auth.UserValidDao;
@@ -17,10 +19,10 @@ import com.organ.service.appinfoconfig.AppInfoConfigService;
 import com.organ.utils.LogUtils;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.SecretUtils;
-import com.organ.utils.StringUtils;
 
 public class AppInfoConfigServiceImpl implements AppInfoConfigService {
-
+	private static final Logger logger = LogManager.getLogger(AppInfoConfigServiceImpl.class);
+	
 	public AppInfoConfigDao appInfoConfigDao;
 	public RoleAppSecretDao roleappsecretDao;
 	public UserValidDao userValidDao;
@@ -64,11 +66,14 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonObject = new JSONObject();
 		
+		logger.info("userId: " + userId + ",pagesize: " + pagesize + ", pageindex: " + pageindex);
+		
 		try {
 			List appList = appInfoConfigDao.getAppInfo(userId, organId, pagesize,
 					pageindex);
 			int count = appInfoConfigDao.getCount(organId);
 			if (appList == null) {
+				logger.warn("appList is null");
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
 				jo.put("text", "û�в�ѯ��Ӧ��");
@@ -102,15 +107,16 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 			}
 
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return jsonObject.toString();
 	}
 
 	@Override
-	public String updatePriv(String callbackurl,
-			String appname, int isopen, int organId) {
+	public String updatePriv(String callbackurl, String appname, int isopen, int organId) {
 		ArrayList<String> idsecret = makeAppId();
+		logger.info("callbackUrl: " + callbackurl + ",appname: " + appname + ",isopen: " + isopen);
 		return appInfoConfigDao.updatePriv(idsecret.get(0), idsecret.get(1), callbackurl, appname, isopen, organId) + "";
 	}
 
@@ -122,6 +128,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 			as.add(id);
 			as.add(new SecretUtils().encrypt(id));
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
@@ -131,7 +138,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 	@Override
 	public String DelApp(int id) {
 		String appnameString = appInfoConfigDao.getAppNameByID(id);
-		System.err.println(appnameString);
+		logger.info(appnameString);
 		appInfoConfigDao.delete("delete AppSecret where id =" + id);
 		roleappsecretDao.delete("delete from TRoleAppSecret where appsecretId = " + id);
 		limitDao.delete("delete from TPriv where app = '" + appnameString+"'");
@@ -157,6 +164,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 					pagesize, pageindex);
 			int count = appInfoConfigDao.getSearchCount(AppName, organId);
 			if (appinfos == null) {
+				logger.warn("appinfos is null");
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
 				jo.put("text", "Ӧ�����Ϊ��");
@@ -189,6 +197,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 				}
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return jsonObject.toString();
@@ -200,7 +209,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 		JSONObject jsonObject = new JSONObject();
 		try {
 			List names = appInfoConfigDao.SearchAppInfoName(organId);
-			System.out.println("------------" + names);
+			
 			if (names == null || "{ }".equals(names)) {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
@@ -217,6 +226,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 				}
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return jsonObject.toString();

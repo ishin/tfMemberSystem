@@ -99,7 +99,7 @@ public class SystemAction extends BaseAction {
 			return "text";
 		}
 		
-		logger.debug("The logining account is " + account);
+		logger.info("The logining account is " + account);
 		
 		String userId = "" + member.getId();
 		String name = member.getFullname();

@@ -48,7 +48,7 @@ public class PosAction extends BaseAction {
 		
 		Integer id = Integer.parseInt(clearChar(this.request.getParameter("id")));
 		
-		positionService.del(id);
+		String ret = positionService.del(id);
 		
 		return returnajaxid(id);
 	}

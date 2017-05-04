@@ -7,10 +7,12 @@ import java.util.Random;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.organ.common.Tips;
 import com.organ.dao.adm.BranchDao;
 import com.organ.dao.adm.BranchMemberDao;
-import com.organ.dao.adm.MemberRoleDao;
 import com.organ.dao.adm.OrgDao;
 import com.organ.dao.adm.PositionDao;
 import com.organ.dao.member.MemberDao;
@@ -21,13 +23,14 @@ import com.organ.model.TOrgan;
 import com.organ.model.TPosition;
 import com.organ.service.adm.OrgService;
 import com.organ.utils.JSONUtils;
+import com.organ.utils.LogUtils;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PinyinGenerator;
 import com.organ.utils.PropertiesUtils;
-import com.organ.utils.TextHttpSender;
 
 public class OrgServiceImpl implements OrgService {
 
+	private Logger logger = LogManager.getLogger(OrgServiceImpl.class);
 	private OrgDao orgDao;
 	private MemberDao memberDao;
 	private BranchDao branchDao;
@@ -108,6 +111,7 @@ public class OrgServiceImpl implements OrgService {
 				jo.put("text", Tips.FAIL.getText());
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return jo.toString();
@@ -227,6 +231,7 @@ public class OrgServiceImpl implements OrgService {
 			}
 			return ret;
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return "fail";
@@ -250,6 +255,7 @@ public class OrgServiceImpl implements OrgService {
 			jo.put("code", 1);
 			jo.put("text", retList.toString());
 		} catch(Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return jo.toString();
