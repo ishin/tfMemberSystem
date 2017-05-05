@@ -1,6 +1,6 @@
 var pagecnumber = 0;
 var curpagec = 0;
-var itemsperpagec = 7;
+var itemsperpagec = 5;
 var itemtemplatec='<tr id="tgmid">'
 	+ '<td class="ftd">creator</td>'
 	+ '<td>name</td>'

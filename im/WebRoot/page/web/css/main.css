@@ -121,7 +121,10 @@ fieldset, img {
 button, input, select, textarea {
     font-size: 100%;
 }
-
+textarea{
+    padding: 5px 0 0 10px !important;
+    line-height: 24px !important;
+}
 /* 使得表单元素在 ie 下能继承字体大小 */
 /* 注：optgroup 无法扶正 */
 

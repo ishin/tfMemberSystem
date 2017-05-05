@@ -1020,14 +1020,15 @@ public class GroupServiceImpl implements GroupService {
 								tmp.put("groupmax", textO.getString("groupmax"));
 								tmp.put("groupuse", textO.getString("groupuse"));
 								tmp.put("intro", textO.getString("intro"));
-								tmp.put("GID", tmp.getInt("id"));
-								tmp.remove("id");
-								tmp.remove("listorder");
-								tmp.remove("creatorId");
 							}
 						}
+						tmp.put("GID", tmp.getInt("id"));
+						tmp.remove("id");
+						tmp.remove("listorder");
+						tmp.remove("creatorId");
 					}
 
+					System.out.println("----------------------------------------------: " + groupArr.toString());
 					// 增加免打扰标记
 					for (int i = 0; i < groupArr.size(); i++) {
 						JSONObject tmp = groupArr.getJSONObject(i);
@@ -1158,12 +1159,12 @@ public class GroupServiceImpl implements GroupService {
 								tmp.put("groupmax", textO.getString("groupmax"));
 								tmp.put("groupuse", textO.getString("groupuse"));
 								tmp.put("intro", textO.getString("intro"));
-								tmp.put("GID", tmp.getInt("id"));
-								tmp.remove("id");
-								tmp.remove("listorder");
-								tmp.remove("creatorId");
 							}
 						}
+						tmp.put("GID", tmp.getInt("id"));
+						tmp.remove("id");
+						tmp.remove("listorder");
+						tmp.remove("creatorId");
 					}
 
 					// 增加免打扰标记
@@ -1427,7 +1428,7 @@ public class GroupServiceImpl implements GroupService {
 				RongCloudUtils.getInstance().sendGroupMsg(fromId, groupIds, msg, extrMsg, 1, 1, 2);
 
 				jo.put("code", 1);
-				jo.put("text", Tips.OK.getText());
+				jo.put("text", groupName);
 			} else {
 				jo.put("code", 0);
 				jo.put("text", Tips.FAIL.getText());

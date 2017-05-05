@@ -68,7 +68,7 @@
     <script src="<%=request.getContextPath() %>/page/web/js/cropper.min.js"></script>
     <script src="<%=request.getContextPath() %>/page/web/js/clipImg.js"></script>
     <%--<script src="<%=request.getContextPath() %>/page/web/js/loginOA.js"></script>--%>
-
+        <script>window.Electron.remote.getCurrentWindow().removeAllListeners()</script>
     </head>
     <%--${SessionPrivilege.map}--%>
     <%--${SessionUser.id}--%>
@@ -265,7 +265,7 @@
                     <p class="retMewPw"></p>
                 </div>
             </div>
-            <b class="systemSet-keep" id=" ">保存</b>
+            <b class="systemSet-keep" id="systemSet-savepsd">保存</b>
         </div>
 
         <!--系统消息历史记录-->

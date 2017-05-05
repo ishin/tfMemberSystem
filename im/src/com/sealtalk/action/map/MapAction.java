@@ -9,6 +9,7 @@ import com.googlecode.sslplugin.annotation.Secured;
 import com.sealtalk.common.BaseAction;
 import com.sealtalk.service.map.MapService;
 import com.sealtalk.utils.LogUtils;
+import com.sealtalk.utils.StringUtils;
 
 public class MapAction extends BaseAction {
 
@@ -18,8 +19,13 @@ public class MapAction extends BaseAction {
 	public String subLocation() throws ServletException {
 		String result = null;
 		
+		System.out.println("userId: " + userid);
+		System.out.println("latitude: " + latitude);
+		System.out.println("longitude: " + longitude);
 		try {
-			result = mapService.subLocation(clearChar(userid), clearChar(latitude), clearChar(longitude));
+			latitude = StringUtils.getInstance().isBlank(latitude) ? "90" : clearChar(latitude);
+			longitude = StringUtils.getInstance().isBlank(longitude) ? "180" : clearChar(longitude);
+			result = mapService.subLocation(clearChar(userid), latitude, longitude);
 		} catch (Exception e) {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();

@@ -139,6 +139,10 @@ public class MapServiceImpl implements MapService {
 							
 							for (int i = 0; i < arr.size(); i++) {
 								JSONObject tmp = arr.getJSONObject(i);
+								if (StringUtils.getInstance().isBlank(tmp.getString("logo"))) {
+									tmp.remove("logo");
+									tmp.put("logo", PropertiesUtils.getStringByKey("cfg.defaultlogo"));
+								}
 								for(int j = 0; j < map.size(); j++) {
 									TMap tm = map.get(j);
 									if (tm.getUserId() == tmp.getInt("userID")) {
@@ -185,7 +189,7 @@ public class MapServiceImpl implements MapService {
 	}
 
 	@Override
-	public String subLocation(String userId, String latitude, String longtitude) {
+	public String subLocation(String userId, String latitude, String longtitude) { 
 		JSONObject jo = new JSONObject();
 
 		try {
@@ -201,17 +205,13 @@ public class MapServiceImpl implements MapService {
 				TMap t = mapDao.getLaLongtitudeForUserId(userIdInt);
 
 				if (t != null) {
-					String la = t.getLatitude();
-					String longt = t.getLongitude();
+					//String la = t.getLatitude();
+					//String longt = t.getLongitude();
 
-					if (la.equals(latitude)) {
-						latitude = null;
-					}
-					if (longt.equals(longtitude)) {
-						longtitude = null;
-					}
-
-					mapDao.updateLocation(userIdInt, latitude, longtitude, now);
+					//if (!la.equals(latitude) || !longt.equals(longtitude)) {
+					//必须更新，因为要更新时间，做超时检测
+						mapDao.updateLocation(userIdInt, latitude, longtitude, now);
+					//}
 				} else {
 					TMap tm = new TMap();
 					tm.setUserId(userIdInt);

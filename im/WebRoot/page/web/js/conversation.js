@@ -137,7 +137,7 @@ function sendMsg(content,targetId,way,extra,callback,uniqueTime){
                         '</div>'
                         downLoadFile = '<a fileName="' + uniqueTime + '"  class="downLoadFile" href="' + sendMsg.fileUrl + '" style="visibility:hidden;"></a>' ;
                     } else {
-                        downLoadFile = '<a fileName="' + uniqueTime + '"  class="downLoadFile" href="' + sendMsg.fileUrl + '"></a>' ;
+                        downLoadFile = '<a fileName="' + uniqueTime + '"  class="downLoadFile" href="' + sendMsg.fileUrl + '" style="display:none;"></a>' ;
                     }
                 }
                 sHTML+=fileOperate+downLoadFile+ '<em class="infoLoading"  infoTime="'+nSendTime+'"></em></div>' +
@@ -154,7 +154,7 @@ function sendMsg(content,targetId,way,extra,callback,uniqueTime){
                     '</div>' +
                     '</div>' +
                     '</div>' +
-                    '<a fileName="'+uniqueTime+'" class="downLoadFile" href="'+sendMsg.fileUrl+'"></a>' +
+                    '<a fileName="'+uniqueTime+'" class="downLoadFile" href="'+sendMsg.fileUrl+'" style="display:none;"></a>' +
                     '<em class="infoLoading"  infoTime="'+nSendTime+'"></em></div>'+
                     '</li>';
 
@@ -713,8 +713,8 @@ function sessionContent(sDoM,sTargetId,sContent,extra,sSentTime,targetType){
                     if(sImgName){
                         var sImgType=sImgName.split('.')[1];
                     }
-                    if(sImgName&&sImgName.indexOf('&')!=-1){//有%
-                        sImgName = sImgName.split('&')[0] //文件唯一标识
+                    if(sImgType&&sImgType.indexOf('&')!=-1){//有%
+                        sImgType = sImgType.split('&')[0] //文件唯一标识
                     }
                     switch (sImgType){
                         case 'jpg':
@@ -798,7 +798,7 @@ function sessionContent(sDoM,sTargetId,sContent,extra,sSentTime,targetType){
                         }
                         var localPath = sURL?window.Electron.chkFileExists(sURL):'';
                         if (localPath) {
-                            fileOperate = '<div id="fileOperate">' +
+                            fileOperate = '<div id="fileOperate" style="display: none;position:absolute">' +
                             '<span class="openFile"></span>' +
                             '<span class="openFloder"></span>' +
                             '</div>';

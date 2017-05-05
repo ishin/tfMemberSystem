@@ -233,6 +233,7 @@ $(function(){
                         //console.log('onProgress', loaded, total, this);
                         var className = this._self.uniqueTime;
                         var percent = Math.floor(loaded / total * 100);
+                        //$('a[filename='+className+']').css('display','none');
                         var progressContent = $('#up_precent[uniquetime="'+className+'"]');
                         progressContent.width(percent + '%');
                         return percent;
@@ -283,6 +284,7 @@ function fropFile(e){
                 onProgress: function (loaded, total) {
                     var className = this._self.uniqueTime;
                     var percent = Math.floor(loaded / total * 100);
+                    $('a[filename='+className+']').css('display','none');
                     var progressContent = $('#up_precent[uniquetime="'+className+'"]');
                     progressContent.width(percent + '%');
                     return percent;
@@ -352,6 +354,7 @@ function uploadComplete(data,_this){
         if(data.thumbnail){
             image.onload = function(){
                 content.base64Str = data.thumbnail;
+                content.content = data.thumbnail;
                 sendByRongImg(content,targetId,targetType,className);
             }
         }
@@ -362,6 +365,7 @@ function uploadComplete(data,_this){
         filedetail.type = _this._self.type;
         filedetail.filename = _this._self.uniqueTime;
         var unique = data.filename.split('/')[0];
+        $('a[fileName='+filedetail.uniqueTime+']').css('display','block');
         $('a[fileName='+filedetail.uniqueTime+']').attr('fileName',unique);
         $('a[fileName='+unique+']').attr('href',downloadLink);
         $('#up_process[uniquetime="'+filedetail.uniqueTime+'"]').remove();

@@ -671,7 +671,7 @@ $(document).ready(function(){
         $('.retMewPw').html('');
     });
     /*修改密码保存*/
-    $('#chatBox').delegate('#systemSet-savepsd','click',function(){
+    $('#systemSet-savepsd').click(function(){
         var sAccount=localStorage.getItem('account');
         var oAccount=JSON.parse(sAccount);
         if(oAccount) {
@@ -1076,6 +1076,9 @@ function fPersonalSet(){
                 sendAjax('branch!getPosition',{},function(data){
                     var oPosData=JSON.parse(data);
                     var sDom='';
+                    if(oPosData.text){
+                        oPosData = oPosData.text;
+                    }
                     for(var i=0;i<oPosData.length;++i){
                         var nPosId=oPosData[i].id;
                         var sPosName=oPosData[i].name;

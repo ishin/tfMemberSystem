@@ -998,7 +998,7 @@ $(function(){
     $('.footerPlus').mouseleave(function(){
         plusTimer = setTimeout(function(){
             $('.footerPlus').find('.operMenuList').slideUp();
-        },2000)
+        },100)
     })
 
 })
@@ -1059,43 +1059,49 @@ function changePersonOnlineN(accountID){
     var $organizationList = $('.organizationList');
     sendAjax('member!getAllMemberOnLineStatus',{userid:accountID},function(data){
         if(data){
-            var datas = JSON.parse(data);
-            var memberList = datas.text;
-            for(var key in memberList){
-                var targetGroup = $organizationList.find('li#'+key+'.member');
-                var sMemberStatus = '';
-                var onlineClassName = '';
-                //memberList[key] = '3';
-                switch (memberList[key]){
+            if(data.indexOf('DOCTYPE')!=-1){
+                //返回登录页面
+                window.location = window.location.origin+'/im/';
+            }else{
+                var datas = JSON.parse(data);
+                var memberList = datas.text;
+                for(var key in memberList){
+                    var targetGroup = $organizationList.find('li#'+key+'.member');
+                    var sMemberStatus = '';
+                    var onlineClassName = '';
+                    //memberList[key] = '3';
+                    switch (memberList[key]){
 
-                    case '0'://离线
-                        onlineClassName = 'imgToGrey';
-                        sMemberStatus = '';
+                        case '0'://离线
+                            onlineClassName = 'imgToGrey';
+                            sMemberStatus = '';
 
-                        //sMemberStatus = '离线'
-                        break;
-                    case '1'://在线
-                        onlineClassName = '';
-                        sMemberStatus = '';
+                            //sMemberStatus = '离线'
+                            break;
+                        case '1'://在线
+                            onlineClassName = '';
+                            sMemberStatus = '';
 
-                        //sMemberStatus = '在线'
-                        break;
-                    case '2'://手机在线
-                        onlineClassName = '';
+                            //sMemberStatus = '在线'
+                            break;
+                        case '2'://手机在线
+                            onlineClassName = '';
 
-                        sMemberStatus = 'phoneOnline';
+                            sMemberStatus = 'phoneOnline';
 
-                        break;
-                    case '3'://繁忙
-                        onlineClassName = '';
-                        sMemberStatus = 'memberbusy';
-                        break;
-                }
-                if(targetGroup&&targetGroup.hasClass('member')){
-                    targetGroup.find('.onlineStatus ').attr('class','onlineStatus '+sMemberStatus)
-                    targetGroup.find('.groupImg').attr('class','groupImg '+onlineClassName);
+                            break;
+                        case '3'://繁忙
+                            onlineClassName = '';
+                            sMemberStatus = 'memberbusy';
+                            break;
+                    }
+                    if(targetGroup&&targetGroup.hasClass('member')){
+                        targetGroup.find('.onlineStatus ').attr('class','onlineStatus '+sMemberStatus)
+                        targetGroup.find('.groupImg').attr('class','groupImg '+onlineClassName);
+                    }
                 }
             }
+
         }
     })
 }

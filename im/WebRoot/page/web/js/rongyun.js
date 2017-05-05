@@ -14,11 +14,11 @@ $(function(){
         if(datas){
             window.localStorage.account=JSON.stringify(changeFormatData);
 			if(RongIMLib.VCDataProvider&&window.Electron){
-                //RongIMClient.init(globalVar.rongKey,new RongIMLib.VCDataProvider(window.Electron.addon),{navi:globalVar.navi});//私有云适用120
-                RongIMClient.init(globalVar.rongKey,new RongIMLib.VCDataProvider(window.Electron.addon));			//公有云   适用本地或35
+                RongIMClient.init(globalVar.rongKey,new RongIMLib.VCDataProvider(window.Electron.addon),{navi:globalVar.navi});//私有云适用120
+                //RongIMClient.init(globalVar.rongKey,new RongIMLib.VCDataProvider(window.Electron.addon));			//公有云   适用本地或35
             }else{
-                //RongIMClient.init(globalVar.rongKey,null,{navi:globalVar.navi});		//私有云适用120
-                RongIMClient.init(globalVar.rongKey);			//公有云   适用本地或35
+                RongIMClient.init(globalVar.rongKey,null,{navi:globalVar.navi});		//私有云适用120
+                //RongIMClient.init(globalVar.rongKey);			//公有云   适用本地或35
             }
             var account = datas.account;
             var accountID = datas.id;
@@ -48,6 +48,8 @@ $(function(){
                             }
                             //显示会话列表
                             getConverList()
+                            sendAjax('group!syncUserGroup',{userid:userid});
+                            RegistInfoMessage();
                             break;
                         //正在链接
                         case RongIMLib.ConnectionStatus.CONNECTING:
@@ -143,7 +145,7 @@ $(function(){
                             // do something...
                             break;
                         case RongIMClient.MessageType.InformationNotificationMessage:
-
+                            //RegistInfoMessage(message);
                             reciveInBox(message);
                             break;
                         case RongIMClient.MessageType.ContactNotificationMessage:
@@ -173,6 +175,7 @@ $(function(){
             RongIMClient.connect(token, {
                 onSuccess: function(userId) {
                     console.log('连接成功');
+                    //RegistInfoMessage();
                 },
                 onTokenIncorrect: function() {
                     new Window().alert({
@@ -257,6 +260,15 @@ function playSound(message,userid){
 
     }
     reciveInBox(message);
+}
+
+function RegistInfoMessage(message){
+    var messageName = 'InformationNotificationMessage';
+    var objectName = 'RC:InfoNtf';
+    var messageTag = new RongIMLib.MessageTag(true, true);
+    var properties = ['message'];
+    RongIMClient.registerMessageType(messageName, objectName, messageTag, properties);
+
 }
 function voicePlay(){
     var systemSound_recive = document.getElementById('systemSound_recive');

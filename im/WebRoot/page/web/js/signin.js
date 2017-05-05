@@ -45,7 +45,6 @@ function countDown(curDom,clickFlag){
             $(curDom).html(sec+'s后再次发送');
 
         }
-        //sec--;
     }
 
     var timer = setInterval(function(){
@@ -53,7 +52,6 @@ function countDown(curDom,clickFlag){
         changeSec(maxSecond);
     },1000)
 }
-
 
 /*
 * 通用AJAX
@@ -68,7 +66,6 @@ function sendAjax(url,data,callback){
         }
     })
 }
-
 
 /*
 *
@@ -106,7 +103,7 @@ function fToStep3(dom){
         alert('两次密码不一致')
     }else{
         var account = $('.sealtalk-forgetpassword').attr('account');
-        sendAjax('system!newPassword',{newpwd:newPWD,comparepwd:comparePWD,account:account},function(data){
+        sendAjax('system!newPassword',{newpwd:newPWD,comparepwd:comparePWD,account:account,type:'web'},function(data){
             if(data){
                 var datas = JSON.parse(data);
                 if(datas.code=='1'){
@@ -119,18 +116,6 @@ function fToStep3(dom){
 
 
 }
-
-
-/*
-*
-* 发送验证码
-*
-*/
-//function fSendCheakCode(){
-//    var phoneNum = $('#username').val();
-//    var data = JSON.stringify({'phoneNum':phoneNum})
-//    sendAjax('system!requestText',data);
-//}
 
 /*
 *
@@ -172,7 +157,8 @@ function signin(){
 *
 */
 function fBackToSignin(){
-    window.location.href = 'system!login';
+    var origin = window.location.origin
+    window.location.href = origin+'/im/system!login';
 }
 
 function addMD5(){

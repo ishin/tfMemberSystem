@@ -299,8 +299,8 @@ public class SystemAction extends BaseAction {
 			
 			String dbCode = memberService.getTextCode(phone);
 
-			//if (dbCode != null && !dbCode.equals("-1") && dbCode.equals(textcode)) {
-			if(textcode.equals("111111")) {
+			if (dbCode != null && !dbCode.equals("-1") && dbCode.equals(textcode)) {
+			//if(textcode.equals("111111")) {
 				text.put("code", 1);
 				text.put("text", Tips.TRUETEXTS.getText());
 			} else {

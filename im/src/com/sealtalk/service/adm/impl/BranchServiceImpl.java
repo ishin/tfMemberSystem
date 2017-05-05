@@ -1,11 +1,13 @@
 package com.sealtalk.service.adm.impl;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.sealtalk.common.SysInterface;
+import com.sealtalk.common.Tips;
 import com.sealtalk.model.TMember;
 import com.sealtalk.service.adm.BranchService;
 import com.sealtalk.utils.HttpRequest;
@@ -73,8 +75,13 @@ public class BranchServiceImpl implements BranchService {
 			jo.put("organId", organId);
 			String ret = HttpRequest.getInstance().sendPost(
 					SysInterface.GETPOSITION.getName(), jo);
-			JSONObject json = JSONUtils.getInstance().stringToObj(ret);
-			result = json.getString("text");
+			if (ret != null) {
+				result = ret;
+			} else {
+				JSONObject r = new JSONObject();
+				r.put("code", 0);
+				r.put("text", Tips.FAIL.getText());
+			}
 		} catch (Exception e) {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();

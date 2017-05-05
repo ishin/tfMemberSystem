@@ -5,8 +5,8 @@
     <appenders>
         <console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
-        </console>
-
+        </console><!--
+		
         <RollingFile name="RollingFileInfo" fileName="logs/info.log"
                      filePattern="logs/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log">
             <Filters>
@@ -43,7 +43,7 @@
             </Policies>
         </RollingFile>
 
-    </appenders>
+    --></appenders>
 
     <loggers>
         <!--过滤掉spring和hibernate的一些无用的debug信息-->
