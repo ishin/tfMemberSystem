@@ -294,10 +294,12 @@ public class BranchAction extends BaseAction {
 		
 		JSONObject jo = new JSONObject();
 		
+		int superState = 0;
 		if (id != null && !"".equals(id)) {
 			member = branchService.getMemberObjectById(Integer.parseInt(id));
 			String account = member.getAccount();
 			account = account == null ? "" : account;
+			superState = member.getSuperAdmin();
 			if (!member.getAccount().equalsIgnoreCase(memberAccount)) {
 				if (branchService.getMemberByAccount(memberAccount, organId) != null) {
 					JSONObject jo1 = new JSONObject();
@@ -385,7 +387,7 @@ public class BranchAction extends BaseAction {
 		long now = TimeGenerator.getInstance().getUnixTime();
 		member.setCreatetokendate(Integer.valueOf(String.valueOf(now)));
 		member.setIsDel(1);
-		member.setSuperAdmin(0);
+		member.setSuperAdmin(superState);
 		
 		Integer memberId = branchService.saveMember(member);
 

@@ -2,15 +2,12 @@ package com.organ.service.adm.impl;
 
 import java.util.List;
 
-import net.sf.json.JSONObject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.organ.common.Tips;
 import com.organ.dao.adm.BranchMemberDao;
 import com.organ.dao.adm.PositionDao;
-import com.organ.model.TBranchMember;
 import com.organ.model.TPosition;
 import com.organ.service.adm.PositionService;
 import com.organ.utils.LogUtils;
