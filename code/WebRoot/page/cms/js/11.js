@@ -138,12 +138,13 @@ $(document).ready(function(){
 	$('#search11').focus(function(){
 		var _this = $(this);
 		$('.defaultText').hide();
-		_this.css({backgroundPosition:'-380px -365px'});
+		//_this.css({backgroundPosition:'10px 8px'});
 		_this.unbind('keypress');
 		_this.on('input',function(){
 			console.log(111);
 			var inputVal = _this.val();
 			if(inputVal){
+				_this.css({backgroundPosition:'10px 8px'});
 				sendAjax('member!searchUser',{account:inputVal},function(data){
 					var datas = JSON.parse(data);
 					var parentDom = $('.orgnized');
@@ -181,6 +182,8 @@ $(document).ready(function(){
 					}
 
 				})
+			}else{
+				_this.css({backgroundPosition:'160px 8px'});
 			}
 		})
 	});

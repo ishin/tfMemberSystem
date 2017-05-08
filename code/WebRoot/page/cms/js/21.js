@@ -291,7 +291,7 @@ var setting21 = {
 	view: {
 		showLine: false,
 		nameIsHTML: true,
-		showIcon: false,
+		showIcon: false
 	},
 	check: {
 		autoCheckTrigger: true,
