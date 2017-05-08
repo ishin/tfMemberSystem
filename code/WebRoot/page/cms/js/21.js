@@ -104,12 +104,12 @@ var tabPageEditTemp = '<div class="col2 collHide" id="211edit" style="display:no
 	});
 	//点击新增/修改人员
 	$('#editmember').click(function(){
-		if (currole == 1) {
-			bootbox.alert({'title':'提示', 'message':'不能修改组织管理员.', callback: function() {
-				$('#container').css('width', document.body.clientWidth + 'px');
-			}});
-			return;
-		}
+		//if (currole == 1) {
+		//	bootbox.alert({'title':'提示', 'message':'不能修改组织管理员.', callback: function() {
+		//		$('#container').css('width', document.body.clientWidth + 'px');
+		//	}});
+		//	return;
+		//}
 
 		//权限
 		//if (has('qxglxg')) {

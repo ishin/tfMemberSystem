@@ -12,7 +12,25 @@ window.onload = function(){
             }
         })
     })
+    window.clickFlag = true;
+    $('.SendCheakCode').click(function(){
+        //fSendCheakCode();
+        if(clickFlag){
+            var _this = $(this);
+            var phoneNum = $('#phoneNum').val();
+            var isPhone = phoneNum.match(/^1[3|4|5|8][0-9]\d{4,8}$/)
+            if(phoneNum&&isPhone){
+                sendAjax('system!requestText',{phone:phoneNum},function(){
+                    console.log('验证码发送成功');
+                    //_this.html();
+                    //成功后开始倒计时
+                    clickFlag = false;
+                    countDown(_this,clickFlag);
 
+                })
+            }
+        }
+    })
     $('.SendCheakCode').click(function(){
         //fSendCheakCode();
         var phoneNum = $('#phoneNum').val();
@@ -38,6 +56,26 @@ function sendAjax(url,data,callback){
     })
 }
 
+function countDown(curDom,clickFlag){
+    var maxSecond = 60;
+
+    var changeSec = function(sec){
+        if(sec==0){
+            clearInterval(timer);
+            window.clickFlag = true;
+            $(curDom).html('发送验证码');
+
+        }else{
+            $(curDom).html(sec+'s后再次发送');
+
+        }
+    }
+
+    var timer = setInterval(function(){
+        maxSecond--;
+        changeSec(maxSecond);
+    },1000)
+}
 
 /*
 *
@@ -53,6 +91,16 @@ function fToStep2(dom){
             var datas = JSON.parse(data);
             if(datas.code=='1'){
                 fToNext(dom)
+            }else if(datas.code=='0'){
+                new Window().alert({
+                    title   : '',
+                    content : '验证码错误！',
+                    hasCloseBtn : false,
+                    hasImg : true,
+                    textForSureBtn : false,
+                    textForcancleBtn : false,
+                    autoHide:true
+                });
             }
         }
     });

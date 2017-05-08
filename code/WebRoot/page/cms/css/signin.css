@@ -425,6 +425,7 @@ p.SendCheakCode{
     line-height: 36px;
     text-align: center;
     color: white;
+    cursor: pointer;
 }
 
 @media screen and (max-height:740px){

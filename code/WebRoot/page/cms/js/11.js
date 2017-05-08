@@ -214,6 +214,7 @@ function cb_11_member_sex(data) {
 	var i = data.length;
 	while(i--) {
 		$('#11membersex').append("<option value='" + data[i].id + "'>" + data[i].name + "</option>");
+		$('#11membersex').val(data[i].id);
 	}
 }
 function cb_11_member_position(data) {
@@ -227,11 +228,11 @@ function cb_11_member_role(data) {
 	$('#11memberroleid').empty();
 	var i = data.length;
 	while(i--) {
-		if (data[i].id != 1) {
+		//if (data[i].id != 1) {
 			$('#11memberroleid').append("<option value='" + data[i].id + "'>" + data[i].name + "</option>");
-		}
+		//}
 	}
-	$("#11memberroleid option[value='1']").attr('disabled', 'disabled');
+	//$("#11memberroleid option[value='1']").attr('disabled', 'disabled');
 }
 function cb_11_branch_branch(data) {
 	$.fn.zTree.init($('#tree11branchbranch'), setting11_branch_branch, data);
@@ -277,7 +278,7 @@ function cb_111_role(data) {
 	while(i--) {
 		$('#memberroleid').append("<option value='" + data[i].id + "'>" + data[i].name + "</option>");
 	}
-	$("#memberroleid option[value='1']").attr('disabled', 'disabled');
+	//$("#memberroleid option[value='1']").attr('disabled', 'disabled');
 }
 function cb_111_sex(data) {
 
@@ -315,21 +316,21 @@ function loadmember(data) {
 	$('#membertitle').empty();
 	$('#membertitle2').empty();
 	var w;
-	if (data.roleId == '1') {
-		$('#membertitle').append('超级管理员信息');
-		$('#membertitle2').append('超级管理员信息');
-		$('#memberroleid').attr('disabled', 'disabled');
-		var w = ((document.body.clientWidth * 0.61 * 0.92 - 68 * 2) / 2 - 142);
-	}
-	else {
+	//if (data.roleId == '1') {
+	//	$('#membertitle').append('超级管理员信息');
+	//	$('#membertitle2').append('超级管理员信息');
+	//	$('#memberroleid').attr('disabled', 'disabled');
+	//	var w = ((document.body.clientWidth * 0.61 * 0.92 - 68 * 2) / 2 - 142);
+	//}
+	//else {
 		$('#membertitle').append('员工信息');
 		$('#membertitle2').append('员工信息');
 		$('#memberroleid').removeAttr('disabled');
 		var w = ((document.body.clientWidth * 0.61 * 0.92 - 68 * 2) / 2 - 94);
-	}
+	//}
 
 //	var w = ((document.body.clientWidth * 0.61 * 0.92 - 68 * 2) / 2 - $('#membertitle').css('width').replace('px',''));
-	$('.infotab').css('padding-left',  w + 'px');
+	$('.infotab').css('padding-left',  32 + '%');
 
 	loadbranchmember(data.branchmember);
 }
@@ -360,7 +361,7 @@ function loadbranchmember(data) {
 var setting11 = {
 	view: {
 		showLine: false,
-		showIcon: false,
+		showIcon: true,
 		nameIsHTML: true,
 	},
 	data: {
@@ -610,6 +611,10 @@ var setting11_move = {
 		enable: false
 	}
 }
+
+function showIconForTree(treeId, treeNode) {
+	//return treeNode.children;
+};
 function handletree11open() {
 	$('#tree11 a').each(function(i, a) {
 		if (a.title.length > iconlenth) {
@@ -741,6 +746,10 @@ function del(tId) {
 		},
 	});
 }
+
+
+
+
 function hasChildBranch(id) {
 	var t = $.fn.zTree.getZTreeObj('tree11');
 	var ns = t.getNodesByParam('pid', id, null);
@@ -762,3 +771,12 @@ function showpage(cp) {
 	$('#112').hide();
 	$('#' + cp).show();
 }
+
+//function changeTreeImg(){
+//	var allNode = $('#tree11 a');
+//	for(var i = 0;i<allNode.length;i++){
+//		if($(allNode[i]).children){
+//			//有子级
+//		}
+//	}
+//}
