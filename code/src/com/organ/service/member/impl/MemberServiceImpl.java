@@ -690,7 +690,7 @@ public class MemberServiceImpl implements MemberService {
 						Object[] o = (Object[]) memList.get(i);
 						t.put("userID", o[0]);
 						for(int k = 1; k < pss.length; k++) {
-							t.put(pss[k], o[k]);
+							t.put(pss[k], o[k] == null ? "" : o[k]);
 						}
 						ja.add(t);
 					}

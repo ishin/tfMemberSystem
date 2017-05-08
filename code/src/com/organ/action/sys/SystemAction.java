@@ -99,7 +99,7 @@ public class SystemAction extends BaseAction {
 			return "text";
 		}
 		
-		logger.debug("The logining account is " + account);
+		logger.info("The logining account is " + account);
 		
 		String userId = "" + member.getId();
 		String name = member.getFullname();
@@ -255,8 +255,8 @@ public class SystemAction extends BaseAction {
 			phone = clearChar(phone);
 			String dbCode = memberService.getTextCode(phone);
 			
-			//if (dbCode != null && !dbCode.equals("-1") && dbCode.equals(clearChar(textcode))) {
-			if(textcode.equals("111111")) {
+			if (dbCode != null && !dbCode.equals("-1") && dbCode.equals(clearChar(textcode))) {
+			//if(textcode.equals("111111")) {
 				text.put("code", 1);
 				text.put("text", Tips.TRUETEXTS.getText());
 			} else {

@@ -2,6 +2,11 @@ package com.organ.dao.adm.impl;
 
 import java.util.List;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
@@ -11,16 +16,12 @@ import com.organ.common.Constants;
 import com.organ.dao.adm.BranchDao;
 import com.organ.model.ImpUser;
 import com.organ.model.TBranch;
-import com.organ.model.TBranchMember;
-import com.organ.model.TMember;
 import com.organ.service.adm.ImpService;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 		BranchDao {
 
+	private static final Logger logger = LogManager.getLogger(BranchDaoImpl.class);
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -212,19 +213,19 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 				+ "M.email," + "M.address," + "M.token," + "M.birthday,"
 				+ "M.workno," + "M.mobile," + "M.intro," + "P.id PID,"
 				+ "P.name PNAME," + "S.id SID," + "S.name SNAME,"
-				+ "TOR.id ORID," + "TOR.name TORNAME "
+				+ "TOR.id ORID," + "TOR.name TORNAME," + "M.isdel "
 				+ "from t_branch_member BM "
 				+ "right join t_branch BC on BM.branch_id=BC.id "
 				+ "right join t_organ TOR on TOR.id=BC.organ_id "
 				+ "left join t_member M on M.id=BM.member_id "
 				+ "left join t_position P on BM.position_id=P.id "
-				+ "left join t_sex S on M.sex=S.id where M.isdel=1";
+				+ "left join t_sex S on M.sex=S.id";
 				
 		if (organId != 0) {
-			sql += " and BC.organ_id=" + organId;
+			sql += " where BC.organ_id=" + organId;
 		}
 
-		System.out.println(sql);
+		logger.info(sql);
 		try {
 			SQLQuery query = this.getSession().createSQLQuery(sql);
 

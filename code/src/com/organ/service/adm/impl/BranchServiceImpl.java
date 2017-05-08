@@ -770,29 +770,31 @@ public class BranchServiceImpl implements BranchService {
 					JSONObject jm = new JSONObject();
 					
 					if (!StringUtils.getInstance().isNull(o[0])) {
-						jm.put("flag", 1);
-						jm.put("pid", isBlank(o[4]));
-						jm.put("id", isBlank(o[7]));
-						jm.put("account", isBlank(o[8]));
-						jm.put("name", isBlank(o[9]));
-						jm.put("logo", isBlank(o[10]));
-						jm.put("telephone", isBlank(o[11]));
-						jm.put("email", isBlank(o[12]));
-						jm.put("address", isBlank(o[13]));
-						jm.put("token", isBlank(o[14]));
-						jm.put("birthday", isBlank(o[15]));
-						jm.put("workno", isBlank(o[16]));
-						jm.put("mobile", isBlank(o[17]));
-						jm.put("intro", isBlank(o[18]));
-						jm.put("postitionid", isBlank(o[19]));
-						jm.put("postitionname", isBlank(o[20]));
-						jm.put("sexid", isBlank(o[21]));
-						jm.put("sexname", isBlank(o[22]));
-						jm.put("organid", isBlank(o[23]));
-						jm.put("organname", isBlank(o[24]));
-						jm.put("branchid", isBlank(o[4]));
-						jm.put("branchname", isBlank(o[6]));
-						jm.put("superior", isBlank(o[7]));			//直接领导人
+						if (isBlank(o[25]).equals("1")) {
+							jm.put("flag", 1);
+							jm.put("pid", isBlank(o[4]));
+							jm.put("id", isBlank(o[7]));
+							jm.put("account", isBlank(o[8]));
+							jm.put("name", isBlank(o[9]));
+							jm.put("logo", isBlank(o[10]));
+							jm.put("telephone", isBlank(o[11]));
+							jm.put("email", isBlank(o[12]));
+							jm.put("address", isBlank(o[13]));
+							jm.put("token", isBlank(o[14]));
+							jm.put("birthday", isBlank(o[15]));
+							jm.put("workno", isBlank(o[16]));
+							jm.put("mobile", isBlank(o[17]));
+							jm.put("intro", isBlank(o[18]));
+							jm.put("postitionid", isBlank(o[19]));
+							jm.put("postitionname", isBlank(o[20]));
+							jm.put("sexid", isBlank(o[21]));
+							jm.put("sexname", isBlank(o[22]));
+							jm.put("organid", isBlank(o[23]));
+							jm.put("organname", isBlank(o[24]));
+							jm.put("branchid", isBlank(o[4]));
+							jm.put("branchname", isBlank(o[6]));
+							jm.put("superior", isBlank(o[7]));			//直接领导人
+						}
 						
 						boolean status = false;
 						
@@ -832,6 +834,7 @@ public class BranchServiceImpl implements BranchService {
 				}
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
@@ -925,6 +928,7 @@ public class BranchServiceImpl implements BranchService {
 				}
 				result = ja.toString();
 			} catch (Exception e) {
+				logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 				status = false;
 				e.printStackTrace();
 			}

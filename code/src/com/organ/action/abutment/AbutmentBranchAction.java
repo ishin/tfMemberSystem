@@ -244,14 +244,15 @@ public class AbutmentBranchAction extends BaseAction {
 					s = false;
 				} else {
 					int organId = p.getInt("organId");
-					result = branchService.getPosition(organId);
+					jo.put("code", 1);
+					jo.put("text", branchService.getPosition(organId));
 				}
 			}
 			if (!s) {
 				jo.put("code", 0);
 				jo.put("text", Tips.WRONGPARAMS.getText());
-				result = jo.toString();
 			}
+			result = jo.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));

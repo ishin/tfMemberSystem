@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.sf.json.JSONObject;
 
 import com.organ.dao.adm.MemberRoleDao;
@@ -20,9 +23,10 @@ import com.organ.model.TRoleAppSecret;
 import com.organ.model.TRolePriv;
 import com.organ.service.adm.PrivService;
 import com.organ.utils.JSONUtils;
+import com.organ.utils.LogUtils;
 
 public class PrivServiceImpl implements PrivService {
-
+	private static final Logger logger = LogManager.getLogger(PrivServiceImpl.class);
 	private RoleDao roleDao;
 	private PrivDao privDao;
 	private RolePrivDao rolePrivDao;
@@ -239,6 +243,7 @@ public class PrivServiceImpl implements PrivService {
 				return lj.toString();
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return null;
@@ -263,6 +268,7 @@ public class PrivServiceImpl implements PrivService {
 				return lj.toString();
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return null;
@@ -287,6 +293,7 @@ public class PrivServiceImpl implements PrivService {
 				return lj.toString();
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return null;
