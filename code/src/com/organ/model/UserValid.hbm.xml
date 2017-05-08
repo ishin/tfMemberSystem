@@ -35,5 +35,8 @@
         <property name="visitTokenTime" type="java.lang.Long">
             <column name="visittokentime" />
         </property>
+        <property name="isDel" type="java.lang.String">
+            <column name="isdel" />
+        </property>
     </class>
 </hibernate-mapping>

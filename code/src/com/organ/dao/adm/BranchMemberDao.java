@@ -14,6 +14,6 @@ public interface BranchMemberDao extends IBaseDao<TBranchMember, Integer> {
 	public void selectMaster(Integer memberId);
 	public List getBranchMemberByMemberIds(String memberIds);
 	public int updatePositionByUseId(int userIdInt, int positionId);
-	public int delRelationByIds(String userids);
+	public int delRelationByIds(String userids, String isLogic);
 	public int getBranchMemberCountByPositionId(Integer id);
 }

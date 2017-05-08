@@ -18,7 +18,7 @@ public interface MemberRoleDao extends IBaseDao<TMemberRole, Integer> {
 
 	public List getMemberIdsByRoleIds(String string);
 
-	public int deleteRelationByIds(String userids);
+	public int deleteRelationByIds(String userids, String isLogic);
 
 
 }

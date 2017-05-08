@@ -19,7 +19,7 @@ public interface UserValidDao extends IBaseDao<UserValid, Integer> {
 
 	public void delUserValid(int id);
 
-	public int deleteRelationByIds(String userids);
+	public int deleteRelationByIds(String userids, String isLogic);
 	
 	public void updateUserValid(UserValid uv);
 }

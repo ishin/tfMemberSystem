@@ -14,5 +14,8 @@
         <property name="logoName" type="java.lang.String">
             <column name="log_name" length="256" />
         </property>
+        <property name="isDel" type="java.lang.String">
+            <column name="isdel" length="1" />
+        </property>
     </class>
 </hibernate-mapping>

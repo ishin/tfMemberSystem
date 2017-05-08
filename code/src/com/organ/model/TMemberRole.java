@@ -16,6 +16,7 @@ public class TMemberRole implements java.io.Serializable {
 	private Integer memberId;
 	private Integer roleId;
 	private Integer listorder;
+	private String isDel;
 
 	// Constructors
 
@@ -62,6 +63,14 @@ public class TMemberRole implements java.io.Serializable {
 
 	public void setListorder(Integer listorder) {
 		this.listorder = listorder;
+	}
+
+	public String getIsDel() {
+		return isDel;
+	}
+
+	public void setIsDel(String isDel) {
+		this.isDel = isDel;
 	}
 
 }

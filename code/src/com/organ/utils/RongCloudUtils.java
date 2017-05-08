@@ -414,8 +414,7 @@ public class RongCloudUtils {
 				CodeSuccessReslut groupCreateResult = rongCloud.group.create(
 						userIds, groupId, groupName);
 
-				System.out.println("-----------------------------: "
-						+ groupCreateResult.toString());
+				//System.out.println("-----------------------------: "+ groupCreateResult.toString());
 				if (groupCreateResult != null) {
 					result = groupCreateResult.getCode().toString();
 				}

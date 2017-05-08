@@ -123,10 +123,15 @@ public class UserValidDaoImpl extends BaseDao<UserValid, Integer> implements
 	}
 
 	@Override
-	public int deleteRelationByIds(String userids) {
+	public int deleteRelationByIds(String userids, String isLogic) {
 		try {
-			String hql = (new StringBuilder("delete from UserValid where userId in (").append(userids).append(")")).toString();
-			return delete(hql);
+			if (isLogic.equals("1")) {
+				String hql = (new StringBuilder("update UserValid set idDel=0 where userId in (").append(userids).append(")")).toString();
+				return update(hql);
+			} else {
+				String hql = (new StringBuilder("delete from UserValid where userId in (").append(userids).append(")")).toString();
+				return delete(hql);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

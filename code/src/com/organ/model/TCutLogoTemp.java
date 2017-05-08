@@ -7,6 +7,7 @@ public class TCutLogoTemp implements java.io.Serializable {
 	private int id;
 	private int userId;
 	private String logoName;
+	private String isDel;
 	
 	public TCutLogoTemp() {
 		super();
@@ -34,6 +35,14 @@ public class TCutLogoTemp implements java.io.Serializable {
 	}
 	public void setLogoName(String logoName) {
 		this.logoName = logoName;
+	}
+
+	public String getIsDel() {
+		return isDel;
+	}
+
+	public void setIsDel(String isDel) {
+		this.isDel = isDel;
 	}
 	
 }
