@@ -14,7 +14,6 @@
     <script src="<%=request.getContextPath() %>/page/cms/js/md5.js"></script>
     <script src="<%=request.getContextPath() %>/page/cms/js/window.js"></script>
 
-
     </head>
 <body>
 <div class="signin-bg">

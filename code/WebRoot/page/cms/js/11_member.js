@@ -82,7 +82,7 @@ function cb_11_save_member(data) {
 			}
 		}
 		$('#11membermobile').val('');
-		$('#11membersex').val('');
+		//$('#11membersex').val('');
 		$('#11memberemail').val('');
 		$('#11memberintro').val('');
 		$('#11memberaccount').val('');
