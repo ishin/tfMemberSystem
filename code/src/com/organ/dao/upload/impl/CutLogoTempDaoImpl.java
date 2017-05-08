@@ -33,6 +33,7 @@ public class CutLogoTempDaoImpl extends BaseDao<TCutLogoTemp, Long> implements C
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("userId", userid));
+			ctr.add(Restrictions.eq("isDel", "1"));
 			
 			List<TCutLogoTemp> list = ctr.list();
 			
@@ -85,6 +86,7 @@ public class CutLogoTempDaoImpl extends BaseDao<TCutLogoTemp, Long> implements C
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("userId", userIdInt));
+			ctr.add(Restrictions.eq("isDel", "1"));
 			
 			List<TCutLogoTemp> list = ctr.list();
 			
@@ -102,7 +104,7 @@ public class CutLogoTempDaoImpl extends BaseDao<TCutLogoTemp, Long> implements C
 	public int deleteRelationByIds(String userids, String isLogic) {
 		try {
 			if (isLogic.equals("1")) {
-				String hql = (new StringBuilder("update TCutLogoTemp set idDel=0 where userId in (").append(userids).append(")")).toString();
+				String hql = (new StringBuilder("update TCutLogoTemp set isDel=0 where userId in (").append(userids).append(")")).toString();
 				return update(hql);
 			} else {
 				String hql = (new StringBuilder("delete from TCutLogoTemp where userId in (").append(userids).append(")")).toString();

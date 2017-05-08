@@ -43,7 +43,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	public List getMemberPosition(Integer memberId) {
 
 		String sql = "select position_id, branch_id, id from t_branch_member"
-				+ " where member_id = " + memberId + " order by is_master desc";
+				+ " where member_id = " + memberId + " and isdel='1' order by is_master desc";
 		SQLQuery query = this.getSession().createSQLQuery(sql);
 
 		List list = query.list();
@@ -55,7 +55,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	public List getMemberRole(Integer memberId) {
 
 		String sql = "select role_id from t_member_role"
-				+ " where member_id = " + memberId;
+				+ " where member_id = " + memberId + " and isdel='1'";
 		SQLQuery query = this.getSession().createSQLQuery(sql);
 
 		List list = query.list();
@@ -773,10 +773,15 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	}
 
 	@Override
-	public int logicDelMemberByUserIds(String userids) {
+	public int logicDelMemberByUserIds(String userids, String isLogic) {
 		try {
-			String hql = (new StringBuilder("update TMember set isDel=0 where id in(").append(userids).append(")")).toString();
-			return update(hql);
+			if (isLogic.equals("1")) {
+				String hql = (new StringBuilder("update TMember set isDel=0 where id in(").append(userids).append(")")).toString();
+				return update(hql);
+			} else {
+				String hql = (new StringBuilder("delete from TMember where id in(").append(userids).append(")")).toString();
+				return delete(hql);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -784,9 +789,14 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	}
 
 	@Override
-	public List<String> getNotDelIds(String userids) {
+	public List<String> getNotDelIds(String userids, String isLogic) {
 		try {
-			String hql = (new StringBuilder("select id from t_member t where t.isdel!=0 and t.id in(").append(userids).append(")")).toString();
+			String hql = null;
+			if (isLogic.equals("1")) {
+				hql = (new StringBuilder("select id from t_member t where t.isdel!=0 and t.id in(").append(userids).append(")")).toString();
+			} else {
+				hql = (new StringBuilder("select id from t_member t where t.id in(").append(userids).append(")")).toString();
+			}
 			List list = runSql(hql);
 			List<String> ids = new ArrayList<String>();
 			

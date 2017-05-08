@@ -23,6 +23,7 @@ public class MemberRoleDaoImpl extends BaseDao<TMemberRole, Integer> implements 
 			
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("memberId", id));
+			ctr.add(Restrictions.eq("isDel", "1"));
 			
 			List<TMemberRole> list = ctr.list();
 			
@@ -44,6 +45,7 @@ public class MemberRoleDaoImpl extends BaseDao<TMemberRole, Integer> implements 
 			
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.in("memberId", ids));
+			ctr.add(Restrictions.eq("isDel", "1"));
 			
 			List<TMemberRole> list = ctr.list();
 			
@@ -61,7 +63,7 @@ public class MemberRoleDaoImpl extends BaseDao<TMemberRole, Integer> implements 
 	@Override
 	public List getMemberIdsByRoleIds(String ids) {
 		try {
-			String hql = "select member_id from t_member_role where role_id in (" + ids + ")";
+			String hql = "select member_id from t_member_role where role_id in (" + ids + ") and isdel='1'";
 			return runSql(hql);
 		} catch (Exception e) {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));

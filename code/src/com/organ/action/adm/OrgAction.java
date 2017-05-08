@@ -4,29 +4,31 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.StringUtils;
 
-import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
-import com.organ.model.TMember;
 import com.organ.model.TOrgan;
 import com.organ.service.adm.OrgService;
-
-import net.sf.json.JSONObject;
+import com.organ.service.member.MemberService;
 
 
 public class OrgAction extends BaseAction {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1731481715198316913L;
 
 	private OrgService orgService;
+	private MemberService memberService;
 
 	public void setOrgService(OrgService orgService) {
 		this.orgService = orgService;
 	}
+
+	public void setMemberService(MemberService memberService) {
+		this.memberService = memberService;
+	}
+
 
 	public String getProvince() {
 
@@ -176,6 +178,7 @@ public class OrgAction extends BaseAction {
 		organ.setLogo(logo);
 		organ.setListorder(Integer.parseInt(listOrder));
 		orgService.save(organ);
+		memberService.updateBySql(organId, address);
 		return returnajaxid(organId);
 	}
 

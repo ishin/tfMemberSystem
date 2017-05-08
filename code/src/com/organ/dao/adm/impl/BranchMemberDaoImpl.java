@@ -22,6 +22,7 @@ public class BranchMemberDaoImpl extends BaseDao<TBranchMember, Integer>
 		Criteria c = getCriteria();
 		c.add(Restrictions.eq("branchId", branchId));
 		c.add(Restrictions.eq("positionId", positionId));
+		c.add(Restrictions.eq("isDel", "1"));
 
 		List list = c.list();
 		if (list.isEmpty()) {
@@ -36,6 +37,7 @@ public class BranchMemberDaoImpl extends BaseDao<TBranchMember, Integer>
 
 		Criteria c = getCriteria();
 		c.add(Restrictions.eq("memberId", memberId));
+		c.add(Restrictions.eq("isDel", "1"));
 
 		List list = c.list();
 		return list;
@@ -47,6 +49,7 @@ public class BranchMemberDaoImpl extends BaseDao<TBranchMember, Integer>
 
 		Criteria c = getCriteria();
 		c.add(Restrictions.eq("branchId", branchId));
+		c.add(Restrictions.eq("isDel", "1"));
 
 		List list = c.list();
 		return list;
@@ -59,6 +62,7 @@ public class BranchMemberDaoImpl extends BaseDao<TBranchMember, Integer>
 		Criteria c = getCriteria();
 		c.add(Restrictions.eq("memberId", memberId));
 		c.add(Restrictions.eq("isMaster", "0"));
+		c.add(Restrictions.eq("isDel", "1"));
 		c.addOrder(Order.asc("listorder"));
 
 		List list = c.list();
@@ -78,6 +82,7 @@ public class BranchMemberDaoImpl extends BaseDao<TBranchMember, Integer>
 		Criteria c = getCriteria();
 		c.add(Restrictions.eq("branchId", branchId));
 		c.add(Restrictions.eq("memberId", memberId));
+		c.add(Restrictions.eq("isDel", "1"));
 
 		List list = c.list();
 		if (list.isEmpty()) {
@@ -91,7 +96,7 @@ public class BranchMemberDaoImpl extends BaseDao<TBranchMember, Integer>
 	public List getBranchMemberByMemberIds(String memberIds) {
 
 		String hql = (new StringBuilder(
-				"select BM.member_id mid, P.name, B.name bname from t_branch_member BM left join t_branch B on B.id=BM.branch_id left join t_position P on BM.position_id=P.id where BM.member_id in (")
+				"select BM.member_id mid, P.name, B.name bname from t_branch_member BM left join t_branch B on B.id=BM.branch_id left join t_position P on BM.position_id=P.id where BM.isdel='1' and BM.member_id in (")
 				.append(memberIds).append(")")).toString();
 		return getSession().createSQLQuery(hql).list();
 	}
@@ -122,7 +127,7 @@ public class BranchMemberDaoImpl extends BaseDao<TBranchMember, Integer>
 
 	@Override
 	public int getBranchMemberCountByPositionId(Integer id) {
-		return count("from TBranchMember t where positionId=" + id);
+		return count("from TBranchMember t where t.positionId=" + id + " and t.isDel='1'");
 	}
 
 }

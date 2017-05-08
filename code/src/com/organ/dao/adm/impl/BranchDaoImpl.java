@@ -108,7 +108,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements BranchDa
 				+ " from t_branch_member bm"
 				+ " left join t_branch b on bm.branch_id = b.id"
 				+ " left join t_position p on bm.position_id = p.id"
-				+ " where bm.member_id = " + memberId + ""
+				+ " where bm.isdel='1' and bm.member_id = " + memberId + ""
 				+ " order by bm.is_master asc, bm.listorder desc";
 		return runSql(sql);
 	}
@@ -205,14 +205,14 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements BranchDa
 	@SuppressWarnings("unchecked")
 	@Override
 	public List getBrancTreeAndMember(Integer organId) {
-		String sql = "select " + "BM.branch_id," + "BM.member_id,"
-				+ "BM.position_id," + "BM.is_master," + "BC.id BCID,"
-				+ "BC.parent_id," + "BC.name BCNAME," + "M.id MID,"
-				+ "M.account," + "M.fullname," + "M.logo," + "M.telephone,"
-				+ "M.email," + "M.address," + "M.token," + "M.birthday,"
-				+ "M.workno," + "M.mobile," + "M.intro," + "P.id PID,"
-				+ "P.name PNAME," + "S.id SID," + "S.name SNAME,"
-				+ "TOR.id ORID," + "TOR.name TORNAME," + "M.isdel "
+		String sql = "select BM.branch_id,BM.member_id,"
+				+ "BM.position_id,BM.is_master,BC.id BCID,"
+				+ "BC.parent_id,BC.name BCNAME,M.id MID,"
+				+ "M.account,M.fullname,M.logo,M.telephone,"
+				+ "M.email,M.address,M.token,M.birthday,"
+				+ "M.workno,M.mobile,M.intro,P.id PID,"
+				+ "P.name PNAME,S.id SID,S.name SNAME,"
+				+ "TOR.id ORID,TOR.name TORNAME,M.isdel "
 				+ "from t_branch_member BM "
 				+ "right join t_branch BC on BM.branch_id=BC.id "
 				+ "right join t_organ TOR on TOR.id=BC.organ_id "
@@ -271,7 +271,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements BranchDa
 		try {
 
 			Criteria ctr = getCriteria();
-			ctr.add(Restrictions.eq("managerId", ids));
+			ctr.add(Restrictions.in("managerId", ids));
 
 			List<TBranch> list = ctr.list();
 

@@ -70,7 +70,7 @@ public class RoleDaoImpl extends BaseDao<TRole, Integer> implements RoleDao {
 				+ " from t_priv p"
 				+ " left join t_role_priv rp on rp.priv_id = p.id"
 				+ " left join t_member_role mr on mr.role_id = rp.role_id"
-				+ " where mr.member_id = " + memberId;
+				+ " where mr.isdel='1' and mr.member_id = " + memberId;
 		
 		return runSql(sql);
 	}
