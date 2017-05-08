@@ -14,25 +14,11 @@
 .window_header{
     font-size: 16px;
     color: #000000;
-    /* background: #333333; */
-    /* text-align: center; */
     height: 40px;
     text-indent: 42px;
-    line-height: 56px;
+    line-height: 60px;
 }
-
-/*.window_chooseArea{*/
-    /*background: #ff0000;*/
-    /*height: 64px;*/
-    /*width: 100%;*/
-/*}*/
 .window_alertBtn{
-    /*width: 100px;*/
-    /*position: relative;*/
-    /*left: 7%;*/
-    /*margin-left: -50px;*/
-    /*bottom: 10px;*/
-    /*top: 0px;*/
     background: #30c0da;
     border: 1px solid #30c0da !important;
     color: white;

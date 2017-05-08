@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %> 
 <div class="infopanel11" id="112">
-	<div class="info" style="overflow: scroll;">
+	<div class="info" style="overflow: auto;">
 		<div class="infotitle">
 			<div class="title" id='membertitle2'>成员信息</div>
 			<div class="infotab" style='font-size: 13px'>

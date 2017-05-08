@@ -41,7 +41,7 @@
 <div class="infopanel12">
 	<div class="info">
 		<div class="infotitle">
-			<div class="title">组织信息</div>
+			<div class="title">公司信息配置</div>
 		</div>
 		<div class="col12">
 			<div class="col1">
@@ -53,12 +53,12 @@
 				<div class="line12b" style='margin-left: 55px'><span style='color:red'>*</span>
 					<input style='width: 80px;border:none;padding-left:0' value='组织全称：' readonly/>
 					<input type="text" id="name" class='required' style='margin-left: -5px'>
-					<span style="margin-left: 15px">填写后将显示在成员名片中</span>
+					<span class="desForCompany" style="margin-left: 15px">填写后将显示在成员名片中</span>
 				</div>
 				<div class="line12b" style='margin-left: 55px'><span style='color:red'>*</span>
 					<input style='width: 80px;border:none;padding-left:0' value='组织简称：' readonly/>
 					<input type="text" id="shortname" class='required' style='margin-left: -5px'>
-					<span style="margin-left: 15px">填写后将显示在客户端标题栏</span>
+					<span class="desForCompany" style="margin-left: 15px">填写后将显示在客户端标题栏</span>
 				</div>
 				<div class="line12b">
 					<input style='width: 80px;border:none' value='英文名称：' readonly/>
@@ -88,7 +88,7 @@
 				<div class="line12b" style='margin-left: 55px'><span style='color:red'>*</span>
 					<input style='width: 80px;border:none;padding-left:0' value='办公地址：' readonly/>
 					<input type="text"  id="address" class='required' style="width:410px;margin-left: -5px">
-					<span style="margin-left: 15px">填写后将显示在成员名片中</span>
+					<span class="desForCompany" style="margin-left: 15px">填写后将显示在成员名片中</span>
 				</div>
 				<div class="line12b">
 					<input style='width: 80px;border:none' value='电话：' readonly/>

@@ -125,25 +125,26 @@ $(document).ready(function(){
 	},function(){
 	});
 
-	//$('#organlineRes').delegate('.searchResult','mouseleave',function(){
-	//	var _this = $(this)
-    //
-	//	setTimeout(function(){
-	//		_this.remove();
-	//	},1000)
-	//})
+	$('#organlineRes').delegate('.searchResult','mouseleave',function(){
+		var _this = $(this)
+
+		setTimeout(function(){
+			_this.remove();
+		},1000)
+	})
 
 
 	//组织结构树中的搜索
 	$('#search11').focus(function(){
 		var _this = $(this);
 		$('.defaultText').hide();
-		_this.css({backgroundPosition:'-380px -365px'});
+		//_this.css({backgroundPosition:'10px 8px'});
 		_this.unbind('keypress');
 		_this.on('input',function(){
 			console.log(111);
 			var inputVal = _this.val();
 			if(inputVal){
+				_this.css({backgroundPosition:'10px 8px'});
 				sendAjax('member!searchUser',{account:inputVal},function(data){
 					var datas = JSON.parse(data);
 					var parentDom = $('.orgnized');
@@ -181,6 +182,8 @@ $(document).ready(function(){
 					}
 
 				})
+			}else{
+				_this.css({backgroundPosition:'160px 8px'});
 			}
 		})
 	});
@@ -330,7 +333,11 @@ function loadmember(data) {
 	//}
 
 //	var w = ((document.body.clientWidth * 0.61 * 0.92 - 68 * 2) / 2 - $('#membertitle').css('width').replace('px',''));
-	$('.infotab').css('padding-left',  32 + '%');
+	$('.infotab').css({
+		position: 'absolute',
+		left: '50%',
+		marginLeft: '-100px'}
+	);
 
 	loadbranchmember(data.branchmember);
 }
