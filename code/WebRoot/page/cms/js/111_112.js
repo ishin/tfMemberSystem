@@ -4,7 +4,7 @@ var branchmembertemplate=[
 		"<td>branch</td>" +
 		"<td>position</td>" +
 		"<td>" +
-		"<img src='images/edit.png' style='margin-right: 15px;cursor:pointer' onclick='editbranchmember(branchmemberid)' />" +
+		"<img src='images/edit-1.png' style='margin-right: 15px;cursor:pointer' onclick='editbranchmember(branchmemberid)' />" +
 		"<img src='images/delete-1.png' style='cursor:pointer' onclick='delbranchmember(branchmemberid)' />" +
 		"</td></tr>",
 	"<tr>" +
@@ -12,7 +12,7 @@ var branchmembertemplate=[
 		"<td>branch</td>" +
 		"<td>position</td>" +
 		"<td>" +
-		"<img src='images/edit.png' style='margin-right: 15px;cursor:pointer' onclick='editbranchmember(branchmemberid)' />" +
+		"<img src='images/edit-1.png' style='margin-right: 15px;cursor:pointer' onclick='editbranchmember(branchmemberid)' />" +
 		"<img src='images/delete-1.png' style='cursor:pointer' onclick='delbranchmember(branchmemberid)' />" +
 		"</td></tr>"];
 var branchmemberid;

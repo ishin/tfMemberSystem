@@ -72,7 +72,7 @@ input:focus {
 	color: #30c0da;
 }
 .searchbox {
-	border: 1px solid #ccc;
+	border: 1px solid #e6e6e6;
 }
 .searchimg {
 	padding: 0 0 0 5px;
@@ -148,6 +148,12 @@ input:focus {
 	width: 750px;
 	box-shadow: 0px 0px 10px #cbcbcb;
 	background: white;
+	height: calc(100% - 50px);
+}
+.desForCompany{
+font-size: 12px;
+	color: #b3b3b3;;
+
 }
 .sidebar11 {
 	float: left;
@@ -156,6 +162,7 @@ input:focus {
 /*	padding-top: 3%;
 	height: 830px;
 */	border-right:1px solid #e6e6e6;
+	height: 100% !important;
 }
 .dropdown-menu{
 	border: 1px solid #e6e6e6;
@@ -179,6 +186,7 @@ input:focus {
 	float: left;
 	width: 500px;
 	padding-top: 10px;
+	height: 100%;
 }
 .organline {
 	clear: left;
@@ -251,6 +259,7 @@ input:focus {
 #tree11 {
 /*	border: 1px solid #ccc;
 */	overflow: auto;
+	height: calc(100% - 108px) !important;
 }
 #tree11 li {
 	margin: 10px 0 10px 10px;
@@ -305,6 +314,7 @@ div#container {
 	height: calc(100% - 125px);
 	overflow: hidden;
 	box-shadow: 0px 0px 10px #cbcbcb;
+	border-radius: 6px;
 }
 ul.searchResultUL {
 	background: #fff;
@@ -313,6 +323,10 @@ ul.searchResultUL {
 	border: 1px solid #e6e6e6;
 	box-shadow: 0px 0px 10px #e6e6e6;
 	border-top: none;
+	z-index: 2;
+	height: auto;
+	max-height: 480px;
+	overflow: auto;
 }
 ul.searchResultUL li {
 	height: 42px;
@@ -326,7 +340,7 @@ ul.searchResultUL li {
 .searchResultUL li.searchNoResult{
 	height: 132px;
 	position: relative;
-	background: url('img/noResult.png') no-repeat 125px 30px;
+	background: url('img/noResult.png') no-repeat 200px 30px;
 }
 .searchResultUL li.searchNoResult:hover{
 	background-color: #ffffff ;
@@ -371,6 +385,10 @@ form#branchform {
 	border-bottom: 1px solid #f0f0f0;
 	min-width: 800px;
 }
+.infopanel11 .infotitle{
+	position: relative;
+	min-width: 0px;
+}
 .title {
 	float: left;
 	/* padding: 15px 0 0 30px; */
@@ -381,6 +399,7 @@ form#branchform {
 }
 .dtitle {
 	font-size: 16px;
+	line-height: 14px;
 }
 .dclose {
 	cursor: pointer;
@@ -391,6 +410,17 @@ form#branchform {
 	right: 40px;
 	top: 10px;
 }
+
+
+#move .dclose,#branch .dclose,#member .dclose,#role .dclose,#position .dclose{
+	right: 30px;
+}
+
+#member .dtitle,#branch .dtitle{
+	font-size: 16px;
+	line-height: 28px;
+}
+
 .infotab {
 	float: left;
 /*	padding-left: 233px;
@@ -843,7 +873,7 @@ button#addrole img {
 }
 .treeopenwrap {
 	background-color: white;
-	border: solid 1px #ccc;
+	border: solid 1px #e6e6e6;
 }
 #tree21member .checkbox_true_full {
 	background: url(img/select-1.png) no-repeat;
@@ -992,7 +1022,7 @@ button#addrole img {
 	line-height: 36px;
 }
 .memberlist_21 {
-	border: 1px solid #ccc;
+	border: 1px solid #e6e6e6;
 	margin: -1px 0 0 0;
 	padding: 5px 0 0 0;
 	height: 400px;

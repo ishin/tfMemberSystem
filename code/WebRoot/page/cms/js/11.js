@@ -125,13 +125,13 @@ $(document).ready(function(){
 	},function(){
 	});
 
-	//$('#organlineRes').delegate('.searchResult','mouseleave',function(){
-	//	var _this = $(this)
-    //
-	//	setTimeout(function(){
-	//		_this.remove();
-	//	},1000)
-	//})
+	$('#organlineRes').delegate('.searchResult','mouseleave',function(){
+		var _this = $(this)
+
+		setTimeout(function(){
+			_this.remove();
+		},1000)
+	})
 
 
 	//组织结构树中的搜索
@@ -330,7 +330,11 @@ function loadmember(data) {
 	//}
 
 //	var w = ((document.body.clientWidth * 0.61 * 0.92 - 68 * 2) / 2 - $('#membertitle').css('width').replace('px',''));
-	$('.infotab').css('padding-left',  32 + '%');
+	$('.infotab').css({
+		position: 'absolute',
+		left: '50%',
+		marginLeft: '-100px'}
+	);
 
 	loadbranchmember(data.branchmember);
 }

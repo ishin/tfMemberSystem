@@ -41,7 +41,7 @@
 <div class="infopanel23">
 	<div class="info" style="height: 100%" id="star">
 		<div class="infotitle">
-			<div class="title">职务职位</div>
+			<div class="title">职务职位配置</div>
 		</div>
 		<div class="line23">
 			职务职位：
