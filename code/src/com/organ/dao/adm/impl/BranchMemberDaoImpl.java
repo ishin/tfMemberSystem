@@ -105,10 +105,15 @@ public class BranchMemberDaoImpl extends BaseDao<TBranchMember, Integer>
 	}
 
 	@Override
-	public int delRelationByIds(String userids) {
+	public int delRelationByIds(String userids, String isLogic) {
 		try {
-			String hql = (new StringBuilder("delete from TBranchMember where memberId in (").append(userids).append(")")).toString();
-			return delete(hql);
+			if (isLogic.equals("1")) {
+				String hql = (new StringBuilder("update TBranchMember set isDel=0 where memberId in (").append(userids).append(")")).toString();
+				return update(hql);
+			} else {
+				String hql = (new StringBuilder("delete from TBranchMember where memberId in (").append(userids).append(")")).toString();
+				return delete(hql);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

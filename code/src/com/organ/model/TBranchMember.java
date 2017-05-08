@@ -13,6 +13,7 @@ public class TBranchMember implements java.io.Serializable {
 	private Integer memberId;
 	private Integer positionId;
 	private String isMaster;
+	private String isDel;
 	private Integer listorder;
 
 	// Constructors
@@ -80,6 +81,14 @@ public class TBranchMember implements java.io.Serializable {
 
 	public void setIsMaster(String isMaster) {
 		this.isMaster = isMaster;
+	}
+
+	public String getIsDel() {
+		return isDel;
+	}
+
+	public void setIsDel(String isDel) {
+		this.isDel = isDel;
 	}
 
 	public Integer getListorder() {

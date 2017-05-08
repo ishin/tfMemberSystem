@@ -18,8 +18,7 @@ import com.organ.model.ImpUser;
 import com.organ.model.TBranch;
 import com.organ.service.adm.ImpService;
 
-public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
-		BranchDao {
+public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements BranchDao {
 
 	private static final Logger logger = LogManager.getLogger(BranchDaoImpl.class);
 	/*
@@ -260,6 +259,26 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements
 			List list = query.list();
 
 			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@Override
+	public List<TBranch> getBranchByMangerId(Integer[] ids) {
+		try {
+
+			Criteria ctr = getCriteria();
+			ctr.add(Restrictions.eq("managerId", ids));
+
+			List<TBranch> list = ctr.list();
+
+			if (list.size() > 0) {
+				return list;
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

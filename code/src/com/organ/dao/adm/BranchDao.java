@@ -73,4 +73,6 @@ public interface BranchDao extends IBaseDao<TBranch, Integer> {
 	 */
 	public List getBranchMember(String branchId, Integer organId);
 	
+	public List<TBranch> getBranchByMangerId(Integer[] ids);
+	
 }

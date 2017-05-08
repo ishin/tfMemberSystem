@@ -50,6 +50,10 @@
 		<property name="memberDao" ref="memberDao" />
 		<property name="textCodeDao" ref="textCodeDao" />
 		<property name="branchMemberDao" ref="branchMemberDao" />
+		<property name="memberRoleDao" ref="memberRoleDao" />
+		<property name="userValidDao" ref="userValidDao" />
+		<property name="cutLogoTempDao" ref="cutLogoTempDao" />
+		<property name="branchDao" ref="branchDao" />
 	</bean>
 	<bean id="branchService" class="com.organ.service.adm.impl.BranchServiceImpl" autowire="byName" >
 		<property name="branchDao" ref="branchDao" />
@@ -106,6 +110,7 @@
 	</bean>
 	<bean id="branchAction" class="com.organ.action.adm.BranchAction" scope="prototype" autowire="byName" >
 		<property name="branchService" ref="branchService" />
+		<property name="memberService" ref="memberService" />
 	</bean>
 	<bean id="privAction" class="com.organ.action.adm.PrivAction" scope="prototype" autowire="byName" >
 		<property name="privService" ref="privService" />

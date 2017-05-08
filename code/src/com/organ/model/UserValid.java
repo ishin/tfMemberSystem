@@ -16,6 +16,7 @@ public class UserValid {
 	private long unAuthTokenTime;			//未授权临时令牌生成时间
 	private long authTokenTime;				//已授权临时令牌生成时间
 	private long visitTokenTime;			//访问令牌生成时间
+	private String isDel;
 	
 	public int getId() {
 		return id;
@@ -76,6 +77,12 @@ public class UserValid {
 	}
 	public void setVisitTokenTime(long visitTokenTime) {
 		this.visitTokenTime = visitTokenTime;
+	}
+	public String getIsDel() {
+		return isDel;
+	}
+	public void setIsDel(String isDel) {
+		this.isDel = isDel;
 	}
 	
 }

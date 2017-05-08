@@ -156,7 +156,6 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 					+ "left join t_position P on BM.position_id=P.id "
 					+ "inner join t_organ O on M.organ_id=O.id "
 					+ "where M.id=" + id + " and M.isdel=1 and BM.is_master=1";
-			System.out.println(hql);
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 
 			System.out.println("getOneOfMember->hql :" + hql);

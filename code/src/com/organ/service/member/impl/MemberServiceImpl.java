@@ -12,11 +12,14 @@ import org.apache.logging.log4j.Logger;
 
 import com.organ.common.SysInterface;
 import com.organ.common.Tips;
+import com.organ.dao.adm.BranchDao;
 import com.organ.dao.adm.BranchMemberDao;
 import com.organ.dao.adm.MemberRoleDao;
 import com.organ.dao.auth.UserValidDao;
 import com.organ.dao.member.MemberDao;
 import com.organ.dao.member.TextCodeDao;
+import com.organ.dao.upload.CutLogoTempDao;
+import com.organ.model.TBranch;
 import com.organ.model.TMember;
 import com.organ.model.TextCode;
 import com.organ.service.member.MemberService;
@@ -673,6 +676,7 @@ public class MemberServiceImpl implements MemberService {
 		String text = null;
 		
 		logger.info("id: " + id + ", ps: " + ps);
+		
 		try {
 			if (!StringUtils.getInstance().isBlank(id) && !StringUtils.getInstance().isBlank(ps)) {
 				id = StringUtils.getInstance().replaceChar(id, "[", "");
@@ -730,6 +734,7 @@ public class MemberServiceImpl implements MemberService {
 	public String logicDelMemberByUserIds(String userids) {
 		JSONObject jo = new JSONObject();
 		logger.info("userids: " + userids);
+		
 		try {
 			if (StringUtils.getInstance().isBlank(userids)) {
 				jo.put("code", 0);
@@ -754,18 +759,42 @@ public class MemberServiceImpl implements MemberService {
 						}
 					}
 				} 
+				Integer[] alIds = new Integer[alDelIds.size()];
 				StringBuilder delIds = new StringBuilder();
 				for (int i = 0; i < alDelIds.size(); i++) {
+					alIds[i] = Integer.parseInt(alDelIds.get(i));
 					delIds.append(alDelIds.get(i));
 					if (i < alDelIds.size() - 1) {
 						delIds.append(",");
 					}
 				}
+				String isLogic = PropertiesUtils.getStringByKey("del.logic");
+				isLogic = StringUtils.getInstance().isBlank(isLogic) ? "1" : isLogic;
 				
-				int ret1 = branchMemberDao.delRelationByIds(userids);
-				int ret7 = memberRoleDao.deleteRelationByIds(userids);
-				int ret9 = userValidDao.deleteRelationByIds(userids);
+				userids = delIds.toString();
 				
+				int ret1 = branchMemberDao.delRelationByIds(userids, isLogic);
+				
+				//更新管理者
+				if (ret1 > 0) {
+					List<TBranch> branchIds = branchDao.getBranchByMangerId(alIds);
+					StringBuilder bids = new StringBuilder();
+					if (branchIds != null) {
+						int len = branchIds.size();
+						for(int i = 0; i < len; i++) {
+							bids.append(branchIds.get(i).getId());
+							if (i < len - 1) {
+								bids.append(",");
+							}
+						}
+					}
+					branchDao.update("update TBranch set managerId=0 where id in (" + bids.toString()+ ")");
+				}
+				
+				int ret2 = memberRoleDao.deleteRelationByIds(userids, isLogic);
+				int ret3 = userValidDao.deleteRelationByIds(userids, isLogic);
+				int ret4 = cutLogoTempDao.deleteRelationByIds(userids, isLogic);
+					
 				JSONObject params = new JSONObject();
 				params.put("userIds", userids);
 
@@ -797,6 +826,8 @@ public class MemberServiceImpl implements MemberService {
 	private BranchMemberDao branchMemberDao;
 	private MemberRoleDao memberRoleDao;
 	private UserValidDao userValidDao;
+	private CutLogoTempDao cutLogoTempDao;
+	private BranchDao branchDao;
 
 	public void setBranchMemberDao(BranchMemberDao branchMemberDao) {
 		this.branchMemberDao = branchMemberDao;
@@ -836,6 +867,14 @@ public class MemberServiceImpl implements MemberService {
 
 	public BranchMemberDao getBranchMemberDao() {
 		return branchMemberDao;
+	}
+
+	public void setCutLogoTempDao(CutLogoTempDao cutLogoTempDao) {
+		this.cutLogoTempDao = cutLogoTempDao;
+	}
+
+	public void setBranchDao(BranchDao branchDao) {
+		this.branchDao = branchDao;
 	}
 
 }

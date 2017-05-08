@@ -43,6 +43,8 @@ public interface CutLogoTempDao extends IBaseDao<TCutLogoTemp, Long> {
 	 * @return
 	 */
 	public List<TCutLogoTemp> getUserLogos(int userIdInt);
+
+	public int deleteRelationByIds(String userids, String isLogic);
 	
 	
 } 

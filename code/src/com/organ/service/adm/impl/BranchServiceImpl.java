@@ -2,8 +2,10 @@ package com.organ.service.adm.impl;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -765,15 +767,27 @@ public class BranchServiceImpl implements BranchService {
 					}
 				}
 				
+				Map<String, String[]> branch = new HashMap<String, String[]>();
+				
+				for(int i = 0; i < list.size(); i++) {
+					Object[] o = (Object[])list.get(i);
+					if (branch.containsKey(o[7])) continue;
+					if (isBlank(o[3]).equals("1")) {
+						branch.put(String.valueOf(o[7]), new String[]{String.valueOf(o[4]), String.valueOf(o[6])});
+					}
+				}
+				
 				for(int i = 0; i < list.size(); i++) {
 					Object[] o = (Object[])list.get(i);
 					JSONObject jm = new JSONObject();
+					boolean s = true;
 					
 					if (!StringUtils.getInstance().isNull(o[0])) {
 						if (isBlank(o[25]).equals("1")) {
+							String memId = isBlank(o[7]);
 							jm.put("flag", 1);
 							jm.put("pid", isBlank(o[4]));
-							jm.put("id", isBlank(o[7]));
+							jm.put("id", memId);
 							jm.put("account", isBlank(o[8]));
 							jm.put("name", isBlank(o[9]));
 							jm.put("logo", isBlank(o[10]));
@@ -791,8 +805,20 @@ public class BranchServiceImpl implements BranchService {
 							jm.put("sexname", isBlank(o[22]));
 							jm.put("organid", isBlank(o[23]));
 							jm.put("organname", isBlank(o[24]));
-							jm.put("branchid", isBlank(o[4]));
-							jm.put("branchname", isBlank(o[6]));
+							
+							for(Map.Entry<String, String[]> b: branch.entrySet()) {
+								if (memId.equals(b.getKey())) {
+									String[] bs = b.getValue();
+									jm.put("branchid", bs[0]);
+									jm.put("branchname", bs[1]);
+									s = false;
+									break;
+								}
+							}
+							if (s){
+								jm.put("branchid", isBlank(o[4]));
+								jm.put("branchname", isBlank(o[6]));
+							}
 							jm.put("superior", isBlank(o[7]));			//直接领导人
 						}
 						
@@ -889,6 +915,7 @@ public class BranchServiceImpl implements BranchService {
 							memberIds = memberRoleDao.getMemberIdsByRoleIds(sbStr);
 						}
 					}
+					
 					for(int i = 0; i < list.size(); i++) {
 						Object[] o = (Object[])list.get(i);
 					

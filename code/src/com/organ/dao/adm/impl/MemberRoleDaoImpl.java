@@ -2,15 +2,20 @@ package com.organ.dao.adm.impl;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
 import com.organ.common.BaseDao;
 import com.organ.dao.adm.MemberRoleDao;
 import com.organ.model.TMemberRole;
+import com.organ.utils.LogUtils;
 
 public class MemberRoleDaoImpl extends BaseDao<TMemberRole, Integer> implements MemberRoleDao {
 
+	private static final Logger logger = LogManager.getLogger(MemberRoleDaoImpl.class);
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<TMemberRole> getRoleForId(int id) {
@@ -25,6 +30,7 @@ public class MemberRoleDaoImpl extends BaseDao<TMemberRole, Integer> implements 
 				return list;
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
@@ -45,6 +51,7 @@ public class MemberRoleDaoImpl extends BaseDao<TMemberRole, Integer> implements 
 				return list;
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
@@ -57,6 +64,7 @@ public class MemberRoleDaoImpl extends BaseDao<TMemberRole, Integer> implements 
 			String hql = "select member_id from t_member_role where role_id in (" + ids + ")";
 			return runSql(hql);
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
@@ -64,11 +72,17 @@ public class MemberRoleDaoImpl extends BaseDao<TMemberRole, Integer> implements 
 	}
 
 	@Override
-	public int deleteRelationByIds(String userids) {
+	public int deleteRelationByIds(String userids, String isLogic) {
 		try {
-			String hql = (new StringBuilder("delete from TMemberRole where memberId in (").append(userids).append(")")).toString();
-			return delete(hql);
+			if (isLogic.equals("1")) {
+				String hql = (new StringBuilder("update TMemberRole set isDel=0 where memberId in (").append(userids).append(")")).toString();
+				return update(hql);
+			} else {
+				String hql = (new StringBuilder("delete from TMemberRole where memberId in (").append(userids).append(")")).toString();
+				return delete(hql);
+			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return 0;
