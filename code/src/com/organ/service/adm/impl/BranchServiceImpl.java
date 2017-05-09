@@ -21,7 +21,9 @@ import com.organ.common.Tips;
 import com.organ.dao.adm.BranchDao;
 import com.organ.dao.adm.BranchMemberDao;
 import com.organ.dao.adm.MemberRoleDao;
+import com.organ.dao.adm.OrgDao;
 import com.organ.dao.adm.PositionDao;
+import com.organ.dao.adm.impl.OrgDaoImpl;
 import com.organ.dao.appinfoconfig.AppInfoConfigDao;
 import com.organ.dao.auth.AppSecretDao;
 import com.organ.dao.member.MemberDao;
@@ -31,6 +33,7 @@ import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
 import com.organ.model.TMember;
 import com.organ.model.TMemberRole;
+import com.organ.model.TOrgan;
 import com.organ.model.TPosition;
 import com.organ.service.adm.BranchService;
 import com.organ.utils.JSONUtils;
@@ -52,6 +55,7 @@ public class BranchServiceImpl implements BranchService {
 	private PositionDao positionDao;
 	private AppSecretDao appSecretDao;
 	private AppInfoConfigDao appinfoconfigDao;
+	private OrgDao orgDao;
 	
 	public void setAppSecretDao(AppSecretDao appSecretDao) {
 		this.appSecretDao = appSecretDao;
@@ -71,7 +75,9 @@ public class BranchServiceImpl implements BranchService {
 	public void setPositionDao(PositionDao positionDao) {
 		this.positionDao = positionDao;
 	}
-
+	public void setOrgDao(OrgDao orgDao) {
+		this.orgDao = orgDao;
+	}
 	@Override
 	public TMember getMemberByMobile(String mobile) {
 		return memberDao.getMemberByMobile(mobile);
@@ -84,6 +90,7 @@ public class BranchServiceImpl implements BranchService {
 	public void setAppinfoconfigDao(AppInfoConfigDao appinfoconfigDao) {
 		this.appinfoconfigDao = appinfoconfigDao;
 	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see com.sealtalk.service.adm.BranchService#getOrganTree(java.lang.Integer)
@@ -1055,6 +1062,104 @@ public class BranchServiceImpl implements BranchService {
 	@Override
 	public boolean getMasterMemberById(int memberId) {
 		return branchMemberDao.getMasterMemberById(memberId);
+	}
+	@Override
+	public String getMembersByOrgan(int organId) {
+		JSONObject ret = new JSONObject();
+		TOrgan to = orgDao.getInfo(organId);
+		JSONArray ja = new JSONArray();
+		
+		if (to != null) {
+			String organName = to.getName();
+			List<TBranchMember> tbm = branchMemberDao.getBranchMemberByBranch(organId);
+			ArrayList<Integer> memIds = new ArrayList<Integer>();		
+			ArrayList<Integer> posIds = new ArrayList<Integer>();
+			Map<Integer, Integer> pidMid = new HashMap<Integer, Integer>();
+			
+			if (tbm!= null && tbm.size() > 0) {
+				for(int i = 0; i < tbm.size(); i++) {
+					TBranchMember tm = tbm.get(i);
+					
+					if (!memIds.contains(tm.getMemberId())) {
+						memIds.add(tm.getMemberId());
+						pidMid.put(tm.getMemberId(), tm.getPositionId());
+					}
+					if (!posIds.contains(tm.getPositionId())) {
+						posIds.add(tm.getPositionId());
+					}
+				}
+			}
+			
+			Integer[] memIdsArr = new Integer[memIds.size()];
+			Integer[] posIdsArr = new Integer[posIds.size()];
+			memIds.toArray(memIdsArr);
+			posIds.toArray(posIdsArr);
+			
+			if (memIdsArr.length > 0) {
+				//成员
+				List<TMember> listMem = memberDao.getMultipleMemberForIds(memIdsArr);
+				
+				if (listMem != null && listMem.size() > 0) {
+					for(int i = 0; i < listMem.size(); i++) {
+						TMember tm = listMem.get(i); 
+						
+						JSONObject jm = new JSONObject();
+						jm.put("flag", 1);
+						jm.put("pid", organId);
+						jm.put("id", tm.getId());
+						jm.put("account", tm.getAccount());
+						jm.put("name", tm.getFullname());
+						jm.put("logo", tm.getLogo());
+						jm.put("telephone", tm.getTelephone());
+						jm.put("email", tm.getEmail());
+						jm.put("address", tm.getAddress());
+						jm.put("birthday", tm.getBirthday());
+						jm.put("workno", tm.getWorkno());
+						jm.put("mobile", tm.getMobile());
+						jm.put("intro", tm.getIntro());
+						jm.put("organid", organId);
+						jm.put("organname", organName);
+						jm.put("sexid", tm.getSex());
+						jm.put("sexname", tm.getSex().equals("1") ? "男" : "女");
+						 
+						for(Map.Entry<Integer, Integer> m : pidMid.entrySet()) {
+							String tmId = tm.getId() + "";
+							String pId = m.getKey() + "";
+							
+							if (tmId.equals(pId)) {
+								jm.put("postitionid", m.getValue());
+								break;
+							}
+						}
+						ja.add(jm);
+					}
+				}
+				if (posIdsArr.length > 0) {
+					//职位
+					List<TPosition> listPos = positionDao.getMultiplePositionByIds(posIdsArr);
+					
+					if (listPos != null && listPos.size() > 0) {
+						for(int i = 0; i < ja.size(); i++) {
+							JSONObject jt = ja.getJSONObject(i);
+							for(int j = 0; j < listPos.size(); j++) {
+								TPosition tp = listPos.get(j);
+								
+								if (jt.containsKey("postitionid") && jt.getInt("postitionid") == tp.getId()) {
+									jt.put("postitionname", tp.getName());
+									break;
+								}
+							}
+						}
+					}
+				}
+			} 
+			ret.put("code", 1);
+			ret.put("text", ja.toString());
+		} else {
+			ret.put("code", 0);
+			ret.put("text", Tips.FAIL.getText());
+		}
+		return ret.toString();
 	}
 
 }

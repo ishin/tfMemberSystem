@@ -7,7 +7,6 @@ import org.hibernate.criterion.Restrictions;
 
 import com.organ.common.BaseDao;
 import com.organ.dao.adm.PositionDao;
-import com.organ.model.TMember;
 import com.organ.model.TPosition;
 
 public class PositionDaoImpl extends BaseDao<TPosition, Integer> implements PositionDao {
@@ -23,6 +22,20 @@ public class PositionDaoImpl extends BaseDao<TPosition, Integer> implements Posi
 		
 		if (list.size() > 0) {
 			return (TPosition) list.get(0);
+		}
+		
+		return null;
+	}
+
+	@Override
+	public List<TPosition> getMultiplePositionByIds(Integer[] posIds) {
+		Criteria ctr = getCriteria();
+		ctr.add(Restrictions.in("id", posIds));
+		
+		List list = ctr.list();
+		
+		if (list != null && list.size() > 0) {
+			return list;
 		}
 		
 		return null;

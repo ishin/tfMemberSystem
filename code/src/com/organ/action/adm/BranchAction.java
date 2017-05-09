@@ -437,7 +437,7 @@ public class BranchAction extends BaseAction {
 			branchMember.setBranchId(Integer.parseInt(memberbranchid));
 		}
 		else {
-			branchMember.setBranchId(0);
+			branchMember.setBranchId(organId);
 		}
 		String memberpositionid = clearChar(this.request.getParameter("memberpositionid"));
 		if ( memberpositionid != null && !"".equals(memberpositionid)) {

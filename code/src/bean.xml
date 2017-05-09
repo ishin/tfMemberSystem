@@ -67,6 +67,7 @@
 		<property name="positionDao" ref="positionDao" />
 		<property name="appinfoconfigDao" ref="appinfoconfigDao" />
 		<property name="appSecretDao" ref="appSecretDao" />
+		<property name="orgDao" ref="orgDao" />
 	</bean>
 	<bean id="privService" class="com.organ.service.adm.impl.PrivServiceImpl" autowire="byName" >
 		<property name="privDao" ref="privDao" />
