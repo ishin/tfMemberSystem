@@ -15,18 +15,11 @@ import com.organ.utils.LogUtils;
 public class PositionServiceImpl implements PositionService {
 	private static final Logger logger = LogManager.getLogger(PositionServiceImpl.class);
 	private PositionDao positionDao;
-	private BranchMemberDao branchMemberDao; 
 	
 	public void setPositionDao(PositionDao positionDao) {
 		this.positionDao = positionDao;
 	}
 	
-
-	public void setBranchMemberDao(BranchMemberDao branchMemberDao) {
-		this.branchMemberDao = branchMemberDao;
-	}
-
-
 	@Override
 	public List getByOrgan(Integer organId) {
 		

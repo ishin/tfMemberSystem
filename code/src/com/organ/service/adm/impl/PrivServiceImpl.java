@@ -132,6 +132,7 @@ public class PrivServiceImpl implements PrivService {
 				TMemberRole mr = new TMemberRole();
 				mr.setMemberId(Integer.parseInt(ms[i]));
 				mr.setRoleId(roleId);
+				mr.setIsDel("1");
 				mr.setListorder(0);
 				memberRoleDao.save(mr);
 			}

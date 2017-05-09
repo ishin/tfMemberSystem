@@ -120,5 +120,6 @@ public interface BranchService {
 	
 	public TMember getMemberByEmail(String parameter);
 	public String getSuperMember(int organId);
+	public boolean getMasterMemberById(int memberId);
 	
 }

@@ -627,6 +627,7 @@ public class BranchServiceImpl implements BranchService {
 			bm.setPositionId(user.getPositionId());
 			bm.setIsMaster("1");
 			bm.setListorder(0);
+			bm.setIsDel("1");
 			branchMemberDao.save(bm);
 		}		
 		
@@ -1050,6 +1051,10 @@ public class BranchServiceImpl implements BranchService {
 			return j.toString();
 		}
 		
+	}
+	@Override
+	public boolean getMasterMemberById(int memberId) {
+		return branchMemberDao.getMasterMemberById(memberId);
 	}
 
 }

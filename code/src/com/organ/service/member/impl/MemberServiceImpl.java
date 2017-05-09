@@ -623,9 +623,9 @@ public class MemberServiceImpl implements MemberService {
 		try {
 			int userIdInt = Integer.parseInt(userId);
 			TMember tm = memberDao.getMemberForId(userIdInt);
-			JSONObject j = JSONUtils.getInstance().modelToJSONObj(tm);
-			j.remove("password");
 			if (tm != null) {
+				JSONObject j = JSONUtils.getInstance().modelToJSONObj(tm);
+				j.remove("password");
 				jo.put("code", 1);
 				jo.put("text", j.toString());
 			} else {
