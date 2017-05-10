@@ -161,11 +161,11 @@ public class AppSecretServiceImpl implements AppSecretService {
 
 							int id = as.getId();
 							UserValid uv = userValidDao.getUserValidByAsId(id);
-
+							
 							if (uv == null) {
 								uv = new UserValid();
 								uv.setAsid(as.getId());
-							}
+							} 
 							uv.setUnAuthToken(unAuthToken);
 							uv.setUnAuthTokenTime(tokenValidTime);
 							uv.setIsDel("1");
@@ -444,7 +444,6 @@ public class AppSecretServiceImpl implements AppSecretService {
 								uv.setAuthTokenTime(now + authTokenTimeL);
 								uv.setUserId(su.getId());
 								uv.setInfo(3);
-								uv.setIsDel("1");
 								userValidDao.setUnAuthToken(uv);
 								code = "200";
 								text = authToken;

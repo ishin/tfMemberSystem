@@ -583,7 +583,6 @@ public class BranchAction extends BaseAction {
 	
 	public String del() throws ServletException {
 		Integer id = Integer.parseInt(clearChar(this.request.getParameter("id")));
-		Integer r = Integer.parseInt(clearChar(this.request.getParameter("r")));
 		JSONObject jo = new JSONObject();
 		
 		// 删除组织

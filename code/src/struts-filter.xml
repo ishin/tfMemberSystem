@@ -32,7 +32,8 @@
 						updateUserPwdForPhoneAb,updateUserPwdForAccountAb,valideOldPwdAb,getMemberIdsByAccountAb,saveTextCodeAb,getTextCodeAb,
 						updateUserTokenForIdAb,checkAccountAb,getMemberCountAb,getMultipleMemberForAccountsAb,getAllMemberOnLineStatusAb,
 						getAllMemberInfoAb,updateMemberInfoForAppAb,updateMemberInfoForWebAb,searchUserAb,getOneOfMemberAb,registOrgan,getOrganCodeAb,
-						httpUploadAb,sendSysMsg,sendPrivateMsg,sendGrayMsg,logicDelMemberByUserIds,getMembersByOrganAb
+						httpUploadAb,sendSysMsg,sendPrivateMsg,sendGrayMsg,logicDelMemberByUserIds,getMembersByOrganAb,
+						getTempTokenSceneOne,getTempTokenSceneTwo,redirectLogin,reqAuthorizeOne,reqAuthorizeTwo,reqAuthorizeTwoForApp,getRealToken,getAuthResource
 					</param>
 					<!-- <param name="includeMethods"></param> -->
 				</interceptor-ref>

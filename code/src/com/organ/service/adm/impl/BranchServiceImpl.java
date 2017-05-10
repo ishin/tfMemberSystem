@@ -23,7 +23,6 @@ import com.organ.dao.adm.BranchMemberDao;
 import com.organ.dao.adm.MemberRoleDao;
 import com.organ.dao.adm.OrgDao;
 import com.organ.dao.adm.PositionDao;
-import com.organ.dao.adm.impl.OrgDaoImpl;
 import com.organ.dao.appinfoconfig.AppInfoConfigDao;
 import com.organ.dao.auth.AppSecretDao;
 import com.organ.dao.member.MemberDao;
@@ -515,11 +514,11 @@ public class BranchServiceImpl implements BranchService {
 				}
 			}  
 			if (s) {
-				if (isLogic.equals("1")) {
-					branchDao.delete("update TBranch set isDel='0' where id=" + branchId);
-				} else {
+				//if (isLogic.equals("1")) {
+					//branchDao.delete("update TBranch set isDel='0' where id=" + branchId);
+				//} else {
 					branchDao.delete("delete from TBranch where id=" + branchId);
-				}
+				//}
 			}
 		}
 		return s;

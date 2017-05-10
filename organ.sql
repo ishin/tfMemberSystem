@@ -78,6 +78,7 @@ CREATE TABLE `t_branch` (
   `fax` VARCHAR(50),
   `intro` VARCHAR(1024),
   `listorder` INT NULL DEFAULT 0,
+  `isdel` char(1) default 1,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 

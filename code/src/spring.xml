@@ -146,12 +146,11 @@
 	
 	<!-- 定义切面，对com.organ.service包下的所有类的所有方法 都应用事务规则 -->
 	<aop:config>
-		<aop:advisor pointcut="execution(* com.organ.service..*(..))"
-			advice-ref="txAdvice" />
+		<aop:advisor pointcut="execution(* com.organ.service..*(..))" advice-ref="txAdvice" />
 	</aop:config>
 	
 	<!-- 事务 控制 -->
-	<tx:advice id="txAdvice">
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
 			<tx:method name="get*" read-only="true" />
 			<tx:method name="*" propagation="REQUIRED" rollback-for="Exception" />
