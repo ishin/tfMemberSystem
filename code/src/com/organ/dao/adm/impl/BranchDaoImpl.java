@@ -225,6 +225,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements BranchDa
 		}
 
 		logger.info(sql);
+		
 		try {
 			SQLQuery query = this.getSession().createSQLQuery(sql);
 
@@ -241,17 +242,16 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements BranchDa
 	@SuppressWarnings("unchecked")
 	@Override
 	public List getBranchMember(String branchId, Integer organId) {
-		String sql = "select " + "M.id," + "M.account," + "M.fullname,"
-				+ "M.logo," + "M.telephone," + "M.email," + "M.address,"
-				+ "M.token," + "M.sex," + "M.birthday," + "M.workno,"
-				+ "M.mobile," + "M.groupmax," + "M.groupuse," + "M.intro,"
-				+ "P.id PID," + "P.name," + "S.id," + "S.name "
+		String sql = "select M.id,M.account,M.fullname,"
+				+ "M.logo,M.telephone,M.email,M.address,"
+				+ "M.token,M.sex,M.birthday,M.workno,"
+				+ "M.mobile,M.groupmax,M.groupuse,M.intro,"
+				+ "P.id PID,P.name,S.id,S.name,M.isdel,BM.is_master "
 				+ "from t_branch_member BM "
 				+ "left join t_position P on BM.position_id=P.id "
 				+ "inner join t_member M on BM.member_id=M.id "
-				+ "left join t_sex S on S.id=M.sex " + "where M.organ_id="+organId
-				+ " and M.isdel=1 and BM.branch_id="
-				+ branchId;
+				+ "left join t_sex S on S.id=M.sex" 
+				+ " where M.organ_id=" + organId + " and BM.branch_id=" + branchId;
 
 		try {
 			SQLQuery query = this.getSession().createSQLQuery(sql);

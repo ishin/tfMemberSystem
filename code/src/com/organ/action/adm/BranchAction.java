@@ -27,6 +27,7 @@ import com.organ.service.member.MemberService;
 import com.organ.service.msg.MessageService;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PinyinGenerator;
+import com.organ.utils.PropertiesUtils;
 import com.organ.utils.StringUtils;
 import com.organ.utils.TextHttpSender;
 import com.organ.utils.TimeGenerator;
@@ -281,6 +282,7 @@ public class BranchAction extends BaseAction {
 			branchMember.setIsDel("1");
 			branchService.saveBranchMember(branchMember);
 		}
+		
 		JSONObject jo = new JSONObject();
 		jo.put("branchid", branchId);
 		
@@ -291,7 +293,6 @@ public class BranchAction extends BaseAction {
 			return jo.toString();
 		}
 	}
-	
 	
 	public String saveMember() throws ServletException {
 		TMember member = null;
@@ -581,16 +582,18 @@ public class BranchAction extends BaseAction {
 	}
 	
 	public String del() throws ServletException {
-		
 		Integer id = Integer.parseInt(clearChar(this.request.getParameter("id")));
 		Integer r = Integer.parseInt(clearChar(this.request.getParameter("r")));
+		JSONObject jo = new JSONObject();
 		
 		// 删除组织
 		if (id < 101) {
 		}
 		// 删除部门
 		else if (id < 10001) {
-			branchService.delBranch(id, r, this.getOrganId());
+			String isLogic = PropertiesUtils.getStringByKey("del.logic");
+			boolean ret = branchService.delBranch(id, isLogic, this.getOrganId());
+			jo.put("status", ret);
 		}
 		// 删除人员
 		else {
@@ -599,9 +602,9 @@ public class BranchAction extends BaseAction {
 			//逻辑删除
 			String ids = "["+id+"]";
 			memberService.logicDelMemberByUserIds(ids);
+			jo.put("status", true);
 		}
 		
-		JSONObject jo = new JSONObject();
 		jo.put("id", id);
 		if (appId == null && secret == null) {
 			returnToClient(jo.toString());

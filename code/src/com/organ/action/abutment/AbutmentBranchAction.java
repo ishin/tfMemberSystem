@@ -23,7 +23,7 @@ public class AbutmentBranchAction extends BaseAction {
 	private static final Logger logger = LogManager.getLogger(AbutmentBranchAction.class);
 
 	/**
-	 * 获取部门树带成员
+	 * 获取公司下的成员
 	 * @return
 	 * @throws ServletException
 	 */
