@@ -43,7 +43,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	public List getMemberPosition(Integer memberId) {
 
 		String sql = "select position_id, branch_id, id from t_branch_member"
-				+ " where member_id = " + memberId + " order by is_master desc";
+				+ " where member_id = " + memberId + " and isdel='1' order by is_master desc";
 		SQLQuery query = this.getSession().createSQLQuery(sql);
 
 		List list = query.list();
@@ -55,7 +55,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	public List getMemberRole(Integer memberId) {
 
 		String sql = "select role_id from t_member_role"
-				+ " where member_id = " + memberId;
+				+ " where member_id = " + memberId + " and isdel='1'";
 		SQLQuery query = this.getSession().createSQLQuery(sql);
 
 		List list = query.list();
@@ -150,20 +150,35 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 					+ "P.id PID,"
 					+ "P.name PNAME,"
 					+ "O.id OID,"
-					+ "O.name ONAME "
+					+ "O.name ONAME,"
+					+ "BM.is_master "
 					+ "from t_member M left join t_branch_member BM on M.id=BM.member_id "
 					+ "left join t_branch B on BM.branch_id=B.id "
 					+ "left join t_position P on BM.position_id=P.id "
 					+ "inner join t_organ O on M.organ_id=O.id "
-					+ "where M.id=" + id + " and M.isdel=1 and BM.is_master=1";
+					+ "where M.id=" + id + " and M.isdel=1";
+			
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 
 			System.out.println("getOneOfMember->hql :" + hql);
 
 			List list = query.list();
 
-			if (list.size() > 0) {
-				return (Object[]) list.get(0);
+			if (list != null) {
+				int len = list.size();
+				if(len == 1) {
+					return (Object[])list.get(0);
+				} else if (len > 1) {
+					Object[] ret = null;
+					for(int i = 0; i < len; i++) {
+						Object[] t = (Object[]) list.get(0);
+						if (String.valueOf(t[19]).equals("1")) {
+							ret = t;
+							break;
+						}
+					}
+					return ret;
+				}
 			}
 
 		} catch (Exception e) {
@@ -569,13 +584,14 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 					+ "M.mobile,"
 					+ "S.name SNAME,"
 					+ "P.name PNAME,"
-					+ "O.name ONAME "
+					+ "O.name ONAME,"
+					+ "BM.is_master "
 					+ "from t_member M left join t_branch_member BM on M.id=BM.member_id "
 					+ "left join t_branch B on BM.branch_id=B.id "
 					+ "left join t_position P on BM.position_id=P.id "
 					+ "left join t_sex S on M.sex=S.id "
 					+ "inner join t_organ O on M.organ_id=O.id "
-					+ "where M.id=" + id + " and M.isdel=1 and BM.is_master=1";
+					+ "where M.id=" + id + " and M.isdel=1";
 
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 
@@ -584,7 +600,20 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 			List list = query.list();
 
 			if (list.size() > 0) {
-				return (Object[]) list.get(0);
+				int len = list.size();
+				if(len == 1) {
+					return (Object[])list.get(0);
+				} else if (len > 1) {
+					Object[] ret = null;
+					for(int i = 0; i < len; i++) {
+						Object[] t = (Object[]) list.get(0);
+						if (String.valueOf(t[8]).equals("1")) {
+							ret = t;
+							break;
+						}
+					}
+					return ret;
+				}
 			}
 
 		} catch (Exception e) {
@@ -773,10 +802,15 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	}
 
 	@Override
-	public int logicDelMemberByUserIds(String userids) {
+	public int logicDelMemberByUserIds(String userids, String isLogic) {
 		try {
-			String hql = (new StringBuilder("update TMember set isDel=0 where id in(").append(userids).append(")")).toString();
-			return update(hql);
+			if (isLogic.equals("1")) {
+				String hql = (new StringBuilder("update TMember set isDel=0 where id in(").append(userids).append(")")).toString();
+				return update(hql);
+			} else {
+				String hql = (new StringBuilder("delete from TMember where id in(").append(userids).append(")")).toString();
+				return delete(hql);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -784,9 +818,14 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	}
 
 	@Override
-	public List<String> getNotDelIds(String userids) {
+	public List<String> getNotDelIds(String userids, String isLogic) {
 		try {
-			String hql = (new StringBuilder("select id from t_member t where t.isdel!=0 and t.id in(").append(userids).append(")")).toString();
+			String hql = null;
+			if (isLogic.equals("1")) {
+				hql = (new StringBuilder("select id from t_member t where t.isdel!=0 and t.id in(").append(userids).append(")")).toString();
+			} else {
+				hql = (new StringBuilder("select id from t_member t where t.id in(").append(userids).append(")")).toString();
+			}
 			List list = runSql(hql);
 			List<String> ids = new ArrayList<String>();
 			

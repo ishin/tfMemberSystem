@@ -623,9 +623,9 @@ public class MemberServiceImpl implements MemberService {
 		try {
 			int userIdInt = Integer.parseInt(userId);
 			TMember tm = memberDao.getMemberForId(userIdInt);
-			JSONObject j = JSONUtils.getInstance().modelToJSONObj(tm);
-			j.remove("password");
 			if (tm != null) {
+				JSONObject j = JSONUtils.getInstance().modelToJSONObj(tm);
+				j.remove("password");
 				jo.put("code", 1);
 				jo.put("text", j.toString());
 			} else {
@@ -746,10 +746,15 @@ public class MemberServiceImpl implements MemberService {
 				String[] idArr = userids.split(",");
 				List<String> alDelIds = new ArrayList<String>();
 				
-				int ret = memberDao.logicDelMemberByUserIds(userids);
+				String isLogic = PropertiesUtils.getStringByKey("del.logic");
+				isLogic = StringUtils.getInstance().isBlank(isLogic) ? "1" : isLogic;
+				
+				int ret = memberDao.logicDelMemberByUserIds(userids, isLogic);
+				Integer[] alIds = null;
+				StringBuilder delIds = new StringBuilder();
 				
 				if (ret != idArr.length) {
-					List<String> noDelIds = memberDao.getNotDelIds(userids);
+					List<String> noDelIds = memberDao.getNotDelIds(userids, isLogic);
 					
 					if (noDelIds != null) {
 						for(int i = 0; i < idArr.length; i++) {
@@ -758,21 +763,24 @@ public class MemberServiceImpl implements MemberService {
 							}
 						}
 					}
-				} 
-				Integer[] alIds = new Integer[alDelIds.size()];
-				StringBuilder delIds = new StringBuilder();
-				for (int i = 0; i < alDelIds.size(); i++) {
-					alIds[i] = Integer.parseInt(alDelIds.get(i));
-					delIds.append(alDelIds.get(i));
-					if (i < alDelIds.size() - 1) {
-						delIds.append(",");
+
+					alIds = new Integer[alDelIds.size()];
+			
+					for (int i = 0; i < alDelIds.size(); i++) {
+						alIds[i] = Integer.parseInt(alDelIds.get(i));
+						delIds.append(alDelIds.get(i));
+						if (i < alDelIds.size() - 1) {
+							delIds.append(",");
+						}
+					}
+					userids = delIds.toString();
+				} else {
+					alIds = new Integer[idArr.length];
+					for (int i = 0; i < idArr.length; i++) {
+						alIds[i] = Integer.parseInt(idArr[i]);
 					}
 				}
-				String isLogic = PropertiesUtils.getStringByKey("del.logic");
-				isLogic = StringUtils.getInstance().isBlank(isLogic) ? "1" : isLogic;
-				
-				userids = delIds.toString();
-				
+			
 				int ret1 = branchMemberDao.delRelationByIds(userids, isLogic);
 				
 				//更新管理者
@@ -787,8 +795,8 @@ public class MemberServiceImpl implements MemberService {
 								bids.append(",");
 							}
 						}
+						branchDao.update("update TBranch set managerId=0 where id in (" + bids.toString()+ ")");
 					}
-					branchDao.update("update TBranch set managerId=0 where id in (" + bids.toString()+ ")");
 				}
 				
 				int ret2 = memberRoleDao.deleteRelationByIds(userids, isLogic);
@@ -797,6 +805,7 @@ public class MemberServiceImpl implements MemberService {
 					
 				JSONObject params = new JSONObject();
 				params.put("userIds", userids);
+				params.put("isLogic", isLogic);
 
 				String protocol = PropertiesUtils.getStringByKey("im.protocol");
 				String host = PropertiesUtils.getStringByKey("im.host");
@@ -815,6 +824,11 @@ public class MemberServiceImpl implements MemberService {
 			e.printStackTrace();
 		}
 		return jo.toString();
+	}
+	
+	@Override
+	public void updateBySql(int organId, String address) {
+		memberDao.update("update TMember set address='" + address + "' where organId=" + organId);
 	}
 	
 	private String isBlank(Object o) {

@@ -37,6 +37,7 @@ public class UserValidDaoImpl extends BaseDao<UserValid, Integer> implements
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("unAuthToken", unAuthToken));
+			ctr.add(Restrictions.eq("isDel", "1"));
 
 			List<UserValid> list = ctr.list();
 
@@ -56,6 +57,7 @@ public class UserValidDaoImpl extends BaseDao<UserValid, Integer> implements
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("authToken", authToken));
+			ctr.add(Restrictions.eq("isDel", 1));
 
 			List<UserValid> list = ctr.list();
 
@@ -75,6 +77,7 @@ public class UserValidDaoImpl extends BaseDao<UserValid, Integer> implements
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("visitToken", visitToken));
+			ctr.add(Restrictions.eq("isDel", "1"));
 
 			List<UserValid> list = ctr.list();
 
@@ -95,6 +98,7 @@ public class UserValidDaoImpl extends BaseDao<UserValid, Integer> implements
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("asid", asId));
+			ctr.add(Restrictions.eq("isDel", "1"));
 
 			List<UserValid> list = ctr.list();
 
@@ -126,7 +130,7 @@ public class UserValidDaoImpl extends BaseDao<UserValid, Integer> implements
 	public int deleteRelationByIds(String userids, String isLogic) {
 		try {
 			if (isLogic.equals("1")) {
-				String hql = (new StringBuilder("update UserValid set idDel=0 where userId in (").append(userids).append(")")).toString();
+				String hql = (new StringBuilder("update UserValid set isDel=0 where userId in (").append(userids).append(")")).toString();
 				return update(hql);
 			} else {
 				String hql = (new StringBuilder("delete from UserValid where userId in (").append(userids).append(")")).toString();

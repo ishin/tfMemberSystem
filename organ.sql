@@ -98,7 +98,7 @@ CREATE TABLE `t_member` (
   `pinyin` VARCHAR(256) COMMENT '姓名首字母',
   `allpinyin` VARCHAR(256) COMMENT '姓名全拼',
   `workno` VARCHAR(50) COMMENT '工号',
-  `sex` CHAR(1) not null comment '1',
+  `sex` CHAR(1) not null default '1' comment '1',
   `birthday` VARCHAR(8),
   `logo` VARCHAR(256),
   `email` VARCHAR(256),
@@ -128,6 +128,7 @@ CREATE TABLE `t_branch_member` (
   `member_id` INT NOT NULL DEFAULT 0,
   `position_id` INT NOT NULL DEFAULT 0,
   `is_master` CHAR(1) DEFAULT '0' COMMENT '0非主要职能，1主要智能',
+  `isdel` char(1) default '1' comment '0已删除,未删除',
   `listorder` INT NULL DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
@@ -188,6 +189,7 @@ CREATE TABLE `t_member_role` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `member_id` INT NOT NULL DEFAULT 0,
   `role_id` INT NOT NULL DEFAULT 0,
+  `isdel` char(1) default '1',
   `listorder` INT DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
@@ -320,6 +322,7 @@ CREATE TABLE `t_cutlogtemp` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL DEFAULT '0',
   `log_name` VARCHAR(256) NOT NULL DEFAULT '0',
+  `isDel` char(1) default '1',
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
@@ -350,6 +353,7 @@ CREATE TABLE `t_uservalid` (
   `visittokentime` BIGINT(11) DEFAULT 0,
   `userid` int,
   `info` int default 3,
+  `isdel` char(1) default '1',
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 

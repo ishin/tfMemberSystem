@@ -14,12 +14,15 @@ import net.sf.json.JSONObject;
 import com.organ.common.AuthTips;
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
+import com.organ.dao.adm.OrgDao;
 import com.organ.model.AppSecret;
 import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
 import com.organ.model.TMember;
 import com.organ.model.TMemberRole;
+import com.organ.model.TOrgan;
 import com.organ.service.adm.BranchService;
+import com.organ.service.adm.OrgService;
 import com.organ.service.member.MemberService;
 import com.organ.service.msg.MessageService;
 import com.organ.utils.PasswordGenerator;
@@ -268,11 +271,14 @@ public class BranchAction extends BaseAction {
 		if (!status) {
 			//增加管理者
 			TBranchMember branchMember = new TBranchMember();
+			boolean b = branchService.getMasterMemberById(memberId);
 			branchMember.setMemberId(memberId);
 			branchMember.setBranchId(branchId);
-			branchMember.setIsMaster("1");
+			
+			branchMember.setIsMaster(!b ? "1" : "0");
 			branchMember.setPositionId(0);
 			branchMember.setListorder(0);
+			branchMember.setIsDel("1");
 			branchService.saveBranchMember(branchMember);
 		}
 		JSONObject jo = new JSONObject();
@@ -301,170 +307,172 @@ public class BranchAction extends BaseAction {
 		String memberSex = clearChar(this.request.getParameter("membersex"));
 		String memberWorkNo = clearChar(this.request.getParameter("memberworkno"));
 		
-		String[] mustParams = {"id", "memberAccount", "memberMobile", "memberFullName"};
-		String result = this.valideNullParams(this.request, mustParams);
+		if (StringUtils.getInstance().isBlank(memberSex)) {
+			memberSex = "1";
+		}
 		
-		if (result == null) {
-			if (StringUtils.getInstance().isBlank(memberSex)) {
-				memberSex = "1";
-			}
-			
-			int organId = getSessionUserOrganId();
-			boolean sms = false;
-			
-			JSONObject jo = new JSONObject();
-			
-			int superState = 0;
-			if (id != null && !"".equals(id)) {
-				member = branchService.getMemberObjectById(Integer.parseInt(id));
-				String account = member.getAccount();
-				account = account == null ? "" : account;
-				superState = member.getSuperAdmin();
-				if (!member.getAccount().equalsIgnoreCase(memberAccount)) {
-					if (branchService.getMemberByAccount(memberAccount, organId) != null) {
-						JSONObject jo1 = new JSONObject();
-						jo1.put("memberid", 0);
-						returnToClient(jo1.toString());
-						return "text";
-					}
-				}
-				String mobile = member.getMobile();
-				String telPhone = member.getTelephone();
-				mobile = mobile == null ? "" : mobile;
-				if (!mobile.equalsIgnoreCase(memberMobile)) {
-					if (branchService.getMemberByMobile(memberMobile) != null) {
-						JSONObject jo1 = new JSONObject();
-						jo1.put("memberid", -1);
-						returnToClient(jo1.toString());
-						return "text";
-					}
-				}
-				String email = member.getEmail();
-				email = email == null ? "" : email;
-				if (!member.getEmail().equalsIgnoreCase(memberMail)) {
-					if (branchService.getMemberByEmail(memberMail) != null) {
-						JSONObject jo1 = new JSONObject();
-						jo1.put("memberid", -2);
-						returnToClient(jo1.toString());
-						return "text";
-					}
-				}
-			} else {
+		int organId = getSessionUserOrganId();
+		boolean sms = false;
+		
+		JSONObject jo = new JSONObject();
+		
+		int superState = 0;
+		if (id != null && !"".equals(id)) {
+			member = branchService.getMemberObjectById(Integer.parseInt(id));
+			String account = member.getAccount();
+			account = account == null ? "" : account;
+			superState = member.getSuperAdmin();
+			if (!member.getAccount().equalsIgnoreCase(memberAccount)) {
 				if (branchService.getMemberByAccount(memberAccount, organId) != null) {
 					JSONObject jo1 = new JSONObject();
 					jo1.put("memberid", 0);
 					returnToClient(jo1.toString());
 					return "text";
 				}
+			}
+			String mobile = member.getMobile();
+			String telPhone = member.getTelephone();
+			mobile = mobile == null ? "" : mobile;
+			if (!mobile.equalsIgnoreCase(memberMobile)) {
 				if (branchService.getMemberByMobile(memberMobile) != null) {
 					JSONObject jo1 = new JSONObject();
 					jo1.put("memberid", -1);
 					returnToClient(jo1.toString());
 					return "text";
 				}
-				if (!StringUtils.getInstance().isBlank(memberMail) && branchService.getMemberByEmail(memberMail) != null) {
+			}
+			String email = member.getEmail();
+			email = email == null ? "" : email;
+			if (!member.getEmail().equalsIgnoreCase(memberMail)) {
+				if (branchService.getMemberByEmail(memberMail) != null) {
 					JSONObject jo1 = new JSONObject();
 					jo1.put("memberid", -2);
 					returnToClient(jo1.toString());
 					return "text";
 				}
-				member = new TMember();
-				member.setGroupmax(0);
-				member.setGroupuse(0);
-				member.setPassword(PasswordGenerator.getInstance().getMD5Str("111111"));
-				sms = true;
 			}
-			if (memberAccount != null)
-				member.setAccount(memberAccount);
-			if (memberAddress != null)
-				member.setAddress(memberAddress);
-			if (memberBirthday != null) {
-				String bd = memberBirthday;
-				if (bd.length() == 10) {
-					member.setBirthday(bd.substring(0,4) + bd.substring(5,7) + bd.substring(8,10));
-				}
-			}
-			if (memberMail != null)
-				member.setEmail(memberMail);
-			if (memberFullName != null) {
-				member.setFullname(memberFullName);
-				member.setPinyin(PinyinGenerator.getPinYinHeadChar(memberFullName));
-				member.setAllpinyin(PinyinGenerator.getPinYin(memberFullName));
-			}
-			if (memberIntro != null)
-				member.setIntro(memberIntro);
-			if (memberMobile != null)
-				member.setMobile(memberMobile);
-			if (memberSex != null)
-				member.setSex(memberSex);
-			if (memberPhone != null)
-				member.setTelephone(memberPhone);
-			if (memberWorkNo != null)
-				member.setWorkno(memberWorkNo);
-			
-			member.setOrganId(this.getOrganId());
-	
-			long now = TimeGenerator.getInstance().getUnixTime();
-			member.setCreatetokendate(Integer.valueOf(String.valueOf(now)));
-			member.setIsDel(1);
-			member.setSuperAdmin(superState);
-			
-			Integer memberId = branchService.saveMember(member);
-	
-			//部门职务
-			TBranchMember branchMember = null;
-			String branchmemberid = clearChar(this.request.getParameter("branchmemberid"));
-			if ( branchmemberid != null && !"".equals(branchmemberid)) {
-				branchMember = branchService.getBranchMemberById(Integer.parseInt(branchmemberid));
-			}
-			else {
-				branchMember = new TBranchMember();
-				branchMember.setListorder(0);
-				branchMember.setIsMaster("0");
-			}
-			branchMember.setMemberId(memberId);
-			String memberbranchid = clearChar(this.request.getParameter("memberbranchid"));
-			if ( memberbranchid!= null && !"".equals(memberbranchid)) {
-				branchMember.setBranchId(Integer.parseInt(memberbranchid));
-			}
-			else {
-				branchMember.setBranchId(0);
-			}
-			String memberpositionid = clearChar(this.request.getParameter("memberpositionid"));
-			if ( memberpositionid != null && !"".equals(memberpositionid)) {
-				branchMember.setPositionId(Integer.parseInt(memberpositionid));
-			}
-			else {
-				branchMember.setPositionId(0);
-			}
-			branchService.saveBranchMember(branchMember);
-			
-			//人员角色
-			String membberroleid = clearChar(this.request.getParameter("memberroleid"));
-			if ( membberroleid != null && !"".equals(membberroleid)) {
-				TMemberRole memberRole = null;
-				memberRole = branchService.getMemberRoleByMemberId(memberId);
-				if (memberRole == null) {
-					memberRole = new TMemberRole();
-					memberRole.setMemberId(memberId);
-					memberRole.setListorder(0);
-				}
-				memberRole.setRoleId(Integer.parseInt(membberroleid));
-				branchService.saveMemberRole(memberRole);
-			}
-			
-			//发短信
-			if (sms) {
-				String msg = "您的IMS产品帐号" + member.getAccount() + ", 密码111111.";
-				TextHttpSender.getInstance().sendText(member.getMobile(), msg);
-			}
-			
-			jo.put("memberid", memberId);
-			returnToClient(jo.toString());
 		} else {
-			returnToClient(result);
+			if (branchService.getMemberByAccount(memberAccount, organId) != null) {
+				JSONObject jo1 = new JSONObject();
+				jo1.put("memberid", 0);
+				returnToClient(jo1.toString());
+				return "text";
+			}
+			if (branchService.getMemberByMobile(memberMobile) != null) {
+				JSONObject jo1 = new JSONObject();
+				jo1.put("memberid", -1);
+				returnToClient(jo1.toString());
+				return "text";
+			}
+			if (!StringUtils.getInstance().isBlank(memberMail) && branchService.getMemberByEmail(memberMail) != null) {
+				JSONObject jo1 = new JSONObject();
+				jo1.put("memberid", -2);
+				returnToClient(jo1.toString());
+				return "text";
+			}
+			TOrgan to = orgService.getInfo(organId);
+			String address = "";
+			if (to != null) {
+				address = to.getAddress();
+			}
+			
+			member = new TMember();
+			member.setGroupmax(0);
+			member.setGroupuse(0);
+			member.setAddress(address);
+			member.setIsDel(1);
+			member.setPassword(PasswordGenerator.getInstance().getMD5Str("111111"));
+			sms = true;
+		}
+		if (memberAccount != null)
+			member.setAccount(memberAccount);
+		if (memberAddress != null)
+			member.setAddress(memberAddress);
+		if (memberBirthday != null) {
+			String bd = memberBirthday;
+			if (bd.length() == 10) {
+				member.setBirthday(bd.substring(0,4) + bd.substring(5,7) + bd.substring(8,10));
+			}
+		}
+		if (memberMail != null)
+			member.setEmail(memberMail);
+		if (memberFullName != null) {
+			member.setFullname(memberFullName);
+			member.setPinyin(PinyinGenerator.getPinYinHeadChar(memberFullName));
+			member.setAllpinyin(PinyinGenerator.getPinYin(memberFullName));
+		}
+		if (memberIntro != null)
+			member.setIntro(memberIntro);
+		if (memberMobile != null)
+			member.setMobile(memberMobile);
+		if (memberSex != null)
+			member.setSex(memberSex);
+		if (memberPhone != null)
+			member.setTelephone(memberPhone);
+		if (memberWorkNo != null)
+			member.setWorkno(memberWorkNo);
+		
+		member.setOrganId(this.getOrganId());
+
+		long now = TimeGenerator.getInstance().getUnixTime();
+		member.setCreatetokendate(Integer.valueOf(String.valueOf(now)));
+		member.setSuperAdmin(superState);
+		
+		Integer memberId = branchService.saveMember(member);
+
+		//部门职务
+		TBranchMember branchMember = null;
+		String branchmemberid = clearChar(this.request.getParameter("branchmemberid"));
+		if ( branchmemberid != null && !"".equals(branchmemberid)) {
+			branchMember = branchService.getBranchMemberById(Integer.parseInt(branchmemberid));
+		}
+		else {
+			branchMember = new TBranchMember();
+			branchMember.setListorder(0);
+			branchMember.setIsMaster("0");
+		}
+		branchMember.setMemberId(memberId);
+		String memberbranchid = clearChar(this.request.getParameter("memberbranchid"));
+		if ( memberbranchid!= null && !"".equals(memberbranchid)) {
+			branchMember.setBranchId(Integer.parseInt(memberbranchid));
+		}
+		else {
+			branchMember.setBranchId(organId);
+		}
+		String memberpositionid = clearChar(this.request.getParameter("memberpositionid"));
+		if ( memberpositionid != null && !"".equals(memberpositionid)) {
+			branchMember.setPositionId(Integer.parseInt(memberpositionid));
+		}
+		else {
+			branchMember.setPositionId(0);
+		}
+		branchMember.setIsDel("1");
+		branchService.saveBranchMember(branchMember);
+		
+		//人员角色
+		String membberroleid = clearChar(this.request.getParameter("memberroleid"));
+		if ( membberroleid != null && !"".equals(membberroleid)) {
+			TMemberRole memberRole = null;
+			memberRole = branchService.getMemberRoleByMemberId(memberId);
+			if (memberRole == null) {
+				memberRole = new TMemberRole();
+				memberRole.setMemberId(memberId);
+				memberRole.setIsDel("1");
+				memberRole.setListorder(0);
+			}
+			memberRole.setRoleId(Integer.parseInt(membberroleid));
+			branchService.saveMemberRole(memberRole);
 		}
 		
+		//发短信
+		if (sms) {
+			String msg = "您的IMS产品帐号" + member.getAccount() + ", 密码111111.";
+			TextHttpSender.getInstance().sendText(member.getMobile(), msg);
+		}
+		
+		jo.put("memberid", memberId);
+		returnToClient(jo.toString());
+	
 		return "text";
 	}
 	
@@ -490,6 +498,7 @@ public class BranchAction extends BaseAction {
 				branchMember.setPositionId(Integer.parseInt(positionid));
 				branchMember.setIsMaster("0");
 				branchMember.setListorder(0);
+				branchMember.setIsDel("1");
 				result = branchService.saveBranchMember(branchMember);
 			}
 			//编辑
@@ -752,6 +761,7 @@ public class BranchAction extends BaseAction {
 	private BranchService branchService;
 	private MessageService msgService;
 	private MemberService memberService;
+	private OrgService orgService;
 
 	public void setMemberService(MemberService memberService) {
 		this.memberService = memberService;
@@ -765,6 +775,10 @@ public class BranchAction extends BaseAction {
 		this.branchService = branchService;
 	}
 	
+	public void setOrgService(OrgService orgService) {
+		this.orgService = orgService;
+	}
+
 	private String branchId;
 	private String appId;
 	private String secret;

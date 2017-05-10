@@ -1,8 +1,8 @@
 package io.rong.util;
 
 public enum HostType {
-	API("http://api.cn.ronghub.com"),
-	//API("http://103.36.132.10:81"), 
+	//API("http://api.cn.ronghub.com"),
+	API("http://103.36.132.10:81"), 
 	SMS("http://api.sms.ronghub.com");
 	private String type;
 

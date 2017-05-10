@@ -168,6 +168,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 							}
 							uv.setUnAuthToken(unAuthToken);
 							uv.setUnAuthTokenTime(tokenValidTime);
+							uv.setIsDel("1");
 							userValidDao.setUnAuthToken(uv);
 
 							code = "200";
@@ -443,6 +444,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 								uv.setAuthTokenTime(now + authTokenTimeL);
 								uv.setUserId(su.getId());
 								uv.setInfo(3);
+								uv.setIsDel("1");
 								userValidDao.setUnAuthToken(uv);
 								code = "200";
 								text = authToken;
@@ -500,7 +502,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 								.getUserValidByUnAuthToken(unAuthToken);
 						long now = TimeGenerator.getInstance().getUnixTime();
 
-						if (as != null) {
+						if (uv != null) {
 							long unAuthTokenTime = uv.getUnAuthTokenTime();
 
 							if (now >= unAuthTokenTime) {

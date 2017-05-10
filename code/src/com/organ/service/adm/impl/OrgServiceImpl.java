@@ -146,7 +146,7 @@ public class OrgServiceImpl implements OrgService {
 					j.put("text", Tips.EXISTACCOUNT.getText());
 				} else {
 					String organName = organ.getName();
-					String name = organName + "-InitMember";
+					String name = organName;
 					String pwd = PasswordGenerator.getInstance().makePwd();
 					TMember tm = new TMember();
 					tm.setAccount(account);
@@ -162,7 +162,7 @@ public class OrgServiceImpl implements OrgService {
 					tm.setAddress("");
 					tm.setGroupmax(0);
 					tm.setGroupuse(0);
-					tm.setIntro(organName + "InitMember");
+					tm.setIntro(organName);
 					tm.setOrganId(organId);
 					tm.setAllpinyin(PinyinGenerator.getPinYin(name));
 					tm.setPassword(PasswordGenerator.getInstance().getMD5Str(pwd));
@@ -175,7 +175,7 @@ public class OrgServiceImpl implements OrgService {
 					
 					//初始化职位
 					TPosition tp = new TPosition();
-					tp.setName(organName+"初始职位");
+					tp.setName(organName);
 					tp.setOrganId(organId);
 					tp.setListorder(0);
 					positionDao.save(tp);
@@ -186,7 +186,7 @@ public class OrgServiceImpl implements OrgService {
 					
 					//初始化部门
 					TBranch tb = new TBranch();
-					tb.setName(organName+"初始部门");
+					tb.setName(organName);
 					tb.setOrganId(organId);
 					tb.setParentId(0);
 					tb.setManagerId(memberId);
@@ -208,6 +208,7 @@ public class OrgServiceImpl implements OrgService {
 					tbm.setMemberId(memberId);
 					tbm.setPositionId(pid);
 					tbm.setIsMaster("1");
+					tbm.setIsDel("1");
 					tbm.setListorder(0);
 					branchMemberDao.save(tbm);
 					

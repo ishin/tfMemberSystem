@@ -172,6 +172,7 @@ public class UploadServiceImpl implements UploadService {
                 	 
                 	 clte.setLogoName(newName);
                 	 clte.setUserId(userIdInt);
+                	 clte.setIsDel("1");
                 	 
                 	 cutLogoTempDao.saveTempPic(clte);
                 	 
@@ -199,6 +200,7 @@ public class UploadServiceImpl implements UploadService {
         	 
         	 clte.setLogoName(logName);
         	 clte.setUserId(Integer.parseInt(userId));
+        	 clte.setIsDel("1");
         	 
         	 cutLogoTempDao.saveTempPic(clte);
         	 

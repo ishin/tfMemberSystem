@@ -21,7 +21,7 @@ public class RoleDaoImpl extends BaseDao<TRole, Integer> implements RoleDao {
 				+ " left join t_branch_member bm on m.id = bm.member_id"
 				+ " left join t_branch b on b.id = bm.branch_id"
 				+ " left join t_position p on p.id = bm.position_id"
-				+ " where bm.is_master=1 and mr.role_id=" + roleId + " and m.isdel=1";
+				+ " where mr.role_id=" + roleId + " and m.isdel=1";
 		
 		List list = runSql(sql);
 		String c = String.valueOf(list.get(0));
@@ -42,7 +42,7 @@ public class RoleDaoImpl extends BaseDao<TRole, Integer> implements RoleDao {
 				+ " left join t_branch_member bm on m.id = bm.member_id"
 				+ " left join t_branch b on b.id = bm.branch_id"
 				+ " left join t_position p on p.id = bm.position_id"
-				+ " where bm.is_master=1 and mr.role_id=" + roleId + " and m.isdel=1";
+				+ " where mr.role_id=" + roleId + " and m.isdel=1";
 		if (page != null)
 			sql += " limit " + page * itemsperpage + ", " + itemsperpage;
 		
@@ -70,7 +70,7 @@ public class RoleDaoImpl extends BaseDao<TRole, Integer> implements RoleDao {
 				+ " from t_priv p"
 				+ " left join t_role_priv rp on rp.priv_id = p.id"
 				+ " left join t_member_role mr on mr.role_id = rp.role_id"
-				+ " where mr.member_id = " + memberId;
+				+ " where mr.isdel='1' and mr.member_id = " + memberId;
 		
 		return runSql(sql);
 	}

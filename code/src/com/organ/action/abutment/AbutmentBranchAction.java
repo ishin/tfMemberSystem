@@ -23,6 +23,47 @@ public class AbutmentBranchAction extends BaseAction {
 	private static final Logger logger = LogManager.getLogger(AbutmentBranchAction.class);
 
 	/**
+	 * 获取部门树带成员
+	 * @return
+	 * @throws ServletException
+	 */
+	public String getMembersByOrganAb() throws ServletException {
+		String result = null;
+		
+		try {
+			String params = getRequestDataByStream();
+			JSONObject jo = new JSONObject();
+			boolean s = true;
+			
+			logger.info(params);
+			
+			if (params == null) {
+				s = false;
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					int organId = p.getInt("organId");
+					result = branchService.getMembersByOrgan(organId);
+				}
+			}
+			
+			if (!s) {
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
+				result = jo.toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		
+		returnToClient(result);
+		return "text"; 
+	}
+	
+	/**
 	 * 获取部门下的成员
 	 * @return
 	 * @throws ServletException

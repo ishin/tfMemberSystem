@@ -38,6 +38,10 @@
 	</bean>
 	<bean id="limitService" class="com.organ.service.limit.impl.LimitServiceImpl" autowire="byName">
 		<property name="limitDao" ref="limitDao" />
+		<property name="roleDao" ref="roleDao" />
+		<property name="privDao" ref="privDao" />
+		<property name="rolePrivDao" ref="rolePrivDao" />
+		<property name="memberRoleDao" ref="memberRoleDao" />
 		<property name="roleappsecretDao" ref="roleappsecretDao" />
 	</bean>
 	<bean id="appInfoConfigService" class="com.organ.service.appinfoconfig.impl.AppInfoConfigServiceImpl" autowire="byName">
@@ -62,6 +66,8 @@
 		<property name="memberRoleDao" ref="memberRoleDao1" />
 		<property name="positionDao" ref="positionDao" />
 		<property name="appinfoconfigDao" ref="appinfoconfigDao" />
+		<property name="appSecretDao" ref="appSecretDao" />
+		<property name="orgDao" ref="orgDao" />
 	</bean>
 	<bean id="privService" class="com.organ.service.adm.impl.PrivServiceImpl" autowire="byName" >
 		<property name="privDao" ref="privDao" />
@@ -71,7 +77,6 @@
 	</bean>
 	<bean id="positionService" class="com.organ.service.adm.impl.PositionServiceImpl" autowire="byName" >
 		<property name="positionDao" ref="positionDao" />
-		<property name="branchMemberDao" ref="branchMemberDao" />
 	</bean>
 	<bean id="orgService" class="com.organ.service.adm.impl.OrgServiceImpl" autowire="byName" >
 		<property name="orgDao" ref="orgDao" />
@@ -111,6 +116,8 @@
 	<bean id="branchAction" class="com.organ.action.adm.BranchAction" scope="prototype" autowire="byName" >
 		<property name="branchService" ref="branchService" />
 		<property name="memberService" ref="memberService" />
+		<property name="msgService" ref="msgService" />
+		<property name="orgService" ref="orgService" />
 	</bean>
 	<bean id="privAction" class="com.organ.action.adm.PrivAction" scope="prototype" autowire="byName" >
 		<property name="privService" ref="privService" />
@@ -120,6 +127,7 @@
 	</bean>
 	<bean id="orgAction" class="com.organ.action.adm.OrgAction" scope="prototype" autowire="byName" >
 		<property name="orgService" ref="orgService" />
+		<property name="memberService" ref="memberService" />
 	</bean>
 	<bean id="admAction" class="com.organ.action.adm.AdmAction" scope="prototype" autowire="byName" >
 		<property name="branchService" ref="branchService" />
@@ -133,11 +141,18 @@
 	<bean id="abutmentAuthAction" class="com.organ.action.abutment.AbutmentAuthAction" scope="prototype" autowire="byName" >
 		<property name="appSecretService" ref="appSecretService" />
 	</bean>
+	<bean id="abutmentBranchAction" class="com.organ.action.abutment.AbutmentBranchAction" scope="prototype" autowire="byName" >
+		<property name="branchService" ref="branchService" />
+		<property name="orgService" ref="orgService" />
+	</bean>
 	<bean id="abutmentPrivilegeAction" class="com.organ.action.abutment.AbutmentPrivilegeAction" scope="prototype" autowire="byName" >
 		<property name="privService" ref="privService" />
 	</bean>
 	<bean id="msgAction" class="com.organ.action.msg.MessageAction" scope="prototype" autowire="byName" >
 		<property name="msgService" ref="msgService" />
+	</bean>
+	<bean id="fKMultOrganAction" class="com.organ.action.adm.FKMultOrganAction" scope="prototype" autowire="byName" >
+		<property name="orgService" ref="orgService" />
 	</bean>
 	
 </beans>
