@@ -23,7 +23,6 @@ import com.organ.dao.adm.BranchMemberDao;
 import com.organ.dao.adm.MemberRoleDao;
 import com.organ.dao.adm.OrgDao;
 import com.organ.dao.adm.PositionDao;
-import com.organ.dao.adm.impl.OrgDaoImpl;
 import com.organ.dao.appinfoconfig.AppInfoConfigDao;
 import com.organ.dao.auth.AppSecretDao;
 import com.organ.dao.member.MemberDao;
@@ -460,11 +459,12 @@ public class BranchServiceImpl implements BranchService {
 	}
 	
 	@Override
-	public void delBranch(Integer branchId, Integer r, Integer organId) {
-		TBranch branch = branchDao.get(branchId); 
+	public boolean delBranch(Integer branchId, String isLogic, Integer organId) {
+		/*TBranch branch = branchDao.get(branchId); 
 		
 		List list = branchMemberDao.getBranchMemberByBranch(branchId);
 		Iterator it = list.iterator();
+		
 		while(it.hasNext()) {
 			TBranchMember bm = (TBranchMember)it.next();
 			List list2 = branchMemberDao.getBranchMemberByMember(bm.getMemberId());
@@ -490,13 +490,38 @@ public class BranchServiceImpl implements BranchService {
 			if (r == 1) {
 				
 				this.delBranch(b.getId(), r, organId);
-			}
-			else {
+			} else {
 				b.setParentId(branch.getParentId());
 				branchDao.saveOrUpdate(b);
 			}
 		}
 		branchDao.delete("delete from TBranch where id=" + branch.getId());
+		*/
+		boolean s = false;
+		List list = branchMemberDao.getBranchMemberByBranch(branchId);
+		
+		if (list != null && list.size() > 0) {
+			return s;
+		} else {
+			List children = branchDao.getChildren(branchId);
+			s = true;
+			
+			if (children != null && children.size() > 0) {
+				Iterator it3 = children.iterator();
+				while(it3.hasNext()) {
+					TBranch b = (TBranch)it3.next();
+					s = this.delBranch(b.getId(), isLogic, organId);
+				}
+			}  
+			if (s) {
+				//if (isLogic.equals("1")) {
+					//branchDao.delete("update TBranch set isDel='0' where id=" + branchId);
+				//} else {
+					branchDao.delete("delete from TBranch where id=" + branchId);
+				//}
+			}
+		}
+		return s;
 	}
 	@Override
 	public void movMember(Integer memberId, Integer pId, Integer toId) {
@@ -928,36 +953,44 @@ public class BranchServiceImpl implements BranchService {
 						Object[] o = (Object[])list.get(i);
 					
 						if (!StringUtils.getInstance().isBlank((String)o[1])) {
-							JSONObject jm = new JSONObject();
-							jm.put("code", 1);
-							jm.put("text", "ok");
-							jm.put("id", isBlank(o[0]));
-							jm.put("account", isBlank(o[1]));
-							jm.put("name", isBlank(o[2]));
-							jm.put("logo", isBlank(o[3]));
-							jm.put("telephone", isBlank(o[4]));
-							jm.put("email", isBlank(o[5]));
-							jm.put("address", isBlank(o[6]));
-							jm.put("token", isBlank(o[7]));
-							jm.put("sex", isBlank(o[8]));
-							jm.put("birthday", isBlank(o[9]));
-							jm.put("workno", isBlank(o[10]));
-							jm.put("mobile", isBlank(o[11]));
-							jm.put("groupmax", isBlank(o[12]));
-							jm.put("groupuse", isBlank(o[13]));
-							jm.put("intro", isBlank(o[14]));
-							jm.put("postitionname", isBlank(o[16]));
-							jm.put("superior", isBlank(o[7]));			//直接领导人
-							
-							boolean acStatus = false;
-							
-							if (!StringUtils.getInstance().isNull(o[17]) && memberIds != null) {
-								acStatus = memberIds.contains(Integer.parseInt(isBlank(o[17])));
+							if (isBlank(o[19]).equals("1")) {
+								JSONObject jm = new JSONObject();
+								jm.put("code", 1);
+								jm.put("text", "ok");
+								jm.put("id", isBlank(o[0]));
+								jm.put("account", isBlank(o[1]));
+								jm.put("name", isBlank(o[2]));
+								jm.put("logo", isBlank(o[3]));
+								jm.put("telephone", isBlank(o[4]));
+								jm.put("email", isBlank(o[5]));
+								jm.put("address", isBlank(o[6]));
+								jm.put("token", isBlank(o[7]));
+								jm.put("sex", isBlank(o[8]));
+								jm.put("birthday", isBlank(o[9]));
+								jm.put("workno", isBlank(o[10]));
+								jm.put("mobile", isBlank(o[11]));
+								jm.put("groupmax", isBlank(o[12]));
+								jm.put("groupuse", isBlank(o[13]));
+								jm.put("intro", isBlank(o[14]));
+								jm.put("postitionname", isBlank(o[16]));
+								jm.put("superior", isBlank(o[7]));			//直接领导人
+								
+								if (isBlank(o[20]).equals("1")) {
+									jm.put("isleader", 1);
+								} else {
+									jm.put("isleader", 0);
+								}
+								
+								boolean acStatus = false;
+								
+								if (!StringUtils.getInstance().isNull(o[17]) && memberIds != null) {
+									acStatus = memberIds.contains(Integer.parseInt(isBlank(o[17])));
+								}
+								
+								jm.put("accessStatus", acStatus);
+								ja.add(jm); 
+								jm = null;
 							}
-							
-							jm.put("accessStatus", acStatus);
-							ja.add(jm); 
-							jm = null;
 						}
 					}
 				}

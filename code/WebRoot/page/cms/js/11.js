@@ -769,7 +769,24 @@ function hasChildBranch(id) {
 	return false;
 }
 function cb_del_member(data) {
-	callajax("branch!getOrganTree", "", cb_11_tree);
+	if (data != null) {
+		if (data["status"] == false) {
+			bootbox.dialog({
+				title: '提示',
+				message: '需要先删除该部门下的员工，再删除该部门',
+				buttons: {
+					'确定': function() {
+						this.modal('hide');
+					}
+				},
+				callback: function() {
+					$('#container').css('width', document.body.clientWidth + 'px');
+				}
+			});
+		} else {
+			callajax("branch!getOrganTree", "", cb_11_tree);
+		}
+	}
 }
 function showpage(cp) {
 	curpage = cp;

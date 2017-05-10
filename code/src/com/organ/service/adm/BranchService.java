@@ -74,7 +74,7 @@ public interface BranchService {
 	public void reset(Integer memberId, String password);
 	
 	public void delMember(Integer memberid);
-	public void delBranch(Integer branchId, Integer r, Integer organId);
+	public boolean delBranch(Integer branchId, String isLogic, Integer organId);
 	public void movMember(Integer memberId, Integer pId, Integer toId);
 	public Integer movBranch(Integer branchId, Integer toId);
 	

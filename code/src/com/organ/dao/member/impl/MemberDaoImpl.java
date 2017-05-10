@@ -315,18 +315,18 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 					+ "M.intro,"
 					+ "B.name BNAME,"
 					+ "P.name PNAME,"
-					+ "O.name ONAME "
+					+ "O.name ONAME,"
+					+ "M.isdel "
 					+ "from t_member M left join t_branch_member BM on M.id=BM.member_id "
 					+ "left join t_branch B on BM.branch_id=B.id "
 					+ "left join t_position P on BM.position_id=P.id "
 					+ "inner join t_organ O on M.organ_id=O.id "
 					+ "where M.organ_id=" + organId
-					+ " and M.isdel=1"
 					+ " and M.account like '%" + account
 					+ "%' or M.fullname like '%" + account
 					+ "%' or M.pinyin like '%" + account
 					+ "%' or M.allpinyin like '%" + account
-					+ "%'";
+					+ "%' or M.mobile='" + account + "'";
 
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 

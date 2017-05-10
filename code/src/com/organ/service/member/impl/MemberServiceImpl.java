@@ -157,24 +157,26 @@ public class MemberServiceImpl implements MemberService {
 				for (int i = 0; i < members.size(); i++) {
 					Object[] member = (Object[]) members.get(i);
 					JSONObject jo = new JSONObject();
-					jo.put("id", isBlank(member[0]));
-					jo.put("account", isBlank(member[1]));
-					jo.put("name", isBlank(member[2]));
-					jo.put("logo", isBlank(member[3]));
-					jo.put("telephone", isBlank(member[4]));
-					jo.put("email", isBlank(member[5]));
-					jo.put("address", isBlank(member[6]));
-					jo.put("birthday", isBlank(member[7]));
-					jo.put("workno", isBlank(member[8]));
-					jo.put("mobile", isBlank(member[9]));
-					jo.put("groupmax", isBlank(member[10]));
-					jo.put("groupuse", isBlank(member[11]));
-					jo.put("intro", isBlank(member[12]));
-					jo.put("branchname", isBlank(member[13]));
-					jo.put("positionname", isBlank(member[14]));
-					jo.put("organname", isBlank(member[15]));
-					jo.put("sex", isBlank(member[16]));
-					ja.add(jo);
+					if (String.valueOf(member[18]).equals("1")) {
+						jo.put("id", isBlank(member[0]));
+						jo.put("account", isBlank(member[1]));
+						jo.put("name", isBlank(member[2]));
+						jo.put("logo", isBlank(member[3]));
+						jo.put("telephone", isBlank(member[4]));
+						jo.put("email", isBlank(member[5]));
+						jo.put("address", isBlank(member[6]));
+						jo.put("birthday", isBlank(member[7]));
+						jo.put("workno", isBlank(member[8]));
+						jo.put("mobile", isBlank(member[9]));
+						jo.put("groupmax", isBlank(member[10]));
+						jo.put("groupuse", isBlank(member[11]));
+						jo.put("intro", isBlank(member[12]));
+						jo.put("branchname", isBlank(member[13]));
+						jo.put("positionname", isBlank(member[14]));
+						jo.put("organname", isBlank(member[15]));
+						jo.put("sex", isBlank(member[16]));
+						ja.add(jo);
+					}
 				}
 			}
 		} catch (Exception e) {
