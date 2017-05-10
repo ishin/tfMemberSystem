@@ -3,6 +3,13 @@
  */
 window.onload = function(){
 
+    var saveSigninData = window.localStorage.saveSigninData;
+    if(saveSigninData){
+        saveSigninData =JSON.parse(saveSigninData);
+        $('#organCode').val(saveSigninData.organCode);
+        $('#username').val(saveSigninData.account);
+
+    }
     //点击发送验证码
     $('#pwdIn').unbind('focus');
     $('#pwdIn').focus(function(){
@@ -156,6 +163,9 @@ function signin(){
         var datas = JSON.parse(datas);
         if(datas &&	datas.code == 1){
             data.token = datas.text.token;
+            var saveSigninData = {account:accout,organCode:organCode}
+            saveSigninData = JSON.stringify(saveSigninData);
+            window.localStorage.saveSigninData = saveSigninData;
             window.localStorage.account=JSON.stringify(datas.text);
             window.location.href = 'page/cms/12.jsp';
         } else {

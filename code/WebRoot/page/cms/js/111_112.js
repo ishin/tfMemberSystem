@@ -161,6 +161,7 @@ function cb_112_position_fresh(data) {
 var setting112_position = {
 	view: {
 		showLine: false,
+		showIcon:false
 	},
 	data: {
 		simpleData: {

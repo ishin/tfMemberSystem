@@ -708,6 +708,16 @@ th {
 	/* padding-left: 62px; */
 	/*overflow: scroll;*/
 }
+.infopanel21 .col21{
+	margin: 10px 0 0 0;
+	width: 100%;
+	height: calc(100% - 110px);
+	min-width: 900px;
+	position: relative;
+	/* padding-right: 62px; */
+	/* padding-left: 62px; */
+	/* overflow: scroll; */
+}
 .col21 .col1 {
 	width: 25%;
 	float: left;
@@ -1027,9 +1037,11 @@ button#addrole img {
 	padding: 5px 0 0 0;
 	height: 400px;
 	overflow: hidden;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
-
+div#branch.modal{
+	background: rgba(0,0,0,0.5);
+}
 .searchArea {
 	width: 100%;
 	padding: 20px 30px 0px 30px;
