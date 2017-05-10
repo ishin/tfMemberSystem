@@ -61,6 +61,9 @@ $(document).ready(function(){
 				branchintro: $('#11branchintro').val(),
 			};
 		callajax('branch!saveBranch', data, cb_11_save_branch);
+		callajax("branch!getOrganOnlyTree", "", cb_11_branch_branch);
+		callajax("branch!getOrganTree", "", cb_11_branch_member);
+
 	});
 	$('#11branchaddmember').click(function(){
 
@@ -98,5 +101,6 @@ function cb_11_save_branch(data) {
 		$('#11branchtelephone').val('');
 		$('#11branchwebsite').val('');
 		$('#11branchintro').val('');
+
 	}
 }

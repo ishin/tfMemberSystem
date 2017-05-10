@@ -19,6 +19,7 @@ $(document).ready(function() {
 		}
 	})
 	$('#imp2').on('dblclick', '.errimp', function() {
+		console.log('111111');
 		$(this).removeClass('errimp');
 		$(this).prop('title', '');
 		var text = ($(this).text() == '(需要填写)') ? '' : $(this).text();
@@ -317,7 +318,7 @@ function gettd(field, data, group) {
 	}
 	
 	var td;
-	if (data == '') {
+	if (data == ''&&field!='sex'&&field!='position'&&field!='telephone'&&field!='email') {
 		td = '<td field="td' + field + '" class="errimp" title="双击修改">(需要填写)</td>';
 	}
 	else if (data.indexOf('##') == 0) {
@@ -354,7 +355,7 @@ function okimp() {
 
 	callajax('branch!impsave', {'jtext': JSON.stringify(js)}, function(data) {
 		if (data.status == 0) {
-			alert(data.succeed);
+			//alert(data.succeed);
 			$('#succeed').text(data.succeed);
 			$('#fail').text(data.fail);
 			$('#imp2').hide();

@@ -92,7 +92,9 @@ input:focus {
 	height:50px;
 	width: 100%;
 	background: linear-gradient(to right, #30c0da 0%,#40d4a3 100%);
-	box-shadow: 0px 0px 10px #cbcbcb;	
+	box-shadow: 0px 0px 10px #cbcbcb;
+	position: relative;
+	z-index: 222;
 }
 .admheadermenu {
 	height: 100%;

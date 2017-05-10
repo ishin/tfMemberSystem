@@ -11,8 +11,43 @@ window.onload = function(){
 
     }
     //点击发送验证码
+    //点击发送验证码
+    $('#pwdIn').unbind('blur');
+    $('#pwdIn').blur(function(){
+        $(this).parent().find('label').css('backgroundPosition','-464px -127px');
+
+    })
     $('#pwdIn').unbind('focus');
     $('#pwdIn').focus(function(){
+        $(this).parent().find('label').css('backgroundPosition','-463px -86px');
+        $(this).keypress(function(event) {
+            if (event.which == 13) {
+                signin();
+            }
+        })
+    })
+    $('#username').unbind('blur');
+    $('#username').blur(function(){
+        $(this).parent().find('label').css('backgroundPosition','-462px -51px');
+
+    })
+    $('#username').unbind('focus');
+    $('#username').focus(function(){
+        $(this).parent().find('label').css('backgroundPosition','-462px -16px');
+        $(this).keypress(function(event) {
+            if (event.which == 13) {
+                signin();
+            }
+        })
+    })
+    $('#organCode').unbind('blur');
+    $('#organCode').blur(function(){
+        $(this).parent().find('label').css('backgroundPosition','-819px -62px');
+
+    })
+    $('#organCode').unbind('focus');
+    $('#organCode').focus(function(){
+        $(this).parent().find('label').css('backgroundPosition','-819px -12px');
         $(this).keypress(function(event) {
             if (event.which == 13) {
                 signin();
