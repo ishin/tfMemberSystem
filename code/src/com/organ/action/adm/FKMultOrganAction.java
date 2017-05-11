@@ -1,5 +1,6 @@
 package com.organ.action.adm;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -47,7 +48,7 @@ public class FKMultOrganAction extends BaseAction {
 			long validTimeLong = validTime != null ? Long.parseLong(validTime) : 0;
 			Map<String, String[]> paramMap = this.request.getParameterMap();
 			JSONObject jsonParam = new JSONObject();
-
+			
 			for(Map.Entry<String, String[]> m : paramMap.entrySet()) {
 				String mapKey = m.getKey();
 				String value = m.getValue()[0];

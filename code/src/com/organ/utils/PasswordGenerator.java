@@ -1,5 +1,6 @@
 package com.organ.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
@@ -50,10 +51,8 @@ public class PasswordGenerator {
 
 		char hexs[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
 				'b', 'c', 'd', 'e', 'f' };
-
-		byte[] source = pwdContext.getBytes();
-
 		try {
+			byte[] source = pwdContext.getBytes("UTF-8");
 			MessageDigest md5 = MessageDigest.getInstance("MD5");
 			md5.update(source);
 
@@ -74,6 +73,8 @@ public class PasswordGenerator {
 			result = new String(str);
 
 		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 
@@ -139,13 +140,13 @@ public class PasswordGenerator {
 			sbp.append(t).append("=").append(v);
 		}
 		String pStr = sbp.toString();
-		logger.info("sort0: " + pStr);
+		logger.info("valideMd5 sort0: " + pStr);
 		pStr = StringUtils.getInstance().sortByChars(pStr);
-		logger.info("sort1: " + pStr);
+		logger.info("valideMd5 sort1: " + pStr);
 		pStr = key + pStr + timeStamp;
-		logger.info("sort2: " + pStr);
+		logger.info("valideMd5 sort2: " + pStr);
 		
-		String caclSign = PasswordGenerator.getInstance().getMD5Str(sbp.toString());
+		String caclSign = PasswordGenerator.getInstance().getMD5Str(pStr);
 		
 		System.out.println("organ sign: " + caclSign);
 		
@@ -175,14 +176,14 @@ public class PasswordGenerator {
 		}
 		
 		String pStr = sbp.toString();
-		
+		System.out.println("makeSign sort0: " + pStr);
 		pStr = StringUtils.getInstance().sortByChars(pStr);
-		System.out.println("sort1: " + pStr);
+		System.out.println("makeSign sort1: " + pStr);
 		pStr = key + pStr + timeStamp;
-		System.out.println("sort2: " + pStr);
-		String caclSign = PasswordGenerator.getInstance().getMD5Str(sbp.toString());
+		System.out.println("makeSign sort2: " + pStr);
+		String caclSign = PasswordGenerator.getInstance().getMD5Str(pStr);
 		
-		System.out.println("im sign: " + caclSign);
+		System.out.println("makeSign im sign: " + caclSign);
 		
 		return caclSign;
 	}

@@ -62,7 +62,7 @@ public interface AppSecretService {
 	 * @param appId
 	 * @return
 	 */
-	public JSONObject reqAuthorizeTwo(SessionUser sessionUser, String appId, String unAuthToken);
+	public JSONObject reqAuthorizeTwo(Integer id, String appId, String unAuthToken);
 
 	/**
 	 * 场景二授权,手机端

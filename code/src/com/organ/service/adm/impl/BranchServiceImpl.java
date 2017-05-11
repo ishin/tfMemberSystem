@@ -1194,5 +1194,10 @@ public class BranchServiceImpl implements BranchService {
 		}
 		return ret.toString();
 	}
+	
+	@Override
+	public int getNoGroupBranch(Integer organId) {
+		return branchDao.getNoGroupBranch(organId);
+	}
 
 }

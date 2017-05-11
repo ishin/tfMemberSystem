@@ -286,4 +286,25 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements BranchDa
 		return null;
 	}
 
+	@Override
+	public int getNoGroupBranch(Integer organId) {
+		try {
+
+			Criteria ctr = getCriteria();
+			ctr.add(Restrictions.eq("organId", organId));
+			ctr.add(Restrictions.eq("noGroup", "1"));
+
+			List<TBranch> list = ctr.list();
+
+			if (list.size() > 0) {
+				return list.get(0).getId();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return organId;
+	}
+
 }

@@ -78,7 +78,8 @@ CREATE TABLE `t_branch` (
   `fax` VARCHAR(50),
   `intro` VARCHAR(1024),
   `listorder` INT NULL DEFAULT 0,
-  `isdel` char(1) default 1,
+  `isdel` char(1) default '1',
+  `nogroup` char(1) default '0' comment '是否未分组',
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 

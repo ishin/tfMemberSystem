@@ -297,8 +297,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 					if (!secretDB.equals(secret)) {
 						text = AuthTips.WORNGSECRET.getText();
 					} else {
-						UserValid uv = userValidDao
-								.getUserValidByAuthToken(authToken);
+						UserValid uv = userValidDao.getUserValidByAuthToken(authToken);
 
 						if (uv != null) {
 							long authTokenTimeDB = uv.getAuthTokenTime();
@@ -400,14 +399,14 @@ public class AppSecretServiceImpl implements AppSecretService {
 	}
 
 	@Override
-	public JSONObject reqAuthorizeTwo(SessionUser su, String appId,
+	public JSONObject reqAuthorizeTwo(Integer id, String appId,
 			String unAuthToken) {
 		JSONObject ret = new JSONObject();
 		String code = "500";
 		String text = null;
 
 		try {
-			if (su == null) {
+			if (id == null) {
 				text = AuthTips.NOTLOGIN.getText();
 			} else if (StringUtils.getInstance().isBlank(appId)) {
 				text = AuthTips.INVALIDAPPID.getText();
@@ -442,7 +441,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 										.parseLong(authTokenTime) : 0;
 								uv.setAuthToken(authToken);
 								uv.setAuthTokenTime(now + authTokenTimeL);
-								uv.setUserId(su.getId());
+								uv.setUserId(id);
 								uv.setInfo(3);
 								userValidDao.setUnAuthToken(uv);
 								code = "200";
@@ -451,7 +450,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 								ret.put("name", as.getAppName());
 								ret.put("accountStatus", this.loginAbleStatus(
 										Integer.valueOf(as.getId()), Integer
-												.valueOf(su.getId())));
+												.valueOf(id)));
 							}
 						} else {
 							logger.warn("uservalid is null");
