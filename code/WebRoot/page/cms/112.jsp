@@ -5,7 +5,7 @@
 			<div class="title" id='membertitle2'>成员信息</div>
 			<div class="infotab" style='font-size: 13px'>
 				<div class="infotabi" style='color:rgb(128,128,128);cursor:pointer' onclick='showpage("111")'>基本信息</div>
-				<div class="infotabi tabactive" style='color:rgb(48,192,218)'>所属分支</div>
+				<div class="infotabi tabactive" style='color:rgb(48,192,218)'>所属部门</div>
 			</div>
 		</div>
 		<div class="line112">
@@ -16,7 +16,7 @@
 				<thead>
 					<tr>
 						<th width="15%"></th>
-						<th width="38%">分支</th>
+						<th width="38%">部门</th>
 						<th width="30%">职务</th>
 						<th width="17%">操作</th>
 					</tr>

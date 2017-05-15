@@ -252,7 +252,7 @@ function cb_11_move(data) {
 function cb_111_112(data) {
 	loadmember(data);
 }
-function cb_11_tree(data) {
+function cb_11_tree(data,callback) {
 
 	$.fn.zTree.init($('#tree11'), setting11, data);
 	$.fn.zTree.init($('#tree110'), setting110, stripicon(data));
@@ -265,6 +265,8 @@ function cb_11_tree(data) {
 			a.title = a.title.substr(iconlenth);
 		}
 	});
+
+
 //	$('#tree11 li').find('a:first').after('<div class="toright" style="height:30px"><img src="images/down.png" style="width:14px;margin:10px 5px 0 0" /></div>');
 }
 function stripicon(data) {
@@ -397,6 +399,7 @@ var setting11 = {
 			handletree11open();
 		},
 		onClick: function(event, treeId, treeNode, clickFlag) {
+
 			if (!treeNode.open) {
 				$.fn.zTree.getZTreeObj(treeId).expandNode(treeNode, true);
 				handletree11open();
@@ -472,6 +475,7 @@ var setting11 = {
 				}
 			});
 		},
+
 	}
 };
 var setting110 = {

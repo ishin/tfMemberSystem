@@ -36,16 +36,9 @@ $(document).ready(function(){
 		
 		if ($( "#110" ).triggerHandler( "submitForm" ) == false) return;
 
-		//权限
-		//if (has('bmglxg')) {
-			var data = formtojson($('#branchform'));
-			callajax('branch!saveBranch', data, cb_110_1);
-		//}
-		//else {
-		//	bootbox.alert({'title':'提示', 'message':'您没有权限修改部门信息.', callback: function() {
-		//		$('#container').css('width', document.body.clientWidth + 'px');
-		//	}});
-		//}
+		var data = formtojson($('#branchform'));
+		callajax('branch!saveBranch', data, cb_110_1);
+
 	});
 })
 function cb_110(data) {
@@ -63,7 +56,22 @@ function loadbranch(data) {
 	$('#branchintro').val(data.intro);
 }
 function cb_110_1(data) {
+	var selectNode = $('#tree11').find('.curSelectedNode').parent();
+	window.selectNodeIdLeft = selectNode.attr('id');
 	bootbox.alert({'title':'提示', 'message':'保存成功.', callback: function() {
-		$('#container').css('width', document.body.clientWidth + 'px');	
+		$('#container').css('width', document.body.clientWidth + 'px');
 	}});
+	var treeObj = $.fn.zTree.getZTreeObj("tree11");
+	var nodes = treeObj.getSelectedNodes();
+	callajax("branch!getOrganTree", "", cb_11_tree);
+	//if(window.selectNodeIdLeft){
+		setTimeout(function(){
+			var treeObj = $.fn.zTree.getZTreeObj("tree11");
+			var node = treeObj.getNodeByTId(selectNodeIdLeft);
+			treeObj.selectNode(node);
+			window.selectNodeIdLeft='';
+		},2000)
+
+	//}
+
 }

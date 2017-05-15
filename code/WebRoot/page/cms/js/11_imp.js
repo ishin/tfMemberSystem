@@ -1,4 +1,4 @@
-var tid;
+ var tid;
 var rep = 0;
 var reps = 40;
 var XLS = 'application/vnd.ms-excel';
@@ -8,7 +8,6 @@ var groups = ['good', 'well', 'bad'];
 $(document).ready(function() {
 
 	$('.downloadDemo').click(function() {
-		//console.log('11111');
 		if (window.Electron) {
 			var url = $(this).attr('href');
 			var localPath = window.Electron.chkFileExists(url);
@@ -356,6 +355,9 @@ function okimp() {
 	callajax('branch!impsave', {'jtext': JSON.stringify(js)}, function(data) {
 		if (data.status == 0) {
 			//alert(data.succeed);
+			bootbox.alert({'title':'提示', 'message':'账号和密码已经通过短信通知对方.', callback: function() {
+				$('#container').css('width', document.body.clientWidth + 'px');
+			}});
 			$('#succeed').text(data.succeed);
 			$('#fail').text(data.fail);
 			$('#imp2').hide();

@@ -32,6 +32,12 @@
 	</div>
 	<div class='linespace'></div>
 	<div>
+		<div class='dialogtitle' style='margin-left: 10px'><span style='color:red'>*</span>工号：
+			<input type='text' id='11memberNum' name='11memberNum' class='w270px toright rightspace120 required'>
+		</div>
+	</div>
+	<div class='linespace'></div>
+	<div>
 		<div class='dialogtitle' id='cyss' style='padding-right: 120px;'>成员所属：
 			<input class='treeedit1 xiala toright' id='xiala11' readonly></input>
 			<input type='text' id='11memberbranch' name='11memberbranch' class='treeedit1 w252px toright' readonly>
