@@ -247,6 +247,8 @@ public class BranchAction extends BaseAction {
 			status = false;
 			branch = new TBranch();
 			branch.setListorder(0);
+			branch.setIsDel("1");
+			branch.setNoGroup("0");
 		}
 		if (branchAddress != null)
 			branch.setAddress(branchAddress);
@@ -438,7 +440,8 @@ public class BranchAction extends BaseAction {
 			branchMember.setBranchId(Integer.parseInt(memberbranchid));
 		}
 		else {
-			branchMember.setBranchId(organId);
+			int noGroupBranchId = branchService.getNoGroupBranch(this.getOrganId());
+			branchMember.setBranchId(noGroupBranchId);
 		}
 		String memberpositionid = clearChar(this.request.getParameter("memberpositionid"));
 		if ( memberpositionid != null && !"".equals(memberpositionid)) {

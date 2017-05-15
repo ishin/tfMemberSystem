@@ -184,9 +184,9 @@ public class OrgServiceImpl implements OrgService {
 					
 					pid = tp.getId() != null ? tp.getId() : 0;
 					
-					//初始化部门
+					//未分组部门
 					TBranch tb = new TBranch();
-					tb.setName(organName);
+					tb.setName("未分组部门");
 					tb.setOrganId(organId);
 					tb.setParentId(0);
 					tb.setManagerId(memberId);
@@ -195,6 +195,8 @@ public class OrgServiceImpl implements OrgService {
 					tb.setTelephone("0");
 					tb.setFax("0");
 					tb.setIntro("0");
+					tb.setIsDel("1");
+					tb.setNoGroup("1");
 					tb.setListorder(0);
 					branchDao.save(tb);
 					

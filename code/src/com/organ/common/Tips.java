@@ -45,6 +45,7 @@ public enum  Tips {
 	NULLCODE("需填写企业码", "00039"),
 	TIMEOUT("超时", "00040"),
 	USEING("正在使用中", "00041"),
+	NOTLOGIN("用户未登陆", "00042"),
 	OK("OK", "10000"),
 	FAIL("fail", "20000"),
 	NOTUPDATE("更新成功","1");

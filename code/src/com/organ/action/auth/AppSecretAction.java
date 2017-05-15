@@ -7,8 +7,9 @@ import javax.servlet.ServletException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.BaseAction;
+import com.organ.common.Tips;
+import com.organ.model.SessionUser;
 import com.organ.service.auth.AppSecretService;
 
 /**
@@ -108,10 +109,21 @@ public class AppSecretAction extends BaseAction {
 	 * @throws JSONException 
 	 */
 	public String reqAuthorizeTwo() throws ServletException, IOException, JSONException {
-		JSONObject result = appSecretService.reqAuthorizeTwo(getSessionUser(), clearChar(appId), clearChar(unAuthToken));
+		SessionUser su = getSessionUser();
+		String result = null;
+		
+		if (su == null) {
+			JSONObject jo = new JSONObject();
+			jo.put("code", 500);
+			jo.put("text", Tips.NOTLOGIN.getText());
+			result = jo.toString();
+		} else {
+			Integer id = su.getId();
+			result = appSecretService.reqAuthorizeTwo(id, clearChar(appId), clearChar(unAuthToken)).toString();
+		}
 		//handleRedirect(result);
 		
-		returnToClient(result.toString());
+		returnToClient(result);
 		return "text";
 	}
 	
@@ -124,7 +136,6 @@ public class AppSecretAction extends BaseAction {
 	 */
 	public String reqAuthorizeTwoForApp() throws ServletException, IOException, JSONException {
 		JSONObject result = appSecretService.reqAuthorizeTwoForApp(clearChar(userId), clearChar(appId), clearChar(unAuthToken));
-		
 		returnToClient(result.toString());
 		return "text";
 	}

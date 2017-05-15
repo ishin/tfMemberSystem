@@ -40,5 +40,11 @@
         <property name="listorder" type="java.lang.Integer">
             <column name="listorder" not-null="true" />
         </property>
+        <property name="isDel" type="java.lang.String">
+            <column name="isdel" length="1" />
+        </property>
+        <property name="noGroup" type="java.lang.String">
+            <column name="nogroup" length="1" />
+        </property>
     </class>
 </hibernate-mapping>

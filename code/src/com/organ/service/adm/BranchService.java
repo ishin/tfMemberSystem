@@ -122,5 +122,6 @@ public interface BranchService {
 	public String getSuperMember(int organId);
 	public boolean getMasterMemberById(int memberId);
 	public String getMembersByOrgan(int organId);
+	public int getNoGroupBranch(Integer organId);
 	
 }

@@ -20,6 +20,8 @@ public class TBranch implements java.io.Serializable {
 	private String telephone;
 	private String fax;
 	private String intro;
+	private String isDel;
+	private String noGroup;
 	private Integer listorder;
 
 	// Constructors
@@ -40,7 +42,7 @@ public class TBranch implements java.io.Serializable {
 	/** full constructor */
 	public TBranch(Integer organId, Integer parentId, String name,
 			Integer managerId, String address, String website,
-			String telephone, String fax, String intro, Integer listorder) {
+			String telephone, String fax, String intro, Integer listorder, String isDel, String noGroup) {
 		this.organId = organId;
 		this.parentId = parentId;
 		this.name = name;
@@ -51,6 +53,9 @@ public class TBranch implements java.io.Serializable {
 		this.fax = fax;
 		this.intro = intro;
 		this.listorder = listorder;
+		this.isDel = isDel;
+		this.noGroup = noGroup;
+		
 	}
 
 	// Property accessors
@@ -143,4 +148,20 @@ public class TBranch implements java.io.Serializable {
 		this.listorder = listorder;
 	}
 
+	public String getIsDel() {
+		return isDel;
+	}
+
+	public void setIsDel(String isDel) {
+		this.isDel = isDel;
+	}
+
+	public String getNoGroup() {
+		return noGroup;
+	}
+
+	public void setNoGroup(String noGroup) {
+		this.noGroup = noGroup;
+	}
+	
 }

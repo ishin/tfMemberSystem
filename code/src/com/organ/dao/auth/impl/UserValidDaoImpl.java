@@ -3,7 +3,6 @@ package com.organ.dao.auth.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 
 import com.organ.common.BaseDao;
@@ -57,7 +56,7 @@ public class UserValidDaoImpl extends BaseDao<UserValid, Integer> implements
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("authToken", authToken));
-			ctr.add(Restrictions.eq("isDel", 1));
+			ctr.add(Restrictions.eq("isDel", "1"));
 
 			List<UserValid> list = ctr.list();
 
