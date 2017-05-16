@@ -38,8 +38,7 @@
 		<action name="system" class="com.sealtalk.action.sys.SystemAction">
 			<result name="loginPage">/page/web/signin.jsp</result>
 			<result name="loginSuccess">/page/web/main.jsp</result>
-			<result name="forgetpwd" type="dispatcher">/page/web/forgotpassword.jsp
-			</result>
+			<result name="forgetpwd" type="dispatcher">/page/web/forgotpassword.jsp</result>
 			<result name="text" type="stream">
 				<param name="contentType">text/plain</param>
 				<param name="inputName">inputStream</param>
@@ -148,6 +147,16 @@
 	<package name="com.sealtalk.action.extra" extends="all">
 		<!-- 外部请求 -->
 		<action name="extra" class="com.sealtalk.action.extra.ExtraAction">
+			<result name="text" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+	</package>
+	<package name="com.sealtalk.action.auth" extends="all">
+		<action name="auth" class="com.sealtalk.action.auth.AppSecretAction">
+			<result name="oaLogin">/page/web/deng.jsp</result>
+			<result name="login">/page/web/authorizePage.jsp</result>
 			<result name="text" type="stream">
 				<param name="contentType">text/plain</param>
 				<param name="inputName">inputStream</param>

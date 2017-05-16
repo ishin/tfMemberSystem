@@ -12,6 +12,7 @@ import com.sealtalk.common.Tips;
 import com.sealtalk.service.extra.ExtraService;
 import com.sealtalk.utils.JSONUtils;
 import com.sealtalk.utils.LogUtils;
+import com.sealtalk.utils.StringUtils;
 
 public class ExtraAction extends BaseAction {
 
@@ -34,8 +35,12 @@ public class ExtraAction extends BaseAction {
 					s = false;
 				} else {
 					String ids = p.getString("userIds");
-					logger.info("params: " + ids);
-					result = extraService.delByMemberIds(ids);
+					if (StringUtils.getInstance().isBlank(ids)) {
+						s = false;
+					} else {
+						String isLogic = p.getString("isLogic");
+						result = extraService.delByMemberIds(ids, isLogic);
+					}
 				}
 			}
 			if (!s) {

@@ -217,6 +217,7 @@ public class MapServiceImpl implements MapService {
 					tm.setUserId(userIdInt);
 					tm.setLatitude(latitude);
 					tm.setLongitude(longtitude);
+					tm.setIsDel("1");
 					tm.setSubDate(now);
 
 					mapDao.saveLocation(tm);

@@ -43,7 +43,7 @@ public class GroupServiceImpl implements GroupService {
 	private static final Logger logger = LogManager.getLogger(GroupServiceImpl.class);
 
 	@Override
-	public String createGroup(String userId, String groupIds) {
+	public String createGroup(String userId, String groupIds, String groupName) {
 		JSONObject jo = new JSONObject();
 		String result = null;
 
@@ -95,7 +95,6 @@ public class GroupServiceImpl implements GroupService {
 				}
 
 				if (status) {
-					// 生成群组名称
 					JSONObject p = new JSONObject();
 					p.put("ids", tempIds);
 					String memberStr = HttpRequest.getInstance().sendPost(
@@ -113,32 +112,31 @@ public class GroupServiceImpl implements GroupService {
 									.jsonObjToBean(t, TMember.class));
 						}
 					}
-
-					StringBuilder groupName = new StringBuilder();
+					// 生成群组名称
 					String groupNameStr = null;
-
-					if (memberList != null) {
-						int len = 4;
-
-						if (memberList.size() <= 4) {
-							len = memberList.size();
+					
+					if (StringUtils.getInstance().isBlank(groupName)) {
+						StringBuilder groupNameBd = new StringBuilder();
+						if (memberList != null) {
+							int len = 4;
+	
+							if (memberList.size() <= 4) {
+								len = memberList.size();
+							}
+	
+							for (int i = 0; i < len; i++) {
+								groupNameBd.append(memberList.get(i).getFullname());
+								if (i < len - 1) {
+									groupNameBd.append(",");
+								}
+							}
+	
+							groupNameStr = groupNameBd.toString();
 						}
-
-						for (int i = 0; i < len; i++) {
-							groupName.append(memberList.get(i).getFullname())
-									.append(",");
-						}
-
-						groupNameStr = groupName.toString();
-
-						if (!StringUtils.getInstance().isBlank(groupNameStr)) {
-							groupNameStr = groupNameStr.substring(0,
-									groupNameStr.length() - 1);
-						} else {
-							groupNameStr = "";
-						}
+					} else {
+						groupNameStr = groupName;
 					}
-
+					
 					// 创建群组
 					String code = "G" + userId + "_"
 							+ TimeGenerator.getInstance().getUnixTime();
@@ -152,7 +150,7 @@ public class GroupServiceImpl implements GroupService {
 						String flag = "0";
 						flag = (tempIds[i] == userIdInt) ? "1" : "0";
 
-						tgmList.add(new TGroupMember(groupId, tempIds[i], flag,
+						tgmList.add(new TGroupMember(groupId, tempIds[i], flag, "1",
 								0));
 					}
 
@@ -318,7 +316,7 @@ public class GroupServiceImpl implements GroupService {
 					for (int i = 0; i < finalIds.size(); i++) {
 						int id = finalIds.get(i);
 
-						tgmList.add(new TGroupMember(groupIdInt, id, "0", 0));
+						tgmList.add(new TGroupMember(groupIdInt, id, "0", "1", 0));
 						idsInt[i] = id;
 					}
 
@@ -355,7 +353,7 @@ public class GroupServiceImpl implements GroupService {
 						for (int i = 0; i < memList.size(); i++) {
 							TMember tm = memList.get(i);
 							String msg = tm.getFullname() + "加入群组";
-							String extrMsg = msg;
+							String extrMsg = groupName;
 							String fromId = "FromId";
 							RongCloudUtils.getInstance().sendGroupMsg(fromId, groupIdA, msg, extrMsg, 1, 1, 2);
 						}
@@ -394,7 +392,7 @@ public class GroupServiceImpl implements GroupService {
 				userId = StringUtils.getInstance().replaceChar(userId, "]", "");
 				String[] userIds = StringUtils.getInstance().stringSplit(
 						userId, ",");
-
+				
 				groupMemberDao.removeGroupMemeber(userId, groupIdInt);
 				groupDao.updateGroupMemberNum(groupIdInt, -userIds.length);
 
@@ -427,10 +425,13 @@ public class GroupServiceImpl implements GroupService {
 					}
 				}
 
+				TGroup tg = groupDao.getGroupForId(groupIdInt);
+				String groupName = tg != null ? tg.getName() : "";
+				
 				for (int i = 0; i < memList.size(); i++) {
 					TMember tm = memList.get(i);
 					String msg = tm.getFullname() + "离开群组";
-					String extrMsg = msg;
+					String extrMsg = groupName;
 					String fromId = "FromId";
 					RongCloudUtils.getInstance().sendGroupMsg(fromId, groupIds, msg, extrMsg, 1, 1, 2);
 				}
@@ -602,8 +603,10 @@ public class GroupServiceImpl implements GroupService {
 							if (ret.getInt("code") == 1) {
 								tm = JSONUtils.getInstance().jsonObjToBean(ret.getJSONObject("text"), TMember.class);
 							}
+							TGroup tg = groupDao.getGroupForId(groupIdInt);
+							String groupName = tg != null ? tg.getName() : "";
 							String msg = "管理员已变更为" + tm.getFullname();
-							String extrMsg = msg;
+							String extrMsg = groupName;
 							String fromId = "FromId";
 							RongCloudUtils.getInstance().sendGroupMsg(fromId, groupIds, msg, extrMsg, 1, 1, 2);
 
@@ -779,7 +782,7 @@ public class GroupServiceImpl implements GroupService {
 					ArrayList<TGroupMember> tgmList = new ArrayList<TGroupMember>();
 
 					for (int i = 0; i < needAddIds.size(); i++) {
-						tgmList.add(new TGroupMember(groupIdInt, needAddIds.get(i), "0", 0));
+						tgmList.add(new TGroupMember(groupIdInt, needAddIds.get(i), "0", "1", 0));
 					}
 
 					if (tgmList.size() > 0) {
@@ -810,7 +813,7 @@ public class GroupServiceImpl implements GroupService {
 								}
 							}
 							String msg =  names.toString() + "离开群组";
-							String extrMsg = msg;
+							String extrMsg = tg.getName();
 							RongCloudUtils.getInstance().sendGroupMsg(fromId, groupIdArr, msg, extrMsg, 1, 1, 2);
 						}
 					}
@@ -832,7 +835,7 @@ public class GroupServiceImpl implements GroupService {
 								}
 							}
 							String msg =  names.toString() + "加入群组";
-							String extrMsg = msg;
+							String extrMsg = tg.getName();
 							RongCloudUtils.getInstance().sendGroupMsg(fromId, groupIdArr, msg, extrMsg, 1, 1, 2);
 						}
 					}
@@ -885,13 +888,11 @@ public class GroupServiceImpl implements GroupService {
 					p.put("userId", tg.getCreatorId());
 					String memberStr = HttpRequest.getInstance().sendPost(
 							SysInterface.MEMBERFORID.getName(), p);
-					JSONObject memJson = JSONUtils.getInstance().stringToObj(
-							memberStr);
+					JSONObject memJson = JSONUtils.getInstance().stringToObj(memberStr);
 					JSONObject mem = null;
 
-					if (memJson.getInt("code") == 1) {
-						mem = JSONUtils.getInstance().stringToObj(
-								memJson.getString("text"));
+					if (memJson != null && memJson.getInt("code") == 1) {
+						mem = JSONUtils.getInstance().stringToObj(memJson.getString("text"));
 						mem.put("GID", tg.getId());
 						mem.put("code", tg.getCode());
 						mem.put("name", tg.getName());
@@ -1028,7 +1029,7 @@ public class GroupServiceImpl implements GroupService {
 						tmp.remove("creatorId");
 					}
 
-					System.out.println("----------------------------------------------: " + groupArr.toString());
+					//System.out.println("----------------------------------------------: " + groupArr.toString());
 					// 增加免打扰标记
 					for (int i = 0; i < groupArr.size(); i++) {
 						JSONObject tmp = groupArr.getJSONObject(i);
@@ -1422,7 +1423,7 @@ public class GroupServiceImpl implements GroupService {
 
 			if (ret > 0) {
 				String msg = "群名称已更改为" + groupName;
-				String extrMsg = msg;
+				String extrMsg = groupName;
 				String fromId = "FromId";
 				String[] groupIds = {groupId};
 				RongCloudUtils.getInstance().sendGroupMsg(fromId, groupIds, msg, extrMsg, 1, 1, 2);
@@ -1493,6 +1494,7 @@ public class GroupServiceImpl implements GroupService {
 					tf = new TFunction();
 					tf.setIsOpen("1");
 					tf.setListorder(0);
+					tf.setIsDel("1");
 					tf.setName((new StringBuilder(groupId).append("_")
 							.append(FunctionName.SHUTUP.getName())).toString());
 					functionDao.setFunctionStatus(tf);

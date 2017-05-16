@@ -49,13 +49,14 @@ public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
 	@Override
 	public void addFriend(int accountId, int friendId) {
 		try {
-			int countFriend = count("from TFriend");
+			int countFriend = count("from TFriend where isDel='1'");
 			
 			TFriend friend = new TFriend();
 			friend.setFriendId(friendId);
 			friend.setMemberId(accountId);
 			friend.setCreatedate(TimeGenerator.getInstance().formatNow("yyyyMMdd"));
 			friend.setListorder(countFriend);
+			friend.setIsDel("1");
 			save(friend);
 			
 			TFriend friend1 = new TFriend();
@@ -63,6 +64,7 @@ public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
 			friend1.setMemberId(friendId);
 			friend1.setCreatedate(TimeGenerator.getInstance().formatNow("yyyyMMdd"));
 			friend1.setListorder(countFriend + 1);
+			friend1.setIsDel("1");
 			
 			save(friend1);
 		} catch (Exception e) {
@@ -88,7 +90,8 @@ public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
 	public List<TFriend> getFriendRelationForId(Integer id) {
 		try {
 			Criteria ctr = getCriteria();
-			ctr.add(Restrictions.eq("memberId", id));
+			ctr.add(Restrictions.or(Restrictions.eq("memberId", id), Restrictions.eq("friendId", id)));
+			ctr.add(Restrictions.eq("isDel", "1"));
 			
 			List<TFriend> list = ctr.list();
 			
@@ -130,7 +133,7 @@ public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<TFriend> getFriendRelationForIdWithLimit(int userId, int limit) {
-		String sql = (new StringBuilder("from TFriend where member_id=").append(userId)).toString();
+		String sql = (new StringBuilder("from TFriend where member_id=").append(userId).append(" and isDel='1'")).toString();
 		
 		try {
 			Query query = getSession().createQuery(sql);
@@ -152,11 +155,15 @@ public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
 	}
 
 	@Override
-	public int deleteRelationByIds(String ids) {
+	public int deleteRelationByIds(String ids, String isLogic) {
 		try {
-			String hql = (new StringBuilder("delete from TFriend where memberId in (").append(ids).append(") or friendId in (").append(ids).append(")")).toString();
-			logger.info("deleteRelationByIds sql: " + hql);
-			return delete(hql);
+			if (isLogic.equals("1")) {
+				String hql = (new StringBuilder("update TFriend set isDel='0' where memberId in (").append(ids).append(") or friendId in (").append(ids).append(")")).toString();
+				return update(hql);
+			} else {
+				String hql = (new StringBuilder("delete from TFriend where memberId in (").append(ids).append(") or friendId in (").append(ids).append(")")).toString();
+				return delete(hql);
+			}
 		} catch (Exception e) {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();

@@ -59,6 +59,6 @@ public interface FriendDao extends IBaseDao<TFriend, Long> {
 	 */
 	public List<TFriend> getFriendRelationForIdWithLimit(int userIdInt, int mapMax);
 
-	public int deleteRelationByIds(String ids);
+	public int deleteRelationByIds(String ids, String isLogic);
 	
 } 

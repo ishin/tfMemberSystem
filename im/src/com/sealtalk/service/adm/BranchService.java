@@ -32,5 +32,7 @@ public interface BranchService {
 	public TMember getMemberByAccount(String account, int organId);
 
 	public int getOrganIdByOrganCode(String organCode);
+
+	public String getMembersByOrgan(int organId);
 	
 }

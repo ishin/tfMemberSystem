@@ -33,7 +33,7 @@ public class GroupAction extends BaseAction {
 		String result = null;
 	
 		if (groupService != null) {
-			result = groupService.createGroup(clearChar(userid), clearChar(groupids));
+			result = groupService.createGroup(clearChar(userid), clearChar(groupids), clearChar(groupname));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", -1);

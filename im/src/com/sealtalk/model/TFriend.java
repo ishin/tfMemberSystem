@@ -16,6 +16,7 @@ public class TFriend implements java.io.Serializable {
 	private Integer memberId;
 	private Integer friendId;
 	private String createdate;
+	private String isDel;
 	private Integer listorder;
 
 	// Constructors
@@ -82,4 +83,12 @@ public class TFriend implements java.io.Serializable {
 		this.listorder = listorder;
 	}
 
+	public String getIsDel() {
+		return isDel;
+	}
+
+	public void setIsDel(String isDel) {
+		this.isDel = isDel;
+	}
+	
 }

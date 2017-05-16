@@ -215,4 +215,17 @@ public class GroupDaoImpl extends BaseDao<TGroup, Long> implements GroupDao {
 		return 0;
 	}
 
+	@Override
+	public int updateCreateIdAndVolume(int groupId, Integer memberId) {
+		try {
+			String hql = "update TGroup t set t.creatorId=" + memberId + ",t.volumeuse=t.volumeuse-1 where t.id=" + groupId;
+			int result = update(hql);
+			return result;
+		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
 }

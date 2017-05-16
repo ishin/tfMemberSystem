@@ -98,7 +98,6 @@ public class MemberServiceImpl implements MemberService {
 	public String getOneOfMember(String userId) {
 		String result = null;
 		JSONObject jo = new JSONObject();
-
 		try {
 			if (StringUtils.getInstance().isBlank(userId)) {
 				jo.put("code", 0);
@@ -375,8 +374,6 @@ public class MemberServiceImpl implements MemberService {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
-
-		logger.info(result);
 		return result;
 	}
 

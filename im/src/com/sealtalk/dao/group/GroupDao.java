@@ -87,4 +87,6 @@ public interface GroupDao {
 	 */
 	public int updateGroupMemberNum(int groupId, int memberVolume);
 
+	public int updateCreateIdAndVolume(int groupId, Integer memberId);
+
 }

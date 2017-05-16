@@ -35,6 +35,6 @@ public interface DontDistrubDao extends IBaseDao<TDontDistrub, Long> {
 	 */
 	public TDontDistrub getSingleDistrubListForUserId(int userIdInt, int groupIdInt);
 
-	public int deleteByIds(String ids);
+	public int deleteByIds(String ids, String isLogic);
 
 } 

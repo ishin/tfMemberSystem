@@ -19,5 +19,8 @@
         <property name="listorder" type="java.lang.Integer">
             <column name="listorder" length="11" />
         </property>
+        <property name="isDel" type="java.lang.String">
+            <column name="isdel" length="1" />
+        </property>
     </class>
 </hibernate-mapping>

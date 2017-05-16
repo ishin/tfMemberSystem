@@ -74,4 +74,21 @@ public class FunctionDaoImpl extends BaseDao<TFunction, Long> implements Functio
 		}
 		
 	}
+
+	@Override
+	public int deleteRelationByIds(String string, String isLogic) {
+		try {
+			if (isLogic.equals("1")) {
+				String hql = "update TFunction t set t.isDel='0' where t.name in(" + string + ")";
+				return update(hql);
+			} else {
+				String hql = "delete from TFunction t where t.name in(" + string + ")";
+				return delete(hql);
+			}
+		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+			e.printStackTrace();
+		}
+		return 0;
+	}
 }

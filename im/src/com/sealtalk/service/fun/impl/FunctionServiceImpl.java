@@ -45,6 +45,7 @@ public class FunctionServiceImpl implements FunctionService {
 				tf.setGroupId(groupIdInt);
 				tf.setMemberId(userIdInt);
 				tf.setIsOpen(status);
+				tf.setIsDel("1");
 				tf.setListOrder(0);
 				
 				dontDistrubDao.setDontDistrub(tf);
@@ -105,7 +106,7 @@ public class FunctionServiceImpl implements FunctionService {
 			
 			jo.put("code", 1);
 			
-			if (tf != null) {
+			if (tf != null && tf.getIsOpen().equals("1")) {
 				jo.put("text", 1);
 			} else {
 				jo.put("text", 0);
@@ -135,6 +136,7 @@ public class FunctionServiceImpl implements FunctionService {
 					
 					tf.setIsOpen(status);
 					tf.setName(name);
+					tf.setIsDel("1");
 					tf.setListorder(0);
 					
 					functionDao.setFunctionStatus(tf);
@@ -174,6 +176,7 @@ public class FunctionServiceImpl implements FunctionService {
 				tm.setMsgType(topType);
 				tm.setUserId(userIdInt);
 				tm.setTopId(topIdInt);
+				tm.setIsDel("1");
 				tm.setListorder(count);
 				
 				msgTopDao.setMsgTop(tm);

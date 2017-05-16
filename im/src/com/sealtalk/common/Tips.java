@@ -41,6 +41,7 @@ public enum  Tips {
 	NOTINIT("请使用正确的账号登陆", "00035"),
 	NULLCODE("需填写企业码", "00036"),
 	TIMEOUT("超时", "00037"),
+	FALSECHECK("检验不通过", "00038"),
 	OK("OK", "10000"),
 	FAIL("fail", "20000");
 	

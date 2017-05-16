@@ -38,6 +38,6 @@ public interface MapDao extends IBaseDao<TMap, Long> {
 	 */
 	public List<TMap> getMapByIds(Integer[] ids);
 
-	public int deleteRelationByIds(String ids);
+	public int deleteRelationByIds(String ids, String isLogic);
 
 }

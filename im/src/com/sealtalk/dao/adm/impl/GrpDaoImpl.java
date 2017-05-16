@@ -23,7 +23,7 @@ public class GrpDaoImpl extends BaseDao<TGroup, Integer> implements GrpDao {
 	@Override
 	public Integer getMemberCountByGrp(Integer id) {
 
-		String sql = "select count(id) from t_group_member where group_id = " + id;
+		String sql = "select count(id) from t_group_member where group_id = " + id + " and isdel='1'";
 		logger.info("getMemberCountByGrp sql: " + sql);
 		List list = runSql(sql);
 
@@ -58,7 +58,7 @@ public class GrpDaoImpl extends BaseDao<TGroup, Integer> implements GrpDao {
 
 	@Override
 	public List getLimitListById(Integer id, Integer page, Integer itemsperpage) {
-		String sql = "select gm.is_creator iscreator,gm.id gmid,gm.member_id mid from t_group_member gm where gm.group_id = " + id + " order by gm.is_creator desc";
+		String sql = "select gm.is_creator iscreator,gm.id gmid,gm.member_id mid from t_group_member gm where gm.group_id = " + id + " and gm.isdel='1' order by gm.is_creator desc";
 		
 		if (page != null && itemsperpage != null)
 			sql += " limit " + page * itemsperpage + ", " + itemsperpage;

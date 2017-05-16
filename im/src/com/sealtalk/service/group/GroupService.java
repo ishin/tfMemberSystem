@@ -13,7 +13,7 @@ public interface GroupService {
 	 * @param groupids
 	 * @return
 	 */
-	public String createGroup(String userid, String groupids);
+	public String createGroup(String userid, String groupids, String groupName);
 	
 	/**
 	 * 加入群组

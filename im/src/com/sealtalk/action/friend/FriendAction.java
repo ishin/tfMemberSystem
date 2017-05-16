@@ -97,9 +97,14 @@ public class FriendAction extends BaseAction {
 				String key = "@q3$fd12%";
 				String caclSign = PasswordGenerator.getInstance().makeSign(p, key, timeStamp);
 				
+				System.out.println("timestamp: " + timeStamp);
+				System.out.println("sign: " + sign);
+				System.out.println("caclSign: " + caclSign);
+				System.out.println("key: " + key);
+				
 				if (!sign.equals(caclSign)) {
 					jo.put("code", 0);
-					jo.put("text", Tips.FAIL.getText());
+					jo.put("text", Tips.FALSECHECK.getText());
 					result = jo.toString();
 				} else {
 					boolean s = true;

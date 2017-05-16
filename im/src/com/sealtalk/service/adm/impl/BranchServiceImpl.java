@@ -1,6 +1,5 @@
 package com.sealtalk.service.adm.impl;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.logging.log4j.LogManager;
@@ -135,5 +134,21 @@ public class BranchServiceImpl implements BranchService {
 		logger.info("oid: " + oid);
 		return oid;
 	}
-	
+
+	@Override
+	public String getMembersByOrgan(int organId) {
+		
+		try {
+			JSONObject jo = new JSONObject();
+			jo.put("organId", organId);
+			String result = HttpRequest.getInstance().sendPost(
+					SysInterface.GETORGANTREE.getName(), jo);
+			return result;
+		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

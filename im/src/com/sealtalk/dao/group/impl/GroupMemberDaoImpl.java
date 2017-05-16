@@ -11,6 +11,7 @@ import org.hibernate.criterion.Restrictions;
 
 import com.sealtalk.common.BaseDao;
 import com.sealtalk.dao.group.GroupMemberDao;
+import com.sealtalk.model.TGroup;
 import com.sealtalk.model.TGroupMember;
 import com.sealtalk.utils.LogUtils;
 
@@ -189,6 +190,7 @@ public class GroupMemberDaoImpl extends BaseDao<TGroupMember, Long> implements G
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.in("groupId", groupIds));
+			ctr.add(Restrictions.eq("isDel", "1"));
 			
 			List<TGroupMember> list = ctr.list();
 			
@@ -205,10 +207,15 @@ public class GroupMemberDaoImpl extends BaseDao<TGroupMember, Long> implements G
 	}
 
 	@Override
-	public int deleteRelationByIds(String ids) {
+	public int deleteRelationByIds(String ids, String isLogic) {
 		try {
-			String hql = (new StringBuilder("delete from TGroupMember where memberId in (").append(ids).append(")")).toString();
-			return delete(hql);
+			if (isLogic.equals("1")) {
+				String hql = (new StringBuilder("update TGroupMember set isDel='0',isCreator='0' where memberId in (").append(ids).append(")")).toString();
+				return update(hql);
+			} else {
+				String hql = (new StringBuilder("delete from TGroupMember where memberId in (").append(ids).append(")")).toString();
+				return delete(hql);
+			}
 		} catch (Exception e) {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
@@ -235,6 +242,37 @@ public class GroupMemberDaoImpl extends BaseDao<TGroupMember, Long> implements G
 		}	
 		
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<TGroupMember> getGroupMemberByMembIds(Integer[] ids) {
+		try {
+			Criteria ctr = getCriteria();
+			ctr.add(Restrictions.in("memberId", ids));
+			ctr.add(Restrictions.eq("isDel", "1"));
+			
+			List<TGroupMember> list = ctr.list();
+			
+			if (list.size() > 0) {
+				return list;
+			}
+			
+		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+			e.printStackTrace();
+		}	
+		
+		return null;
+	}
+
+	@Override
+	public void updateGroupMember(TGroupMember tgm) {
+		try {
+			update(tgm);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

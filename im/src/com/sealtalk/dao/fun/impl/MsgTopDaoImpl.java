@@ -23,7 +23,7 @@ public class MsgTopDaoImpl extends BaseDao<TMsgtop, Integer> implements MsgTopDa
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<TMsgtop> getMsgTop(Integer userId) {
-		String hql = (new StringBuilder("from TMsgtop tm where userId=").append(userId).append(" order by listorder asc")).toString();
+		String hql = (new StringBuilder("from TMsgtop tm where userId=").append(userId).append(" and isDel='1' order by listorder asc")).toString();
 		
 		logger.info("getMsgTop sql: " + hql);
 	
@@ -53,7 +53,7 @@ public class MsgTopDaoImpl extends BaseDao<TMsgtop, Integer> implements MsgTopDa
 
 	@Override
 	public int getCountMsgTopForUserId(int userIdInt) {
-		String sql = (new StringBuilder(" from TMsgtop where userId=").append(userIdInt)).toString();
+		String sql = (new StringBuilder(" from TMsgtop where userId=").append(userIdInt).append(" and isDel='1'")).toString();
 		logger.info("getCountMsgTopForUserId sql: " + sql);
 		return count(sql);
 	}
@@ -72,12 +72,15 @@ public class MsgTopDaoImpl extends BaseDao<TMsgtop, Integer> implements MsgTopDa
 	}
 
 	@Override
-	public int deleteRelationByIds(String ids) {
+	public int deleteRelationByIds(String ids, String isLogic) {
 		try {
-			String hql = (new StringBuilder("delete from TMsgtop where userId in (").append(ids).append(")")).toString();
-			
-			logger.info("deleteRelationByIds sql: " + hql);
-			return delete(hql);
+			if (isLogic.equals("1")) {
+				String hql = (new StringBuilder("update TMsgtop set isDel='0' where userId in (").append(ids).append(")")).toString();
+				return update(hql);
+			} else {
+				String hql = (new StringBuilder("delete from TMsgtop where userId in (").append(ids).append(")")).toString();
+				return delete(hql);
+			}
 		} catch (Exception e) {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();

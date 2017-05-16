@@ -25,7 +25,7 @@
 					<param name="excludeMethods">
 						getBase,
 						login,loginForWeb,afterLogin,logOut,newPassword,testText,requestText,fogetPassword,attemptSession,
-						delByMemberIds
+						delByMemberIds,getTempTokenSceneOne,redirectLogin,reqAuthorizeOne,getRealToken,getAuthResource
 					</param>
 					<!-- <param name="includeMethods"></param> -->
 				</interceptor-ref>

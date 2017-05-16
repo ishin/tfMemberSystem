@@ -37,6 +37,7 @@ public class DontDistrubDaoImpl extends BaseDao<TDontDistrub, Long> implements D
 		try {
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("memberId", userIdInt));
+			ctr.add(Restrictions.eq("isDel", "1"));
 			
 			List<TDontDistrub> list = ctr.list();
 			
@@ -74,11 +75,15 @@ public class DontDistrubDaoImpl extends BaseDao<TDontDistrub, Long> implements D
 	}
 
 	@Override
-	public int deleteByIds(String ids) {
+	public int deleteByIds(String ids, String isLogic) {
 		try {
-			String hql = (new StringBuilder("delete from TDontDistrub where memberId in (").append(ids).append(")")).toString();
-			logger.info("deleteByIds sql: " + hql);
-			return delete(hql);
+			if (isLogic.equals("1")) {
+				String hql = (new StringBuilder("update TDontDistrub set isDel='0' where memberId in (").append(ids).append(")")).toString();
+				return update(hql);
+			} else {
+				String hql = (new StringBuilder("delete from TDontDistrub where memberId in (").append(ids).append(")")).toString();
+				return delete(hql);
+			}
 		} catch (Exception e) {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();

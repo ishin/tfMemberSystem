@@ -15,6 +15,7 @@ public class TFunction implements java.io.Serializable {
 	private Integer id;
 	private String name;
 	private String isOpen;
+	private String isDel;
 	private Integer listorder;
 
 	// Constructors
@@ -68,6 +69,14 @@ public class TFunction implements java.io.Serializable {
 
 	public void setListorder(Integer listorder) {
 		this.listorder = listorder;
+	}
+
+	public String getIsDel() {
+		return isDel;
+	}
+
+	public void setIsDel(String isDel) {
+		this.isDel = isDel;
 	}
 
 }

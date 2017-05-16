@@ -36,13 +36,20 @@ public enum SysInterface {
 	MEMBEROFBRANCH("abranch!getBranchMemberAb"),
 	BRANCHTREE("abranch!getBranchTreeAb"),
 	GETORGANCODE("abranch!getOrganCodeAb"),
+	GETORGANTREE("abranch!getMembersByOrganAb"),
 	GETPRIVILEGE("abprivilege!getRoleIdForIdAb"),
 	INITLOGINPRIV("abprivilege!getInitLoginPrivAb"),
 	GETPRIVBYURL("abprivilege!getPrivByUrlAb"),
 	GETPRIVBYPRIVS("abprivilege!getRolePrivsByPrivsAb"),
 	GETROLEMEMBERBYROLEIDS("abprivilege!getMemberRolesByRoleIdsAb"),
 	PRIVBYMEMBER("abprivilege!getPrivStringByMemberAb"),
-	VALIDAPPSECRET("abauth!validAppIdAndSecretAb");
+	VALIDAPPSECRET("abauth!validAppIdAndSecretAb"),
+	GETTEMPTOKENSCENEONE("abauth!getTempTokenSceneOneAb"),
+	REQAUTHORIZEONE("abauth!reqAuthorizeOneAb"),
+	REQAUTHORIZTWO("abauth!reqAuthorizeTwoAb"),
+	REQAUTHORIZETOWFORAPP("abauth!reqAuthorizeTwoForAppAb"),
+	GETREALTOKEN("abauth!getRealTokenAb"),
+	GETAUTHRESOURCE("abauth!getAuthResourceAb");
 
 	private String name;
 	

@@ -224,6 +224,8 @@ public class UploadServiceImpl implements UploadService {
 					jo.put("text", Tips.USEDLOGO.getText());
 					result = jo.toString();
 				} else {
+					p.remove("sign");
+					p.remove("timestamp");
 					result = HttpRequest.getInstance().sendPost(SysInterface.DELUSERLOGS.getName(), p);
 				}
 			}

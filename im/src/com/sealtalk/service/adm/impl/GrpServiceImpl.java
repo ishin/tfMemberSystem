@@ -26,7 +26,6 @@ public class GrpServiceImpl implements GrpService {
 		this.groupMemberDao = groupMemberDao;
 	}
 
-
 	@Override
 	public Integer getCount() {
 		

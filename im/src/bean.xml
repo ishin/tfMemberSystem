@@ -7,7 +7,6 @@
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-
 	<!-- dao -->
 	<bean id="friendDao" class="com.sealtalk.dao.friend.impl.FriendDaoImpl" autowire="byName" />
 	<bean id="dontDistrubDao" class="com.sealtalk.dao.fun.impl.DontDistrubDaoImpl" autowire="byName" />
@@ -36,6 +35,7 @@
 		<property name="groupDao" ref="groupDao" />
 		<property name="groupMemberDao" ref="groupMemberDao" />
 		<property name="dontDistrubDao" ref="dontDistrubDao" />
+		<property name="functionDao" ref="functionDao" />
 	</bean>
 	<bean id="mapService" class="com.sealtalk.service.map.impl.MapServiceImpl" autowire="byName" >
 		<property name="mapDao" ref="mapDao" />
@@ -58,6 +58,12 @@
 		<property name="groupMemberDao" ref="groupMemberDao" />
 		<property name="mapDao" ref="mapDao" />
 		<property name="msgTopDao" ref="msgTopDao" />
+		<property name="groupDao" ref="groupDao" />
+		<property name="functionDao" ref="functionDao" />
+	</bean>
+	<bean id="userService" class="com.sealtalk.service.msg.impl.UserServiceServiceImpl" autowire="byName" >
+	</bean>
+	<bean id="appSecretService" class="com.sealtalk.service.auth.impl.AppSecretServiceImpl" autowire="byName" >
 	</bean>
 	
 	<!-- action -->
@@ -95,5 +101,11 @@
 	</bean>
 	<bean id="extraAction" class="com.sealtalk.action.extra.ExtraAction" scope="prototype" autowire="byName" >
 		<property name="extraService" ref="extraService" />
+	</bean>
+	<bean id="userServiceAction" class="com.sealtalk.action.msg.UserServiceAction" scope="prototype" autowire="byName" >
+		<property name="userService" ref="userService" />
+	</bean>
+	<bean id="appSecretAction" class="com.sealtalk.action.auth.AppSecretAction" scope="prototype" autowire="byName" >
+		<property name="appSecretService" ref="appSecretService" />
 	</bean>
 </beans>

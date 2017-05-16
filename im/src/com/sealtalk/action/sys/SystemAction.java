@@ -42,7 +42,6 @@ import com.sealtalk.utils.TimeGenerator;
 public class SystemAction extends BaseAction {
 
 	private static final long serialVersionUID = -3901445181785461508L;
-	private static final String LOGIN_ERROR_MESSAGE = "loginErrorMsg";
 	private static final Logger logger = LogManager.getLogger(SystemAction.class);
 
 	/**
@@ -380,46 +379,50 @@ public class SystemAction extends BaseAction {
 			}
 		} else {
 			String type = this.request.getParameter("type");
-			phone = account;
+	
 			if (type == null || !type.equalsIgnoreCase("web")) {
-				if (!StringUtils.getInstance().isBlank(textcode)) {
-					String dbCode = memberService.getTextCode(phone);
-		
-					if (dbCode != null && !dbCode.equals("-1") && dbCode.equals(textcode)) {
-						text.put("code", 1);
-						text.put("text", Tips.TRUETEXTS.getText());
-					} else {
-						text.put("code", 0);
-						text.put("text", Tips.FAIL.getText());
-					}
+				phone = account;
+			}
+			if (!StringUtils.getInstance().isBlank(textcode)) {
+				String dbCode = memberService.getTextCode(phone);
+	
+				if (dbCode != null && !dbCode.equals("-1") && dbCode.equals(textcode)) {
+					text.put("code", 1);
+					text.put("text", Tips.TRUETEXTS.getText());
 				} else {
-					status = false;
-					text.put("code", -1);
-					text.put("text", Tips.NULLTEXTS.getText());
+					text.put("code", 0);
+					text.put("text", Tips.FAIL.getText());
 				}
+			} else {
+				status = false;
+				text.put("code", -1);
+				text.put("text", Tips.NULLTEXTS.getText());
 			}
 		}
 
 		if (status) {
 			if (!newpwd.equals(comparepwd)) {
-				request.setAttribute(LOGIN_ERROR_MESSAGE, Tips.FALSECOMPAREPWD.getText());
-				return "fogetpwd";
-			}
-
-			boolean updateState = false;
-
-			if (flag == 1) {
-				updateState = memberService.updateUserPwdForAccount(account,newpwd, organId);
-			} else {
-				updateState = memberService.updateUserPwdForPhone(phone, newpwd);
-			}
-
-			if (updateState == true) {
-				text.put("code", "1");
-				text.put("text", Tips.CHANGEPWDSUC.getText());
-			} else {
 				text.put("code", "0");
-				text.put("text", Tips.CHANGEPWDFAIL.getText());
+				text.put("text", Tips.FALSECOMPAREPWD.getText());
+				//request.setAttribute(LOGIN_ERROR_MESSAGE, Tips.FALSECOMPAREPWD.getText());
+				//return "fogetpwd";
+			} else {
+
+				boolean updateState = false;
+	
+				if (flag == 1) {
+					updateState = memberService.updateUserPwdForAccount(account,newpwd, organId);
+				} else {
+					updateState = memberService.updateUserPwdForPhone(phone, newpwd);
+				}
+	
+				if (updateState == true) {
+					text.put("code", "1");
+					text.put("text", Tips.CHANGEPWDSUC.getText());
+				} else {
+					text.put("code", "0");
+					text.put("text", Tips.CHANGEPWDFAIL.getText());
+				}
 			}
 		}
 		

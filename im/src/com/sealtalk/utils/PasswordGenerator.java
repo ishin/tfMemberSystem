@@ -1,5 +1,6 @@
 package com.sealtalk.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
@@ -9,6 +10,8 @@ import java.util.UUID;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.RandomStringUtils;
+
+import com.sun.istack.internal.logging.Logger;
 
 
 public class PasswordGenerator {
@@ -23,6 +26,8 @@ public class PasswordGenerator {
 	public static PasswordGenerator getInstance() {
 		return Inner.PG;
 	}
+	
+	private static final Logger logger = Logger.getLogger(PasswordGenerator.class);
 
 	public String makePwd() {
 		char c[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
@@ -47,9 +52,8 @@ public class PasswordGenerator {
 		char hexs[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
 				'b', 'c', 'd', 'e', 'f' };
 
-		byte[] source = pwdContext.getBytes();
-
 		try {
+			byte[] source = pwdContext.getBytes("UTF-8");
 			MessageDigest md5 = MessageDigest.getInstance("MD5");
 			md5.update(source);
 
@@ -70,6 +74,8 @@ public class PasswordGenerator {
 			result = new String(str);
 
 		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 
@@ -122,12 +128,12 @@ public class PasswordGenerator {
 		}
 		
 		String pStr = sbp.toString();
-		
+		logger.info("sort0: " + pStr);
 		pStr = StringUtils.getInstance().sortByChars(pStr);
-		System.out.println("sort1: " + pStr);
+		logger.info("sort1: " + pStr);
 		pStr = key + pStr + timeStamp;
-		System.out.println("sort2: " + pStr);
-		String caclSign = PasswordGenerator.getInstance().getMD5Str(sbp.toString());
+		logger.info("sort2: " + pStr);
+		String caclSign = PasswordGenerator.getInstance().getMD5Str(pStr);
 		
 		System.out.println("im sign: " + caclSign);
 		
@@ -171,7 +177,7 @@ public class PasswordGenerator {
 		pStr = key + pStr + timeStamp;
 		System.out.println("sort2: " + pStr);
 		
-		String caclSign = PasswordGenerator.getInstance().getMD5Str(sbp.toString());
+		String caclSign = PasswordGenerator.getInstance().getMD5Str(pStr);
 		
 		System.out.println("organ sign: " + caclSign);
 		
