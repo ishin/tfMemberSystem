@@ -143,7 +143,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 
 						// appid已超时，-1表示无时效限制
 						if (appTime != -1 && now >= appTime) {
-							text = AuthTips.INVALIDAPPID.getText();
+							text = AuthTips.TIMEOUTAPPID.getText();
 						} else {
 							// 生成临时令牌
 							long tokenTimeL = 0;
@@ -222,7 +222,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 							long unAuthTokenTime = uv.getUnAuthTokenTime();
 
 							if (now >= unAuthTokenTime) {
-								text = AuthTips.INVALTOKEN.getText();
+								text = AuthTips.TIMEOUTTOKEN.getText();
 							} else {
 								int organId = as.getOrganId();
 								TMember tm = memberDao.searchSigleUser(
@@ -303,7 +303,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 							long authTokenTimeDB = uv.getAuthTokenTime();
 
 							if (now >= authTokenTimeDB) {
-								text = AuthTips.INVALTOKEN.getText();
+								text = AuthTips.TIMEOUTTOKEN.getText();
 							} else {
 								long realTokenTimeL = 0;
 								String realTokenTime = PropertiesUtils
@@ -357,7 +357,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 					long visitTokenTime = as.getVisitTokenTime();
 
 					if (now >= visitTokenTime) {
-						text = AuthTips.INVALTOKEN.getText();
+						text = AuthTips.TIMEOUTTOKEN.getText();
 					} else {
 						int userId = as.getUserId();
 						int info = as.getInfo();
@@ -430,7 +430,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 							long unAuthTokenTime = uv.getUnAuthTokenTime();
 
 							if (now >= unAuthTokenTime) {
-								text = AuthTips.INVALTOKEN.getText();
+								text = AuthTips.TIMEOUTTOKEN.getText();
 							} else {
 								long authTokenTimeL = 0;
 								String authTokenTime = PropertiesUtils
@@ -504,7 +504,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 							long unAuthTokenTime = uv.getUnAuthTokenTime();
 
 							if (now >= unAuthTokenTime) {
-								text = AuthTips.INVALTOKEN.getText();
+								text = AuthTips.TIMEOUTTOKEN.getText();
 							} else {
 								long authTokenTimeL = 0;
 								String authTokenTime = PropertiesUtils

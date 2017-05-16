@@ -32,14 +32,6 @@ public class TOrgan implements java.io.Serializable {
 	private Integer inwardId;
 	private Integer industryId;
 	private Integer subdustryId;
-	public Integer getSubdustryId() {
-		return subdustryId;
-	}
-
-	public void setSubdustryId(Integer subdustryId) {
-		this.subdustryId = subdustryId;
-	}
-
 	private Integer capital;
 	private Integer membernumber;
 	private Integer computernumber;
@@ -302,6 +294,13 @@ public class TOrgan implements java.io.Serializable {
 
 	public void setListorder(Integer listorder) {
 		this.listorder = listorder;
+	}
+	public Integer getSubdustryId() {
+		return subdustryId;
+	}
+
+	public void setSubdustryId(Integer subdustryId) {
+		this.subdustryId = subdustryId;
 	}
 
 }

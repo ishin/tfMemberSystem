@@ -16,6 +16,7 @@ public class TRole implements java.io.Serializable {
 	private String name;
 	private Integer listorder;
 	private Integer organId;
+	private String roleLevel;
 
 	// Constructors
 
@@ -66,6 +67,14 @@ public class TRole implements java.io.Serializable {
 
 	public void setOrganId(Integer organId) {
 		this.organId = organId;
+	}
+
+	public String getRoleLevel() {
+		return roleLevel;
+	}
+
+	public void setRoleLevel(String roleLevel) {
+		this.roleLevel = roleLevel;
 	}
 
 }

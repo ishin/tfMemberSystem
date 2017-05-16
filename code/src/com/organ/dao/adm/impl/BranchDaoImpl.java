@@ -43,7 +43,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements BranchDa
 	public List getBranch(Integer organId) {
 
 		String sql = "select id, parent_id, name from t_branch"
-				+ " where organ_id = " + organId;
+				+ " where organ_id = " + organId + " order by nogroup asc";
 		return runSql(sql);
 	}
 

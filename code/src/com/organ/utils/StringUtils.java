@@ -215,4 +215,14 @@ public class StringUtils {
 		}
 		return null;
 	}
+
+	public String addZero(int code, int bit) {
+		String c = String.valueOf(code);
+		bit = bit - c.length();
+		
+		for(int i = 0; i < bit; i++) {
+			c = "0" + c;
+		}
+		return c;
+	}
 }

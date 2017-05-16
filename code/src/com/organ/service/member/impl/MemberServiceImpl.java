@@ -472,17 +472,20 @@ public class MemberServiceImpl implements MemberService {
 			mulMemberStr = StringUtils.getInstance().replaceChar(mulMemberStr, "\"", "");
 			mulMemberStrs = mulMemberStr.split(",");
 			List<TMember> memberList = memberDao.getMultipleMemberForAccounts(mulMemberStrs, organId);
-			int[] ids = null;
+			JSONArray ja = new JSONArray();
 			
 			if (memberList != null) {
 				int len = memberList.size();
-				ids = new int[len];
+				
 				for (int i = 0; i < len; i++) {
+					JSONObject j = new JSONObject();
 					TMember t = memberList.get(i);
-					ids[i] = t.getId();
+					j.put("id", t.getId());
+					j.put("name", t.getFullname());
+					ja.add(j);
 				}
 				jo.put("code", 1);
-				jo.put("text", ids);
+				jo.put("text", ja.toString());
 			} else {
 				jo.put("code", 0);
 				jo.put("text", Tips.NULLGROUPMEMBER.getText());

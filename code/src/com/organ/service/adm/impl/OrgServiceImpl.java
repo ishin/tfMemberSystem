@@ -2,7 +2,6 @@ package com.organ.service.adm.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -13,20 +12,25 @@ import org.apache.logging.log4j.Logger;
 import com.organ.common.Tips;
 import com.organ.dao.adm.BranchDao;
 import com.organ.dao.adm.BranchMemberDao;
+import com.organ.dao.adm.MemberRoleDao;
 import com.organ.dao.adm.OrgDao;
 import com.organ.dao.adm.PositionDao;
+import com.organ.dao.adm.RoleDao;
 import com.organ.dao.member.MemberDao;
 import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
 import com.organ.model.TMember;
+import com.organ.model.TMemberRole;
 import com.organ.model.TOrgan;
 import com.organ.model.TPosition;
+import com.organ.model.TRole;
 import com.organ.service.adm.OrgService;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PinyinGenerator;
 import com.organ.utils.PropertiesUtils;
+import com.organ.utils.StringUtils;
 
 public class OrgServiceImpl implements OrgService {
 
@@ -36,6 +40,16 @@ public class OrgServiceImpl implements OrgService {
 	private BranchDao branchDao;
 	private PositionDao positionDao;
 	private BranchMemberDao branchMemberDao;
+	private RoleDao roleDao;
+	private MemberRoleDao memberRoleDao;
+
+	public void setMemberRoleDao(MemberRoleDao memberRoleDao) {
+		this.memberRoleDao = memberRoleDao;
+	}
+
+	public void setRoleDao(RoleDao roleDao) {
+		this.roleDao = roleDao;
+	}
 
 	public void setBranchMemberDao(BranchMemberDao branchMemberDao) {
 		this.branchMemberDao = branchMemberDao;
@@ -123,13 +137,15 @@ public class OrgServiceImpl implements OrgService {
 	@Override
 	public String registOrgan(TOrgan organ) {
 		String priv = PropertiesUtils.getStringByKey("organ.priv");
-		Random r = new Random();
-		String random = r.nextInt(999) + "";
-		String code = priv + random + PinyinGenerator.getPinYinHeadChar(organ.getName());
+		String code = priv + PinyinGenerator.getPinYinHeadChar(organ.getName());
+		int maxNumber =orgDao.getMaxNumber();
+		maxNumber++;
+		code += StringUtils.getInstance().addZero(maxNumber, 5);
 		String ret = null;
 		JSONObject j = new JSONObject();
 		
 		try {
+			organ.setListorder(maxNumber);
 			organ.setCode(code);
 			//注册系统
 			orgDao.save(organ);
@@ -170,21 +186,23 @@ public class OrgServiceImpl implements OrgService {
 					tm.setIsDel(1);
 					memberDao.save(tm);
 					
+					//初始化职位
+					String [] posArr = {"总经理", "副总经理", "部门经理", "项目主管", "工程师", "市场", "商务", "运营", "网管", "财务", "人事", "行政", "企宣"};
+					List<TPosition> tpList = new ArrayList<TPosition>();
+					
+					for(int i = 0; i < posArr.length; i++) {
+						TPosition tpt = new TPosition();
+						tpt.setName(posArr[i]);
+						tpt.setOrganId(organId);
+						tpt.setListorder(0);
+						tpList.add(tpt);
+					}
+					positionDao.save(tpList);
+					
 					int memberId = 0;
 					memberId = tm.getId() != null ? tm.getId() : 0;
 					
-					//初始化职位
-					TPosition tp = new TPosition();
-					tp.setName(organName);
-					tp.setOrganId(organId);
-					tp.setListorder(0);
-					positionDao.save(tp);
-					
-					int pid = 0;
-					
-					pid = tp.getId() != null ? tp.getId() : 0;
-					
-					//未分组部门
+					//初始化部门
 					TBranch tb = new TBranch();
 					tb.setName("未分组部门");
 					tb.setOrganId(organId);
@@ -201,27 +219,84 @@ public class OrgServiceImpl implements OrgService {
 					branchDao.save(tb);
 					
 					int bid = 0;
-					
+					//int pid = 0;
 					bid = tb.getId() != null ? tb.getId() : 0;
+					//pid = tp.getId() != null ? tp.getId() : 0;
 					
 					//初始化部门成员关系 
 					TBranchMember tbm = new TBranchMember();
 					tbm.setBranchId(bid);
 					tbm.setMemberId(memberId);
-					tbm.setPositionId(pid);
+					tbm.setPositionId(0);
 					tbm.setIsMaster("1");
 					tbm.setIsDel("1");
 					tbm.setListorder(0);
 					branchMemberDao.save(tbm);
 					
-					/*
 					//初始化角色
-					TMemberRole tmr = new TMemberRole();
-					tmr.setMemberId(memberId);
-					tmr.setRoleId(1);
-					tmr.setListorder(0);
-					memberRoleDao.save(tmr);
-					*/
+					List<TRole> roleList = new ArrayList<TRole>();
+					TRole role1 = new TRole();
+					TRole role2 = new TRole();
+					TRole role3 = new TRole();
+					TRole role4 = new TRole();
+					
+					role1.setName("组织管理员");
+					role1.setOrganId(organId);
+					role1.setRoleLevel("1");
+					
+					role2.setName("副组织管理员");
+					role2.setOrganId(organId);
+					role2.setRoleLevel("2");
+				
+					role3.setName("部门领导");
+					role3.setOrganId(organId);
+					role3.setRoleLevel("3");
+					
+					role4.setName("普通成员");
+					role4.setOrganId(organId);
+					role4.setRoleLevel("4");
+					
+					roleList.add(role1);
+					roleList.add(role2);
+					roleList.add(role3);
+					roleList.add(role4);
+					roleDao.save(roleList);
+					
+					int role1Id = role1.getId();
+					//int role2Id = role2.getId();
+					//int role3Id = role3.getId();
+					
+					List<TMemberRole> memRoleList = new ArrayList<TMemberRole>();
+					
+					//初始化成员角色关系
+					TMemberRole tmr1 = new TMemberRole();
+					//TMemberRole tmr2 = new TMemberRole();
+					//TMemberRole tmr3 = new TMemberRole();
+					
+					tmr1.setMemberId(memberId);
+					tmr1.setRoleId(role1Id);
+					tmr1.setListorder(0);
+					tmr1.setIsDel("1");
+					
+					//tmr2.setMemberId(memberId);
+					//tmr2.setRoleId(role2Id);
+					//tmr2.setListorder(0);
+					//tmr2.setIsDel("1");
+					
+					//tmr3.setMemberId(memberId);
+					//tmr3.setRoleId(role3Id);
+					//tmr3.setListorder(0);
+					//tmr3.setIsDel("1");
+					
+					memRoleList.add(tmr1);
+					//memRoleList.add(tmr2);
+					//memRoleList.add(tmr3);
+					
+					memberRoleDao.save(memRoleList);
+					
+					//初始化角色权限
+					
+					
 					
 					j.put("account", tm.getAccount());
 					j.put("pwd", pwd);
@@ -252,6 +327,7 @@ public class OrgServiceImpl implements OrgService {
 				TOrgan to = list.get(i);
 				JSONObject t = new JSONObject();
 				t.put("id", to.getId());
+				t.put("code", to.getCode());
 				t.put("name", to.getName());
 				retList.add(t);
 			}
