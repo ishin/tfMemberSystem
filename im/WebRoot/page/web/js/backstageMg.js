@@ -907,41 +907,41 @@ function fSearchPersonalHistory(){
     var sVal=$('#personalData').find('.infoDet-search input').val();
     //var sVal=$(this).prev().val();
     sVal=sVal.replace(/^\s+|\s+$/g,'').replace(/\s+/g,' ');
-    if(sVal==''){
-        new Window().alert({
-            title   : '',
-            content : '请输入您要搜索的内容！',
-            hasCloseBtn : false,
-            hasImg : true,
-            textForSureBtn : false,
-            textForcancleBtn : false,
-            autoHide:true
-        });
-    }else{
+    //if(sVal==''){
+        //new Window().alert({
+        //    title   : '',
+        //    content : '请输入您要搜索的内容！',
+        //    hasCloseBtn : false,
+        //    hasImg : true,
+        //    textForSureBtn : false,
+        //    textForcancleBtn : false,
+        //    autoHide:true
+        //});
+    //}else{
         var $perEle=$('#infoDetailsBox .infoDet-chatRecord').find('.infoDet-page');
         var oPagetest = new PageObj({divObj:$perEle,pageSize:20,searchstr:sVal,conversationtype:sTargettype,targetId:sTargetid},function(type,list,callback)//声明page1
         {
             getChatRecord(list,'#infoDetailsBox .infoDet-chatRecord .chatRecordSel');
 
         });
-    }
+    //}
 }
 function fSearchGroupHistory(){
     var sTargettype=$('#groupContainer').attr('targettype');
     var sTargetid=$('#groupContainer').attr('targetid');
     var sVal=$('#groupData').find('.infoDet-search input').val();
     sVal=sVal.replace(/^\s+|\s+$/g,'').replace(/\s+/g,' ');
-    if(sVal==''){
-        new Window().alert({
-            title   : '',
-            content : '请输入您要搜索的内容！',
-            hasCloseBtn : false,
-            hasImg : true,
-            textForSureBtn : false,
-            textForcancleBtn : false,
-            autoHide:true
-        });
-    }else{
+    //if(sVal==''){
+    //    new Window().alert({
+    //        title   : '',
+    //        content : '请输入您要搜索的内容！',
+    //        hasCloseBtn : false,
+    //        hasImg : true,
+    //        textForSureBtn : false,
+    //        textForcancleBtn : false,
+    //        autoHide:true
+    //    });
+    //}else{
         var $groupEle=$('#groupDetailsBox .infoDet-chatRecord').find('.infoDet-page');
         var oPagetest = new PageObj({divObj:$groupEle,pageSize:20,searchstr:sVal,conversationtype:sTargettype,targetId:sTargetid},function(type,list,callback)//声明page1
         {
@@ -949,7 +949,7 @@ function fSearchGroupHistory(){
             //showHistoryMessages(list);
 
         });
-    }
+    //}
 }
 
 //查询单个群信息
@@ -995,7 +995,7 @@ function fPersonalSet(){
             var sPosition=oPerInfo.positionname|| '';//职位
             var sBranch=oPerInfo.branchname || '';//部门
             var sEmail=oPerInfo.email || '';//邮箱
-            var sTelephone=oPerInfo.telephone || '';//电话
+            var sTelephone=oPerInfo.mobile || '';//电话
             var sSign=oPerInfo.organname || '';//工作签名
             var sHeaderImg=oPerInfo.logo?globalVar.imgSrc+oPerInfo.logo:globalVar.defaultLogo;//头像
             var limit = $('body').attr('limit');
@@ -1102,10 +1102,10 @@ function showGroupMemberInfo(oGroupInfo,pos){
     var sCreatorAcconut=oGroupInfo.account//群创建者帐号
     var sCreatedate=subTimer(oGroupInfo.createdate);//创建时间
     var oCreator=searchFromList(1,sCreatorId);
-    if(!oCreator.logo){
-        var sImg=globalVar.defaultLogo;
-    }else{
+    if(oCreator&&oCreator.logo){
         var sImg=globalVar.imgSrc+oCreator.logo;
+    }else{
+        var sImg=globalVar.defaultLogo;
     }
    /* var sImg=oCreator.logo || globalVar.defaultLogo;*/
     //console.log(findMemberInList(sCreatorId));

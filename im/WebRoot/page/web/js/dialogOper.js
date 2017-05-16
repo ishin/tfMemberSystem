@@ -103,7 +103,8 @@ $(function(){
             var memberID = $(this).parent().attr('memberID');
             deleteElement(converseACount,memberID);
             $('.contactsList li.member[id='+memberID+']').find('.dialogCheckBox').removeClass('CheckBoxChecked');
-            changeSelected(converseACount);
+            var cannotEdit = $('.selectedContactOuter ul li[editable=false]').attr('memberid');
+            changeSelected(converseACount,cannotEdit);
         }
     })
 
@@ -226,9 +227,10 @@ function hasItem(parentLevelarr,parentLevel){
     return bhas;
 }
 
-function creatDialogTree(data,className,title,callback,selected,addGroupIn){
+function creatDialogTree(data,className,title,callback,selected,addGroupIn,groupid){
     $('.WindowMask').find('.conversWindow').attr('class','conversWindow '+className);
     $('.WindowMask').find('.dialogHeader').html(title);
+
     $('.WindowMask').show();
     var sHTML = '';
     var level = 0;
@@ -257,18 +259,36 @@ function creatDialogTree(data,className,title,callback,selected,addGroupIn){
         for(var i = 0;i<selected.length;i++){
             converseACount.push(selected[i]);
             var targetList = searchFromList(1,selected[i]);
-            if(targetList){
-                if(selected[i]==userID){
-                    var editable = false;
-                    $('.contactsList').find('li[account='+targetList.account+'][id='+selected[i]+']').find('.dialogCheckBox').addClass('CheckBoxChecked');
-                    $('.contactsList').find('li[account='+targetList.account+'][id='+selected[i]+']').attr('editable','false');
+            if(groupid){
+                var groupInfo = groupInfoFromList(groupid);
+                var mid = groupInfo.mid;
+                if(targetList){
+                    if(selected[i]==mid){
+                        var editable = false;
+                        $('.contactsList').find('li[account='+targetList.account+'][id='+selected[i]+']').find('.dialogCheckBox').addClass('CheckBoxChecked');
+                        $('.contactsList').find('li[account='+targetList.account+'][id='+selected[i]+']').attr('editable','false');
 
-                }else {
-                    var editable = true;
-                    $('.contactsList').find('li[account='+targetList.account+'][id='+selected[i]+']').find('.dialogCheckBox').addClass('CheckBoxChecked');
+                    }else {
+                        var editable = true;
+                        $('.contactsList').find('li[account='+targetList.account+'][id='+selected[i]+']').find('.dialogCheckBox').addClass('CheckBoxChecked');
+                    }
+                    sHTML += '<li memberID="'+selected[i]+'" editable="'+editable+'"><span class="memberName">'+targetList.name+'</span><span class="chatLeftIcon deleteMemberIcon"></span></li>'
                 }
-                sHTML += '<li memberID="'+selected[i]+'" editable="'+editable+'"><span class="memberName">'+targetList.name+'</span><span class="chatLeftIcon deleteMemberIcon"></span></li>'
+            }else{
+                if(targetList){
+                    if(selected[i]==userID){
+                        var editable = false;
+                        $('.contactsList').find('li[account='+targetList.account+'][id='+selected[i]+']').find('.dialogCheckBox').addClass('CheckBoxChecked');
+                        $('.contactsList').find('li[account='+targetList.account+'][id='+selected[i]+']').attr('editable','false');
+
+                    }else {
+                        var editable = true;
+                        $('.contactsList').find('li[account='+targetList.account+'][id='+selected[i]+']').find('.dialogCheckBox').addClass('CheckBoxChecked');
+                    }
+                    sHTML += '<li memberID="'+selected[i]+'" editable="'+editable+'"><span class="memberName">'+targetList.name+'</span><span class="chatLeftIcon deleteMemberIcon"></span></li>'
+                }
             }
+
         }
         dom.html(sHTML);
         selectedNum(selected)
@@ -276,6 +296,23 @@ function creatDialogTree(data,className,title,callback,selected,addGroupIn){
         dom.html('');
     }
     //console.log(HTML);
+
+    if(title=='创建群组'){
+        $('.groupConvers').css('height','794px');
+        $('.dialogBody').css('padding','80px 42px 45px 42px');
+        if($('.dialogBody').find('.addGroupNameBox').length!=0){
+            $('.addGroupNameBox').remove();
+        }
+        var sHTML = '<div class="addGroupNameBox" style="position: absolute"><span>创建群组：</span><input maxlength="30" placeholder="最长50个字符" type="text"  class="addGroupGroupName" /></div>'
+
+        $('.dialogBody').prepend($(sHTML));
+    }else{
+        $('.groupConvers').css('height','764px');
+        $('.dialogBody').css('padding','50px 42px 45px 42px')
+        if($('.dialogBody').find('.addGroupNameBox').length!=0){
+            $('.addGroupNameBox').remove();
+        }
+    }
 
     $('.manageSure').unbind('click');
     $('.manageSure').click(function(){
@@ -327,7 +364,7 @@ function deleteElement(arr,name,value){
 }
 
 //修改select里面的成员 以及已选联系人数量
-function changeSelected(converseACount){
+function changeSelected(converseACount,cannotEdit){
     //var sAccount = localStorage.getItem('account');
     var sdata = localStorage.getItem('datas');
     //var account = JSON.parse(sAccount).account;
@@ -335,12 +372,26 @@ function changeSelected(converseACount){
     var dom = $('.selectedList ul');
     var sHTML = '';
     for(var i = 0;i<converseACount.length;i++){
-        if(accountID==converseACount[i]){
-            var editable = 'false';
+        if(cannotEdit){
+            if(converseACount[i]==cannotEdit){
+                var editable = 'false';
+            }else{
+                var editable = 'true';
+            }
         }else{
-            var editable = 'true';
+            if(accountID==converseACount[i]){
+                var editable = 'false';
+            }else{
+                var editable = 'true';
+            }
         }
-        var name = searchFromList(1,converseACount[i]).name;
+
+        if(searchFromList(1,converseACount[i])){
+            var name = searchFromList(1,converseACount[i]).name;
+        }else{
+            continue
+        }
+        //var name = searchFromList(1,converseACount[i])?searchFromList(1,converseACount[i]).name:continue;
         sHTML+='<li memberID="'+converseACount[i]+'" editable="'+editable+'"><span class="memberName">'+name+'</span><span class="chatLeftIcon deleteMemberIcon"></span></li>'
     }
     dom.html($(sHTML));

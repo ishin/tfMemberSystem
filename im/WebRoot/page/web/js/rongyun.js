@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Created by zhu_jq on 2017/1/9.
  */
 $(function(){
@@ -20,8 +20,8 @@ $(function(){
                 RongIMClient.init(globalVar.rongKey,null,{navi:globalVar.navi});		//私有云适用120
                 //RongIMClient.init(globalVar.rongKey);			//公有云   适用本地或35
             }
-            var account = datas.account;
-            var accountID = datas.id;
+            window.account = datas.account;
+            window.accountID = datas.id;
             //获取常用联系人
             getMemberFriends(account);
             //获取左侧组织树状图
@@ -36,6 +36,7 @@ $(function(){
 
             // 设置连接监听状态 （ status 标识当前连接状态）
             // 连接状态监听器
+
             RongIMClient.setConnectionStatusListener({
                 onChanged: function (status) {
                     switch (status) {

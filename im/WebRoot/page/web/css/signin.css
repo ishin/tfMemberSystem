@@ -213,25 +213,25 @@ input::-ms-clear{display:none;}
     background: url("img/IMsign.png") no-repeat -819px -62px;
 
 }
-.sign-flow .form-group:hover .organCode {
-    background: url("img/IMsign.png") no-repeat -819px -12px;
-}
+/*.sign-flow .form-group:hover .organCode {*/
+    /*background: url("img/IMsign.png") no-repeat -819px -12px;*/
+/*}*/
 
 
 .sign-flow .form-group .username{
     background: url("img/IMsign.png") no-repeat -462px -51px;
 }
 
-.sign-flow .form-group:hover .username {
-    background: url("img/IMsign.png") no-repeat -462px -16px;
-}
+/*.sign-flow .form-group:hover .username {*/
+    /*background: url("img/IMsign.png") no-repeat -462px -16px;*/
+/*}*/
 .sign-flow .form-group .pwdIn{
     background: url("img/IMsign.png") no-repeat -464px -127px;
 }
 
-.sign-flow .form-group:hover .pwdIn{
-    background: url("img/IMsign.png") no-repeat -463px -86px;
-}
+/*.sign-flow .form-group:hover .pwdIn{*/
+    /*background: url("img/IMsign.png") no-repeat -463px -86px;*/
+/*}*/
 .sign-flow .form-group input{
     height: 42px;
     text-indent: 42px;

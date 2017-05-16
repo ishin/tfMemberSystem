@@ -8260,11 +8260,11 @@ var RongIMLib;
             me.addon.setConnectionStatusListener(function (result) {
                 switch (result) {
                     case 10:
-                        console.log(111111111111111);
+                        //console.log(111111111111111);
                         listener.onChanged(RongIMLib.ConnectionStatus.CONNECTING);
                         break;
                     case 31004:
-                        console.log(2222222222222222);
+                        //console.log(2222222222222222);
                         me.connectCallback.onTokenIncorrect();
                         break;
                     case 1:
@@ -8281,18 +8281,18 @@ var RongIMLib;
                     case 30007:
                     case 30008:
                     case 30009:
-                        console.log(3333333333333333);
+                        //console.log(3333333333333333);
                         listener.onChanged(RongIMLib.ConnectionStatus.DISCONNECTED);
                         break;
                     case 0:
                     case 33005:
-                        console.log(4444444444444444);
+                        //console.log(4444444444444444);
 
                         me.connectCallback.onSuccess(me.userId);
                         listener.onChanged(RongIMLib.ConnectionStatus.CONNECTED);
                         break;
                     case 6:
-                        console.log(55555555555555);
+                        //console.log(55555555555555);
 
                         listener.onChanged(RongIMLib.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT);
                         break;

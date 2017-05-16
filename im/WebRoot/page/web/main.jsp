@@ -67,8 +67,6 @@
     <script src="<%=request.getContextPath() %>/page/web/js/bootstrap.min.js"></script>
     <script src="<%=request.getContextPath() %>/page/web/js/cropper.min.js"></script>
     <script src="<%=request.getContextPath() %>/page/web/js/clipImg.js"></script>
-    <%--<script src="<%=request.getContextPath() %>/page/web/js/loginOA.js"></script>--%>
-        <script>window.Electron.remote.getCurrentWindow().removeAllListeners()</script>
     </head>
     <%--${SessionPrivilege.map}--%>
     <%--${SessionUser.id}--%>
@@ -150,6 +148,7 @@
 
                 </c:if>
             </ul>
+            <div id="zhanwei"></div>
         </div>
     </div>
 
@@ -636,7 +635,7 @@
         <!--组织的层级导航-->
 
         <div class="orgNavClick orgNavClick1 chatHide" id="orgnizedLevel">
-            <div class="orgNavTitle">标题</div>
+            <div class="orgNavTitle">成员</div>
             <%--<ul>--%>
                 <%--<li>--%>
                     <%--&lt;%&ndash;<div class="showImgInfo">&ndash;%&gt;--%>
@@ -652,7 +651,7 @@
                     <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
                 <%--</li>--%>
             <%--</ul>--%>
-            <div class="orgNavTitle">标题</div>
+            <div class="orgNavTitle">成员</div>
             <%--<ul>--%>
 
                 <%--<li>--%>

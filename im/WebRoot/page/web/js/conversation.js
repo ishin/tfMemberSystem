@@ -107,7 +107,7 @@ function sendMsg(content,targetId,way,extra,callback,uniqueTime){
         var sFilePaste=sendMsg.filepaste;
         var Msize = KBtoM(sendMsg.size);
         if(sendMsg.type!='image/png'&&sendMsg.type!='image/jpeg'&& sendMsg.type!='ImageMessage'){
-            var imgSrc = imgType(sendMsg.type);
+            var imgSrc = imgType(sendMsg.name);
             var file = sendMsg.name.split('.')[0];
             //var str = RongIMLib.RongIMEmoji.symbolToHTML('成功发送文件');
             if(sFilePaste==1){
@@ -214,7 +214,7 @@ function sendMsg(content,targetId,way,extra,callback,uniqueTime){
     //写消息区域清空
     callback&&callback();
     //调用融云的发送文件
-    if(extra!='uploadFile'&&(limit.indexOf('ltszwjsc')!=-1||way== 'PRIVATE')&&(limit.indexOf('ltszqzlt')!=-1)){
+    if(extra!='uploadFile'&&(limit.indexOf('ltszqzlt')!=-1||way== 'PRIVATE')){
         //sendByRong(content,targetId,way);
         parent.find('.textarea').empty();
         sendByRong(content,targetId,way,'',uniqueTime);
@@ -561,7 +561,23 @@ function sendMsgBoxMsg(contentBox){
                 sendMsg(content,targetId,targetType,'','',new Date().getTime())
             }
         }else{
-            sendMsg(content,targetId,targetType,'','',new Date().getTime());
+            var memberInfo = searchFromList(1,targetId);
+            if(!memberInfo){//
+                new Window().alert({
+                    title   : '',
+                    content : '联系人不存在，无法发送',
+                    hasCloseBtn : false,
+                    hasImg : true,
+                    textForSureBtn : false,
+                    textForcancleBtn : false,
+                    autoHide:true
+                });
+                //刷新常用联系人
+                getMemberFriends(account);
+                $('.mesContainerSelf').addClass('chatHide');
+            }else{
+                sendMsg(content,targetId,targetType,'','',new Date().getTime());
+            }
         }
     }
 }
@@ -659,7 +675,7 @@ function sessionContent(sDoM,sTargetId,sContent,extra,sSentTime,targetType){
             case "FileMessage":
                 var Msize = KBtoM(sContent.size);
                 var fileURL = sContent.fileUrl;
-                var imgSrc = imgType(sContent.type)
+                var imgSrc = imgType(sContent.fileUrl)
                 var file = fileURL?getFileUniqueName(fileURL):'';
                 if(fileURL.indexOf('token')!=-1){//有%
                     file = getFileUniqueNameFromApp(fileURL) //文件唯一标识
@@ -779,7 +795,7 @@ function sessionContent(sDoM,sTargetId,sContent,extra,sSentTime,targetType){
             case "FileMessage":
                 var sendMsg = sContent;
                 var Msize = KBtoM(sendMsg.size);
-                var imgSrc = imgType(sContent.type)
+                var imgSrc = imgType(sendMsg.fileUrl)
                 var file = getFileUniqueName(sendMsg.fileUrl);
                 var fileOperate = '';
                 var downLoadFile = '';
@@ -1032,6 +1048,7 @@ function conversationSelf(targetID,targetType,callback){
     $('.sendMsgBTN').click(function(){
         var contentBox = $(this).prev()
         sendMsgBoxMsg(contentBox);
+
     })
     //获取右侧的联系人资料聊天记录
     clearNoReadMsg(targetType,targetID);
@@ -1069,7 +1086,8 @@ function getGroupDetails(groupId){
             var sCreatorId=aText[i].mid;//群创建者id
             var sCreatedate=subTimer(aText[i].createdate);//创建时间
             var oCreator=searchFromList(1,sCreatorId);
-            var sImg=oCreator.logo?globalVar.imgSrc+oCreator.logo:globalVar.defaultLogo;
+
+            var sImg=oCreator&&oCreator.logo?globalVar.imgSrc+oCreator.logo:globalVar.defaultLogo;
             //var limit = $('body').attr('limit');
             var groupName = sCreatorId==accountID?'<input type="text" value='+sName+' class="groupSetBox-name">':'<b>'+sName+'</b>';
             sDom+='<ul class="groupInfo">\
@@ -1233,7 +1251,7 @@ function getChatRecord(aList,sClass){
             var sContent=aInfo[i].content;
             switch (sExtra){
                 case 'FileMessage':
-                    var imgSrc = imgType(sContent.type);
+                    var imgSrc = imgType(sContent.fileUrl);
                     var Msize = KBtoM(sContent.size);
                     var uniqueTime = sContent.uniqueTime;
                     var fileURL=sContent.fileUrl;
@@ -1424,13 +1442,48 @@ function scrollTop(eDom){
 }
 
 //不同文件类型返回不同图片
-function imgType(type){
+function imgType(URL){
+    if(URL){
+        var aURL = URL.split('&')[0];
+        var type = aURL.split('.')[aURL.split('.').length-1];
+    }else{
+        var type = '';
+    }
+
+
     switch (type){
-        case 'image/png':
-            var imgSrc = 'page/web/css/img/formatImg.jpg';
+        case 'xls':
+            var imgSrc = 'page/web/css/img/formatExcel.png';
             break;
-        case 'image/jpeg':
-            var imgSrc = 'page/web/css/img/formatImg.jpg';
+        case 'xlsx':
+            var imgSrc = 'page/web/css/img/formatExcel.png';
+            break;
+        case 'pdf':
+            var imgSrc = 'page/web/css/img/formatPdf.png';
+            break;
+        case 'ppt':
+            var imgSrc = 'page/web/css/img/formatPpt.png';
+            break;
+        case 'pptx':
+            var imgSrc = 'page/web/css/img/formatPpt.png';
+            break;
+        case 'txt':
+            var imgSrc = 'page/web/css/img/formatTxt.png';
+            break;
+        case 'doc':
+            var imgSrc = 'page/web/css/img/formatWord.png';
+            break;
+        case 'docx':
+            var imgSrc = 'page/web/css/img/formatWord.png';
+            break;
+        case 'zip':
+            var imgSrc = 'page/web/css/img/formatZip.png';
+            break;
+        case 'rar':
+            var imgSrc = 'page/web/css/img/formatZip.png';
+            break;
+        case '7z':
+            var imgSrc = 'page/web/css/img/formatZip.png';
             break;
         default :
             var imgSrc = 'page/web/css/img/formatUnknew.jpg';
@@ -1722,11 +1775,16 @@ function groupInfo(id){
     var curInfo = '';
     if(groupInfo){
         groupInfo = JSON.parse(groupInfo);
-        for(var i = 0;i<groupInfo.text.length;i++){
-            if(groupInfo.text[i].GID==id){
-                curInfo = groupInfo.text[i]
+        if(groupInfo.text){
+            for(var i = 0;i<groupInfo.text.length;i++){
+                if(groupInfo.text[i].GID==id){
+                    curInfo = groupInfo.text[i]
+                }
             }
+        }else{
+            console.log('groupList')
         }
+
     }
     return curInfo;
 }
@@ -1793,7 +1851,7 @@ function reciveInBox(msg){
             case "FileMessage":
                 var Msize = KBtoM(content.size);
                 var fileURL = content.fileUrl;
-                var imgSrc = imgType(content.type);
+                var imgSrc = imgType(content.fileUrl);
                 var file = getFileUniqueName(fileURL);
                 if(fileURL.indexOf('token')!=-1){//有%
                     file = getFileUniqueNameFromApp(fileURL) //文件唯一标识

@@ -2,10 +2,51 @@
  * Created by zhu_jq on 2017/1/4.
  */
 window.onload = function(){
+    //account:accout,organCode:organCode
+    var saveSigninData = window.localStorage.saveSigninData;
+    if(saveSigninData){
+        saveSigninData =JSON.parse(saveSigninData);
+        $('#organCode').val(saveSigninData.organCode);
+        $('#username').val(saveSigninData.account);
 
+    }
     //点击发送验证码
+    $('#pwdIn').unbind('blur');
+    $('#pwdIn').blur(function(){
+        $(this).parent().find('label').css('backgroundPosition','-464px -127px');
+
+    })
     $('#pwdIn').unbind('focus');
     $('#pwdIn').focus(function(){
+        $(this).parent().find('label').css('backgroundPosition','-463px -86px');
+        $(this).keypress(function(event) {
+            if (event.which == 13) {
+                signin();
+            }
+        })
+    })
+    $('#username').unbind('blur');
+    $('#username').blur(function(){
+        $(this).parent().find('label').css('backgroundPosition','-462px -51px');
+
+    })
+    $('#username').unbind('focus');
+    $('#username').focus(function(){
+        $(this).parent().find('label').css('backgroundPosition','-462px -16px');
+        $(this).keypress(function(event) {
+            if (event.which == 13) {
+                signin();
+            }
+        })
+    })
+    $('#organCode').unbind('blur');
+    $('#organCode').blur(function(){
+        $(this).parent().find('label').css('backgroundPosition','-819px -62px');
+
+    })
+    $('#organCode').unbind('focus');
+    $('#organCode').focus(function(){
+        $(this).parent().find('label').css('backgroundPosition','-819px -12px');
         $(this).keypress(function(event) {
             if (event.which == 13) {
                 signin();
@@ -135,6 +176,9 @@ function signin(){
         var datas = JSON.parse(datas);
         if(datas &&	datas.code == 1){
             data.token = datas.text.token;
+            var saveSigninData = {account:accout,organCode:organCode}
+            saveSigninData = JSON.stringify(saveSigninData);
+            window.localStorage.saveSigninData = saveSigninData;
             window.localStorage.account=JSON.stringify(data);
             window.location.href = 'system!login';
         } else {

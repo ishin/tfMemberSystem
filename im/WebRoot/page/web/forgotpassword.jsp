@@ -15,7 +15,6 @@
     <script src="<%=request.getContextPath() %>/page/web/js/signin.js"></script>
     <script src="<%=request.getContextPath() %>/page/web/js/md5.js"></script>
     <script src="<%=request.getContextPath() %>/page/web/js/window.js"></script>
-    <script>window.Electron.remote.getCurrentWindow().removeAllListeners()</script>
 
     </head>
 <body>

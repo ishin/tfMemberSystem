@@ -50,8 +50,8 @@
 }
 .perSetBox-leftCont .perSetBox-contDetails{
     padding: 34px 0 0 42px;
-    height: calc(100% - 80px);
-    overflow: auto;
+    /*height: calc(100% - 80px);*/
+    /*overflow: auto;*/
 }
 .perSetBox-contDetails li{
     line-height:34px;
@@ -1195,8 +1195,8 @@ input.groupSetBox-name{
     display: inline-block;
 }
 div#fileOperate {
-    margin-top: -10px;
-    margin-left: 70px;
+    margin-top: 23px;
+    margin-left: -110px;
     display: inline-block;
     position: absolute;
 }
@@ -1207,8 +1207,8 @@ div#personSettingId {
 }
 .perSetBox-content.clearfix {
     overflow: auto;
-    min-height: 500px;
-    height: calc(100% - 62px);
+    /*min-height: 500px;*/
+    height: calc(100% - 80px);
     /*background: paleturquoise;*/
 }
 

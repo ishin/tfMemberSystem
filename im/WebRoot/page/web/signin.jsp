@@ -8,15 +8,10 @@
     <title></title>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/page/web/css/signin.css"/>
     <link rel="stylesheet" href="<%=request.getContextPath() %>/page/web/css/window.css"/>
-    <%--<link rel="stylesheet" href="<%=request.getContextPath() %>/page/web/css/window.css"/>--%>
-
     <script src="<%=request.getContextPath() %>/page/web/js/jquery-2.1.1.min.js"></script>
 	<script src="<%=request.getContextPath() %>/page/web/js/signin.js"></script>
-    <%--<script src="<%=request.getContextPath() %>/page/web/js/jquery-2.1.1.min.js"></script>--%>
     <script src="<%=request.getContextPath() %>/page/web/js/md5.js"></script>
-    <%--<script src="<%=request.getContextPath() %>/page/web/js/signin.js"></script>--%>
     <script src="<%=request.getContextPath() %>/page/web/js/window.js"></script>
-    <script>window.Electron.remote.getCurrentWindow().removeAllListeners()</script>
     </head>
 <body>
 

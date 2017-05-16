@@ -13,6 +13,8 @@ $(function(){
     $('.chatHeaderOper li')[0].onclick = function(){
         sendAjax('system!logOut','',function(){
             if (window.Electron) {
+                RongIMLib.RongIMClient.getInstance().logout();
+
                 var curWindow = window.Electron.remote.getCurrentWindow().reload();
             }else{
                 window.location.href = 'system!login';
@@ -108,6 +110,7 @@ function initEmoji(){
     $('.rongyun-emoji').perfectScrollbar();
 }
 function brforeClose(){
+
     if(win){
         win.close();
     }

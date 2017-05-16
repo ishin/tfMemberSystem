@@ -14,11 +14,11 @@ $(function(){
     },5000)
 
     //获取常用联系人左侧
-    var sAccount = localStorage.getItem('account');
-    var sdata = localStorage.getItem('datas');
-    var oData=JSON.parse(sdata);
-    var account = oData?oData.account : '';
-    var accountID = oData?oData.id :'';
+    //var sAccount = localStorage.getItem('account');
+    //var sdata = localStorage.getItem('datas');
+    //var oData=JSON.parse(sdata);
+    //var account = oData?oData.account : '';
+    //var accountID = oData?oData.id :'';
     var timer=null,timer1 = null;
 
 
@@ -101,26 +101,29 @@ $(function(){
                             textForcancleBtn : false,
                             autoHide:true
                         });
-                    }else{
-                        $('.chatHeaderMenu li')[0].click();
-                        $('.chatContent ul li')[1].click();
-                        var target = $('.usualChatList').find('li[targetid='+targetID+']');
-                        var sTarget = searchFromList(1,targetID)
-                        if(sTarget){
-                            var targetAccount = sTarget.account;
-                        }
-                        if(target.length==0){//如果不存在的话，添加好友并刷新列表
-                            addFriendAndRefreshList(account,targetAccount)
-                        }else{//如果存在的话刷新列表
-                            jumpToFriendListOpen(targetAccount)
-                        }
-                        if(targeType=='member'){
-
-                            targeType = 'PRIVATE';
-                        }
-                        conversationSelf(targetID,targeType);
-                        $('.orgNavClick').addClass('chatHide');
-                        $('.mesContainerSelf').removeClass('chatHide');
+                    }else{//targetID
+                        //var targetID = $(this).attr('targetid');
+                        var targeType = 'PRIVATE';
+                        newContactList(targeType,targetID);
+                    //    $('.chatHeaderMenu li')[0].click();
+                    //    $('.chatContent ul li')[1].click();
+                    //    var target = $('.usualChatList').find('li[targetid='+targetID+']');
+                    //    var sTarget = searchFromList(1,targetID)
+                    //    if(sTarget){
+                    //        var targetAccount = sTarget.account;
+                    //    }
+                    //    if(target.length==0){//如果不存在的话，添加好友并刷新列表
+                    //        addFriendAndRefreshList(account,targetAccount)
+                    //    }else{//如果存在的话刷新列表
+                    //        jumpToFriendListOpen(targetAccount)
+                    //    }
+                    //    if(targeType=='member'){
+                    //
+                    //        targeType = 'PRIVATE';
+                    //    }
+                    //    conversationSelf(targetID,targeType);
+                    //    $('.orgNavClick').addClass('chatHide');
+                    //    $('.mesContainerSelf').removeClass('chatHide');
                     }
                     $('.memberHover').remove();
                     break;
@@ -335,21 +338,25 @@ $(function(){
                             })
                         },memShipArr);
                     }else{
+                        globalVar.temporary = targetID;
                         sendAjax('group!listGroupMemebers',{groupid:targetID},function(data){
                             if(data) {
                                 var groupDatas = JSON.parse(data);
                                 if (groupDatas && groupDatas.code == 1) {
                                     var memShipArr = groupDatas.text;
+                                    console.log('11111111111111',globalVar.temporary)
                                     creatDialogTree(datas,'groupConvers','添加会话',function(){
                                         var sConverseACount = JSON.stringify(converseACount);
-                                        sendAjax('group!createGroup',{userid:accountID,groupids:sConverseACount},function(data){
+                                        console.log('2222222222222222222222',globalVar.temporary)
+                                        sendAjax('group!manageGroupMem',{groupid:globalVar.temporary,groupids:sConverseACount},function(data){
                                             if(data){
+                                                console.log('33333333333333333333333',globalVar.temporary)
                                                 $('.manageCancle').click();
                                                 var datas = JSON.parse(data);
-                                                if(datas.code==200){
+                                                if(datas.code==1){
                                                     new Window().alert({
                                                         title   : '',
-                                                        content : '创建群组成功！',
+                                                        content : '修改群组成功！',
                                                         hasCloseBtn : false,
                                                         hasImg : true,
                                                         textForSureBtn : false,
@@ -357,8 +364,7 @@ $(function(){
                                                         autoHide:true
                                                     });
                                                     getGroupList(accountID);
-                                                    $('.chatHeaderMenu li')[0].click();
-                                                    $('.chatMenu li')[0].click();
+                                                    getGroupMembersList(globalVar.temporary);
                                                 }else{
                                                     alert('失败',datas.text);
                                                 }
@@ -537,28 +543,7 @@ $(function(){
     });
 
 
-    function newContactList(targeType,targetID,groupName,callback){
-        $('.newsChatList').find('li').removeClass('active');
-        $(this).addClass('active');
-        if(targeType=='PRIVATE'){
-            $('.orgNavClick').addClass('chatHide');
-            $('.mesContainerSelf').removeClass('chatHide');
-            $('#groupContainer #message-content').attr('contenteditable','true');
-            $('#groupContainer #message-content').attr('placeholder','请输入文字...');
-            $('#groupContainer #message-content').html('');
-            conversationSelf(targetID,targeType,callback);
-        }else if(targeType=='system'){
-            $('.orgNavClick').addClass('chatHide');
-            $('.mesContainerSys').removeClass('chatHide');
-            conversationSys(targetID,targeType,callback);
 
-        }else{
-            $('.orgNavClick').addClass('chatHide');
-            $('.mesContainerGroup').removeClass('chatHide');
-            checkShutUp();
-            conversationGroup(targetID,targeType,groupName,callback);
-        }
-    }
 
 
     //将系统消息从消息列表中删除
@@ -738,7 +723,7 @@ $(function(){
                     }
                 }
             })
-        },memShipArr);
+        },memShipArr,'',groupid);
     })
 
     //群组右键菜单
@@ -784,7 +769,7 @@ $(function(){
                                         }
                                     }
                                 })
-                            },memShipArr);
+                            },memShipArr,'',groupid);
                             break;
                         case 1:
                             //解散群
@@ -955,8 +940,8 @@ $(function(){
                         creatDialogTree(data,'groupConvers','创建群组',function(){
 
                             var sConverseACount = JSON.stringify(converseACount);
-
-                            sendAjax('group!createGroup',{userid:accountID,groupids:sConverseACount,groupname:''},function(data){
+                            var groupname = $('.addGroupGroupName').val();
+                            sendAjax('group!createGroup',{userid:accountID,groupids:sConverseACount,groupname:groupname},function(data){
                                 if(data){
                                     $('.manageCancle').click();
                                     var datas = JSON.parse(data);
@@ -1105,7 +1090,28 @@ function changePersonOnlineN(accountID){
         }
     })
 }
+function newContactList(targeType,targetID,groupName,callback){
+    $('.newsChatList').find('li').removeClass('active');
+    $(this).addClass('active');
+    if(targeType=='PRIVATE'){
+        $('.orgNavClick').addClass('chatHide');
+        $('.mesContainerSelf').removeClass('chatHide');
+        $('#groupContainer #message-content').attr('contenteditable','true');
+        $('#groupContainer #message-content').attr('placeholder','请输入文字...');
+        $('#groupContainer #message-content').html('');
+        conversationSelf(targetID,targeType,callback);
+    }else if(targeType=='system'){
+        $('.orgNavClick').addClass('chatHide');
+        $('.mesContainerSys').removeClass('chatHide');
+        conversationSys(targetID,targeType,callback);
 
+    }else{
+        $('.orgNavClick').addClass('chatHide');
+        $('.mesContainerGroup').removeClass('chatHide');
+        checkShutUp();
+        conversationGroup(targetID,targeType,groupName,callback);
+    }
+}
 
 function changeGroupOnlineN(accountID){
 
@@ -1255,7 +1261,37 @@ function groupOnlineMember(accountID){
 function changeClick1Content(data){
     var sHTML = ''
     if(data&&data.length!=0){
-        sHTML = '<div class="orgNavTitle">标题</div><ul>';
+        sHTML = '<div class="orgNavTitle">部门领导</div><ul>';
+        for(var i = 0;i<data.length;i++){
+            if(data[i].isleader==1){
+                var sHeadImg=data[i].logo || 'PersonImg.png';//头像
+                var sName=data[i].name||'';//姓名
+                if(data[i].logo){
+                    var imgHTML = '<img src="'+globalVar.imgSrc+sHeadImg+'" alt="">';
+                }else{
+                    var imgHTML = '<img src="'+globalVar.defaultLogo+'" alt="">';
+
+                }
+                sHTML += '<li id="'+data[i].id+'" account="'+data[i].account+'">'+
+                '<div class="showImgInfo">'+
+                imgHTML+
+                '</div>'+
+                '<div class="showPersonalInfo">'+
+                '<span>'+sName+'</span>'+
+                '<ul class="personalOperaIcon">'+
+                '<li class="sendMsg" title="发起聊天"></li>'+
+                '<li class="checkPosition" title="查看位置"></li>'+
+                '<li class="addConver" title="加入会话"></li>'+
+                '</ul>'+
+                '</div>'+
+                '</li>';
+                remove(data,i);
+                break;
+            }
+
+        }
+        sHTML+='</ul>'
+        sHTML += '<div class="orgNavTitle">成员</div><ul>';
         for(var i = 0;i<data.length;i++){
             var sHeadImg=data[i].logo || 'PersonImg.png';//头像
             var sName=data[i].name||'';//姓名
@@ -1318,10 +1354,18 @@ function searchTree(){
     sendAjax('branch!getBranchTreeAndMember','',function(data){
         window.localStorage.normalInfo = data;
     })
+    sendAjax('branch!getMembersByOrgan','',function(data){
+        var oData = JSON.parse(data);
+        data = oData.text;
+        var datas = JSON.stringify(data)
+        window.localStorage.getOrganTree = datas;
+    })
 }
 
 //从组织结构中找到相应的成员、部门数据
 function searchFromList(flag,id){
+
+
     var curList;
     var normalInfo = localStorage.getItem('normalInfo');
     if(normalInfo){
@@ -1331,6 +1375,18 @@ function searchFromList(flag,id){
     for(var i = 0;i<data.length;i++){
         if(data[i].id==id&&data[i].flag==flag){
             curList = data[i];
+        }
+    }
+    if(!curList){
+        var normalInfo = localStorage.getItem('getOrganTree');
+        if(normalInfo){
+            var data = JSON.parse(normalInfo);
+        }
+        id = parseInt(id);
+        for(var i = 0;i<data.length;i++){
+            if(data[i].id==id&&data[i].flag==flag){
+                curList = data[i];
+            }
         }
     }
     return curList;
@@ -1503,9 +1559,13 @@ function changeFormat(data){
     }
     data.sort(compare('pid'));
     console.log('paixu',data);
+    for(var i = 0;i<data.length;i++){
+        if(data[i].flag==-1){
+            small.push(data[i]);
+            remove(data,i);
+        }
+    }
 
-    small.push(data[0]);
-    remove(data,0);
     var delArr = [];
 
     for(var i = 0;i<data.length;i++){
