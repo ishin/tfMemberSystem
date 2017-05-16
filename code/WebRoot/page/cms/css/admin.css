@@ -370,8 +370,11 @@ form#memberform {
 form#branchform {
 	overflow: scroll;
 	overflow: auto;
-	height: calc(100% - 50px);
+	height: calc(100% - 180px);
  }
+.fade.in{
+	background: rgba(0,0,0,0.5);
+}
 .info {
 	width: 100%;
 	box-shadow: 0px 0px 10px #cbcbcb;
@@ -783,6 +786,11 @@ div#list211,div#list213,div#list214,div#list211edit,div#list213edit,div#list214e
 .col21 .infotab {
 	float: left;
 	padding: 0;
+}
+@media screen and (max-width: 600px) {
+	#addrole {
+		margin-bottom: 10px;
+	}
 }
 button#addrole img {
 	display: inherit;

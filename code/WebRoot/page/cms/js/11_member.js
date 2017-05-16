@@ -39,6 +39,7 @@ $(document).ready(function(){
 				memberemail: $('#11memberemail').val(),
 				memberroleid: $('#11memberroleid').val(),
 				memberintro: $('#11memberintro').val(),
+				memberworkno: $('#11memberNum').val()
 			};
 		callajax('branch!saveMember', data, cb_11_save_member);
 	});

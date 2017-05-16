@@ -6,7 +6,7 @@
 			<div class="title" id='membertitle'>成员信息</div>
 			<div class="infotab" style='font-size: 13px'>
 				<div class="infotabi tabactive" style='color:rgb(48,192,218)'>基本信息</div>
-				<div class="infotabi" style='color:rgb(128,128,128);cursor:pointer' onclick='showpage("112")'>所属分支</div>
+				<div class="infotabi" style='color:rgb(128,128,128);cursor:pointer' onclick='showpage("112")'>所属部门</div>
 			</div>
 		</div>
 		<form id="memberform" name="memberform">
