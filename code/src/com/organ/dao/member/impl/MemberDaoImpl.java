@@ -100,9 +100,11 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		boolean status = true;
 
 		try {
-			executeUpdate(hql);
+			int rt = executeUpdate(hql);
+			if (rt == 0) {
+				status = false;
+			}
 		} catch (Exception e) {
-			status = false;
 			e.printStackTrace();
 		}
 
@@ -118,9 +120,11 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		boolean status = true;
 
 		try {
-			executeUpdate(hql);
+			int ret = executeUpdate(hql);
+			if (ret == 0) {
+				status = false;
+			}
 		} catch (Exception e) {
-			status = false;
 			e.printStackTrace();
 		}
 
@@ -160,8 +164,6 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 			
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 
-			System.out.println("getOneOfMember->hql :" + hql);
-
 			List list = query.list();
 
 			if (list != null) {
@@ -171,7 +173,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 				} else if (len > 1) {
 					Object[] ret = null;
 					for(int i = 0; i < len; i++) {
-						Object[] t = (Object[]) list.get(0);
+						Object[] t = (Object[]) list.get(i);
 						if (String.valueOf(t[19]).equals("1")) {
 							ret = t;
 							break;

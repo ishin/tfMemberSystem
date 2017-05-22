@@ -443,10 +443,11 @@ public class MemberServiceImpl implements MemberService {
 
 			JSONObject ja = new JSONObject();
 			// 各成员在线状态
+			logger.info("idList: " + idList.toString());
 			for (int i = 0; i < idList.size(); i++) {
 				String id = idList.get(i);
 				String status = RongCloudUtils.getInstance().checkOnLine(id);
-				ja.put(id, status);
+				ja.put(id, status == null ? 0 : status);
 			}
 			jo.put("code", 1);
 			jo.put("text", ja.toString());
@@ -482,6 +483,7 @@ public class MemberServiceImpl implements MemberService {
 					TMember t = memberList.get(i);
 					j.put("id", t.getId());
 					j.put("name", t.getFullname());
+					j.put("account", t.getAccount());
 					ja.add(j);
 				}
 				jo.put("code", 1);

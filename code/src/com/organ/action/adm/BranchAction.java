@@ -8,6 +8,9 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -40,6 +43,7 @@ import com.organ.utils.TimeGenerator;
 public class BranchAction extends BaseAction {
 
 	private static final long serialVersionUID = 1L;
+	private Logger logger = LogManager.getLogger(BranchAction.class);
 		
 	/*
 	 * 取部门树
@@ -225,7 +229,6 @@ public class BranchAction extends BaseAction {
 		
 		int organId = getSessionUserOrganId();
 		int memberId = Integer.parseInt(branchManagerId);
-		boolean status = true;
 		
 		if (id != null) {
 			branch = branchService.getBranchObjectById(Integer.parseInt(id));
@@ -244,7 +247,6 @@ public class BranchAction extends BaseAction {
 				returnToClient(jo.toString());
 				return "text";
 			}
-			status = false;
 			branch = new TBranch();
 			branch.setListorder(0);
 			branch.setIsDel("1");
@@ -269,24 +271,32 @@ public class BranchAction extends BaseAction {
 
 		branch.setOrganId(this.getOrganId());
 		
-		Integer branchId = branchService.saveBranch(branch);
-		
-		if (!status) {
-			//增加管理者
-			TBranchMember branchMember = new TBranchMember();
-			boolean b = branchService.getMasterMemberById(memberId);
-			branchMember.setMemberId(memberId);
-			branchMember.setBranchId(branchId);
-			
-			branchMember.setIsMaster(!b ? "1" : "0");
-			branchMember.setPositionId(0);
-			branchMember.setListorder(0);
-			branchMember.setIsDel("1");
-			branchService.saveBranchMember(branchMember);
-		}
-		
 		JSONObject jo = new JSONObject();
-		jo.put("branchid", branchId);
+		int branchLeaderCount = branchService.getBranchMemberCountByMember(memberId);
+		
+		if (branchLeaderCount < 5) {
+			Integer branchId = branchService.saveBranch(branch);
+			
+			//增加管理者
+			TBranchMember tb = branchService.getBranchMemberByBranchMember(branchId, memberId);
+			
+			if (tb == null) {
+				TBranchMember branchMember = new TBranchMember();
+				boolean b = branchService.getMasterMemberById(memberId);
+				branchMember.setMemberId(memberId);
+				branchMember.setBranchId(branchId);
+				
+				branchMember.setIsMaster(!b ? "1" : "0");
+				branchMember.setPositionId(0);
+				branchMember.setListorder(0);
+				branchMember.setIsDel("1");
+				branchService.saveBranchMember(branchMember);
+			}
+			
+			jo.put("branchid", branchId);
+		} else {
+			jo.put("branchid", -1);
+		}
 		
 		if (appId == null && secret == null) {
 			returnToClient(jo.toString());
@@ -471,6 +481,7 @@ public class BranchAction extends BaseAction {
 		//发短信
 		if (sms) {
 			String msg = "您的IMS产品帐号" + member.getAccount() + ", 密码111111.";
+			logger.info("短信验证内容： " + msg);
 			TextHttpSender.getInstance().sendText(member.getMobile(), msg);
 		}
 		

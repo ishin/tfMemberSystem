@@ -2,23 +2,7 @@ package com.organ.service.auth;
 
 import org.json.JSONObject;
 
-import com.organ.model.SessionUser;
-
-
 public interface AppSecretService {
-	/**
-	 * 获取生成的appid和secret
-	 * @return
-	 */
-	public String getAppIDAndSecret();
-	
-	/**
-	 * 设置appid和secret和url
-	 * @param appId
-	 * @param secret
-	 * @param url
-	 */
-	public String setAppIDAndSecretAndUrl(String appName, String appId, String secret, String url, String isOpen);
 
 	/**
 	 * 场景一获取临时令牌

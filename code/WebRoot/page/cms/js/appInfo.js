@@ -158,7 +158,7 @@ function fShowTableNew(data){
 				.replace('backURL', datas[i].callbackurl)
 				.replace('states', status)
 				.replace('operser', datas[i].fullname)
-				.replace('date', datas[i].apptime)
+				.replace('date', formatDate(datas[i].apptime))
 				.replace(/aid/g, datas[i].id)
 		);
 	}
@@ -213,7 +213,7 @@ function fShowTable(data) {
 					.replace('backURL', datas[i].callbackurl)
 					.replace('states', status)
 					.replace('operser', datas[i].fullname)
-					.replace('date', datas[i].apptime)
+					.replace('date', formatDate(datas[i].apptime))
 					.replace(/aid/g, datas[i].id)
 			);
 		}
@@ -275,3 +275,24 @@ function cancleRelation(id,callback){
 	});
 
 }
+
+function formatDate(now)   {    
+	if (now != null) {
+		if (now.length == 10) {
+			now += "000";
+		}
+		var time = new Date(parseInt(now));
+		
+	    var   year = time.getFullYear();     
+	    var   month = time.getMonth()+1;     
+	    var   date = time.getDate();     
+	    //var   hour = time.getHours();     
+	    //var   minute = time.getMinutes();     
+	    //var   second = time.getSeconds();     
+	    
+	    return year + "-" + month + "-" + date;
+	} else {
+		return "";
+	}
+}     
+

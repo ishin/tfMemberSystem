@@ -1199,5 +1199,9 @@ public class BranchServiceImpl implements BranchService {
 	public int getNoGroupBranch(Integer organId) {
 		return branchDao.getNoGroupBranch(organId);
 	}
+	@Override
+	public int getBranchMemberCountByMember(int memberId) {
+		return branchMemberDao.getBranchMemberCountByMember(memberId);
+	}
 
 }

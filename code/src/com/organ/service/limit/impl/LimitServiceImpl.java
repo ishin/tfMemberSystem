@@ -232,6 +232,7 @@ public class LimitServiceImpl implements LimitService {
 			role.setOrganId(organId);
 			//role.setListorder(roleDao.getMax("listorder", "from TRole") + 1);
 			role.setListorder(0);
+			role.setRoleLevel("0");
 			roleDao.save(role);
 		}
 		if (roleId == -1) {

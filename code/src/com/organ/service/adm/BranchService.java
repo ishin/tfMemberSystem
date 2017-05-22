@@ -123,5 +123,6 @@ public interface BranchService {
 	public boolean getMasterMemberById(int memberId);
 	public String getMembersByOrgan(int organId);
 	public int getNoGroupBranch(Integer organId);
+	public int getBranchMemberCountByMember(int memberId);
 	
 }
