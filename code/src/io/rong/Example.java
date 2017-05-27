@@ -48,7 +48,6 @@ public class Example {
 		
 		Reader reader = null ;
 		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);
-				
 		
 		System.out.println("************************User********************");
 		// 获取 Token 方法 

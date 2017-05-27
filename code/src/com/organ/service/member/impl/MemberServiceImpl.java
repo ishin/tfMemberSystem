@@ -147,6 +147,7 @@ public class MemberServiceImpl implements MemberService {
 
 		logger.info("account: " + account + ",organId: " + organId);
 		try {
+			account =  java.net.URLDecoder.decode(account, "utf-8");
 			List members = memberDao.searchUser(account, organId);
 
 			if (members == null) {

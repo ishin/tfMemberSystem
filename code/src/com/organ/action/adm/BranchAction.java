@@ -17,7 +17,6 @@ import net.sf.json.JSONObject;
 import com.organ.common.AuthTips;
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
-import com.organ.dao.adm.OrgDao;
 import com.organ.model.AppSecret;
 import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
@@ -113,15 +112,18 @@ public class BranchAction extends BaseAction {
 	 * by alopex
 	 */
 	public String getMemberById() throws ServletException {
-		
-		String memberId = clearChar(this.request.getParameter("id"));
-		
-		String result = branchService.getMemberById(Integer.valueOf(memberId));
+		String id = this.request.getParameter("id");
+		String result = branchService.getMemberById(id);
 		returnToClient(result);
-		
 		return "text";
 	}
 
+	public String getSuperAdmin() throws ServletException {
+		int organId = getSessionUserOrganId();
+		returnToClient(branchService.getSuperMember(organId));
+		return "text";
+	}
+	
 	/*
 	 * 取部门人员通过id
 	 * by alopex
@@ -364,6 +366,14 @@ public class BranchAction extends BaseAction {
 					return "text";
 				}
 			}
+			if (!member.getWorkno().equalsIgnoreCase(memberWorkNo)) {
+				if (branchService.getMemberByWorkNo(memberWorkNo, organId) != null) {
+					JSONObject jo1 = new JSONObject();
+					jo1.put("memberid", -2);
+					returnToClient(jo1.toString());
+					return "text";
+				}
+			}
 		} else {
 			if (branchService.getMemberByAccount(memberAccount, organId) != null) {
 				JSONObject jo1 = new JSONObject();
@@ -380,6 +390,12 @@ public class BranchAction extends BaseAction {
 			if (!StringUtils.getInstance().isBlank(memberMail) && branchService.getMemberByEmail(memberMail) != null) {
 				JSONObject jo1 = new JSONObject();
 				jo1.put("memberid", -2);
+				returnToClient(jo1.toString());
+				return "text";
+			}
+			if (!StringUtils.getInstance().isBlank(memberWorkNo) && branchService.getMemberByWorkNo(memberWorkNo, organId) != null) {
+				JSONObject jo1 = new JSONObject();
+				jo1.put("memberid", -3);
 				returnToClient(jo1.toString());
 				return "text";
 			}
@@ -614,7 +630,11 @@ public class BranchAction extends BaseAction {
 			//branchService.delMember(id);
 			//逻辑删除
 			String ids = "["+id+"]";
-			memberService.logicDelMemberByUserIds(ids);
+			String ret = memberService.logicDelMemberByUserIds(ids);
+			/*JSONObject j = JSONUtils.getInstance().stringToObj(ret);
+			if (j.getInt("code") == 1) {
+				jo.put("status", true);
+			}*/
 			jo.put("status", true);
 		}
 		

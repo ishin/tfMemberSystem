@@ -259,6 +259,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("id", id));
+			ctr.add(Restrictions.eq("isDel", 1));
 
 			List<TMember> list = ctr.list();
 
@@ -843,6 +844,28 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 			e.printStackTrace();
 		}
 		
+		return null;
+	}
+
+	@Override
+	public TMember getMemberByWorkNo(String memberWorkNo, int organId) {
+		try {
+
+			Criteria ctr = getCriteria();
+			ctr.add(Restrictions.eq("workno", memberWorkNo));
+			ctr.add(Restrictions.eq("organId", organId));
+			ctr.add(Restrictions.eq("isDel", 1));
+
+			List<TMember> list = ctr.list();
+
+			if (list.size() > 0) {
+				return (TMember) list.get(0);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return null;
 	}
 }

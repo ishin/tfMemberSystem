@@ -216,51 +216,78 @@ public class BranchServiceImpl implements BranchService {
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public String getMemberById(Integer memberId) {
+	public String getMemberById(String idStr) {
+		String ret = null;
 		
-		TMember member = memberDao.get(memberId);
-
-		JSONObject jo = JSONObject.fromObject(member);
-		
-		/*
-		 * 取职务
-		 */
-		List list1 = memberDao.getMemberPosition(memberId);
-		Iterator it1 = list1.iterator();
-		if (it1.hasNext()) {
-			Object[] pos = (Object[])it1.next();
-			jo.put("positionId", pos[0]);
-			jo.put("branchId", pos[1]);
-			jo.put("branchMemberId", pos[2]);
+		if (StringUtils.getInstance().isBlank(idStr)) {
+			JSONObject jo = new JSONObject();
+			jo.put("code", 0);
+			jo.put("text", Tips.NULLID.getText());
+			ret = jo.toString();
+		} else {
+			int id = Integer.parseInt(idStr);
+			TMember member = memberDao.get(id);
+			
+			if (member != null) {
+				JSONObject jo = JSONObject.fromObject(member);
+				jo.remove("password");
+				
+				int memberId = member.getId();
+				
+				/*
+				 * 取职务
+				 */
+				List list1 = memberDao.getMemberPosition(memberId);
+				
+				if (list1 != null) {
+					Iterator it1 = list1.iterator();
+					if (it1.hasNext()) {
+						Object[] pos = (Object[])it1.next();
+						jo.put("positionId", pos[0]);
+						jo.put("branchId", pos[1]);
+						jo.put("branchMemberId", pos[2]);
+					}
+				}
+				
+				/*
+				 * 取角色
+				 */
+				List list2 = memberDao.getMemberRole(memberId);
+				if (list2 != null) {
+					Iterator it2 = list2.iterator();
+					if (it2.hasNext()) {
+						Object rol = (Object)it2.next();
+						jo.put("roleId", rol);
+					}
+				}
+				
+				/*
+				 * 取所在部门
+				 */
+				ArrayList<JSONObject> js = new ArrayList<JSONObject>();
+				List list3 = branchDao.getBranchMember(memberId);
+				if (list3 != null) {
+					Iterator it3 = list3.iterator();
+					while (it3.hasNext()) {
+						JSONObject j = new JSONObject();
+						Object[] bm = (Object[])it3.next();
+						j.put("branchmemberid", bm[0]);
+						j.put("branchname", bm[1] != null ? bm[1] : "（未分组人员）");
+						j.put("positionname", bm[2] == null ? "(未知职务)" : bm[2]);
+						j.put("ismaster", bm[3]);
+						js.add(j);
+					}
+					jo.put("branchmember", js);
+				}
+				ret = jo.toString();
+			} else {
+				JSONObject jo = new JSONObject();
+				jo.put("code", 0);
+				jo.put("text", Tips.NULLGROUPMEMBER.getText());
+				ret = jo.toString();
+			}
 		}
-		
-		/*
-		 * 取角色
-		 */
-		List list2 = memberDao.getMemberRole(memberId);
-		Iterator it2 = list2.iterator();
-		if (it2.hasNext()) {
-			Object rol = (Object)it2.next();
-			jo.put("roleId", rol);
-		}
-		
-		/*
-		 * 取所在部门
-		 */
-		ArrayList<JSONObject> js = new ArrayList<JSONObject>();
-		List list3 = branchDao.getBranchMember(memberId);
-		Iterator it3 = list3.iterator();
-		while (it3.hasNext()) {
-			JSONObject j = new JSONObject();
-			Object[] bm = (Object[])it3.next();
-			j.put("branchmemberid", bm[0]);
-			j.put("branchname", bm[1] != null ? bm[1] : "（未分组人员）");
-			j.put("positionname", bm[2] == null ? "(未知职务)" : bm[2]);
-			j.put("ismaster", bm[3]);
-			js.add(j);
-		}
-		jo.put("branchmember", js);
-		return jo.toString();
+		return ret;
 	}
 	
 	/*
@@ -1193,6 +1220,11 @@ public class BranchServiceImpl implements BranchService {
 			ret.put("text", Tips.FAIL.getText());
 		}
 		return ret.toString();
+	}
+	
+	@Override
+	public TMember getMemberByWorkNo(String memberWorkNo, int organId) {
+		return memberDao.getMemberByWorkNo(memberWorkNo, organId);
 	}
 	
 	@Override
