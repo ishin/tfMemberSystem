@@ -42,6 +42,8 @@ public enum  Tips {
 	NULLCODE("需填写企业码", "00036"),
 	TIMEOUT("超时", "00037"),
 	FALSECHECK("检验不通过", "00038"),
+	WRONGTWOCODE("非应用内二维码", "00039"),
+	NOTGROUPCREATE("不是群主", "00040"),
 	OK("OK", "10000"),
 	FAIL("fail", "20000");
 	

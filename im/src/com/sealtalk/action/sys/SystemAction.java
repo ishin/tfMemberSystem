@@ -251,22 +251,24 @@ public class SystemAction extends BaseAction {
 						PropertiesUtils.getStringByKey("code.bit"));
 				code = String.valueOf(MathUtils.getInstance().getRandomSpecBit(
 						codeBit));
-				context = code + endText;
+				context = endText + code;;
 				memberService.saveTextCode(phone, code);
 			} else {
-				context = dbCode + endText;
+				context = endText + dbCode; 
 			}
-
+			
+			logger.info("短信验证内容： " + context);
 			// 发送短信代码
-			String sendText = TextHttpSender.getInstance().sendText(phone,
-					context);
+			String sendText = TextHttpSender.getInstance().sendText(phone,context);
 
 			if ("0".equals(sendText)) {
 				text.put("code", 1);
 				text.put("text", Tips.SENDTEXTS.getText());
 			} else {
 				text.put("code", 0);
-				text.put("text", Tips.SENDERR.getText());
+				//text.put("text", Tips.SENDERR.getText());
+				text.put("text", TextHttpSender.getInstance().code.get(sendText));
+				text.put("textcode", sendText);
 			}
 		} else {
 			text.put("code", 0);
@@ -358,7 +360,7 @@ public class SystemAction extends BaseAction {
 		newpwd = clearChar(newpwd);
 		
 		if (!StringUtils.getInstance().isBlank(oldpwd)) { // 登陆后修改密码
-
+			System.out.println("oldpwd");
 			if (StringUtils.getInstance().isBlank(account)) {
 				text.put("code", "0");
 				text.put("text", Tips.NULLUSER.getText());
@@ -379,24 +381,22 @@ public class SystemAction extends BaseAction {
 			}
 		} else {
 			String type = this.request.getParameter("type");
-	
 			if (type == null || !type.equalsIgnoreCase("web")) {
-				phone = account;
-			}
-			if (!StringUtils.getInstance().isBlank(textcode)) {
-				String dbCode = memberService.getTextCode(phone);
-	
-				if (dbCode != null && !dbCode.equals("-1") && dbCode.equals(textcode)) {
-					text.put("code", 1);
-					text.put("text", Tips.TRUETEXTS.getText());
+				if (!StringUtils.getInstance().isBlank(textcode)) {
+					String dbCode = memberService.getTextCode(account);
+					if (dbCode != null && !dbCode.equals("-1") && dbCode.equals(textcode)) {
+						text.put("code", 1);
+						text.put("text", Tips.TRUETEXTS.getText());
+					} else {
+						status = false;
+						text.put("code", 0);
+						text.put("text", Tips.ERRORTEXTS.getText());
+					}
 				} else {
-					text.put("code", 0);
-					text.put("text", Tips.FAIL.getText());
+					status = false;
+					text.put("code", -1);
+					text.put("text", Tips.NULLTEXTS.getText());
 				}
-			} else {
-				status = false;
-				text.put("code", -1);
-				text.put("text", Tips.NULLTEXTS.getText());
 			}
 		}
 
@@ -413,7 +413,7 @@ public class SystemAction extends BaseAction {
 				if (flag == 1) {
 					updateState = memberService.updateUserPwdForAccount(account,newpwd, organId);
 				} else {
-					updateState = memberService.updateUserPwdForPhone(phone, newpwd);
+					updateState = memberService.updateUserPwdForPhone(account, newpwd);
 				}
 	
 				if (updateState == true) {
@@ -440,12 +440,17 @@ public class SystemAction extends BaseAction {
 	public String attemptSession() throws ServletException {
 		SessionUser su = this.getSessionUser();
 		JSONObject jo = new JSONObject();
-		jo.put("status", !(su == null));
-		logger.info(jo.toString());
+		boolean b = false;
+		
+		if (su != null) {
+			int id = su.getId();
+			b = memberService.memberIsDel(id);
+		}
+		jo.put("status", b);
 		returnToClient(jo.toString());
 		return "text";
 	}
-
+	
 	private MemberService memberService;
 	private PrivService privService;
 	private BranchService branchService;

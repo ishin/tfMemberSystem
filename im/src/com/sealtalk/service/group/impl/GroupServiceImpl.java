@@ -463,37 +463,45 @@ public class GroupServiceImpl implements GroupService {
 				jo.put("code", -1);
 				jo.put("text", Tips.NOSECGROUP.getText());
 			} else {
-				int count = groupMemberDao
-						.getGroupMemberCountForGoupId(groupId);
-				int delNum = groupMemberDao.removeGroupMember(groupIdInt);
-
-				if (count == delNum) {
-					int delGroupNum = groupDao.removeGroupForGroupId(groupId);
-
-					if (delGroupNum > 0) {
-						String fromId = "FromId";
-						String msg = "群组已解散";
-						String extrMsg = msg;
-						String[] groupIds = {groupId};
-						String code = RongCloudUtils.getInstance().sendGroupMsg(fromId, groupIds, msg, extrMsg, 1, 1, 2);
-						if (code.equals("200")) {
-							String code1 = RongCloudUtils.getInstance().dissLoveGroup(userId, groupId);
-							if (code1.equals("200")) {
-								jo.put("code", 1);
-								jo.put("text", Tips.OK.getText());
-							} else {
-								jo.put("code", 0);
-								jo.put("text", Tips.FAIL.getText());	
+				//查看是否是群组
+				/*TGroupMember isCreate = groupMemberDao.judgeGroupCreate(userIdInt, groupIdInt);
+				
+				if (isCreate == null) {
+					jo.put("code", 0);
+					jo.put("text", Tips.NOTGROUPCREATE.getText());
+				} else {*/
+					int count = groupMemberDao
+							.getGroupMemberCountForGoupId(groupId);
+					int delNum = groupMemberDao.removeGroupMember(groupIdInt);
+	
+					if (count == delNum) {
+						int delGroupNum = groupDao.removeGroupForGroupId(groupId);
+	
+						if (delGroupNum > 0) {
+							String fromId = "FromId";
+							String msg = "群组已解散";
+							String extrMsg = msg;
+							String[] groupIds = {groupId};
+							String code = RongCloudUtils.getInstance().sendGroupMsg(fromId, groupIds, msg, extrMsg, 1, 1, 2);
+							if (code.equals("200")) {
+								String code1 = RongCloudUtils.getInstance().dissLoveGroup(userId, groupId);
+								if (code1.equals("200")) {
+									jo.put("code", 1);
+									jo.put("text", Tips.OK.getText());
+								} else {
+									jo.put("code", 0);
+									jo.put("text", Tips.FAIL.getText());	
+								}
 							}
+						} else {
+							jo.put("code", 0);
+							jo.put("text", Tips.FAIL.getText());
 						}
 					} else {
 						jo.put("code", 0);
-						jo.put("text", Tips.FAIL.getText());
+						jo.put("text", Tips.NOTCLEARALLMEMBER.getText());
 					}
-				} else {
-					jo.put("code", 0);
-					jo.put("text", Tips.NOTCLEARALLMEMBER.getText());
-				}
+				//}
 			}
 		} catch (Exception e) {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));

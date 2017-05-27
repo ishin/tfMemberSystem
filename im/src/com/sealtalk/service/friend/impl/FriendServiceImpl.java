@@ -90,7 +90,7 @@ public class FriendServiceImpl implements FriendService {
 						for(int i = 0; i < len; i++) {
 							JSONObject t = ja.getJSONObject(i);
 							sb.append(t.getString("name"));
-							if (t.getString("name").equals(account)) {
+							if (t.getString("account").equals(account)) {
 								id = t.getInt("id");
 							} else {
 								ids.add(t.getInt("id"));
@@ -99,24 +99,29 @@ public class FriendServiceImpl implements FriendService {
 								sb.append(",");
 							}
 						}
-						Integer[] fIds = new Integer[ids.size()];
-						ids.toArray(fIds);
-						List<TFriend> friendRelation = friendDao.getFriendRelationForFriendIds(id, fIds);
-						String[] targetIds = new String[fIds.length];
-	
-						for (int i = 0; i < fIds.length; i++) {
-							if (friendRelation == null || (friendRelation != null && friendRelation.get(i) == null)) {
-								friendDao.addFriend(id, fIds[i]);
+						if (ids.size() > 0) {
+							Integer[] fIds = new Integer[ids.size()];
+							ids.toArray(fIds);
+							List<TFriend> friendRelation = friendDao.getFriendRelationForFriendIds(id, fIds);
+							String[] targetIds = new String[fIds.length];
+		
+							for (int i = 0; i < fIds.length; i++) {
+								if (friendRelation == null || (friendRelation != null && friendRelation.get(i) == null)) {
+									friendDao.addFriend(id, fIds[i]);
+								}
+								targetIds[i] = fIds[i] + "";
 							}
-							targetIds[i] = fIds[i] + "";
+							jo.put("code", 1);
+							jo.put("text", Tips.SUCADDFRIEND.getText());
+							String msg = "建立好友关系，现在可以开始聊天";
+							String extrMsg = sb.toString();
+							RongCloudUtils.getInstance().sendPrivateMsg(id + "",
+									targetIds, msg, extrMsg, "", "4", "0", "0", "0",
+									"2");
+						} else {
+							jo.put("code", -1);
+							jo.put("text", Tips.NOTFRIENDID.getText());
 						}
-						jo.put("code", 1);
-						jo.put("text", Tips.SUCADDFRIEND.getText());
-						String msg = "建立好友关系，现在可以开始聊天";
-						String extrMsg = sb.toString();
-						RongCloudUtils.getInstance().sendPrivateMsg(id + "",
-								targetIds, msg, extrMsg, "", "4", "0", "0", "0",
-								"2");
 					} else {
 						jo.put("code", -1);
 						jo.put("text", Tips.FAILADDFRIEND.getText());
@@ -165,7 +170,7 @@ public class FriendServiceImpl implements FriendService {
 				for(int i = 0; i < len; i++) {
 					JSONObject t = ja.getJSONObject(i);
 					int id = t.getInt("id");
-					if (t.getString("name").equals(account)) {
+					if (t.getString("account").equals(account)) {
 						accountId = id;
 					} else {
 						friendId = id;

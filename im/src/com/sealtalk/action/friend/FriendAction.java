@@ -75,58 +75,65 @@ public class FriendAction extends BaseAction {
 		SessionUser su = getSessionUser();
 		
 		try{
-			String ts = clearChar(this.request.getParameter("timestamp"));
-			long timeStamp = StringUtils.getInstance().isBlank(ts) ? 0 : Long.parseLong(ts);
-			long now = TimeGenerator.getInstance().getUnixTime();
-			long max = timeStamp + 120;
-			long min = timeStamp - 120;
-			
-			if (now < min || now > max) {
-				jo.put("code", 0);
-				jo.put("text", Tips.TIMEOUT.getText());
-				result = jo.toString();
-			} else {
-				if (StringUtils.getInstance().isBlank(friend)) {
-					jo.put("code", 0);
-					jo.put("text", Tips.NOTFRIENDID.getText());
-					result = jo.toString();
-				}			
-				JSONObject p = new JSONObject();
-				p.put("friend", friend);
-				String sign = (this.request.getParameter("sign"));
-				String key = "@q3$fd12%";
-				String caclSign = PasswordGenerator.getInstance().makeSign(p, key, timeStamp);
+			String key = "@q3$fd12%";
+			String rqKey = this.request.getParameter("imkey");
+			if (!StringUtils.getInstance().isBlank(rqKey) && rqKey.equals(key)) {
+				String ts = clearChar(this.request.getParameter("timestamp"));
+				long timeStamp = StringUtils.getInstance().isBlank(ts) ? 0 : Long.parseLong(ts);
+				long now = TimeGenerator.getInstance().getUnixTime();
+				long max = timeStamp + 120;
+				long min = timeStamp - 120;
 				
-				System.out.println("timestamp: " + timeStamp);
-				System.out.println("sign: " + sign);
-				System.out.println("caclSign: " + caclSign);
-				System.out.println("key: " + key);
-				
-				if (!sign.equals(caclSign)) {
+				if (now < min || now > max) {
 					jo.put("code", 0);
-					jo.put("text", Tips.FALSECHECK.getText());
+					jo.put("text", Tips.TIMEOUT.getText());
 					result = jo.toString();
 				} else {
-					boolean s = true;
-					
-					if (su != null ) {
-						String account = su.getAccount();
-						int organId = su.getOrganId();
-						
-						if (account == null || "".equals(account)) {
-							s = false;
-						}  else {
-							result = friendService.addFriend(account, clearChar(friend), organId);
-						}
-					} else {
-						s = false;
-					}
-					if (!s) {
+					if (StringUtils.getInstance().isBlank(friend)) {
 						jo.put("code", 0);
-						jo.put("text", Tips.NOTINIT.getText());
+						jo.put("text", Tips.NOTFRIENDID.getText());
 						result = jo.toString();
+					}			
+					JSONObject p = new JSONObject();
+					p.put("friend", friend);
+					String sign = (this.request.getParameter("sign"));
+					String caclSign = PasswordGenerator.getInstance().makeSign(p, key, timeStamp);
+					
+					System.out.println("timestamp: " + timeStamp);
+					System.out.println("sign: " + sign);
+					System.out.println("caclSign: " + caclSign);
+					System.out.println("key: " + key);
+					
+					if (!sign.equals(caclSign)) {
+						jo.put("code", 0);
+						jo.put("text", Tips.FALSECHECK.getText());
+						result = jo.toString();
+					} else {
+						boolean s = true;
+						
+						if (su != null ) {
+							String account = su.getAccount();
+							int organId = su.getOrganId();
+							
+							if (account == null || "".equals(account)) {
+								s = false;
+							}  else {
+								result = friendService.addFriend(account, clearChar(friend), organId);
+							}
+						} else {
+							s = false;
+						}
+						if (!s) {
+							jo.put("code", 0);
+							jo.put("text", Tips.NOTINIT.getText());
+							result = jo.toString();
+						}
 					}
 				}
+			} else {
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGTWOCODE.getText());
+				result = jo.toString();
 			}
 			logger.info(result);
 			returnToClient(result);

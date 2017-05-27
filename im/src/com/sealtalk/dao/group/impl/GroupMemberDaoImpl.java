@@ -275,4 +275,27 @@ public class GroupMemberDaoImpl extends BaseDao<TGroupMember, Long> implements G
 		}
 	}
 
+	@Override
+	public TGroupMember judgeGroupCreate(Integer userIdInt, Integer groupIdInt) {
+		try {
+			Criteria ctr = getCriteria();
+			ctr.add(Restrictions.eq("memberId", userIdInt));
+			ctr.add(Restrictions.eq("groupId", groupIdInt));
+			ctr.add(Restrictions.eq("isCreator", "1"));
+			ctr.add(Restrictions.eq("isDel", "1"));
+			
+			List<TGroupMember> list = ctr.list();
+			
+			if (list.size() > 0) {
+				return list.get(0);
+			}
+			
+		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+			e.printStackTrace();
+		}	
+		
+		return null;
+	}
+
 }

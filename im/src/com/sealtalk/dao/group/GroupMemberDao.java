@@ -101,4 +101,6 @@ public interface GroupMemberDao {
 
 	public void updateGroupMember(TGroupMember tgm);
 
+	public TGroupMember judgeGroupCreate(Integer userIdInt, Integer groupIdInt);
+
 }

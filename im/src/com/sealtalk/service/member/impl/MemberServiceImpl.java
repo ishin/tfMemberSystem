@@ -398,4 +398,17 @@ public class MemberServiceImpl implements MemberService {
 
 		return count;
 	}
+
+	@Override
+	public boolean memberIsDel(int id) {
+		JSONObject p = new JSONObject();
+		p.put("userId", id);
+		String result = HttpRequest.getInstance().sendPost(
+				SysInterface.MEMBERFORID.getName(), p);
+		JSONObject memJson = JSONUtils.getInstance().stringToObj(result);
+		if (memJson != null && memJson.getInt("code") == 1) {
+			return true;
+		}
+		return false;
+	}
 }
