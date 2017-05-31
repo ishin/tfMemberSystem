@@ -74,5 +74,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/slf4j-api-1.7.7.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/log4j-api-2.8.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/log4j-core-2.8.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jxl.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>

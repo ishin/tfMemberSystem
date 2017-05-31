@@ -75,5 +75,6 @@ public interface BranchDao extends IBaseDao<TBranch, Integer> {
 	
 	public List<TBranch> getBranchByMangerId(Integer[] ids);
 	public int getNoGroupBranch(Integer organId);
+	public List<TBranch> getAllBranch(int organId);
 	
 }

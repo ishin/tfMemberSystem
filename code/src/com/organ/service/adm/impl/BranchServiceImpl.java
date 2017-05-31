@@ -1,11 +1,15 @@
 package com.organ.service.adm.impl;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import jxl.write.WriteException;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -35,6 +39,7 @@ import com.organ.model.TMemberRole;
 import com.organ.model.TOrgan;
 import com.organ.model.TPosition;
 import com.organ.service.adm.BranchService;
+import com.organ.utils.FileUtil;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
 import com.organ.utils.PasswordGenerator;
@@ -42,6 +47,7 @@ import com.organ.utils.PinyinGenerator;
 import com.organ.utils.StringUtils;
 import com.organ.utils.TextHttpSender;
 import com.organ.utils.TimeGenerator;
+import com.organ.utils.XlsUtils;
 
 public class BranchServiceImpl implements BranchService {
 
@@ -1223,6 +1229,67 @@ public class BranchServiceImpl implements BranchService {
 	}
 	
 	@Override
+	public String exportsBranch(int organId, String path) {
+		List organ = branchDao.getOrgan(organId);
+		if (organ != null && organ.size() > 0) {
+			Object[] o = (Object[]) organ.get(0);
+			String organName = String.valueOf(o[1]);
+			List<TBranch> list = branchDao.getAllBranch(organId);
+			if (list != null && list.size() > 0) {
+				ArrayList<String[]> branchList = new ArrayList<String[]>();
+				
+				branchList.add(new String[]{"0", "0", organName + "-组织结构表"});
+				//生成标题
+				branchList.add(new String[]{"0", "1", "ID"});
+				branchList.add(new String[]{"1", "1", "父ID"});
+				branchList.add(new String[]{"2", "1", "部门名称"});
+				branchList.add(new String[]{"3", "1", "领导人ID"});
+				branchList.add(new String[]{"4", "1", "地址"});
+				branchList.add(new String[]{"5", "1", "网址"});
+				branchList.add(new String[]{"6", "1", "电话"});
+				branchList.add(new String[]{"7", "1", "传真"});
+				branchList.add(new String[]{"8", "1", "说明"});
+				
+				int line = 2;
+				
+				for(int i = 0; i < list.size(); i++) {
+					TBranch tb = list.get(i);
+					String lineStr = String.valueOf(line);
+					branchList.add(new String[]{"0", lineStr, String.valueOf(tb.getId())});
+					branchList.add(new String[]{"1", lineStr, String.valueOf(tb.getParentId())});
+					branchList.add(new String[]{"2", lineStr, tb.getName()});
+					branchList.add(new String[]{"3", lineStr, String.valueOf(tb.getManagerId())});
+					branchList.add(new String[]{"4", lineStr, tb.getAddress()});
+					branchList.add(new String[]{"5", lineStr, tb.getWebsite()});
+					branchList.add(new String[]{"6", lineStr, tb.getTelephone()});
+					branchList.add(new String[]{"7", lineStr, tb.getFax()});
+					branchList.add(new String[]{"8", lineStr, tb.getIntro()});
+					line++;
+				}
+				String fileName = organName + "-Branch-" + TimeGenerator.getInstance().formatNow("yyyyMMddhhmmss") + ".xls";
+				String fileAllName = path + "exports/" + fileName;
+				
+				try {
+					OutputStream os = new FileOutputStream(fileAllName);
+					XlsUtils.getInstance().createTitleExcel("组织结构", 9, branchList, os);
+					if (FileUtil.isExists(fileAllName)) {
+						return fileName;
+					}
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (WriteException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return null;
+	}
+
+	
+	@Override
 	public TMember getMemberByWorkNo(String memberWorkNo, int organId) {
 		return memberDao.getMemberByWorkNo(memberWorkNo, organId);
 	}
@@ -1235,5 +1302,4 @@ public class BranchServiceImpl implements BranchService {
 	public int getBranchMemberCountByMember(int memberId) {
 		return branchMemberDao.getBranchMemberCountByMember(memberId);
 	}
-
 }

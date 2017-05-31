@@ -307,6 +307,14 @@ public class FileUtil {
 		}
 		return flag;
 	}
+	
+	public static boolean isExists(String path) {
+		File file = new File(path);
+		if (file.isFile() && file.exists()) {// 路径为文件且不为空则进行删除
+			return true;
+		}
+		return false;
+	}
 
 	
 }

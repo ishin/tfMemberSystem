@@ -1,7 +1,10 @@
 package com.organ.action.adm;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,6 +13,7 @@ import javax.servlet.ServletException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -794,6 +798,29 @@ public class BranchAction extends BaseAction {
 		return "text";
 	}
 	
+	public String exportsBranch() throws ServletException, FileNotFoundException {
+		int organId = getSessionUserOrganId();
+		String realPath = request.getSession().getServletContext().getRealPath("/");  
+		String downFileName = branchService.exportsBranch(organId, realPath);
+		
+		if (downFileName != null) {
+			this.setFileName(downFileName);
+			inputStream = new FileInputStream(new File(realPath + "exports/" + downFileName)); 
+			return "down";
+		} else {
+			JSONObject jo = new JSONObject();
+			jo.put("code", 0);
+			jo.put("text", Tips.FAIL.getText());
+			returnToClient(jo.toString());
+			return "text";
+		}
+	}
+	
+	//文件下载
+	public InputStream getInputStream() {
+		return inputStream;
+	}
+	
 	private BranchService branchService;
 	private MessageService msgService;
 	private MemberService memberService;
@@ -819,7 +846,21 @@ public class BranchAction extends BaseAction {
 	private String appId;
 	private String secret;
 	private String companyId;
+	private String fileName;
+	private InputStream inputStream;
 	
+	public void setInputStream(InputStream inputStream) {
+		this.inputStream = inputStream;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
 	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
 	}

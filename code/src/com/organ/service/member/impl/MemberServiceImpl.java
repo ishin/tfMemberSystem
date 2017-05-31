@@ -1,8 +1,14 @@
 package com.organ.service.member.impl;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import jxl.write.WriteException;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -23,6 +29,7 @@ import com.organ.model.TBranch;
 import com.organ.model.TMember;
 import com.organ.model.TextCode;
 import com.organ.service.member.MemberService;
+import com.organ.utils.FileUtil;
 import com.organ.utils.HttpRequest;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
@@ -31,6 +38,7 @@ import com.organ.utils.PropertiesUtils;
 import com.organ.utils.RongCloudUtils;
 import com.organ.utils.StringUtils;
 import com.organ.utils.TimeGenerator;
+import com.organ.utils.XlsUtils;
 
 public class MemberServiceImpl implements MemberService {
 
@@ -830,6 +838,77 @@ public class MemberServiceImpl implements MemberService {
 			e.printStackTrace();
 		}
 		return jo.toString();
+	}
+	
+
+	@Override
+	public String exportsMember(int organId, String realPath) {
+		List organ = branchDao.getOrgan(organId);
+		
+		if (organ != null && organ.size() > 0) {
+			Object[] o = (Object[]) organ.get(0);
+			String organName = String.valueOf(o[1]);
+			List<TMember> memberList = memberDao.getAllMemberInfo(organId);
+			
+			if (memberList != null && memberList.size() > 0) {
+				ArrayList<String[]> exportMemList = new ArrayList<String[]>();
+				
+				exportMemList.add(new String[]{"0", "0", organName + "-成员表"});
+				//生成标题
+				exportMemList.add(new String[]{"0", "1", "ID"});
+				exportMemList.add(new String[]{"1", "1", "账号"});
+				exportMemList.add(new String[]{"2", "1", "姓名"});
+				exportMemList.add(new String[]{"3", "1", "拼音"});
+				exportMemList.add(new String[]{"4", "1", "工号"});
+				exportMemList.add(new String[]{"5", "1", "性别"});
+				exportMemList.add(new String[]{"6", "1", "生日"});
+				exportMemList.add(new String[]{"7", "1", "头像"});
+				exportMemList.add(new String[]{"8", "1", "Email"});
+				exportMemList.add(new String[]{"9", "1", "手机"});
+				exportMemList.add(new String[]{"10", "1", "电话"});
+				exportMemList.add(new String[]{"11", "1", "地址"});
+				exportMemList.add(new String[]{"12", "1", "描述"});
+				
+				int line = 2;
+				
+				for(int i = 0; i < memberList.size(); i++) {
+					TMember tb = memberList.get(i);
+					String lineStr = String.valueOf(line);
+					exportMemList.add(new String[]{"0", lineStr, String.valueOf(tb.getId())});
+					exportMemList.add(new String[]{"1", lineStr, String.valueOf(tb.getAccount())});
+					exportMemList.add(new String[]{"2", lineStr, tb.getFullname()});
+					exportMemList.add(new String[]{"3", lineStr, tb.getAllpinyin()});
+					exportMemList.add(new String[]{"4", lineStr, tb.getWorkno()});
+					exportMemList.add(new String[]{"5", lineStr, tb.getSex().equals(1) ? "男" : "女"});
+					exportMemList.add(new String[]{"6", lineStr, tb.getBirthday()});
+					exportMemList.add(new String[]{"7", lineStr, tb.getLogo()});
+					exportMemList.add(new String[]{"8", lineStr, tb.getEmail()});
+					exportMemList.add(new String[]{"9", lineStr, tb.getMobile()});
+					exportMemList.add(new String[]{"10", lineStr, tb.getTelephone()});
+					exportMemList.add(new String[]{"11", lineStr, tb.getAddress()});
+					exportMemList.add(new String[]{"12", lineStr, tb.getIntro()});
+					line++;
+				}
+				
+				String fileName = organName + "-Member-" + TimeGenerator.getInstance().formatNow("yyyyMMddhhmmss") + ".xls";
+				String fileAllName = realPath + "exports/" + fileName;
+				
+				try {
+					OutputStream os = new FileOutputStream(fileAllName);
+					XlsUtils.getInstance().createTitleExcel("成员表", 13, exportMemList, os);
+					if (FileUtil.isExists(fileAllName)) {
+						return fileName;
+					}
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (WriteException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
 	}
 	
 	@Override
