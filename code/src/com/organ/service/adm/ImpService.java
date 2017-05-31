@@ -186,7 +186,13 @@ public class ImpService {
 			}
 			
 			// 如果人员已存在
-			else if (impDao.testExist()) {
+			else if (impDao.testMobileExist()) {
+				this.status = Constants.WELL;
+			}
+			else if (impDao.testWorkNoExist()) {
+				this.status = Constants.WELL;
+			}
+			else if (impDao.testEmailNoExist()) {
 				this.status = Constants.WELL;
 			}
 					
