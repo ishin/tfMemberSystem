@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import com.organ.model.ImpUser;
+import com.organ.utils.StringUtils;
 
 public class ImpDao {
 
@@ -55,19 +56,24 @@ public class ImpDao {
 	}
 	
 	public boolean testMobileExist() throws HibernateException{
-		
+		if (StringUtils.getInstance().isBlank(user.getMobile())) {
+			return false;
+		}
 		String sql = "select * from t_member"
-				+ " where mobile ='" + user.getMobile() + "'";
+				+ " where mobile ='" + user.getMobile() + "' and isdel=1";
 		
 		List list = runSql(sql);
 		
 		return !list.isEmpty();
 	}
 	
-	public boolean testWorkNoExist() throws HibernateException{
+	public boolean testWorkNoExist(int organId) throws HibernateException{
 		
+		if (StringUtils.getInstance().isBlank(user.getWorkno())) {
+			return false;
+		}
 		String sql = "select * from t_member"
-			+ " where workno ='" + user.getWorkno() + "'";
+			+ " where workno ='" + user.getWorkno() + "' and organ_id=" + organId + " and isdel=1";
 		
 		List list = runSql(sql);
 		
@@ -76,8 +82,11 @@ public class ImpDao {
 
 	public boolean testEmailNoExist() throws HibernateException{
 		
-		String sql = "select * from t_member"
-			+ " where email ='" + user.getEmail() + "'";
+		if (StringUtils.getInstance().isBlank(user.getEmail())) {
+			return false;
+		}
+ 		String sql = "select * from t_member"
+			+ " where email ='" + user.getEmail() + "' and isdel=1";
 		
 		List list = runSql(sql);
 		

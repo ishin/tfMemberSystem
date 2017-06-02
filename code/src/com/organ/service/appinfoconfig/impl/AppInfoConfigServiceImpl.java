@@ -136,12 +136,11 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 	}
 
 	@Override
-	public String DelApp(int id) {
+	public String DelApp(int id, int organId) {
 		String appnameString = appInfoConfigDao.getAppNameByID(id);
-		logger.info(appnameString);
 		appInfoConfigDao.delete("delete AppSecret where id =" + id);
 		roleappsecretDao.delete("delete from TRoleAppSecret where appsecretId = " + id);
-		limitDao.delete("delete from TPriv where app = '" + appnameString+"'");
+		limitDao.delete("delete from TPriv where app = '" + appnameString+"' and organId=" + organId);
 		userValidDao.delete("delete from UserValid where asid=" + id);
 		return id + "";
 	}

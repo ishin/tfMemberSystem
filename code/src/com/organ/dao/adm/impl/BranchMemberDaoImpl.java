@@ -96,7 +96,7 @@ public class BranchMemberDaoImpl extends BaseDao<TBranchMember, Integer>
 	public List getBranchMemberByMemberIds(String memberIds) {
 
 		String hql = (new StringBuilder(
-				"select BM.member_id mid, P.name, B.name bname from t_branch_member BM left join t_branch B on B.id=BM.branch_id left join t_position P on BM.position_id=P.id where BM.isdel='1' and BM.member_id in (")
+				"select BM.member_id mid, P.name pname, B.name bname, BM.is_master master, B.manager_id mnid  from t_branch_member BM left join t_branch B on B.id=BM.branch_id left join t_position P on BM.position_id=P.id where BM.isdel='1' and BM.member_id in (")
 				.append(memberIds).append(")")).toString();
 		return getSession().createSQLQuery(hql).list();
 	}

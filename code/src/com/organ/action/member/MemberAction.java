@@ -167,10 +167,11 @@ public class MemberAction extends BaseAction {
 	public String exportsMember() throws ServletException, FileNotFoundException, UnsupportedEncodingException {
 		int organId = getSessionUserOrganId();
 		String realPath = request.getSession().getServletContext().getRealPath("/");
-		String downFileName = memberService.exportsMember(organId, realPath);
+		String downFileName = memberService.exportsMember2(organId, realPath);
 
-		if (downFileName != null) {
-			fileName = downFileName;
+		//直接下载
+		/*if (downFileName != null) {
+			fileName = new String(downFileName.getBytes("gbk"),"iso-8859-1");
 			inputStream = new FileInputStream(new File(realPath + "exports/" + downFileName)); 
 			return "down";
 		} else {
@@ -179,7 +180,17 @@ public class MemberAction extends BaseAction {
 			jo.put("text", Tips.FAIL.getText());
 			returnToClient(jo.toString());
 			return "text";
+		}*/
+		JSONObject jo = new JSONObject();
+		if (downFileName != null) {
+			jo.put("code", 1);
+			jo.put("text", downFileName);
+		} else {
+			jo.put("code", 0);
+			jo.put("text", Tips.FAIL.getText());
 		}
+		returnToClient(jo.toString());
+		return "text";
 	}
 
 	// 文件下载

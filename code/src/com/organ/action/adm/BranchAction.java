@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -678,8 +679,8 @@ public class BranchAction extends BaseAction {
 		
 		String jtext = clearChar(this.request.getParameter("jtext"));
 		JSONArray ja = JSONArray.fromObject(jtext);
-		
-		JSONObject js = branchService.testUsers(ja);
+		int organId = getSessionUserOrganId();
+		JSONObject js = branchService.testUsers(ja, organId);
 		
 		returnToClient(js.toString());
 		
@@ -798,13 +799,14 @@ public class BranchAction extends BaseAction {
 		return "text";
 	}
 	
-	public String exportsBranch() throws ServletException, FileNotFoundException {
+	public String exportsBranch() throws ServletException, FileNotFoundException, UnsupportedEncodingException {
 		int organId = getSessionUserOrganId();
 		String realPath = request.getSession().getServletContext().getRealPath("/");  
 		String downFileName = branchService.exportsBranch(organId, realPath);
-		
+		//直接下载
+		/*
 		if (downFileName != null) {
-			this.setFileName(downFileName);
+			this.setFileName(new String(downFileName.getBytes("gbk"),"iso-8859-1"));
 			inputStream = new FileInputStream(new File(realPath + "exports/" + downFileName)); 
 			return "down";
 		} else {
@@ -813,7 +815,17 @@ public class BranchAction extends BaseAction {
 			jo.put("text", Tips.FAIL.getText());
 			returnToClient(jo.toString());
 			return "text";
+		}*/
+		JSONObject jo = new JSONObject();
+		if (downFileName != null) {
+			jo.put("code", 1);
+			jo.put("text", downFileName);
+		} else {
+			jo.put("code", 0);
+			jo.put("text", Tips.FAIL.getText());
 		}
+		returnToClient(jo.toString());
+		return "text";
 	}
 	
 	//文件下载

@@ -14,13 +14,13 @@
             <column name="name" length="256" />
         </property>
         <property name="listorder" type="java.lang.Integer">
-            <column name="listorder" not-null="true" />
+            <column name="listorder" />
         </property>
         <property name="organId" type="java.lang.Integer">
             <column name="organid" not-null="true" />
         </property>
         <property name="roleLevel" type="java.lang.String">
-            <column name="rolelevel" not-null="true" length="1" />
+            <column name="rolelevel" length="1" />
         </property>
     </class>
 </hibernate-mapping>

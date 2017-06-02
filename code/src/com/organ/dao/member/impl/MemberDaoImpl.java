@@ -514,7 +514,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	@Override
 	public List<TMember> getLimitMemberIds(int limit, int organId) {
 		String sql = (new StringBuilder(
-				"select new TMember(t.id) from TMember t where t.organId=").append(organId).append(" and t.idDel=1")).toString();
+				"select new TMember(t.id) from TMember t where t.organId=").append(organId).append(" and t.isDel=1")).toString();
 
 		try {
 			Query query = getSession().createQuery(sql);
@@ -586,7 +586,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 					+ "M.account,"
 					+ "S.name SNAME,"
 					+ "P.name PNAME,"
-					+ "O.name ONAME "
+					+ "O.name ONAME,"
+					+ "BM.is_master "
 					+ "from t_member M left join t_branch_member BM on M.id=BM.member_id "
 					+ "left join t_branch B on BM.branch_id=B.id "
 					+ "left join t_position P on BM.position_id=P.id "
@@ -607,8 +608,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 				} else if (len > 1) {
 					Object[] ret = null;
 					for(int i = 0; i < len; i++) {
-						Object[] t = (Object[]) list.get(0);
-						if (String.valueOf(t[8]).equals("1")) {
+						Object[] t = (Object[]) list.get(i);
+						if (String.valueOf(t[10]).equals("1")) {
 							ret = t;
 							break;
 						}
@@ -863,6 +864,20 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 			e.printStackTrace();
 		}
 
+		return null;
+	}
+
+	@Override
+	public List<TMember> getExportsMember(int organId) {
+		String hql = (new StringBuilder("select new TMember(t.id,t.mobile,t.fullname,t.workno,t.sex,t.telephone,t.email) from TMember t where t.organId=").append(organId).append(" and t.isDel=1")).toString();
+		
+		Query query = getSession().createQuery(hql);
+
+		List<TMember> list = query.list();
+
+		if (list != null && list.size() > 0) {
+			return list;
+		}
 		return null;
 	}
 }

@@ -78,7 +78,7 @@ public interface BranchService {
 	public void movMember(Integer memberId, Integer pId, Integer toId);
 	public Integer movBranch(Integer branchId, Integer toId);
 	
-	public JSONObject testUsers(JSONArray ja);
+	public JSONObject testUsers(JSONArray ja, int organId);
 	public void saveimp(JSONArray ja, Integer organId);
 	public void impexcel(JSONArray ja, String path) throws FileNotFoundException, IOException;
 

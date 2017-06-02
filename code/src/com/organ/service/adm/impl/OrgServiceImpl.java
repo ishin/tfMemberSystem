@@ -1,7 +1,9 @@
 package com.organ.service.adm.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -15,7 +17,10 @@ import com.organ.dao.adm.BranchMemberDao;
 import com.organ.dao.adm.MemberRoleDao;
 import com.organ.dao.adm.OrgDao;
 import com.organ.dao.adm.PositionDao;
+import com.organ.dao.adm.PrivDao;
 import com.organ.dao.adm.RoleDao;
+import com.organ.dao.appinfoconfig.AppInfoConfigDao;
+import com.organ.dao.limit.RoleAppSecretDao;
 import com.organ.dao.member.MemberDao;
 import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
@@ -23,13 +28,16 @@ import com.organ.model.TMember;
 import com.organ.model.TMemberRole;
 import com.organ.model.TOrgan;
 import com.organ.model.TPosition;
+import com.organ.model.TPriv;
 import com.organ.model.TRole;
+import com.organ.model.TRoleAppSecret;
 import com.organ.service.adm.OrgService;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PinyinGenerator;
 import com.organ.utils.PropertiesUtils;
+import com.organ.utils.SecretUtils;
 import com.organ.utils.StringUtils;
 
 public class OrgServiceImpl implements OrgService {
@@ -42,6 +50,21 @@ public class OrgServiceImpl implements OrgService {
 	private BranchMemberDao branchMemberDao;
 	private RoleDao roleDao;
 	private MemberRoleDao memberRoleDao;
+	private AppInfoConfigDao appinfoconfigDao;
+	private RoleAppSecretDao roleappsecretDao;
+	private PrivDao privDao;
+
+	public void setPrivDao(PrivDao privDao) {
+		this.privDao = privDao;
+	}
+
+	public void setAppinfoconfigDao(AppInfoConfigDao appinfoconfigDao) {
+		this.appinfoconfigDao = appinfoconfigDao;
+	}
+
+	public void setRoleappsecretDao(RoleAppSecretDao roleappsecretDao) {
+		this.roleappsecretDao = roleappsecretDao;
+	}
 
 	public void setMemberRoleDao(MemberRoleDao memberRoleDao) {
 		this.memberRoleDao = memberRoleDao;
@@ -263,8 +286,9 @@ public class OrgServiceImpl implements OrgService {
 					roleDao.save(roleList);
 					
 					int role1Id = role1.getId();
-					//int role2Id = role2.getId();
-					//int role3Id = role3.getId();
+					int role2Id = role2.getId();
+					int role3Id = role3.getId();
+					int role4Id = role4.getId();
 					
 					List<TMemberRole> memRoleList = new ArrayList<TMemberRole>();
 					
@@ -294,16 +318,29 @@ public class OrgServiceImpl implements OrgService {
 					
 					memberRoleDao.save(memRoleList);
 					
-					//初始化角色权限
+					//初始化IM应用
+					ArrayList<String> idsecret = makeAppId();
+					String callbackurl = "";
+					String appname = "IM";
+					int isOpen = 1;
+					int appId = appinfoconfigDao.updatePriv(idsecret.get(0), idsecret.get(1), callbackurl, appname, isOpen, organId);
+					//初始化角色应用关联
+					List<TRoleAppSecret> tas = new ArrayList<TRoleAppSecret>();
+					tas.add(new TRoleAppSecret(role1Id, appId));
+					tas.add(new TRoleAppSecret(role2Id, appId));
+					tas.add(new TRoleAppSecret(role3Id, appId));
+					tas.add(new TRoleAppSecret(role4Id, appId));
+					roleappsecretDao.save(tas);
 					
+					//初始化IM权限
+					initIMPriv(organId);
 					
+					//初始化角色权限（可不用）
 					
 					j.put("account", tm.getAccount());
 					j.put("pwd", pwd);
 					j.put("organId", organId);
 					j.put("organCode", organ.getCode());
-					//String msg = organName + "注册成功,初始账号：" + account + ";初始密码"+pwd+";公司ID:" + organId + ";公司码:"+organ.getCode();
-					//TextHttpSender.getInstance().sendText(account, msg);
 				}
 				ret = j.toString();
 			}
@@ -313,6 +350,86 @@ public class OrgServiceImpl implements OrgService {
 			e.printStackTrace();
 		}
 		return "fail";
+	}
+	
+	//初始化IM权限
+	private void initIMPriv(int organId) {
+		List<TPriv> privList = new ArrayList<TPriv>();
+		
+		privList.add(new TPriv(0, "应用APP/PC端", "1", "1", "yyapppcd", "IM", organId, 2));
+		privList.add(new TPriv(0, "层级限制", "2", "1", "cjxz", "IM", organId, 3));
+		privList.add(new TPriv(1, "个人设置", "1", "0", "grsz", "IM", organId, 9));
+		privList.add(new TPriv(1, "聊天设置", "1", "0", "stsz", "IM", organId, 10));
+		privList.add(new TPriv(1, "群组", "1", "0", "qz", "IM", organId, 11));
+		privList.add(new TPriv(1, "对讲机", "1", "0", "djj", "IM", organId, 0));
+		privList.add(new TPriv(1, "其他", "1", "0", "qt", "IM", organId, 0));
+		privList.add(new TPriv(2, "对平级或者上级部门开放", "2", "1", "dpjhzsjbmkf", "IM", organId, 0));
+		privList.add(new TPriv(3, "使用工作签名", "3", "0", "grszsygzqm", "IM", organId, 1));
+		privList.add(new TPriv(3, "修改用户名", "1", "0", "grszxgyhm", "IM", organId, 2));
+		privList.add(new TPriv(3, "修改姓名", "1", "0", "grszxgxm", "IM", organId, 3));
+		privList.add(new TPriv(4, "修改职务", "1", "0", "grszxgzw", "IM", organId, 4));
+		privList.add(new TPriv(4, "发起个人聊天", "1", "0", "ltszfqgrlt", "IM", organId, 1));
+		privList.add(new TPriv(4, "群组聊天", "1", "0", "ltszqzlt", "IM", organId, 2));
+		privList.add(new TPriv(4, "文件上传", "1", "0", "ltszwjsc", "IM", organId, 3));
+		privList.add(new TPriv(5, "创建群", "1", "0", "qzcjq", "IM", organId, 1));
+		privList.add(new TPriv(5, "解散群", "1", "0", "qzjsq", "IM", organId, 2));
+		privList.add(new TPriv(5, "修改群创建者", "1", "0", "qzxgqcjz", "IM", organId, 3));
+		privList.add(new TPriv(6, "开启", "1", "0", "djjkq", "IM", organId, 1));
+		privList.add(new TPriv(6, "发言时其他人禁言", "1", "0", "djjfysqtrjy", "IM", organId, 2));
+		privList.add(new TPriv(6, "紧急呼叫", "1", "0", "djjjjhj", "IM", organId, 3));
+		privList.add(new TPriv(7, "查看地理位置", "1", "0", "qtckdlwz", "IM", organId, 1));
+		privList.add(new TPriv(8, "发起个人聊天", "2", "0", "dpjhzsjbmkffqgrlt", "IM", organId, 1));
+		privList.add(new TPriv(8, "文件上传", "2", "0", "dpjhzsjbmkfwjsc", "IM", organId, 2));
+		privList.add(new TPriv(8, "创建群", "1", "0", "dpjhzsjbmkfcjq", "IM", organId, 3));
+		privList.add(new TPriv(8, "查看地理位置", "2", "0", "dpjhzsjbmkfckdlwz", "IM", organId, 4));
+		privList.add(new TPriv(8, "紧急通知", "2", "0", "dpjhzsjbmkfjjtz", "IM", organId, 4));
+		privList.add(new TPriv(1, "群组管理", "2", "0", "qzgl", "IM", organId, 9));
+		privList.add(new TPriv(9, "查看", "1", "0", "qzglck", "IM", organId, 0));
+		privList.add(new TPriv(9, "解散", "1", "0", "qzgljs", "IM", organId, 0));
+		privList.add(new TPriv(9, "修改", "1", "0", "qzglxg", "IM", organId, 0));
+		privDao.save(privList);
+		privList.clear();
+		privList = null;
+		privList = privDao.getPrivByOrganAndApp("IM", organId);
+		
+		if (privList != null) {
+			Map<Integer, Integer> idMap = new HashMap<Integer, Integer>();
+			int len = privList.size();
+			
+			for(int i = 0; i < len; i++) {
+				TPriv t = privList.get(i);
+				int id = t.getId();
+				String url = t.getUrl();
+				if (url.equals("yyapppcd")) {
+					idMap.put(1, id);
+				} else if (url.equals("cjxz")) {
+					idMap.put(2, id);
+				} else if (url.equals("grsz")) {
+					idMap.put(3, id);
+				} else if (url.equals("stsz")) {
+					idMap.put(4, id);
+				} else if (url.equals("qz")) {
+					idMap.put(5, id);
+				} else if (url.equals("djj")) {
+					idMap.put(6, id);
+				} else if (url.equals("qt")) {
+					idMap.put(7, id);
+				} else if (url.equals("dpjhzsjbmkf")) {
+					idMap.put(8, id);
+				} else if (url.equals("qzgl")) {
+					idMap.put(9, id);
+				}
+			}
+			for(int i = 0; i < len; i++) {
+				TPriv t = privList.get(i);
+				int pid = t.getParentId();
+				if (pid == 0) continue;
+				if (idMap.get(pid) == null) continue;
+				t.setParentId(idMap.get(pid));
+			}
+			privDao.saveOrUpdate(privList);
+		}
+		
 	}
 
 	@Override
@@ -343,6 +460,21 @@ public class OrgServiceImpl implements OrgService {
 	@Override
 	public TOrgan getOrganByCode(String organCode) {
 		return orgDao.getOrganByCode(organCode);
+	}
+	
+	private ArrayList<String> makeAppId() {
+		ArrayList<String> as = new ArrayList<String>();
+
+		try {
+			String id = PasswordGenerator.getInstance().createId(18);
+			as.add(id);
+			as.add(new SecretUtils().encrypt(id));
+		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+			e.printStackTrace();
+		}
+
+		return as;
 	}
 
 }

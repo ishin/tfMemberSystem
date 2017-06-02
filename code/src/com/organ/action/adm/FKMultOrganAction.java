@@ -27,6 +27,10 @@ public class FKMultOrganAction extends BaseAction {
 
 	private static final long serialVersionUID = 6961033310590131108L;
 	
+	public String jumpRegistPage() throws ServletException {
+		return "regist";
+	}
+	
 	/**
 	 * 注册
 	 * @return

@@ -20,7 +20,7 @@ public interface LimitDao extends IBaseDao<TPriv, Long>{
 	
 	public int getSearchCount(int organId, String name);//获取查询结构的个数
 	
-	public List getLimitbyRole(Integer roleId2, String appName);//根据姓名获取接口
+	public List getLimitbyRole(Integer roleId2, int organId, String appName);//根据姓名获取接口
 	
 	public List getRoleList(Integer appId, int organId);
 	

@@ -14,5 +14,8 @@ public interface PrivDao extends IBaseDao<TPriv, Integer> {
 	 * @return
 	 */
 	public List<TPriv> getPrivByUrl(String[] url, int organId);
+	public List<TPriv> getPrivByOrganAndApp(String app, int organId);
+
+	public int getMaxPrivId();
 
 }

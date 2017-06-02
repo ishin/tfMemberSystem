@@ -113,9 +113,10 @@ public class AppInfoConfigAction extends BaseAction {
 		Integer intid = id == null ? null : Integer.parseInt(id);
 		boolean falg = false;
 		String result = null;
+		int organId = getSessionUserOrganId();
 		
 		try {
-			result = appInfoConfigService.DelApp(intid);
+			result = appInfoConfigService.DelApp(intid, organId);
 			if ("".equals(result) && null == result) {
 				falg = false;
 			} else {

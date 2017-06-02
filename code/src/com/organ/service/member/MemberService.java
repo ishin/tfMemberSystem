@@ -223,4 +223,6 @@ public interface MemberService {
 	public void updateBySql(int organId, String address);
 
 	public String exportsMember(int organId, String realPath);
+
+	public String exportsMember2(int organId, String realPath);
 }

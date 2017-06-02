@@ -28,14 +28,15 @@ public class TPriv implements java.io.Serializable {
 	}
 
 	public TPriv(Integer parentId, String name, String category,
-			String grouping, String url, int organId, Integer listorder) {
+			String grouping, String url, String app, int organId, Integer listorder) {
 		this.parentId = parentId;
 		this.name = name;
 		this.category = category;
 		this.grouping = grouping;
 		this.url = url;
-		this.listorder = listorder;
+		this.app = app;
 		this.organId = organId;
+		this.listorder = listorder;
 	}
 
 	// Property accessors

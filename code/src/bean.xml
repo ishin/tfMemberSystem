@@ -84,6 +84,9 @@
 		<property name="positionDao" ref="positionDao" />
 		<property name="branchDao" ref="branchDao" />
 		<property name="branchMemberDao" ref="branchMemberDao" />
+		<property name="appinfoconfigDao" ref="appinfoconfigDao" />
+		<property name="roleappsecretDao" ref="roleappsecretDao" />
+		<property name="privDao" ref="privDao" />
 		
 	</bean>
 	<bean id="uploadService" class="com.organ.service.upload.impl.UploadServiceImpl" autowire="byName" >

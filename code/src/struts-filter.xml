@@ -34,7 +34,8 @@
 						getAllMemberInfoAb,updateMemberInfoForAppAb,updateMemberInfoForWebAb,searchUserAb,getOneOfMemberAb,registOrgan,getOrganCodeAb,
 						httpUploadAb,sendSysMsg,sendPrivateMsg,sendGrayMsg,logicDelMemberByUserIds,getMembersByOrganAb,
 						getTempTokenSceneOne,getTempTokenSceneTwo,redirectLogin,reqAuthorizeOne,reqAuthorizeTwo,reqAuthorizeTwoForApp,getRealToken,getAuthResource,
-						getAuthResourceAb,getRealTokenAb,reqAuthorizeTwoForAppAb,reqAuthorizeTwoAb,reqAuthorizeOneAb,getTempTokenSceneOneAb
+						getAuthResourceAb,getRealTokenAb,reqAuthorizeTwoForAppAb,reqAuthorizeTwoAb,reqAuthorizeOneAb,getTempTokenSceneOneAb,
+						jumpRegistPage
 					</param>
 					<!-- <param name="includeMethods"></param> -->
 				</interceptor-ref>

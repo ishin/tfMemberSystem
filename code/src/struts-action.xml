@@ -137,6 +137,7 @@
 		</action>
 		<action name="mulorgan" class="com.organ.action.adm.FKMultOrganAction">
 			<result name="loginPage">/page/cms/signin.jsp</result>
+			<result name="regist">/page/cms/registorgan.jsp</result>
 			<result name="text" type="stream">
 				<param name="contentType">text/plain</param>
 				<param name="inputName">inputStream</param>

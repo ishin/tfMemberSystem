@@ -159,7 +159,7 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List getLimitbyRole(Integer roleId, String appName) {
+	public List getLimitbyRole(Integer roleId, int organId, String appName) {
 		String sql = "select p.id, p.name, p.parent_id parentid, p.grouping, rp.role_id roleid, p.url url"
 				+ " from t_priv p"
 				+ " left join t_role_priv rp"
@@ -167,7 +167,7 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 				+ roleId
 				+ " where p.app = '"
 				+ appName
-				+ "' order by p.parent_id desc, p.listorder desc";
+				+ "' and p.organid=" + organId + " order by p.parent_id desc, p.listorder desc";
 		return runSql(sql);
 	}
 

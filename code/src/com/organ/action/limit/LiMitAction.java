@@ -215,8 +215,9 @@ public class LiMitAction extends BaseAction {
 	public String getLimitByRole() throws ServletException, JSONException {
 		Integer roleid = Integer.parseInt(clearChar(this.request.getParameter("roleid")));
 		String appName = clearChar(this.request.getParameter("appname"));
+		int organId = getSessionUserOrganId();
 		
-		List list = limitService.getLimitbyRole(roleid, appName);
+		List list = limitService.getLimitbyRole(roleid, organId, appName);
 		Iterator it = list.iterator();
 		ArrayList<JSONObject> ja = new ArrayList<JSONObject>();
 		while (it.hasNext()) {

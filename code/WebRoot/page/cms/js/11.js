@@ -91,7 +91,9 @@ $(document).ready(function(){
 			console.log(data);
 			$('.exportbatch').find('a').attr('href',data.text);
 			var fileName = data.text.split('/')[1];
-			location.href = 'http://120.26.42.225:8080/organ/'+data.text+'?attname='+fileName;
+			var l = location;
+			var path = l.protocol + "//" + l.host;
+			location.href = path + '/organ/'+data.text+'?attname='+fileName;
 			//$('.exportbatch').find('a').click()
 		});
 	});
@@ -101,7 +103,9 @@ $(document).ready(function(){
 			console.log(data);
 			$('.exportbatch').find('a').attr('href',data.text);
 			var fileName = data.text.split('/')[1];
-			location.href = 'http://120.26.42.225:8080/organ/'+data.text+'?attname='+fileName;
+			var l = location;
+			var path = l.protocol + "//" + l.host;
+			location.href = path + '/organ/'+data.text+'?attname='+fileName;
 			//$('.exportbatch').find('a').click()
 		});
 	});
