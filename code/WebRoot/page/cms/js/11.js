@@ -91,9 +91,7 @@ $(document).ready(function(){
 			console.log(data);
 			$('.exportbatch').find('a').attr('href',data.text);
 			var fileName = data.text.split('/')[1];
-			var l = location;
-			var path = l.protocol + "//" + l.host;
-			location.href = path + '/organ/'+data.text+'?attname='+fileName;
+			location.href = location.origin + '/organ/'+data.text+'?attname='+fileName;
 			//$('.exportbatch').find('a').click()
 		});
 	});
@@ -103,9 +101,7 @@ $(document).ready(function(){
 			console.log(data);
 			$('.exportbatch').find('a').attr('href',data.text);
 			var fileName = data.text.split('/')[1];
-			var l = location;
-			var path = l.protocol + "//" + l.host;
-			location.href = path + '/organ/'+data.text+'?attname='+fileName;
+			location.href = location.origin + '/organ/'+data.text+'?attname='+fileName;
 			//$('.exportbatch').find('a').click()
 		});
 	});
