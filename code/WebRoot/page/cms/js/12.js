@@ -83,7 +83,7 @@ function loaddata() {
 	//}
 }
 function cb_12_info(data) {
-	$('head').append($('<title>'+data.name+'</title>'));
+	$('head').append($('<title>'+data.shortname+'</title>'));
 	info = data;
 	$('#code').val(data.code);
 	$('#name').val(data.name);

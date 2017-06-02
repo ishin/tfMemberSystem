@@ -57,6 +57,10 @@ function cb_11_save_member(data) {
 		bootbox.alert({'title':'提示', 'message':'邮箱已存在，请重新输入.', callback: function() {
 			$('#container').css('width', document.body.clientWidth + 'px');
 		}});
+	}else if(data.memberid == '-3'){
+		bootbox.alert({'title':'提示', 'message':'工号已存在，请重新输入.', callback: function() {
+			$('#container').css('width', document.body.clientWidth + 'px');
+		}});
 	}
 	else {
 		bootbox.alert({'title':'提示', 'message':'账号和密码已经通过短信通知对方.', callback: function() {

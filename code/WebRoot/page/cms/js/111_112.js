@@ -181,6 +181,7 @@ var setting112_position = {
 	}
 }
 function cb_112_position_del(data) {
+	console.log(111);
 	if (data.branchmemberid == '-1') {
 		
 	}
@@ -190,7 +191,19 @@ function cb_112_position_del(data) {
 		}});
 	}
 	else {
+		var selectNode = $('#tree11').find('.curSelectedNode').parent();
+		window.selectNodeIdLeft = selectNode.attr('id');
 		update_112_position();
+		var treeObj = $.fn.zTree.getZTreeObj("tree11");
+		var nodes = treeObj.getSelectedNodes();
+		callajax("branch!getOrganTree", "", cb_11_tree);
+		//if(window.selectNodeIdLeft){
+		setTimeout(function(){
+			var treeObj = $.fn.zTree.getZTreeObj("tree11");
+			var node = treeObj.getNodeByTId(selectNodeIdLeft);
+			treeObj.selectNode(node);
+			window.selectNodeIdLeft='';
+		},2000)
 	}
 }
 function cb_112_position_master(data) {

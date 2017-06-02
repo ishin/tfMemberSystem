@@ -40,7 +40,7 @@ $(document).ready(function(){
 
 		//权限
 		//if (has('rsglck')) {
-		callajax("branch!getMemberById", {'id': curmember}, cb_111_112);
+		callajax("branch!getSuperMember", {'id': ''}, cb_111_112);
 		//}
 		$('#membertitle').html('超级管理员信息');
 		//$("#memberroleid").find("option[value=1]").attr("selected",true);
@@ -79,21 +79,42 @@ $(document).ready(function(){
 		//}
 	});
 	$('.addbatch').click(function(){
-		
-		//权限
-		//if (has('rsgltj')) {
-			$('#imp').modal({
-				backdrop: false,
-				remote: '11_imp.jsp'
-			});
-		//}
-		//else {
-		//	bootbox.alert({title:'提示', message:'您没有权限批量导入成员.', callback: function() {
-		//		$('#container').css('width', document.body.clientWidth + 'px');
-		//	}});
-		//}
+
+		$('#imp').modal({
+			backdrop: false,
+			remote: '11_imp.jsp'
+		});
 	});
-	
+	//导出组织
+	$('.exportbatch').click(function(){
+		callajaxGet("branch!exportsBranch", "", function(data){
+			console.log(data);
+			$('.exportbatch').find('a').attr('href',data.text);
+			var fileName = data.text.split('/')[1];
+			location.href = 'http://120.26.42.225:8080/organ/'+data.text+'?attname='+fileName;
+			//$('.exportbatch').find('a').click()
+		});
+	});
+	////导出人员
+	$('.exportmember').click(function(){
+		callajaxGet("member!exportsMember", "", function(data){
+			console.log(data);
+			$('.exportbatch').find('a').attr('href',data.text);
+			var fileName = data.text.split('/')[1];
+			location.href = 'http://120.26.42.225:8080/organ/'+data.text+'?attname='+fileName;
+			//$('.exportbatch').find('a').click()
+		});
+	});
+	$('.exportbatchaaa').click(function() {
+		if (window.Electron) {
+			var url = $(this).attr('href');
+			var localPath = window.Electron.chkFileExists(url);
+			if(localPath){//本地有这个文件
+				window.Electron.openFileDir(url);
+				return false;
+			}
+		}
+	})
 	$('.downmov').click(function() {
 		mov(downid);
 	});
@@ -408,8 +429,8 @@ var setting11 = {
 				$.fn.zTree.getZTreeObj(treeId).expandNode(treeNode, false);
 
 			if (treeNode.flag == 0) return;
-			if (treeNode.flag == 1 && curpage == '110' && treeNode.id == curbranch) return;
-			if (treeNode.flag == 2 && curpage != '110' && treeNode.id == curmember) return;
+			//if (treeNode.flag == 1 && curpage == '110' && treeNode.id == curbranch) return;
+			//if (treeNode.flag == 2 && curpage != '110' && treeNode.id == curmember) return;
 
 			if (treeNode.flag == 1) {
 				curbranch = treeNode.id;
@@ -808,3 +829,107 @@ function showpage(cp) {
 //		}
 //	}
 //}
+
+function chDownloadProgress(url, state, progress){
+	console.log('progressprogressprogressprogressprogressprogressprogress');
+	if (state == 'progressing') {
+		//console.log(url, state, progress);
+		var fileName = url.split('attname=')[1];
+		var file = fileName.split('.')[0];
+		if(url.indexOf('token')!=-1){//有%
+			file = getFileUniqueNameFromAppElec(url);
+		}
+		if(url.indexOf('uniquetime')!=-1){//有%
+			file = getFileUniqueNameFromPCElec(url)
+		}
+		var targetA = $("a[fileName=" + file + "]");
+		var targetParent = targetA.parents('.mr-ownChat').length==1?targetA.parents('.mr-ownChat'):targetA.parents('.mr-chatBox');
+		if($(targetParent[0]).hasClass('mr-ownChat') || $(targetParent[0]).hasClass('mr-chatBox')){
+			if ($(targetParent[0]).find('#down_process[uniquetime=' + file + ']').length == 0) {
+				$('#down_process[uniquetime=' + file + ']').remove();
+				var sHTML = '<div id="down_process" uniquetime="' + file + '">' +
+					'<div id="down_precent" uniquetime="' + file + '" style="width: 0%;">' +
+					'</div>' +
+					'</div>'
+				targetParent.append(sHTML);
+			} else {
+				$('#down_process[uniquetime=' + file + ']').find('#down_precent').css('width', progress+'%');
+			}
+		}else if(targetA.hasClass('downloadDemo')){
+			//window.Electron.openFile(url);
+		}
+	}
+}
+
+function chDownloadState(url, state){
+	if (state == 'completed') {
+		console.log('chDownloadStatechDownloadStatechDownloadState');
+
+		var fileName = url.split('attname=')[1];
+		var file = fileName.split('.')[0];
+		if(url.indexOf('token')!=-1){//有%
+			file = getFileUniqueNameFromAppElec(url)
+		}
+		if(url.indexOf('uniquetime')!=-1){//有%
+			file = getFileUniqueNameFromPCElec(url)
+		}
+		var targetA = $("a[fileName=" + file + "]");
+
+		for(var i=0;i<targetA.length;++i){
+			if(targetA.eq(i).closest('.mr-ownChat').length>0 || targetA.eq(i).closest('.mr-chatBox').length>0){
+				//console.log(444444444444444444)
+
+				$('#down_process[uniquetime=' + file + ']').remove();
+				targetA.eq(i).css('visibility','hidden');
+				var sHTML = '<div id="fileOperate" uniquetime="1486626340273">' +
+					'<span class="openFile"></span><span class="openFloder"></span>' +
+					'</div>';
+				var targetParent = targetA.eq(i).parents('.mr-ownChat').length==1?targetA.eq(i).parents('.mr-ownChat'):targetA.eq(i).parents('.mr-chatBox');
+				targetParent.append(sHTML);
+			}else if(targetA.eq(i).closest('.downLoadFileInfo').length>0){
+				//console.log(333333333333333)
+
+				targetA.eq(i).css('visibility','hidden');
+				targetA.eq(i).closest('.downLoadFileInfo').find('#fileOperate1').remove();
+				var sHTML = '<div id="fileOperate" uniquetime="1486626340273">' +
+					'<span class="openFile">打开文件</span>' +
+					'<span class="openFloder">打开文件夹</span>' +
+					'</div>'
+				targetA.eq(i).closest('.downLoadFileInfo').append($(sHTML));
+			}else if(targetA.hasClass('downloadDemo')){
+				window.Electron.openFileDir(url);
+			}else{
+				var sHtml='<strong  data-url="'+url+'" class="hosOpenFile">打开</strong>\
+            <strong data-url="'+url+'" class="hosOpenFloder">打开文件夹</strong>';
+				targetA.eq(i).closest('.chatFile-folder').append(sHtml);
+				targetA.eq(i).closest('strong').remove();
+			}
+		}
+		if(targetA.length==0){
+			window.Electron.openFileDir(url);
+		}
+		targetA.each(function(index){
+		});
+	}
+}
+function getFileUniqueNameFromAppElec(fileURL){
+	if(fileURL){
+		var aURM = fileURL.split('?attname=')[0];
+		var fileName = aURM.split('_');
+		var UniqueName = fileName[fileName.length-1];
+
+		return UniqueName;
+	}else{
+		return "";
+	}
+}
+function getFileUniqueNameFromPCElec(fileURL){
+	if(fileURL){
+		var UniqueName = fileURL.split('&uniquetime=')[1];
+		//var fileName = aURM.split('_');
+		//var UniqueName = fileName[fileName.length-1];
+		return UniqueName;
+	}else{
+		return "";
+	}
+}

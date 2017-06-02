@@ -120,7 +120,32 @@ function callajax(url, data, cb){
 //			}
 		},
 		error: function(msg){
-			alert(msg.status + ', ' + msg.responseText);
+			//alert(msg.status + ', ' + msg.responseText);
+		}
+	});
+}
+function callajaxGet(url, data, cb) {
+	$.ajax({
+		type: "GET",
+		url: path + url,
+		data: data,
+		datatype: 'json',
+		async: false,
+		success: function (msg) {
+			var ret = $.parseJSON(msg);
+			cb(ret);
+//			if (ret.status == 'ok') {
+//				cb(ret.data);
+//			}
+//			else if (ret.status == 'bad'){
+//				alert(ret.message);
+//			}
+//			else {
+//				alert(msg);
+//			}
+		},
+		error: function (msg) {
+			//alert(msg.status + ', ' + msg.responseText);
 		}
 	});
 }

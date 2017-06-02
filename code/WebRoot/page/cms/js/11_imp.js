@@ -7,6 +7,16 @@ var fields = ['email', 'telephone', 'position', 'manager', 'branch', 'sex', 'wor
 var groups = ['good', 'well', 'bad'];
 $(document).ready(function() {
 
+	//$('.downloadDemo').click(function() {
+	//	if (window.Electron) {
+	//		var url = $(this).attr('href');
+	//		var localPath = window.Electron.chkFileExists(url);
+	//		if(localPath){//本地有这个文件
+	//			window.Electron.openFileDir(url);
+	//			return false;
+	//		}
+	//	}
+	//})
 	$('.downloadDemo').click(function() {
 		if (window.Electron) {
 			var url = $(this).attr('href');

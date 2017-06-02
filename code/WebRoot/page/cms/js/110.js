@@ -56,15 +56,25 @@ function loadbranch(data) {
 	$('#branchintro').val(data.intro);
 }
 function cb_110_1(data) {
-	var selectNode = $('#tree11').find('.curSelectedNode').parent();
-	window.selectNodeIdLeft = selectNode.attr('id');
-	bootbox.alert({'title':'提示', 'message':'保存成功.', callback: function() {
-		$('#container').css('width', document.body.clientWidth + 'px');
-	}});
-	var treeObj = $.fn.zTree.getZTreeObj("tree11");
-	var nodes = treeObj.getSelectedNodes();
-	callajax("branch!getOrganTree", "", cb_11_tree);
-	//if(window.selectNodeIdLeft){
+	console.log(data);
+	if(data.branchid==0){
+		bootbox.alert({'title':'提示', 'message':'保存失败.', callback: function() {
+			$('#container').css('width', document.body.clientWidth + 'px');
+		}});
+	}else if(data.branchid==-1){
+		bootbox.alert({'title':'提示', 'message':'每个成员最多兼职5个部门，请更换部门领导', callback: function() {
+			$('#container').css('width', document.body.clientWidth + 'px');
+		}});
+	}else{
+		var selectNode = $('#tree11').find('.curSelectedNode').parent();
+		window.selectNodeIdLeft = selectNode.attr('id');
+		bootbox.alert({'title':'提示', 'message':'保存成功.', callback: function() {
+			$('#container').css('width', document.body.clientWidth + 'px');
+		}});
+		var treeObj = $.fn.zTree.getZTreeObj("tree11");
+		var nodes = treeObj.getSelectedNodes();
+		callajax("branch!getOrganTree", "", cb_11_tree);
+		//if(window.selectNodeIdLeft){
 		setTimeout(function(){
 			var treeObj = $.fn.zTree.getZTreeObj("tree11");
 			var node = treeObj.getNodeByTId(selectNodeIdLeft);
@@ -72,6 +82,8 @@ function cb_110_1(data) {
 			window.selectNodeIdLeft='';
 		},2000)
 
-	//}
+		//}
+	}
+
 
 }

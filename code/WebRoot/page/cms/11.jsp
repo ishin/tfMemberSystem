@@ -50,7 +50,12 @@
             		<li class="admadd addbranch">添加部门</li>
             		<li class="admadd addmember">添加人员</li>
             		<li class="admadd addbatch" style="padding-bottom: 5px">批量导入</li>
-            	</ul>
+					<%--<li class="admadd exportbatch" style="padding-bottom: 5px"><a>导出组织</a></li>--%>
+					<%--<li class="admadd exportmember" style="padding-bottom: 5px"><a>导出人员</a></li>--%>
+					<li class="admadd exportbatch" class="exportbatchaaa" style="padding-bottom: 5px">导出组织</li>
+					<li class="admadd exportmember" style="padding-bottom: 5px">导出人员</li>
+
+	</ul>
             </div>
 			
 		</div>

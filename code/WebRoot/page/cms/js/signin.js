@@ -57,9 +57,22 @@ window.onload = function(){
     window.clickFlag = true;
     $('.SendCheakCode').click(function(){
         //fSendCheakCode();
+        var phoneNum = $('#phoneNum').val();
+        if(!phoneNum){
+            new Window().alert({
+                title   : '',
+                content : '请输入手机号！',
+                hasCloseBtn : false,
+                hasImg : true,
+                textForSureBtn : false,
+                textForcancleBtn : false,
+                autoHide:true
+            });
+            return;
+        }
         if(clickFlag){
             var _this = $(this);
-            var phoneNum = $('#phoneNum').val();
+
             var isPhone = phoneNum.match(/^1[3|4|5|8][0-9]\d{4,8}$/)
             if(phoneNum&&isPhone){
                 sendAjax('system!requestText',{phone:phoneNum},function(){
@@ -73,14 +86,14 @@ window.onload = function(){
             }
         }
     })
-    $('.SendCheakCode').click(function(){
-        //fSendCheakCode();
-        var phoneNum = $('#phoneNum').val();
-        //var data = JSON.stringify({phoneNum:phoneNum});
-        sendAjax('system!requestText',{phone:phoneNum},function(){
-            console.log('验证码发送成功')
-        })
-    })
+    //$('.SendCheakCode').click(function(){
+    //    //fSendCheakCode();
+    //    var phoneNum = $('#phoneNum').val();
+    //    //var data = JSON.stringify({phoneNum:phoneNum});
+    //    sendAjax('system!requestText',{phone:phoneNum},function(){
+    //        console.log('验证码发送成功')
+    //    })
+    //})
 }
 
 
@@ -126,45 +139,85 @@ function countDown(curDom,clickFlag){
 function fToStep2(dom){
     var phoneNum = $('#phoneNum').val();
     var textcode = $('#checkCode').val();
-    //var data = JSON.stringify({'phone':phoneNum,textcode:textcode});
-    $('.sealtalk-forgetpassword').attr('account',phoneNum);
-    sendAjax('system!testText',{phone:phoneNum,textcode:textcode},function(data){
-        if(data){
-            var datas = JSON.parse(data);
-            if(datas.code=='1'){
-                fToNext(dom)
-            }else if(datas.code=='0'){
-                new Window().alert({
-                    title   : '',
-                    content : '验证码错误！',
-                    hasCloseBtn : false,
-                    hasImg : true,
-                    textForSureBtn : false,
-                    textForcancleBtn : false,
-                    autoHide:true
-                });
+    if(phoneNum&&textcode){
+        $('.sealtalk-forgetpassword').attr('account',phoneNum);
+        sendAjax('system!testText',{phone:phoneNum,textcode:textcode},function(data){
+            if(data){
+                var datas = JSON.parse(data);
+                if(datas.code=='1'){
+                    fToNext(dom)
+                }else if(datas.code=='0'){
+                    new Window().alert({
+                        title   : '',
+                        content : '验证码错误！',
+                        hasCloseBtn : false,
+                        hasImg : true,
+                        textForSureBtn : false,
+                        textForcancleBtn : false,
+                        autoHide:true
+                    });
+                }
             }
-        }
+        });
+    }else{
+        phoneNum?fn1():fn2();
+    }
+    //var data = JSON.stringify({'phone':phoneNum,textcode:textcode});
+
+}
+function fn1(){
+    new Window().alert({
+        title   : '',
+        content : '请输入验证码！',
+        hasCloseBtn : false,
+        hasImg : true,
+        textForSureBtn : false,
+        textForcancleBtn : false,
+        autoHide:true
+    });
+}
+function fn2(){
+    new Window().alert({
+        title   : '',
+        content : '请输入手机号！',
+        hasCloseBtn : false,
+        hasImg : true,
+        textForSureBtn : false,
+        textForcancleBtn : false,
+        autoHide:true
     });
 }
 function fToStep3(dom){
     var newpwd = $('#newpassword').val();
     var comparepwd = $('#newpasswordCertain').val();
-    var newPWD = hex_md5(newpwd);
-    var comparePWD = hex_md5(comparepwd);
-    if(newPWD!=comparePWD){
-        alert('两次密码不一致')
-    }else{
-        var account = $('.sealtalk-forgetpassword').attr('account');
-        sendAjax('system!newPassword',{newpwd:newPWD,comparepwd:comparePWD,account:account,type:'web'},function(data){
-            if(data){
-                var datas = JSON.parse(data);
-                if(datas.code=='1'){
-                    fToNext(dom)
+    if(newpwd&&comparepwd){
+        var newPWD = hex_md5(newpwd);
+        var comparePWD = hex_md5(comparepwd);
+        if(newPWD!=comparePWD){
+            alert('两次密码不一致')
+        }else{
+            var account = $('.sealtalk-forgetpassword').attr('account');
+            sendAjax('system!newPassword',{newpwd:newPWD,comparepwd:comparePWD,account:account,type:'web'},function(data){
+                if(data){
+                    var datas = JSON.parse(data);
+                    if(datas.code=='1'){
+                        fToNext(dom)
+                    }
                 }
-            }
+            });
+        }
+    }else{
+        new Window().alert({
+            title   : '',
+            content : '请输入密码！',
+            hasCloseBtn : false,
+            hasImg : true,
+            textForSureBtn : false,
+            textForcancleBtn : false,
+            autoHide:true
         });
     }
+
 
 
 
