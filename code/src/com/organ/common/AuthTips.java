@@ -12,6 +12,8 @@ public enum  AuthTips {
 	WORNGSECRET("Secret无效", "00007"),
 	NOTLOGIN("用户未登陆", "00008"),
 	INVALCOMPANYID("未指定公司", "00009"),
+	TIMEOUTAPPID("AppId失效,重新申请", "00010"),
+	TIMEOUTTOKEN("令牌失效,重新申请", "00010"),
 	
 	OK("OK", "10000"),
 	ERROR("error", "3000"),

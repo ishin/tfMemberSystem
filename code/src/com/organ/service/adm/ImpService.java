@@ -186,15 +186,21 @@ public class ImpService {
 			}
 			
 			// 如果人员已存在
-			else if (impDao.testExist()) {
+			else if (impDao.testMobileExist()) {
+				this.status = Constants.WELL;
+			}
+			else if (impDao.testWorkNoExist()) {
+				this.status = Constants.WELL;
+			}
+			else if (impDao.testEmailNoExist()) {
 				this.status = Constants.WELL;
 			}
 					
 			// 如果性别错
-			else if (!testSex()){
+			/*else if (!testSex()){
 				this.status = Constants.BAD;
 				this.user.setSex("##" + this.user.getSex());
-			}
+			}*/
 			
 			// 如果部门存在
 			else if (impDao.testBranch()){
@@ -231,7 +237,7 @@ public class ImpService {
 		if ("".equals(user.getMobile())
 				|| "".equals(this.user.getName())
 				|| "".equals(this.user.getWorkno())
-				|| "".equals(this.user.getSex())
+			//	|| "".equals(this.user.getSex())
 				|| "".equals(this.user.getBranch())
 				|| "".equals(this.user.getManager())) {
 
@@ -243,7 +249,7 @@ public class ImpService {
 	
 	private ImpUser rowToUser(Row row) {
 		
-		ImpUser user = new ImpUser();
+		ImpUser user = new ImpUser(); 
 
 		Cell cell = row.getCell(0);
 		user.setMobile(getCellValue(row.getCell(0)));

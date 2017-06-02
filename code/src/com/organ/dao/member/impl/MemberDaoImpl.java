@@ -100,9 +100,11 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		boolean status = true;
 
 		try {
-			executeUpdate(hql);
+			int rt = executeUpdate(hql);
+			if (rt == 0) {
+				status = false;
+			}
 		} catch (Exception e) {
-			status = false;
 			e.printStackTrace();
 		}
 
@@ -118,9 +120,11 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		boolean status = true;
 
 		try {
-			executeUpdate(hql);
+			int ret = executeUpdate(hql);
+			if (ret == 0) {
+				status = false;
+			}
 		} catch (Exception e) {
-			status = false;
 			e.printStackTrace();
 		}
 
@@ -160,8 +164,6 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 			
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 
-			System.out.println("getOneOfMember->hql :" + hql);
-
 			List list = query.list();
 
 			if (list != null) {
@@ -171,7 +173,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 				} else if (len > 1) {
 					Object[] ret = null;
 					for(int i = 0; i < len; i++) {
-						Object[] t = (Object[]) list.get(0);
+						Object[] t = (Object[]) list.get(i);
 						if (String.valueOf(t[19]).equals("1")) {
 							ret = t;
 							break;
@@ -257,6 +259,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("id", id));
+			ctr.add(Restrictions.eq("isDel", 1));
 
 			List<TMember> list = ctr.list();
 
@@ -305,14 +308,11 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 					+ "M.telephone,"
 					+ "M.email,"
 					+ "M.address,"
-					+ "M.token,"
-					+ "M.sex,"
 					+ "M.birthday,"
 					+ "M.workno,"
 					+ "M.mobile,"
-					+ "M.groupmax,"
-					+ "M.groupuse,"
 					+ "M.intro,"
+					+ "M.sex,"
 					+ "B.name BNAME,"
 					+ "P.name PNAME,"
 					+ "O.name ONAME,"
@@ -321,7 +321,7 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 					+ "left join t_branch B on BM.branch_id=B.id "
 					+ "left join t_position P on BM.position_id=P.id "
 					+ "inner join t_organ O on M.organ_id=O.id "
-					+ "where M.organ_id=" + organId
+					+ "where M.isdel=1 and M.organ_id=" + organId
 					+ " and M.account like '%" + account
 					+ "%' or M.fullname like '%" + account
 					+ "%' or M.pinyin like '%" + account
@@ -841,6 +841,28 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 			e.printStackTrace();
 		}
 		
+		return null;
+	}
+
+	@Override
+	public TMember getMemberByWorkNo(String memberWorkNo, int organId) {
+		try {
+
+			Criteria ctr = getCriteria();
+			ctr.add(Restrictions.eq("workno", memberWorkNo));
+			ctr.add(Restrictions.eq("organId", organId));
+			ctr.add(Restrictions.eq("isDel", 1));
+
+			List<TMember> list = ctr.list();
+
+			if (list.size() > 0) {
+				return (TMember) list.get(0);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return null;
 	}
 }

@@ -68,7 +68,7 @@ public class AppInfoConfigDaoImpl extends BaseDao<AppSecret, Long> implements
 		appSecret.setIsOpen(isopen);
 		appSecret.setSecert(secert);
 		appSecret.setOrganId(organId);
-		appSecret.setCreatetime(getDate());
+		
 		try {
 			save(appSecret);
 			// 保存以及权限

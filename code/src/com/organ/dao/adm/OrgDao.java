@@ -17,4 +17,5 @@ public interface OrgDao extends IBaseDao<TOrgan, Integer> {
 	public List getInfos(String soStr);
 	public List<TOrgan> getList();
 	public TOrgan getOrganByCode(String organCode);
+	public int getMaxNumber();
 }

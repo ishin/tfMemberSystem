@@ -34,7 +34,6 @@ import com.organ.utils.TimeGenerator;
 public class SystemAction extends BaseAction {
 	
 	private static final long serialVersionUID = -3901445181785461508L;
-	private static final String LOGIN_ERROR_MESSAGE = "loginErrorMsg";
 	private static final Logger logger = LogManager.getLogger(SystemAction.class);
 	
 	/**
@@ -210,11 +209,13 @@ public class SystemAction extends BaseAction {
 			if (dbCode == null || dbCode.equals("-1")) {
 				int codeBit = StringUtils.getInstance().strToInt(PropertiesUtils.getStringByKey("code.bit"));
 				code = String.valueOf(MathUtils.getInstance().getRandomSpecBit(codeBit));
-				context = code + endText;
+				context = endText + code;
 				memberService.saveTextCode(phone, code);
 			} else {
-				context = dbCode + endText;
+				context = endText + dbCode;
 			}
+			
+			logger.info("短信验证内容： " + context);
 			
 			//发送短信代码
 			String sendText = TextHttpSender.getInstance().sendText(phone, context);
@@ -224,7 +225,9 @@ public class SystemAction extends BaseAction {
 				text.put("text", Tips.SENDTEXTS.getText());
 			} else {
 				text.put("code", 0);
-				text.put("text", Tips.SENDERR.getText());
+				//text.put("text", Tips.SENDERR.getText());
+				text.put("text", TextHttpSender.getInstance().code.get(sendText));
+				text.put("textcode", sendText);
 			}
 		} else {
 			text.put("code", 0);
@@ -259,7 +262,7 @@ public class SystemAction extends BaseAction {
 			//if(textcode.equals("111111")) {
 				text.put("code", 1);
 				text.put("text", Tips.TRUETEXTS.getText());
-			} else {
+			} else {	
 				text.put("code", 0);
 				text.put("text", Tips.FAIL.getText());
 			}
@@ -328,24 +331,24 @@ public class SystemAction extends BaseAction {
 			}
 		} else {
 			String type = this.request.getParameter("type");
-			if (type == null || !type.equalsIgnoreCase("web")) {
-				phone = account;
-			}
+			if (StringUtils.getInstance().isBlank(type) || !type.equalsIgnoreCase("web")) {
 			
-			if (!StringUtils.getInstance().isBlank(textcode)) {
-				String dbCode = memberService.getTextCode(phone);
-	
-				if (dbCode != null && !dbCode.equals("-1") && dbCode.equals(textcode)) {
-					text.put("code", 1);
-					text.put("text", Tips.TRUETEXTS.getText());
+				if (!StringUtils.getInstance().isBlank(textcode)) {
+					String dbCode = memberService.getTextCode(account);
+		
+					if (dbCode != null && !dbCode.equals("-1") && dbCode.equals(textcode)) {
+						text.put("code", 1);
+						text.put("text", Tips.TRUETEXTS.getText());
+					} else {
+						status = false;
+						text.put("code", 0);
+						text.put("text", Tips.ERRORTEXTS.getText());
+					}
 				} else {
-					text.put("code", 0);
-					text.put("text", Tips.FAIL.getText());
+					status = false;
+					text.put("code", -1);
+					text.put("text", Tips.NULLTEXTS.getText());
 				}
-			} else {
-				status = false;
-				text.put("code", -1);
-				text.put("text", Tips.NULLTEXTS.getText());
 			}
 		}
 		
@@ -363,7 +366,7 @@ public class SystemAction extends BaseAction {
 				if (flag == 1) {
 					updateState = memberService.updateUserPwdForAccount(account, newpwd, organId);
 				} else {
-					updateState = memberService.updateUserPwdForPhone(phone, newpwd);
+					updateState = memberService.updateUserPwdForPhone(account, newpwd);
 				}
 				
 				if (updateState == true) {

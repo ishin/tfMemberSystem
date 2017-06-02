@@ -23,28 +23,6 @@ public class AppSecretAction extends BaseAction {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * 获取appid和secret
-	 * @return
-	 * @throws ServletException
-	 */
-	public String getAppIDAndSecret() throws ServletException {
-		String result = appSecretService.getAppIDAndSecret();
-		returnToClient(result);
-		return "text";
-	}
-	
-	/**
-	 * 设置auth2登陆基本信息
-	 * @return
-	 * @throws ServletException
-	 */
-	public String setAppIDAndSecretAndUrl() throws ServletException {
-		String result = appSecretService.setAppIDAndSecretAndUrl(clearChar(appName), clearChar(appId), clearChar(secret), clearChar(url), clearChar(isOpen));
-		returnToClient(result);
-		return "text";
-	}
-	
-	/**
 	 * 场景一取临时令牌
 	 * @return
 	 * @throws ServletException

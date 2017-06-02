@@ -132,13 +132,20 @@ public class BranchMemberDaoImpl extends BaseDao<TBranchMember, Integer>
 
 	@Override
 	public boolean getMasterMemberById(int memberId) {
-		String hql = (new StringBuilder("from TBranchMember where memberId=").append(memberId).append(" and isMaster='1'")).toString();
+		String hql = (new StringBuilder("from TBranchMember where memberId=").append(memberId).append(" and isMaster='1'").append(" and isDel='1'")).toString();
 		List list = find(hql);
 		
 		if (list != null && list.size() > 0) {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public int getBranchMemberCountByMember(int memberId) {
+		String hql = (new StringBuilder("from TBranchMember where memberId=").append(memberId).append(" and isDel='1'")).toString();
+		int count = count(hql);
+		return count;
 	}
 
 }

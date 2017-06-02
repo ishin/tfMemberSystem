@@ -30,92 +30,6 @@ public class AppSecretServiceImpl implements AppSecretService {
 	private static final Logger logger = LogManager.getLogger(AppSecretServiceImpl.class);
 
 	@Override
-	@Deprecated
-	public String getAppIDAndSecret() {
-		JSONObject jo = new JSONObject();
-		ArrayList<String> as = null;
-
-		try {
-			as = makeAppId();
-			String code = "200";
-			String text = "";
-
-			if (as != null) {
-				JSONObject jo1 = new JSONObject();
-				jo1.put("appid", as.get(0));
-				jo1.put("secret", as.get(1));
-				text = jo1.toString();
-			} else {
-				code = "500";
-				text = AuthTips.WORNGMAKEAS.getText();
-			}
-			jo.put("code", code);
-			jo.put("text", text);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
-		}
-
-		return jo.toString();
-	}
-
-	@Override
-	@Deprecated
-	public String setAppIDAndSecretAndUrl(String appName, String appId,
-			String secret, String url, String isOpen) {
-		JSONObject jo = new JSONObject();
-		String code = null;
-		String text = null;
-
-		try {
-			if (StringUtils.getInstance().isBlank(appName)
-					|| StringUtils.getInstance().isBlank(appId)
-					|| StringUtils.getInstance().isBlank(secret)
-					|| StringUtils.getInstance().isBlank(url)
-					|| StringUtils.getInstance().isBlank(isOpen)) {
-				code = "500";
-				text = AuthTips.WORNGPARAM.getText();
-			} else {
-				long valideTime = 0;
-				long now = TimeGenerator.getInstance().getUnixTime();
-
-				String authTime = PropertiesUtils
-						.getStringByKey("auth.appidtime");
-
-				if (!StringUtils.getInstance().isBlank(authTime)) {
-					if (!authTime.toLowerCase().equals("max")) {
-						valideTime = Long.parseLong(authTime);
-						valideTime += now;
-					} else {
-						valideTime = -1;
-					}
-				}
-
-				AppSecret as = new AppSecret();
-				as.setAppId(appId);
-				as.setSecert(secret);
-				as.setCallBackUrl(url);
-				as.setAppTime(valideTime);
-				as.setAppName(appName);
-				as.setIsOpen(Integer.parseInt(isOpen));
-
-				appSecretDao.setAppIDAndSecretAndUrl(as);
-				code = "200";
-				text = AuthTips.OK.getText();
-			}
-			jo.put("code", code);
-			jo.put("text", text);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
-			code = "500";
-			text = AuthTips.ERROR.getText();
-		}
-
-		return jo.toString();
-	}
-
-	@Override
 	public JSONObject getTempTokenSceneOne(String appId) {
 		JSONObject jo = new JSONObject();
 		String code = "500";
@@ -139,41 +53,34 @@ public class AppSecretServiceImpl implements AppSecretService {
 					if (!dbAppId.equals(appId)) {
 						text = AuthTips.INVALIDAPPID.getText();
 					} else {
-						long appTime = as.getAppTime();
+						// 生成临时令牌
+						long tokenTimeL = 0;
+						String tokenTime = PropertiesUtils
+								.getStringByKey("auth.unauthtime");
 
-						// appid已超时，-1表示无时效限制
-						if (appTime != -1 && now >= appTime) {
-							text = AuthTips.INVALIDAPPID.getText();
-						} else {
-							// 生成临时令牌
-							long tokenTimeL = 0;
-							String tokenTime = PropertiesUtils
-									.getStringByKey("auth.unauthtime");
-
-							if (tokenTime != null) {
-								tokenTimeL = Long.parseLong(tokenTime);
-							}
-							long tokenValidTime = now + tokenTimeL;
-
-							appId += tokenValidTime;
-
-							String unAuthToken = makeCode(appId);
-
-							int id = as.getId();
-							UserValid uv = userValidDao.getUserValidByAsId(id);
-							
-							if (uv == null) {
-								uv = new UserValid();
-								uv.setAsid(as.getId());
-							} 
-							uv.setUnAuthToken(unAuthToken);
-							uv.setUnAuthTokenTime(tokenValidTime);
-							uv.setIsDel("1");
-							userValidDao.setUnAuthToken(uv);
-
-							code = "200";
-							text = unAuthToken;
+						if (tokenTime != null) {
+							tokenTimeL = Long.parseLong(tokenTime);
 						}
+						long tokenValidTime = now + tokenTimeL;
+
+						appId += tokenValidTime;
+
+						String unAuthToken = makeCode(appId);
+
+						int id = as.getId();
+						UserValid uv = userValidDao.getUserValidByAsId(id);
+						
+						if (uv == null) {
+							uv = new UserValid();
+							uv.setAsid(as.getId());
+						} 
+						uv.setUnAuthToken(unAuthToken);
+						uv.setUnAuthTokenTime(tokenValidTime);
+						uv.setIsDel("1");
+						userValidDao.setUnAuthToken(uv);
+
+						code = "200";
+						text = unAuthToken;
 					}
 				}
 			}
@@ -222,7 +129,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 							long unAuthTokenTime = uv.getUnAuthTokenTime();
 
 							if (now >= unAuthTokenTime) {
-								text = AuthTips.INVALTOKEN.getText();
+								text = AuthTips.TIMEOUTTOKEN.getText();
 							} else {
 								int organId = as.getOrganId();
 								TMember tm = memberDao.searchSigleUser(
@@ -303,7 +210,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 							long authTokenTimeDB = uv.getAuthTokenTime();
 
 							if (now >= authTokenTimeDB) {
-								text = AuthTips.INVALTOKEN.getText();
+								text = AuthTips.TIMEOUTTOKEN.getText();
 							} else {
 								long realTokenTimeL = 0;
 								String realTokenTime = PropertiesUtils
@@ -357,7 +264,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 					long visitTokenTime = as.getVisitTokenTime();
 
 					if (now >= visitTokenTime) {
-						text = AuthTips.INVALTOKEN.getText();
+						text = AuthTips.TIMEOUTTOKEN.getText();
 					} else {
 						int userId = as.getUserId();
 						int info = as.getInfo();
@@ -430,7 +337,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 							long unAuthTokenTime = uv.getUnAuthTokenTime();
 
 							if (now >= unAuthTokenTime) {
-								text = AuthTips.INVALTOKEN.getText();
+								text = AuthTips.TIMEOUTTOKEN.getText();
 							} else {
 								long authTokenTimeL = 0;
 								String authTokenTime = PropertiesUtils
@@ -504,7 +411,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 							long unAuthTokenTime = uv.getUnAuthTokenTime();
 
 							if (now >= unAuthTokenTime) {
-								text = AuthTips.INVALTOKEN.getText();
+								text = AuthTips.TIMEOUTTOKEN.getText();
 							} else {
 								long authTokenTimeL = 0;
 								String authTokenTime = PropertiesUtils

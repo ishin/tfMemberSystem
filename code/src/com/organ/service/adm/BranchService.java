@@ -35,7 +35,7 @@ public interface BranchService {
 	/*
 	 * 取人员通过人员id
 	 */
-	public String getMemberById(Integer memberId);
+	public String getMemberById(String id);
 	public List getMemberBranchById(Integer memberId);
 	public TMember getMemberByAccount(String account, int organId);
 	public TBranch getBranchByName(String name, int organId);	
@@ -123,5 +123,8 @@ public interface BranchService {
 	public boolean getMasterMemberById(int memberId);
 	public String getMembersByOrgan(int organId);
 	public int getNoGroupBranch(Integer organId);
+	public int getBranchMemberCountByMember(int memberId);
+	public TMember getMemberByWorkNo(String memberWorkNo, int organId);
+	public String exportsBranch(int organId, String realPath);
 	
 }

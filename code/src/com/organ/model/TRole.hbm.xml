@@ -19,5 +19,8 @@
         <property name="organId" type="java.lang.Integer">
             <column name="organid" not-null="true" />
         </property>
+        <property name="roleLevel" type="java.lang.String">
+            <column name="rolelevel" not-null="true" length="1" />
+        </property>
     </class>
 </hibernate-mapping>

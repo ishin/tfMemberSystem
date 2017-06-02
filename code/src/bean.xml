@@ -7,7 +7,7 @@
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-	<!-- dao -->
+	
 	<bean id="appSecretDao" class="com.organ.dao.auth.impl.AppSecretDaoImpl" autowire="byName" />
 	<bean id="memberDao" class="com.organ.dao.member.impl.MemberDaoImpl" autowire="byName" />
 	<bean id="memberRoleDaoImpl" class="com.organ.dao.adm.impl.MemberRoleDaoImpl" autowire="byName" />
@@ -25,10 +25,10 @@
 	<bean id="userValidDao" class="com.organ.dao.auth.impl.UserValidDaoImpl" autowire="byName" />
 	<bean id="memberRoleDao" class="com.organ.dao.adm.impl.MemberRoleDaoImpl" autowire="byName" />
 	<bean id="cutLogoTempDao" class="com.organ.dao.upload.impl.CutLogoTempDaoImpl" autowire="byName" />
-	
 	<bean id="roleappsecretDao" class="com.organ.dao.limit.impl.RoleAppSecretDaoImpl" autowire="byName" />
 	
-	<!-- service -->
+	
+	
 	<bean id="appSecretService" class="com.organ.service.auth.impl.AppSecretServiceImpl" autowire="byName" >
 		<property name="appSecretDao" ref="appSecretDao" />
 		<property name="memberDao" ref="memberDao" />
@@ -95,7 +95,8 @@
 		<property name="memberDao" ref="memberDao" />
 	</bean>
 	
-	<!-- action -->
+	
+	
 	<bean id="appSecretAction" class="com.organ.action.auth.AppSecretAction" scope="prototype" autowire="byName" >
 		<property name="appSecretService" ref="appSecretService" />
 	</bean>

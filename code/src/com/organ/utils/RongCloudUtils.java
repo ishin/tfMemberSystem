@@ -148,20 +148,19 @@ public class RongCloudUtils {
 	 * @return
 	 */
 	public String checkOnLine(String userId) {
-		JSONObject jo = new JSONObject();
-
+		
 		try {
 			if (rongCloud == null) {
 				this.init();
 			}
+			
 			CheckOnlineReslut checkOnlineReslut = rongCloud.user
 					.checkOnline(userId);
 			return checkOnlineReslut.getStatus();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return jo.toString();
+		return null;
 	}
 
 	/**

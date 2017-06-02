@@ -34,14 +34,4 @@ public class PrivDaoImpl extends BaseDao<TPriv, Integer> implements PrivDao {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	@Deprecated
-	public List<TPriv> getAllPriv() {
-		String sql = (new StringBuilder("from TPriv t order by t.parentId asc")).toString();
-		Query query = this.getSession().createQuery(sql);
-		List<TPriv> list = query.list();
-		return list;
-	}
-
 }

@@ -54,11 +54,30 @@ public class ImpDao {
 		return !list.isEmpty();
 	}
 	
-	public boolean testExist() throws HibernateException{
+	public boolean testMobileExist() throws HibernateException{
 		
 		String sql = "select * from t_member"
-				+ " where mobile ='" + user.getMobile() + "'"
-				+ " and fullname ='" + user.getName() + "'";
+				+ " where mobile ='" + user.getMobile() + "'";
+		
+		List list = runSql(sql);
+		
+		return !list.isEmpty();
+	}
+	
+	public boolean testWorkNoExist() throws HibernateException{
+		
+		String sql = "select * from t_member"
+			+ " where workno ='" + user.getWorkno() + "'";
+		
+		List list = runSql(sql);
+		
+		return !list.isEmpty();
+	}
+
+	public boolean testEmailNoExist() throws HibernateException{
+		
+		String sql = "select * from t_member"
+			+ " where email ='" + user.getEmail() + "'";
 		
 		List list = runSql(sql);
 		

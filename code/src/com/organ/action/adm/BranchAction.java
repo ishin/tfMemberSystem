@@ -1,12 +1,19 @@
 package com.organ.action.adm;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -14,7 +21,6 @@ import net.sf.json.JSONObject;
 import com.organ.common.AuthTips;
 import com.organ.common.BaseAction;
 import com.organ.common.Tips;
-import com.organ.dao.adm.OrgDao;
 import com.organ.model.AppSecret;
 import com.organ.model.TBranch;
 import com.organ.model.TBranchMember;
@@ -40,6 +46,7 @@ import com.organ.utils.TimeGenerator;
 public class BranchAction extends BaseAction {
 
 	private static final long serialVersionUID = 1L;
+	private Logger logger = LogManager.getLogger(BranchAction.class);
 		
 	/*
 	 * 取部门树
@@ -109,15 +116,18 @@ public class BranchAction extends BaseAction {
 	 * by alopex
 	 */
 	public String getMemberById() throws ServletException {
-		
-		String memberId = clearChar(this.request.getParameter("id"));
-		
-		String result = branchService.getMemberById(Integer.valueOf(memberId));
+		String id = this.request.getParameter("id");
+		String result = branchService.getMemberById(id);
 		returnToClient(result);
-		
 		return "text";
 	}
 
+	public String getSuperAdmin() throws ServletException {
+		int organId = getSessionUserOrganId();
+		returnToClient(branchService.getSuperMember(organId));
+		return "text";
+	}
+	
 	/*
 	 * 取部门人员通过id
 	 * by alopex
@@ -225,7 +235,6 @@ public class BranchAction extends BaseAction {
 		
 		int organId = getSessionUserOrganId();
 		int memberId = Integer.parseInt(branchManagerId);
-		boolean status = true;
 		
 		if (id != null) {
 			branch = branchService.getBranchObjectById(Integer.parseInt(id));
@@ -244,7 +253,6 @@ public class BranchAction extends BaseAction {
 				returnToClient(jo.toString());
 				return "text";
 			}
-			status = false;
 			branch = new TBranch();
 			branch.setListorder(0);
 			branch.setIsDel("1");
@@ -269,24 +277,32 @@ public class BranchAction extends BaseAction {
 
 		branch.setOrganId(this.getOrganId());
 		
-		Integer branchId = branchService.saveBranch(branch);
-		
-		if (!status) {
-			//增加管理者
-			TBranchMember branchMember = new TBranchMember();
-			boolean b = branchService.getMasterMemberById(memberId);
-			branchMember.setMemberId(memberId);
-			branchMember.setBranchId(branchId);
-			
-			branchMember.setIsMaster(!b ? "1" : "0");
-			branchMember.setPositionId(0);
-			branchMember.setListorder(0);
-			branchMember.setIsDel("1");
-			branchService.saveBranchMember(branchMember);
-		}
-		
 		JSONObject jo = new JSONObject();
-		jo.put("branchid", branchId);
+		int branchLeaderCount = branchService.getBranchMemberCountByMember(memberId);
+		
+		if (branchLeaderCount < 5) {
+			Integer branchId = branchService.saveBranch(branch);
+			
+			//增加管理者
+			TBranchMember tb = branchService.getBranchMemberByBranchMember(branchId, memberId);
+			
+			if (tb == null) {
+				TBranchMember branchMember = new TBranchMember();
+				boolean b = branchService.getMasterMemberById(memberId);
+				branchMember.setMemberId(memberId);
+				branchMember.setBranchId(branchId);
+				
+				branchMember.setIsMaster(!b ? "1" : "0");
+				branchMember.setPositionId(0);
+				branchMember.setListorder(0);
+				branchMember.setIsDel("1");
+				branchService.saveBranchMember(branchMember);
+			}
+			
+			jo.put("branchid", branchId);
+		} else {
+			jo.put("branchid", -1);
+		}
 		
 		if (appId == null && secret == null) {
 			returnToClient(jo.toString());
@@ -354,6 +370,14 @@ public class BranchAction extends BaseAction {
 					return "text";
 				}
 			}
+			if (!member.getWorkno().equalsIgnoreCase(memberWorkNo)) {
+				if (branchService.getMemberByWorkNo(memberWorkNo, organId) != null) {
+					JSONObject jo1 = new JSONObject();
+					jo1.put("memberid", -2);
+					returnToClient(jo1.toString());
+					return "text";
+				}
+			}
 		} else {
 			if (branchService.getMemberByAccount(memberAccount, organId) != null) {
 				JSONObject jo1 = new JSONObject();
@@ -370,6 +394,12 @@ public class BranchAction extends BaseAction {
 			if (!StringUtils.getInstance().isBlank(memberMail) && branchService.getMemberByEmail(memberMail) != null) {
 				JSONObject jo1 = new JSONObject();
 				jo1.put("memberid", -2);
+				returnToClient(jo1.toString());
+				return "text";
+			}
+			if (!StringUtils.getInstance().isBlank(memberWorkNo) && branchService.getMemberByWorkNo(memberWorkNo, organId) != null) {
+				JSONObject jo1 = new JSONObject();
+				jo1.put("memberid", -3);
 				returnToClient(jo1.toString());
 				return "text";
 			}
@@ -471,6 +501,7 @@ public class BranchAction extends BaseAction {
 		//发短信
 		if (sms) {
 			String msg = "您的IMS产品帐号" + member.getAccount() + ", 密码111111.";
+			logger.info("短信验证内容： " + msg);
 			TextHttpSender.getInstance().sendText(member.getMobile(), msg);
 		}
 		
@@ -603,7 +634,11 @@ public class BranchAction extends BaseAction {
 			//branchService.delMember(id);
 			//逻辑删除
 			String ids = "["+id+"]";
-			memberService.logicDelMemberByUserIds(ids);
+			String ret = memberService.logicDelMemberByUserIds(ids);
+			/*JSONObject j = JSONUtils.getInstance().stringToObj(ret);
+			if (j.getInt("code") == 1) {
+				jo.put("status", true);
+			}*/
 			jo.put("status", true);
 		}
 		
@@ -763,6 +798,29 @@ public class BranchAction extends BaseAction {
 		return "text";
 	}
 	
+	public String exportsBranch() throws ServletException, FileNotFoundException {
+		int organId = getSessionUserOrganId();
+		String realPath = request.getSession().getServletContext().getRealPath("/");  
+		String downFileName = branchService.exportsBranch(organId, realPath);
+		
+		if (downFileName != null) {
+			this.setFileName(downFileName);
+			inputStream = new FileInputStream(new File(realPath + "exports/" + downFileName)); 
+			return "down";
+		} else {
+			JSONObject jo = new JSONObject();
+			jo.put("code", 0);
+			jo.put("text", Tips.FAIL.getText());
+			returnToClient(jo.toString());
+			return "text";
+		}
+	}
+	
+	//文件下载
+	public InputStream getInputStream() {
+		return inputStream;
+	}
+	
 	private BranchService branchService;
 	private MessageService msgService;
 	private MemberService memberService;
@@ -788,7 +846,21 @@ public class BranchAction extends BaseAction {
 	private String appId;
 	private String secret;
 	private String companyId;
+	private String fileName;
+	private InputStream inputStream;
 	
+	public void setInputStream(InputStream inputStream) {
+		this.inputStream = inputStream;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
 	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
 	}

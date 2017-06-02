@@ -221,4 +221,6 @@ public interface MemberService {
 	public String logicDelMemberByUserIds(String userids);
 
 	public void updateBySql(int organId, String address);
+
+	public String exportsMember(int organId, String realPath);
 }

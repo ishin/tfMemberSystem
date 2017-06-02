@@ -30,7 +30,7 @@ USE `organ`;
 
 CREATE TABLE `t_organ` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `code` VARCHAR(256),
+  `code` VARCHAR(6),
   `name` VARCHAR(256),
   `shortname` VARCHAR(256),
   `englishname` VARCHAR(256),
@@ -145,6 +145,7 @@ CREATE TABLE `t_role` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(256),
   `organid` int not null default 0,	
+  `rolelevel` char(1) not null default 0,
   `listorder` INT NOT NULL DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
