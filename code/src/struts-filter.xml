@@ -35,7 +35,7 @@
 						httpUploadAb,sendSysMsg,sendPrivateMsg,sendGrayMsg,logicDelMemberByUserIds,getMembersByOrganAb,
 						getTempTokenSceneOne,getTempTokenSceneTwo,redirectLogin,reqAuthorizeOne,reqAuthorizeTwo,reqAuthorizeTwoForApp,getRealToken,getAuthResource,
 						getAuthResourceAb,getRealTokenAb,reqAuthorizeTwoForAppAb,reqAuthorizeTwoAb,reqAuthorizeOneAb,getTempTokenSceneOneAb,
-						jumpRegistPage
+						jumpRegistPage,getProvince,getCity,getDistrict,getInward,getIndustry,getSubdustry
 					</param>
 					<!-- <param name="includeMethods"></param> -->
 				</interceptor-ref>

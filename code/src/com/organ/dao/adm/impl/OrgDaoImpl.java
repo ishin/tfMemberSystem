@@ -107,7 +107,7 @@ public class OrgDaoImpl extends BaseDao<TOrgan, Integer> implements OrgDao {
 		try {
 			String hql = "select Max(listorder) from t_organ";
 			List list = runSql(hql);
-			if (list != null && list.size() > 0) {
+			if (list != null && list.size() > 0 && list.get(0) != null) {
 				return Integer.parseInt(String.valueOf(list.get(0)));
 			}
 		} catch (Exception e) {

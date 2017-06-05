@@ -650,6 +650,7 @@ public class BranchServiceImpl implements BranchService {
 		while(it.hasNext()) {
 			ImpUser user = it.next();
 			TBranch br = this.getBranchByName(user.getBranch(),organId);
+			int mar = 0;
 			if (br == null) {
 				br = new TBranch();
 				br.setName(user.getBranch());
@@ -663,10 +664,12 @@ public class BranchServiceImpl implements BranchService {
 				}
 				else {
 					br.setManagerId(m.getId());
+					mar = m.getId();
 				}
 				br.setListorder(0);
 				branchDao.save(br);
-			}
+			} 
+			user.setManager(String.valueOf(mar));
 			user.setBranchId(br.getId());
 		}
 		
@@ -697,6 +700,20 @@ public class BranchServiceImpl implements BranchService {
 			bm.setListorder(0);
 			bm.setIsDel("1");
 			branchMemberDao.save(bm);
+			if (!user.getManager().equals("0")) {
+				int id = Integer.parseInt(user.getManager());
+				TBranchMember tbm = branchMemberDao.getBranchMemberByBranchMember(user.getBranchId(), id);
+				if (tbm == null) {
+					TBranchMember bm1 = new TBranchMember();
+					bm1.setBranchId(user.getBranchId());
+					bm1.setMemberId(id);
+					bm1.setPositionId(0);
+					bm1.setIsMaster("0");
+					bm1.setListorder(0);
+					bm1.setIsDel("1");
+					branchMemberDao.save(bm1);
+				}
+			}
 		}		
 		
 	}
@@ -1291,6 +1308,10 @@ public class BranchServiceImpl implements BranchService {
 		return null;
 	}
 
+	@Override
+	public TMember getSuperManager(int organId) {
+		return memberDao.getSuperMember(organId);
+	}
 	
 	@Override
 	public TMember getMemberByWorkNo(String memberWorkNo, int organId) {

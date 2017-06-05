@@ -161,7 +161,7 @@ public class OrgServiceImpl implements OrgService {
 	public String registOrgan(TOrgan organ) {
 		String priv = PropertiesUtils.getStringByKey("organ.priv");
 		String code = priv + PinyinGenerator.getPinYinHeadChar(organ.getName());
-		int maxNumber =orgDao.getMaxNumber();
+		int maxNumber = orgDao.getMaxNumber();
 		maxNumber++;
 		code += StringUtils.getInstance().addZero(maxNumber, 5);
 		String ret = null;

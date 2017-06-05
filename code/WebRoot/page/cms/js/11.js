@@ -484,7 +484,7 @@ var setting11 = {
 		},
 		beforeDrop: function(treeId, treeNodes, targetNode, moveType, isCopy) {
 
-			if (targetNode.flag == 2) return false;
+			if (targetNode.flag == 2 || targetNode.flag == 0) return false;
 
 			var data = {id: treeNodes[0].id, pid: treeNodes[0].pid, toid: targetNode.id};
 			callajax('branch!mov', data, function(data) {

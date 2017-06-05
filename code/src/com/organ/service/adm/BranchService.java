@@ -126,5 +126,6 @@ public interface BranchService {
 	public int getBranchMemberCountByMember(int memberId);
 	public TMember getMemberByWorkNo(String memberWorkNo, int organId);
 	public String exportsBranch(int organId, String realPath);
+	public TMember getSuperManager(int organId);
 	
 }

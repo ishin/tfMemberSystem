@@ -1,7 +1,5 @@
 package com.organ.action.adm;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -631,16 +629,22 @@ public class BranchAction extends BaseAction {
 		}
 		// 删除人员
 		else {
+			int organId = getSessionUserOrganId();
 			//物理删除
 			//branchService.delMember(id);
 			//逻辑删除
-			String ids = "["+id+"]";
-			String ret = memberService.logicDelMemberByUserIds(ids);
-			/*JSONObject j = JSONUtils.getInstance().stringToObj(ret);
-			if (j.getInt("code") == 1) {
+			TMember superManager = branchService.getSuperManager(organId);
+			if (String.valueOf(superManager.getId()).equals(id+"")) {
+				jo.put("status", false);
+			} else {
+				String ids = "["+id+"]";
+				String ret = memberService.logicDelMemberByUserIds(ids);
+				/*JSONObject j = JSONUtils.getInstance().stringToObj(ret);
+				if (j.getInt("code") == 1) {
+					jo.put("status", true);
+				}*/
 				jo.put("status", true);
-			}*/
-			jo.put("status", true);
+			}
 		}
 		
 		jo.put("id", id);
@@ -653,7 +657,7 @@ public class BranchAction extends BaseAction {
 	}
 
 	public String mov() throws ServletException {
-		
+		int organId = getSessionUserOrganId();
 		Integer id = Integer.parseInt(clearChar(this.request.getParameter("id")));
 		Integer pid = Integer.parseInt(clearChar(this.request.getParameter("pid")));
 		Integer toid = Integer.parseInt(clearChar(this.request.getParameter("toid")));
@@ -667,7 +671,10 @@ public class BranchAction extends BaseAction {
 		}
 		// 移动人员
 		else {
-			branchService.movMember(id, pid, toid);
+			if (organId != toid) {
+				branchService.movMember(id, pid, toid);
+				id = -1;
+			}
 		}
 		JSONObject jo = new JSONObject();
 		jo.put("id", id);
