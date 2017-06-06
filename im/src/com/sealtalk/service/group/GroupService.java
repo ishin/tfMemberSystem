@@ -82,7 +82,7 @@ public interface GroupService {
 	 * @param groupids
 	 * @return
 	 */
-	public String manageGroupMem(String groupid, String groupids);
+	public String manageGroupMem(String groupid, String opeaUserId, String groupids);
 
 	/**
 	 * 查看群信息

@@ -136,20 +136,32 @@ function jumpToBack(fresh){
 }
 //memShip表示与此操作相关的人员account
 function fshowContexMenu(arr,style,id,memShip,targettype,bTopHas,eTarget){
-
+    var curGroup = groupInfoFromList(memShip);
     var listHTML = '';
     for(var i = 0;i<arr.length;i++){
         var limit = $('body').attr('limit');
+        if(arr[i].limit=='znsqz'){
+            if(parseInt(curGroup.mid)==parseInt(accountID)){
+                listHTML+='<li>'+arr[i].value+'</li>'
+            }else{
+                listHTML+='<li displaylimit="false">'+arr[i].value+'</li>'
+            }
+            continue;
+        }
         if(arr[i].limit!=''&&limit.indexOf(arr[i].limit)==-1){
             listHTML+='<li displaylimit="false">'+arr[i].value+'</li>'
         }else{
             if(i==0 || i==5){
                 if(bTopHas){
+                    //if(curGroup.mid!=accountID){
+                    //    listHTML+='<li displaylimit="false">'+arr[i].value+'</li>'
+                    //}
                     listHTML+='<li data-top="1">'+arr[i].value+'</li>'
                 }else{
                     listHTML+='<li data-top="0">'+arr[i].value+'</li>'
                 }
             }else{
+               
                 listHTML+='<li>'+arr[i].value+'</li>'
             }
 

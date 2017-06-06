@@ -84,20 +84,22 @@ public class FriendServiceImpl implements FriendService {
 					if (ja != null && ja.size() > 0) {
 						int len = ja.size();
 						ArrayList<Integer> ids = new ArrayList<Integer>();
-						StringBuilder sb = new StringBuilder();
+						//StringBuilder sb = new StringBuilder();
+						String addName = "";
 						int id = 0;
 						
 						for(int i = 0; i < len; i++) {
 							JSONObject t = ja.getJSONObject(i);
-							sb.append(t.getString("name"));
+							//sb.append(t.getString("name"));
 							if (t.getString("account").equals(account)) {
 								id = t.getInt("id");
+								addName = t.getString("name");
 							} else {
 								ids.add(t.getInt("id"));
 							}
-							if (i < len - 1) {
+							/*if (i < len - 1) {
 								sb.append(",");
-							}
+							}*/
 						}
 						if (ids.size() > 0) {
 							Integer[] fIds = new Integer[ids.size()];
@@ -114,7 +116,7 @@ public class FriendServiceImpl implements FriendService {
 							jo.put("code", 1);
 							jo.put("text", Tips.SUCADDFRIEND.getText());
 							String msg = "建立好友关系，现在可以开始聊天";
-							String extrMsg = sb.toString();
+							String extrMsg = addName;
 							RongCloudUtils.getInstance().sendPrivateMsg(id + "",
 									targetIds, msg, extrMsg, "", "4", "0", "0", "0",
 									"2");

@@ -654,9 +654,10 @@ span.defaultText{
 }
 
 .organizationList{
-    padding: 19px 10px 19px 10px;
     overflow: scroll;
     height: calc(100% - 100px);
+    padding-top: 19px;
+    padding-left: 19px;
 }
 
 .organizationList li .groupImg{
@@ -673,6 +674,7 @@ span.defaultText{
     float: left;
     line-height: 44px;
     text-indent: 8px;
+    max-width: 70px;
 }
 .organizationList li .positionName{
     display: inline-block;
@@ -680,6 +682,7 @@ span.defaultText{
     float: left;
     line-height: 44px;
     text-indent: 8px;
+    max-width: 80px;
 }
 .organizationList li {
     cursor: pointer;
@@ -702,22 +705,24 @@ span.defaultText{
     top: 1px;
 }
 .groupCollspanO{
-    float: right;
+    float: left;
     height: 20px;
-    width: 20px;
+    width: 19px;
     display: inline-block;
     /* background: red; */
     margin-top: 10px;
     background-position: -206px -339px;
+    margin-left: 10px;
 }
 .groupCollspanC{
-    float: right;
+    float: left;
     height: 20px;
     width: 20px;
     display: inline-block;
     /* background: red; */
     margin-top: 10px;
     background-position: -206px -373px;
+    margin-left: 10px;
 }
 .BreadcrumbsOuter{
     width: 100%;

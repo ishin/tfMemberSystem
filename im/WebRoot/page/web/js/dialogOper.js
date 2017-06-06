@@ -51,7 +51,7 @@ $(function(){
         var _this = $(this);
         _this.on('input',function(){
                 $('.contactSearchResult').remove();
-                var keyWord = _this.val();
+                var keyWord = encodeURI(_this.val());
                 sendAjax('member!searchUser',{account:keyWord},function(data){
                     var datas = JSON.parse(data);
                     var parentDom = $('#contactBox');

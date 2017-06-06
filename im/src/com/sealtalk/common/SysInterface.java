@@ -49,7 +49,8 @@ public enum SysInterface {
 	REQAUTHORIZTWO("abauth!reqAuthorizeTwoAb"),
 	REQAUTHORIZETOWFORAPP("abauth!reqAuthorizeTwoForAppAb"),
 	GETREALTOKEN("abauth!getRealTokenAb"),
-	GETAUTHRESOURCE("abauth!getAuthResourceAb");
+	GETAUTHRESOURCE("abauth!getAuthResourceAb"),
+	CHECKAPPIDOFORGAN("abauth!checkAppIdOfOrganAb");
 
 	private String name;
 	

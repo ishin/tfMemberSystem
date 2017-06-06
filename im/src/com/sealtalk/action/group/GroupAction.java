@@ -269,7 +269,8 @@ public class GroupAction extends BaseAction {
 		String result = null;
 		
 		if (groupService != null) {
-			result = groupService.manageGroupMem(clearChar(groupid), clearChar(groupids));
+			String userId = String.valueOf(getSessionUser().getId());
+			result = groupService.manageGroupMem(clearChar(groupid), userId, clearChar(groupids));
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", -1);

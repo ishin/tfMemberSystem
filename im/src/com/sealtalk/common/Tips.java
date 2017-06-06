@@ -44,6 +44,7 @@ public enum  Tips {
 	FALSECHECK("检验不通过", "00038"),
 	WRONGTWOCODE("非应用内二维码", "00039"),
 	NOTGROUPCREATE("不是群主", "00040"),
+	UNIILLORGAN("不合法的公司", "00041"),
 	OK("OK", "10000"),
 	FAIL("fail", "20000");
 	

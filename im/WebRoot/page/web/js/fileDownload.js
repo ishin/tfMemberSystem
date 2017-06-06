@@ -213,7 +213,7 @@ function fileFromPC(fileURL){
         var UniqueName = fileURL.split('&uniquetime=')[0];
         //var fileName = aURM.split('_');
         //var UniqueName = fileName[fileName.length-1];
-
+        UniqueName = decodeURI(UniqueName.replace(/\\u/g, '%u'));;
         return UniqueName;
     }else{
         return "";
@@ -258,7 +258,7 @@ function chDownloadProgress(url, state, progress){
                 $('#down_process[uniquetime=' + file + ']').find('#down_precent').css('width', progress+'%');
             }
         }else if(targetA.hasClass('downloadDemo')){
-            //window.Electron.openFile(url);
+            window.Electron.openFile(url);
         }
     }
 }

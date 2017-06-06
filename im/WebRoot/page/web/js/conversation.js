@@ -47,7 +47,7 @@ $(function(){
                 if(down==1)//ctrl+enter
                 {
                     var oldContent = _this.html();
-                    var newContent = oldContent+'<div><br><div >';
+                    var newContent = oldContent+'\n';
                     _this.html(newContent);
                     placeCaretAtEnd(jsThis)
                     down=0;
@@ -68,10 +68,10 @@ $(function(){
         var targetType = $parentNode.attr('targettype');
         var targetId = $parentNode.attr('targetid');
         if(targetType=='PRIVATE'){
-            $('.chatMenu li')[1].click();
+            //$('.chatMenu li')[1].click();
             $('.usualChatList').find('li[targetid='+targetId+']').dblclick();
         }else if(targetType=='GROUP'){
-            $('.chatMenu li')[1].click();
+            //$('.chatMenu li')[1].click();
             $('.groupChatList').find('li[targetid='+targetId+']').dblclick();
         }
     })
@@ -182,7 +182,9 @@ function sendMsg(content,targetId,way,extra,callback,uniqueTime){
                 '<em class="infoLoading"  infoTime="'+nSendTime+'"></em></div></li>';
         }
     }else{//如果是普通消息
+        content = html_encode(content);
         var str = RongIMLib.RongIMEmoji.symbolToHTML(content);
+        //str = html_encode(str);
         var sHTML = '<li class="mr-chatContentR clearfix" uniqueTime="'+uniqueTime+'">'+
             '<div class="mr-ownChat">'+
             '<span name="'+content+'">' + str + '</span>'+
@@ -215,9 +217,10 @@ function sendMsg(content,targetId,way,extra,callback,uniqueTime){
     callback&&callback();
     //调用融云的发送文件
     if(extra!='uploadFile'&&(limit.indexOf('ltszqzlt')!=-1||way== 'PRIVATE')){
-        //sendByRong(content,targetId,way);
         parent.find('.textarea').empty();
-        sendByRong(content,targetId,way,'',uniqueTime);
+        str = html_decode(content);
+        var str = RongIMLib.RongIMEmoji.symbolToEmoji(content);
+        sendByRong(str,targetId,way,'',uniqueTime);
     }
 }
 
@@ -349,10 +352,42 @@ function sendByRongImg(content,targetId,way,uniqueTime){
         }
     });
 }
+function html_decode(s)
+{
+    //var s = "";
+    if (s.length == 0) return "";
+    //s = s.replace(/&gt;/g, "&");
+    s = s.replace(/<br>/g, "\n");
+    s = s.replace(/&lt;/g, "<");
+    s = s.replace(/&gt;/g, ">");
+    //s = s.replace(/&nbsp;/g, " ");
+    s = s.replace(/&amp;/g, "&");
+    //s = s.replace(/&#39;/g, "\'");
+    //s = s.replace(/&quot;/g, "\"");
+    //s = s.replace(/<br>/g, "\n");
+    return s;
+}
+function html_decodes(s)
+{
+    //var s = "";
+    if (s.length == 0) return "";
+    s = s.replace(/&/g, "&amp;");
+    s = s.replace(/<br>/g, "\n");
+    //s = s.replace(/&lt;/g, "<");
+    //s = s.replace(/&gt;/g, ">");
+    //s = s.replace(/&nbsp;/g, " ");
 
+    //s = s.replace(/&#39;/g, "\'");
+    //s = s.replace(/&quot;/g, "\"");
+    //s = s.replace(/<br>/g, "\n");
+    return s;
+}
 function sendByRong(content,targetId,way,extra,uniqueTime){
+    //
+    content = html_decode(content);
     // 定义消息类型,文字消息使用 RongIMLib.TextMessage
     var transFlag = null;
+    //content = content.replace(/<\/?[^>]*>/g,'');
 
     transFlag = setRongTimer(uniqueTime);
     var msg = new RongIMLib.TextMessage({content:content,extra:extra});
@@ -551,7 +586,8 @@ function po_Last_Div(obj) {
 //发送消息()
 function sendMsgBoxMsg(contentBox){
     var content = contentBox.html();
-    if(content){
+    var str = content.replace(' ','');
+    if(str){
         var targetNode = $(".mesContainer:not(.chatHide)")
         var targetType = targetNode.attr('targetType');
         var targetId = targetNode.attr('targetID');
@@ -753,7 +789,9 @@ function sessionContent(sDoM,sTargetId,sContent,extra,sSentTime,targetType){
                 sDoM += '<li data-t="1486971032807"><p class="mr-Date">'+sContent.message+'</p></li>'
                 break;
             case "TextMessage":
-                var str = RongIMLib.RongIMEmoji.symbolToHTML(sContent);
+
+                str = html_encode(sContent);
+                var str = RongIMLib.RongIMEmoji.symbolToHTML(str);
                 sDoM += ' <li class="mr-chatContentL clearfix" data-t="' + sSentTime + '">\
                             <img class="headImg" src="' + sImg + '">\
                             <div class="mr-chatBox">\
@@ -868,7 +906,9 @@ function sessionContent(sDoM,sTargetId,sContent,extra,sSentTime,targetType){
                 sDoM += '<li data-t="1486971032807"><p class="mr-Date">'+sContent.message+'</p></li>'
                 break;
             case "TextMessage":
-                var str = RongIMLib.RongIMEmoji.symbolToHTML(sContent);
+
+                str = html_encode(sContent);
+                var str = RongIMLib.RongIMEmoji.symbolToHTML(str);
                 sDoM += '<li class="mr-chatContentR clearfix" data-t="'+sSentTime+'">\
                             <div class="mr-ownChat">\
                             <span name="'+sContent+'">' + str + '</span>\
@@ -1185,7 +1225,7 @@ function getPerInfo(oInfoDetails){
     //var memberInfoFromList = searchFromList(1,sTargetId);
     var sName=oInfoDetails.name || '';//姓名
     var sLogo=oInfoDetails.logo?  globalVar.imgSrc+oInfoDetails.logo : globalVar.defaultLogo;//头像
-    var sMobile=oInfoDetails.telephone || '';//手机
+    var sMobile=oInfoDetails.mobile || '';//手机
     var sEmail=oInfoDetails.email || '';//邮箱
     var sBranch=oInfoDetails.branchname || '';//部门
     var sJob=oInfoDetails.postitionname || '';//职位
@@ -1300,6 +1340,7 @@ function getChatRecord(aList,sClass){
                     break;
                 case "TextMessage":
                     var sTextContent=sContent.content;
+                    sTextContent = html_encode(sTextContent);
                     var  str= RongIMLib.RongIMEmoji.symbolToHTML(sTextContent);
                     sContent='<span><span ></span>'+str+'</span><i></i>';
                     break;
@@ -1640,7 +1681,7 @@ function creatTopList(sHTML,list,bFlg,systemMsg){
         }else if(extra=="InformationNotificationMessage"){
             content="系统消息";
         }else if(extra=="TextMessage"){
-            content = content;
+            content = html_encode(content);
         }else{
             content="系统消息";
         }
@@ -1676,12 +1717,13 @@ function creatTopList(sHTML,list,bFlg,systemMsg){
             if(member){
                 var logo = member.logo?globalVar.imgSrc+member.logo:globalVar.defaultLogo;
                 var name = member.name || '';
+                var str = RongIMLib.RongIMEmoji.emojiToSymbol(content);
                 if(bFlg){
                     sHTML += ' <li targetid="'+targetId+'" targetType="PRIVATE" class="top">'+
                     '<div><img class="groupImg" src="'+logo+'" alt=""/>'+
                     sNum+
                     '<span class="groupName">'+name+'</span>'+
-                    '<span class="usualLastMsg">'+content+'</span>'+
+                    '<span class="usualLastMsg">'+str+'</span>'+
                     '<span class="lastTime">'+lastTime+'</span>'+
                     '</div>'+
                     '</li>'
@@ -1690,7 +1732,7 @@ function creatTopList(sHTML,list,bFlg,systemMsg){
                     '<div><img class="groupImg" src="'+logo+'" alt=""/>'+
                     sNum+
                     '<span class="groupName">'+name+'</span>'+
-                    '<span class="usualLastMsg">'+content+'</span>'+
+                    '<span class="usualLastMsg">'+str+'</span>'+
                     '<span class="lastTime">'+lastTime+'</span>'+
                     '</div>'+
                     '</li>'
@@ -1701,13 +1743,15 @@ function creatTopList(sHTML,list,bFlg,systemMsg){
         }else if(conversationType==3){
             var curGroup = groupInfo(targetId);
                 var curGroup = groupInfo(targetId);
-                if(curGroup){
+                var str = RongIMLib.RongIMEmoji.emojiToSymbol(content);
+
+            if(curGroup){
                     if(bFlg){
                         sHTML += ' <li targetid="'+targetId+'" targetType="GROUP" class="top">'+
                         '<div><img class="groupImg" src="'+globalVar.defaultGroupLogo+'" alt=""/>'+
                         sNum+
                         '<span class="groupName">'+curGroup.name+'</span>'+
-                        '<span class="usualLastMsg">'+content+'</span>'+
+                        '<span class="usualLastMsg">'+str+'</span>'+
                         '<span class="lastTime">'+lastTime+'</span>'+
                         '</div>'+
                         '</li>'
@@ -1716,7 +1760,7 @@ function creatTopList(sHTML,list,bFlg,systemMsg){
                         '<div><img class="groupImg" src="'+globalVar.defaultGroupLogo+'" alt=""/>'+
                         sNum+
                         '<span class="groupName">'+curGroup.name+'</span>'+
-                        '<span class="usualLastMsg">'+content+'</span>'+
+                        '<span class="usualLastMsg">'+str+'</span>'+
                         '<span class="lastTime">'+lastTime+'</span>'+
                         '</div>'+
                         '</li>'
@@ -1742,12 +1786,14 @@ function creatTopList(sHTML,list,bFlg,systemMsg){
                     var lastTime = changeTimeFormat(lastTime,'h');
                 }
                 var sNum = sNum==0?'':'<i class="notReadMsg">'+sNum+'</i>'
+                var str = RongIMLib.RongIMEmoji.emojiToSymbol(content);
+
                 if(curList.sentTime<=systemMsg.lastMsgTime){
                     sHTML += ' <li targetid="system" targetType="system">'+
                     '<div><img class="groupImg" src="'+systemLogo+'" alt=""/>'+
                     sNum+
                     '<span class="groupName">[系统消息]</span>'+
-                    '<span class="usualLastMsg">'+content+'</span>'+
+                    '<span class="usualLastMsg">'+str+'</span>'+
                     '<span class="lastTime">'+lastTime+'</span>'+
                     '</div>'+
                     '</li>'
@@ -1799,6 +1845,34 @@ function KBtoM(kb){
         return Math.floor(kb/1024 * 100) / 100;
     }
 }
+function html_encodes(s)
+{
+//     var s = "";
+    if (s.length == 0) return "";
+    //s = str.replace(/&/g, "&gt;");
+    s = s.replace(/</g, "&lt;");
+    s = s.replace(/>/g, "&gt;");
+    //s = s.replace(/ /g, "&nbsp;");
+    s = s.replace(/\'/g, "&#39;");
+    s = s.replace(/\"/g, "&quot;");
+   // s = s.replace(/\n/g, "<br>");
+    s = s.replace(/&nbsp/g, "&amp;nbsp");
+    return s;
+}
+function html_encode(s)
+{
+//     var s = "";
+    if (s.length == 0) return "";
+    //s = str.replace(/&/g, "&gt;");
+    s = s.replace(/</g, "&lt;");
+    s = s.replace(/>/g, "&gt;");
+    //s = s.replace(/ /g, "&nbsp;");
+    s = s.replace(/\'/g, "&#39;");
+    s = s.replace(/\"/g, "&quot;");
+    s = s.replace(/\n/g, "<br>");
+    s = s.replace(/&nbsp/g, "&amp;nbsp");
+    return s;
+}
 //接收到的消息显示在盒子里或者在消息列表中显示
 function reciveInBox(msg){
     //打包后的程序收到消息的弹层提示
@@ -1806,7 +1880,7 @@ function reciveInBox(msg){
     var targetID = msg.targetId;
     var messageType = msg.messageType;
     var content = messageType=="TextMessage"?msg.content.content:msg.content;
-
+    //content = html_encode(content)
     var alertMsg = messageType=="TextMessage"?msg.content.content:'发送文件'
     var targetType = msg.conversationType;
     if(targetType==6){
@@ -1924,11 +1998,13 @@ function reciveInBox(msg){
 
                 break;
             case "TextMessage":
-                var str = RongIMLib.RongIMEmoji.symbolToHTML(content);
+                str = html_encode(content)
+                var str = RongIMLib.RongIMEmoji.symbolToHTML(str);
+
                 var sHTML = '<li messageUId="' + msg.messageUId + '" sentTime="' + msg.sentTime + '" class="mr-chatContentL clearfix">' +
                     '<img class="headImg" src="'+senderImg+'">' +
                     '<div class="mr-chatBox">' +
-                    '<span>' + str + '</span>' +
+                    '<span name="'+content+'">' + str + '</span>' +
                     '<i></i>' +
                     '</div>' +
                     '<span class="sendSuccess"></span>'+

@@ -96,10 +96,11 @@ public class GroupMemberDaoImpl extends BaseDao<TGroupMember, Long> implements G
 	@Override
 	public int transferGroup(int userIdInt, int groupIdInt, Integer id) {
 		try {
-			String hql = "update TGroupMember t set t.isCreator=0 where t.id=" + id;
-			update(hql);
-			
-			hql = "update TGroupMember t set t.isCreator=1 where t.groupId=" + groupIdInt + " and t.memberId=" + userIdInt;
+			if (id != null) {
+				String hql = "update TGroupMember t set t.isCreator=0 where t.id=" + id;
+				update(hql);
+			}
+			String hql = "update TGroupMember t set t.isCreator=1 where t.groupId=" + groupIdInt + " and t.memberId=" + userIdInt;
 			
 			int result = update(hql);
 			
@@ -296,6 +297,11 @@ public class GroupMemberDaoImpl extends BaseDao<TGroupMember, Long> implements G
 		}	
 		
 		return null;
+	}
+
+	@Override
+	public int getGroupMemberCount(int groupId) {
+		return count("from TGroupMember where groupId=" + groupId + " and isDel='1'");
 	}
 
 }

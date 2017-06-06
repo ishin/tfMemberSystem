@@ -408,7 +408,9 @@ function returnDLLink(filename,className){
     //var d = today.getDay();
     //var floderName = 'text_plain__RC-'+y+'-'+m+'-'+d+'_'+className;
     var unique = filename.split('/')[0];
-    return globalVar.qiniuDOWNLOAD+filename+'?attname='+filename+'&uniquetime='+unique;
+
+    var fileRealName = encodeURIComponent(filename.split('/')[1])
+    return globalVar.qiniuDOWNLOAD+unique+'/'+fileRealName+'?attname='+unique+'/'+fileRealName+'&uniquetime='+unique;
 }
 //function returnOPLink(filename){
 //    //debugger;

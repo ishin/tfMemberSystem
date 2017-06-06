@@ -103,4 +103,6 @@ public interface GroupMemberDao {
 
 	public TGroupMember judgeGroupCreate(Integer userIdInt, Integer groupIdInt);
 
+	public int getGroupMemberCount(int groupId);
+
 }

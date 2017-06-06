@@ -56,7 +56,7 @@ $(function(){
         var _this = $(this).closest('li');
         timer=setTimeout(function(){
             showPersonDetailDia(e,_this);
-        },1000);
+        },500);
     })
     $('.usualChatList').delegate('li .groupImg','mouseleave',function(e){
         clearTimeout(timer);
@@ -102,28 +102,10 @@ $(function(){
                             autoHide:true
                         });
                     }else{//targetID
-                        //var targetID = $(this).attr('targetid');
                         var targeType = 'PRIVATE';
+
+
                         newContactList(targeType,targetID);
-                    //    $('.chatHeaderMenu li')[0].click();
-                    //    $('.chatContent ul li')[1].click();
-                    //    var target = $('.usualChatList').find('li[targetid='+targetID+']');
-                    //    var sTarget = searchFromList(1,targetID)
-                    //    if(sTarget){
-                    //        var targetAccount = sTarget.account;
-                    //    }
-                    //    if(target.length==0){//如果不存在的话，添加好友并刷新列表
-                    //        addFriendAndRefreshList(account,targetAccount)
-                    //    }else{//如果存在的话刷新列表
-                    //        jumpToFriendListOpen(targetAccount)
-                    //    }
-                    //    if(targeType=='member'){
-                    //
-                    //        targeType = 'PRIVATE';
-                    //    }
-                    //    conversationSelf(targetID,targeType);
-                    //    $('.orgNavClick').addClass('chatHide');
-                    //    $('.mesContainerSelf').removeClass('chatHide');
                     }
                     $('.memberHover').remove();
                     break;
@@ -661,7 +643,8 @@ $(function(){
             var memship = $(this).attr('targetid');
             var top = e.clientY;
             //var arr = ['群成员管理','解散群','转让群'];
-            var arr = [{limit:'',value:'群成员管理'},{limit:'qzjsq',value:'解散群'},{limit:'qzxgqcjz',value:'转让群'}];
+            //var arr = [{limit:'qzxgqcjz',value:'群成员管理'},{limit:'qzjsq',value:'解散群'},{limit:'qzxgqcjz',value:'转让群'}];
+            var arr = [{limit:'qzxgqcjz',value:'群成员管理'},{limit:'znsqz',value:'解散群'},{limit:'znsqz',value:'转让群'}];
 
             var style = 'left:'+left+'px;top:'+top+'px';
             var id = 'groupLeftClick'
@@ -779,7 +762,7 @@ $(function(){
                             }else{
                                 new Window().alert({
                                     title   : '解散群',
-                                    content : '确定要解散群么？',
+                                    content : '确定要解散群吗？',
                                     hasCloseBtn : true,
                                     hasImg : true,
                                     textForSureBtn : '确定',              //确定按钮
@@ -904,7 +887,15 @@ $(function(){
                                     autoHide:true
                                 });
                             }else{
-                                alert('失败!'+datas.text);
+                                new Window().alert({
+                                    title   : '添加好友',
+                                    content : '好友添加失败！',
+                                    hasCloseBtn : false,
+                                    hasImg : true,
+                                    textForSureBtn : false,
+                                    textForcancleBtn : false,
+                                    autoHide:true
+                                });
                             }
                         })
                     });
@@ -917,12 +908,9 @@ $(function(){
                     creatDialogTree(data,'privateConvers','发起聊天',function(){
                         var targetAccount = converseACount[0];
                         $('.manageCancle').click();
-                        if(targetAccount!=accountID){//是自己
-                            if($('.usualChatList').find   ('li[account='+targetAccount+']').length==0){
-                                addFriendAndRefreshList(account,targetAccount);
-                            }else{
-                                jumpToFriendListOpen(targetAccount)
-                            }
+                        if(targetAccount!=account){//是自己
+                            var targetID = searchIDFromList(1,targetAccount);
+                            newContactList('PRIVATE',targetID);
                         }
                     })
                     break;
@@ -1055,7 +1043,8 @@ function changePersonOnlineN(accountID){
                     var sMemberStatus = '';
                     var onlineClassName = '';
                     //memberList[key] = '3';
-                    switch (memberList[key]){
+                    var onLineStatues = memberList[key]+''
+                    switch (onLineStatues){
 
                         case '0'://离线
                             onlineClassName = 'imgToGrey';
@@ -1361,11 +1350,34 @@ function searchTree(){
         window.localStorage.getOrganTree = datas;
     })
 }
-
+function searchIDFromList(flag,account){
+    var curList;
+    var normalInfo = localStorage.getItem('normalInfo');
+    if(normalInfo){
+        var data = JSON.parse(normalInfo);
+    }
+    //account = parseInt(account);
+    for(var i = 0;i<data.length;i++){
+        if(data[i].account==account&&data[i].flag==flag){
+            curList = data[i];
+        }
+    }
+    if(!curList){
+        var normalInfo = localStorage.getItem('getOrganTree');
+        if(normalInfo){
+            var data = JSON.parse(normalInfo);
+        }
+        //account = parseInt(account);
+        for(var i = 0;i<data.length;i++){
+            if(data[i].account==account&&data[i].flag==flag){
+                curList = data[i];
+            }
+        }
+    }
+    return curList.id;
+}
 //从组织结构中找到相应的成员、部门数据
 function searchFromList(flag,id){
-
-
     var curList;
     var normalInfo = localStorage.getItem('normalInfo');
     if(normalInfo){
@@ -1406,6 +1418,7 @@ function getBranchTreeAndMember(callback){
             var sHTML = '';
             var HTML = createOrganizList(myData,sHTML,i);
             $ParendtDom.html(HTML);
+            $('.firstUL').css('width',globalVar.FirstULWidth+'px');
             changePersonOnlineN('');
             console.log('newTree');
             callback&&callback();
@@ -1604,7 +1617,18 @@ function removeObj(delArr,ele){
 }
 
 function createOrganizList(data,sHTML,level){
-    sHTML += '<ul>';
+    if(level&&globalVar.maxLevel<level){
+        globalVar.maxLevel = level;
+        globalVar.FirstULWidth = level*32+30+32+70+70
+        //var FirstULWidth = level*32+30+32+70+70
+        console.log(globalVar.FirstULWidth);
+    }
+    if(!level){
+        sHTML += '<ul class="firstUL">';
+
+    }else{
+        sHTML += '<ul>';
+    }
     var k = data.length;
     for(var i = 0;i<data.length;i++){
         var num = level
@@ -1630,6 +1654,7 @@ function createOrganizList(data,sHTML,level){
             var imgSrc = globalVar.defaultDepLogo;
             var poaitionName = ''
         }
+        //console.log(level);
         sHTML += '<li class="'+state+'" id="'+oData.id+'">'+
                     '<div level="">'+
                     '<span style="height: 20px;width: '+level*32+'px;display:inline-block;float: left;"></span>'+
@@ -1728,5 +1753,4 @@ function createTransforContent(data,groupid){
                 '</tr>'
     }
     return sHTML;
-
 }

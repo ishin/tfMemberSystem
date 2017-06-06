@@ -4,15 +4,16 @@
 
 
 var globalVar={
+    maxLevel:0,
     fileStroage:{},
     //系统声音
     SYSTEMSOUND:1,//系统声音
     MESSAGESOUND:1,//消息免打扰
     //融云appKey
-    rongKey:'m7ua80guyso7u',		//适用于120
-    navi:'103.36.132.10:80',		//适用于120
-    //navi:'nav.cn.ronghub.com',	//适用于本地及35
-    //rongKey:'e5t4ouvpe564a',		//适用于本地及35
+    //rongKey:'m7ua80guyso7u',		//适用于120
+    //navi:'103.36.132.10:80',		//适用于120
+    navi:'nav.cn.ronghub.com',	//适用于本地及35
+    rongKey:'e5t4ouvpe564a',		//适用于本地及35
     
     //fileServer:'upload.qiniu.com',
    

@@ -215,10 +215,12 @@ $(document).ready(function(){
                 var sCopy=JSON.stringify(oCopy);
                 window.localStorage.setItem('copy',sCopy);
             }else{
-                sInfoContent=eTarget.find('span').attr('name')||eTarget.find('span').html();
+                sInfoContent=eTarget.find('span').html();
+                sInfoContent = sInfoContent.replace(/(\<span\s)style=".*?(name="(.*?)")\>\<b.*?\<\/b\>\<\/span\>/ig,"$3");
+                sInfoContent=html_decode(sInfoContent);
                 oCopy={};
                 oCopy.infoContent=sInfoContent;
-               var sCopy=JSON.stringify(oCopy);
+                var sCopy=JSON.stringify(oCopy);
                 window.localStorage.setItem('copy',sCopy);
             }
         }
@@ -361,6 +363,7 @@ $(document).ready(function(){
             sendByRongImg(oPast,targetId,targetType,nSendTime);
         }else if(sInfoContent){
             var sNewInfo=sInfoContent;
+            sNewInfo = html_encodes(sNewInfo);
             $('#chatBox #message-content').append(sNewInfo);
         }else if(sFile){
             sFile.filepaste=1;
@@ -575,13 +578,13 @@ $(document).ready(function(){
                     showGroupMemberInfo(aText[i],pos);
                 }
             }
-        },1000);
+        },500);
     });
     $('.groupChatList').delegate('li .groupImg','mouseleave',function(e){
         clearTimeout(groupTimer);
         groupTimer1 = setTimeout(function(){
             $('.groupDataBox').remove();
-        },1000)
+        },100)
     });
     $('body').delegate('.groupDataBox','mouseenter',function(){
         clearTimeout(groupTimer1);
@@ -1400,7 +1403,7 @@ function getFileUniqueNameFromPC(fileURL){
         var UniqueName = fileURL.split('&uniquetime=')[0];
         //var fileName = aURM.split('_');
         //var UniqueName = fileName[fileName.length-1];
-
+        UniqueName = decodeURI(UniqueName.replace(/\\u/g, '%u'));;
         return UniqueName;
     }else{
         return "";

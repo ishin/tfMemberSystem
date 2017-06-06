@@ -41,8 +41,10 @@
     <script src="<%=request.getContextPath() %>/page/web/js/md5.js"></script>
     <script src="<%=request.getContextPath() %>/page/web/js/main.js"></script>
     <%--<script src="http://cdn.ronghub.com/RongIMLib-2.2.4.min.js"></script>--%>
-    <script src="http://cdn.ronghub.com/RongEmoji-2.2.4.min.js"></script>
-    <script src="http://cdn.ronghub.com/RongIMVoice-2.2.4.min.js"></script>
+    <%--<script src="http://cdn.ronghub.com/RongEmoji-2.2.4.min.js"></script>--%>
+        <%--<script src="http://cdn.ronghub.com/RongIMVoice-2.2.4.min.js"></script>--%>
+        <script src="http://cdn.ronghub.com/RongEmoji-2.2.5.min.js"></script>
+        <script src="http://cdn.ronghub.com/RongIMVoice-2.2.5.min.js"></script>
     <script src="http://webapi.amap.com/js/marker.js"></script>
     <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=acafe737e6344c4ce19d101b9f3b1d03"></script>
     <script src="<%=request.getContextPath() %>/page/web/js/getCurrentPos.js"></script>
@@ -108,7 +110,7 @@
         <div class="chatContent groupChatList">
             <div class="listCtrl myGroup">
                 <span class="triOpen chatLeftIcon"></span>
-                <span class="discrib">我的组群</span>
+                <span class="discrib">我的群组</span>
             </div>
             <ul class="groupChatListUl">
             </ul>
@@ -259,7 +261,7 @@
         </ul>
                 </div>
                 <div class="clearfix cp-reNewPassword">
-                    <span>新密码：</span>
+                    <span>重复密码：</span>
                     <input type="password" id="comparepwd">
                     <p class="retMewPw"></p>
                 </div>

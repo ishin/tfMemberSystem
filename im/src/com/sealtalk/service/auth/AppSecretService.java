@@ -54,5 +54,7 @@ public interface AppSecretService {
 	 */
 	public String reqAuthorizeTwoForApp(String userId, String appId, String unAuthToken);
 
+	public boolean checkAppIdOfOrgan(String appId, int organId);
+
 
 }

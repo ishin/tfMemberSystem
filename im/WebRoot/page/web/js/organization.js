@@ -68,8 +68,9 @@ $(function(){
         $(this).unbind('keypress');
         $(this).on('input',function(){
             var inputVal = $(this).val();
+            var keyWord = encodeURI(inputVal);
             if(inputVal){
-                sendAjax('member!searchUser',{account:inputVal},function(data){
+                sendAjax('member!searchUser',{account:keyWord},function(data){
                     var datas = JSON.parse(data);
                     var parentDom = $('.orgnized');
                     if(datas.length==0){

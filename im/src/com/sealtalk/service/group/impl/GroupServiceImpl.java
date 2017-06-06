@@ -436,6 +436,51 @@ public class GroupServiceImpl implements GroupService {
 					RongCloudUtils.getInstance().sendGroupMsg(fromId, groupIds, msg, extrMsg, 1, 1, 2);
 				}
 
+				if (!checkHaveMember(groupIdInt)) {
+					int delGroupNum = groupDao.removeGroupForGroupId(groupId);
+					if (delGroupNum > 0) {
+						String fromId = "FromId";
+						String msg = "没有群成员,群组已解散";
+						String extrMsg = msg;
+						String[] groupIdsSend = {groupId};
+						String code = RongCloudUtils.getInstance().sendGroupMsg(fromId, groupIdsSend, msg, extrMsg, 1, 1, 2);
+						if (code.equals("200")) {
+							String code1 = RongCloudUtils.getInstance().dissLoveGroup(userId, groupId);
+						}
+					} else {
+					}
+				} else {
+					//查询群主
+					int groupManagerId = tg.getCreatorId();
+					if (userId.indexOf(String.valueOf(groupManagerId)) != -1) {
+						//转移群主
+						TGroupMember tgm = groupMemberDao.getTGroupMemberList(groupIdInt).get(0);
+						int newId = tgm.getMemberId();
+						int result1 = groupMemberDao.transferGroup(newId, groupIdInt, null);
+						if (result1 > 0) {
+							JSONObject pa = new JSONObject();
+							pa.put("userId", userId);
+							String newMemberStr = HttpRequest.getInstance().sendPost(SysInterface.MEMBERFORID.getName(), pa);
+							JSONObject ret = JSONUtils.getInstance().stringToObj(newMemberStr);
+							String newName = null;
+							
+							if (ret.getInt("code") == 1) {
+								TMember tm = JSONUtils.getInstance().jsonObjToBean(ret.getJSONObject("text"), TMember.class);
+								newName = tm.getFullname();
+							}
+							
+							int result = groupDao.transferGroup(newId, groupIdInt);
+							if(result > 0) {
+								String msg = "群主已退出,管理员已变更" + newName == null ? "" : "为" + newName;
+								String extrMsg = groupName;
+								String fromId = "FromId";
+								RongCloudUtils.getInstance().sendGroupMsg(fromId, groupIds, msg, extrMsg, 1, 1, 2);
+							}
+						}
+						
+					}
+				}
+				
 				jo.put("code", 1);
 				jo.put("text", Tips.OK.getText());
 			}
@@ -567,7 +612,6 @@ public class GroupServiceImpl implements GroupService {
 			e.printStackTrace();
 		}
 
-		//logger.info(jo.toString());
 		return jo.toString();
 	}
 
@@ -711,7 +755,7 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public String manageGroupMem(String groupId, String groupIds) {
+	public String manageGroupMem(String groupId, String opeaUserId, String groupIds) {
 		JSONObject jo = new JSONObject();
 
 		try {
@@ -845,6 +889,20 @@ public class GroupServiceImpl implements GroupService {
 							String msg =  names.toString() + "加入群组";
 							String extrMsg = tg.getName();
 							RongCloudUtils.getInstance().sendGroupMsg(fromId, groupIdArr, msg, extrMsg, 1, 1, 2);
+						}
+					}
+					
+					if (!checkHaveMember(groupIdInt)) {
+						int delGroupNum = groupDao.removeGroupForGroupId(groupId);
+						if (delGroupNum > 0) {
+							String msg = "没有群成员,群组已解散";
+							String extrMsg = msg;
+							String[] groupIdsSend = {groupId};
+							String code = RongCloudUtils.getInstance().sendGroupMsg(fromId, groupIdsSend, msg, extrMsg, 1, 1, 2);
+							if (code.equals("200")) {
+								String code1 = RongCloudUtils.getInstance().dissLoveGroup(opeaUserId, groupId);
+							}
+						} else {
 						}
 					}
 					
@@ -1791,6 +1849,11 @@ public class GroupServiceImpl implements GroupService {
 
 		logger.info(result.toString());
 		return result.toString();
+	}
+	
+	private boolean checkHaveMember(int groupId) {
+		int count = groupMemberDao.getGroupMemberCount(groupId);
+		return count > 0;
 	}
 
 	private GroupDao groupDao;

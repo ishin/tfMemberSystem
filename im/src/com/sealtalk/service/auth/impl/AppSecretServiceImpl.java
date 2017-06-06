@@ -5,10 +5,12 @@ import net.sf.json.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.googlecode.jsonplugin.JSONUtil;
 import com.sealtalk.common.AuthTips;
 import com.sealtalk.common.SysInterface;
 import com.sealtalk.service.auth.AppSecretService;
 import com.sealtalk.utils.HttpRequest;
+import com.sealtalk.utils.JSONUtils;
 import com.sealtalk.utils.LogUtils;
 import com.sealtalk.utils.StringUtils;
 
@@ -222,6 +224,26 @@ public class AppSecretServiceImpl implements AppSecretService {
 		}
 
 		return result;
+	}
+
+	@Override
+	public boolean checkAppIdOfOrgan(String appId, int organId) {
+		boolean s = false;
+		
+		if (!StringUtils.getInstance().isBlank(appId)) {
+			JSONObject pa = new JSONObject();
+			pa.put("appId", appId);
+			pa.put("organId", organId);
+			
+			String result = HttpRequest.getInstance().sendPost(
+					SysInterface.CHECKAPPIDOFORGAN.getName(), pa);
+			
+			JSONObject jo = JSONUtils.getInstance().stringToObj(result);
+			if (jo != null && jo.getInt("code") == 1) {
+				s = jo.getBoolean("text");
+			}
+		}
+		return s;
 	}
 
 }

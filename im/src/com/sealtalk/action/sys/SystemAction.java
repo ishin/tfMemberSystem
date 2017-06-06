@@ -7,11 +7,10 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.sf.json.JSONObject;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.sealtalk.common.BaseAction;
 import com.sealtalk.common.Constants;
@@ -21,6 +20,7 @@ import com.sealtalk.model.SessionUser;
 import com.sealtalk.model.TMember;
 import com.sealtalk.service.adm.BranchService;
 import com.sealtalk.service.adm.PrivService;
+import com.sealtalk.service.auth.AppSecretService;
 import com.sealtalk.service.member.MemberService;
 import com.sealtalk.utils.JSONUtils;
 import com.sealtalk.utils.LogUtils;
@@ -30,6 +30,7 @@ import com.sealtalk.utils.RongCloudUtils;
 import com.sealtalk.utils.StringUtils;
 import com.sealtalk.utils.TextHttpSender;
 import com.sealtalk.utils.TimeGenerator;
+import com.sealtalk.utils.XMLUtils;
 
 /**
  * 登陆相关
@@ -98,9 +99,19 @@ public class SystemAction extends BaseAction {
 			returnToClient(result.toString());
 			return "text";
 		}
-
-		TMember member = memberService.searchSigleUser(clearChar(account), clearChar(userpwd),
-				organId);
+		
+		String appId = getAppId();
+		boolean appIdExist = appSecretService.checkAppIdOfOrgan(appId, organId);
+		
+		if (!appIdExist) {
+			result.put("code", 0);
+			result.put("text", Tips.UNIILLORGAN.getText());
+			logger.info(result);
+			returnToClient(result.toString());
+			return "text";
+		}
+		
+		TMember member = memberService.searchSigleUser(clearChar(account), clearChar(userpwd), organId);
 
 		if (member == null) {
 			result.put("code", 0);
@@ -451,9 +462,18 @@ public class SystemAction extends BaseAction {
 		return "text";
 	}
 	
+	private String getAppId() {
+		return XMLUtils.getInstance().getDynamicData("appid");
+	}
+	
 	private MemberService memberService;
 	private PrivService privService;
 	private BranchService branchService;
+	private AppSecretService appSecretService;
+	
+	public void setAppSecretService(AppSecretService appSecretService) {
+		this.appSecretService = appSecretService;
+	}
 
 	public void setBranchService(BranchService branchService) {
 		this.branchService = branchService;
@@ -466,20 +486,14 @@ public class SystemAction extends BaseAction {
 	public void setPrivService(PrivService privService) {
 		this.privService = privService;
 	}
-
+	
 	private String account;
 	private String userpwd;
 	private String oldpwd;
 	private String newpwd;
 	private String textcode;
 	private String comparepwd;
-	private String dataSource;
 	private String phone;
-	private String token;
-
-	public void setToken(String token) {
-		this.token = token;
-	}
 
 	public void setAccount(String account) {
 		this.account = account;
@@ -503,10 +517,6 @@ public class SystemAction extends BaseAction {
 
 	public void setComparepwd(String comparepwd) {
 		this.comparepwd = comparepwd;
-	}
-
-	public void setDataSource(String dataSource) {
-		this.dataSource = dataSource;
 	}
 
 	public void setPhone(String phone) {
