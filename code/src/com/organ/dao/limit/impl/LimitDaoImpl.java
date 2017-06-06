@@ -103,7 +103,7 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,pr.organid,t.name AS parent_name FROM t_priv pr "
 					+"LEFT JOIN t_priv t ON pr.parent_id=t.id "
 					+"WHERE pr.parent_id IN (SELECT  p.id FROM t_priv p WHERE p.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) "
-					+") tmp where tmp.organid="+organId+" and tmp.name like '%"+Name+"%'"+" or tmp.url like '%"+Name+"%' limit "+start+","+pagesize;
+					+") tmp where tmp.organid="+organId+" and (tmp.name like '%"+Name+"%'"+" or tmp.url like '%"+Name+"%') limit "+start+","+pagesize;
 			} else {
 				hql ="SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,t.name AS parent_name FROM t_priv pr "
 					+"LEFT JOIN t_priv t ON pr.parent_id=t.id "
@@ -142,7 +142,7 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 			if (!StringUtils.isBlank(name)) {
 				sql="select count(*) from (("
 					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app FROM t_priv pr WHERE pr.parent_id IN (SELECT  pv.id FROM t_priv pv WHERE pv.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0))) as aa) "
-					+"where aa.organid=" + organId + " aa.name like '%"+name+"%' or aa.url like '%" + name + "%' ";
+					+"where aa.organid=" + organId + " and (aa.name like '%"+name+"%' or aa.url like '%" + name + "%')";
 			} else {
 				sql = "select count(*) from (" 
 					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app FROM t_priv pr WHERE pr.parent_id IN (SELECT  pv.id FROM t_priv pv WHERE pv.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) and pr.organid=" + organId + ") AS tt";

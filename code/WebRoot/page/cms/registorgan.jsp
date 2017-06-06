@@ -281,7 +281,7 @@
 					subForm();
 				}
 			}
-			
+		
 			function judgeNull() {
 				var name = document.getElementById("name").value;
 				var shortname = document.getElementById("shortname").value;
@@ -295,6 +295,9 @@
 				var industryid = document.getElementById("industryid").value;
 				var subdustryid = document.getElementById("subdustryid").value;
 				
+				if (!isNull(name)) {
+					$("#name").css({"border":"1px sold, red"});
+				}
 				return isNull(name) || isNull(shortname) || isNull(englishname)
 					|| isNull(provinceid) || isNull(cityid) || isNull(districtid)
 					|| isNull(contact) || isNull(address) || isNull(inwardid) 

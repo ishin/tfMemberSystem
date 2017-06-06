@@ -561,8 +561,8 @@ public class BranchServiceImpl implements BranchService {
 	public void movMember(Integer memberId, Integer pId, Integer toId) {
 		
 		TBranchMember bm = this.getBranchMemberByBranchMember(pId, memberId);
-
 		TBranchMember tobm = this.getBranchMemberByBranchMember(toId, memberId);
+		
 		if (tobm == null) {
 			bm.setBranchId(toId);
 			branchMemberDao.saveOrUpdate(bm);

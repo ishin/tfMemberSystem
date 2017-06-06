@@ -828,7 +828,6 @@ public class MemberServiceImpl implements MemberService {
 				String sys = PropertiesUtils.getStringByKey("im.sys");
 				String urlStr = protocol + "://" + host + "/" + sys + "/";
 
-				
 				String result = HttpRequest.getInstance().sendPost(
 						SysInterface.DELBYMEMIDS.getName(), params, urlStr, host);
 				

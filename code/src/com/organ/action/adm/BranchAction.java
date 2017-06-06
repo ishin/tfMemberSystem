@@ -673,7 +673,6 @@ public class BranchAction extends BaseAction {
 		else {
 			if (organId != toid) {
 				branchService.movMember(id, pid, toid);
-				id = -1;
 			}
 		}
 		JSONObject jo = new JSONObject();

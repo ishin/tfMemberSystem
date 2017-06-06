@@ -285,6 +285,43 @@ public class AbutmentAuthAction extends BaseAction {
 		return "text";
 	}
 	
+	public String checkAppIdOfOrganAb() throws ServletException {
+		String result = null;
+		
+		try {
+			String params = getRequestDataByStream();
+			logger.info(params);
+			
+			JSONObject jo = new JSONObject();
+			boolean s = true;
+			
+			if (params == null) {
+				s = false;
+			} else {
+				JSONObject p = JSONUtils.getInstance().stringToObj(params);
+				if (!validParams(p)) {
+					s = false;
+				} else {
+					String appId = p.getString("appId");
+					int organId = p.getInt("organId");
+					boolean b = appSecretService.checkAppIdOfOrganAb(appId, organId);
+					jo.put("code", 1);
+					jo.put("text", b);
+				}
+			}
+			if (!s) {
+				jo.put("code", 0);
+				jo.put("text", Tips.WRONGPARAMS.getText());
+			}
+			result = jo.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+		}
+		returnToClient(result);
+		return "text";
+	}
+	
 	private AppSecretService appSecretService;
 
 	public void setAppSecretService(AppSecretService appSecretService) {

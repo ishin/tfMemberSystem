@@ -41,4 +41,6 @@ public interface AppSecretDao extends IBaseDao<AppSecret, Integer> {
 	 */
 	public AppSecret getAppSecretByAppIdAndSecret(String appId, String secret);
 
+	public AppSecret getAppSecretByAppIdAndOrganId(String appId, int organId);
+
 }

@@ -521,6 +521,13 @@ public class AppSecretServiceImpl implements AppSecretService {
 		return jo.toString();
 	}
 
+	@Override
+	public boolean checkAppIdOfOrganAb(String appId, int organId) {
+		AppSecret as = appSecretDao.getAppSecretByAppIdAndOrganId(appId, organId);
+		return as != null;
+	}
+
+	
 	private ArrayList<String> makeAppId() {
 		ArrayList<String> as = new ArrayList<String>();
 
