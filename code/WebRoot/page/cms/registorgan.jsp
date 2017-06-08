@@ -277,7 +277,7 @@
 			}
 		
 			function sub() {
-				if (!judgeNull()) {
+				if (judgeNull()) {
 					subForm();
 				}
 			}
@@ -298,10 +298,10 @@
 				if (!isNull(name)) {
 					$("#name").css({"border":"1px sold, red"});
 				}
-				return isNull(name) || isNull(shortname) || isNull(englishname)
-					|| isNull(provinceid) || isNull(cityid) || isNull(districtid)
-					|| isNull(contact) || isNull(address) || isNull(inwardid) 
-					|| isNull(industryid) || isNull(subdustryid); 
+				return isNull(name) && isNull(shortname) && isNull(englishname)
+					&& isNull(provinceid) || isNull(cityid) && isNull(districtid)
+					&& isNull(contact) && isNull(address) && isNull(inwardid) 
+					&& isNull(industryid) && isNull(subdustryid); 
 			}
 			
 			function isNull(str) {

@@ -17,5 +17,6 @@ public interface PrivDao extends IBaseDao<TPriv, Integer> {
 	public List<TPriv> getPrivByOrganAndApp(String app, int organId);
 
 	public int getMaxPrivId();
+	public TPriv getSimilarityPrivByUrl(String string, int organId);
 
 }

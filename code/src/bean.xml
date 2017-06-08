@@ -87,6 +87,7 @@
 		<property name="appinfoconfigDao" ref="appinfoconfigDao" />
 		<property name="roleappsecretDao" ref="roleappsecretDao" />
 		<property name="privDao" ref="privDao" />
+		<property name="rolePrivDao" ref="rolePrivDao" />
 		
 	</bean>
 	<bean id="uploadService" class="com.organ.service.upload.impl.UploadServiceImpl" autowire="byName" >

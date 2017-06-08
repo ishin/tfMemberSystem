@@ -101,5 +101,19 @@ public class RoleDaoImpl extends BaseDao<TRole, Integer> implements RoleDao {
 		
 		return runSql(sql);
 	}
+
+	@Override
+	public TRole getOneLevelRole(int organId) {
+		Criteria ctr = getCriteria();
+		ctr.add(Restrictions.eq("roleLevel", "1"));
+		ctr.add(Restrictions.eq("organId", organId));
+		
+		List<TRole> list = ctr.list();
+		
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
 	
 }

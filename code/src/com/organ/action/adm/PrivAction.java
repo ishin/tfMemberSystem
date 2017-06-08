@@ -118,10 +118,14 @@ public class PrivAction extends BaseAction {
 	public String delMemberRole() {
 		
 		Integer id = Integer.parseInt(clearChar(this.request.getParameter("id")));
+		int organId = getSessionUserOrganId();
+		boolean is = privService.checkManagerRole(id, organId);
 		
-		privService.delMemberRole(id);
-		
-		return returnajaxid(0);
+		if (!is) {
+			privService.delMemberRole(id);
+			return returnajaxid(0);
+		}
+		return returnajaxid(-1);
 	}
 
 	/**
@@ -147,10 +151,15 @@ public class PrivAction extends BaseAction {
 		
 		Integer roleId = Integer.parseInt(clearChar(this.request.getParameter("roleid")));
 		String memberlist = clearChar(this.request.getParameter("memberlist"));
+		int organId = getSessionUserOrganId();
 		
-		privService.saveRoleMember(roleId, memberlist);
-		
-		return returnajaxid(0);
+		//组织管理员只能有一个
+		boolean is = privService.isOneLevelRole(roleId, organId);
+		if (!is) {
+			privService.saveRoleMember(roleId, memberlist);
+			return returnajaxid(0);
+		}
+		return returnajaxid(-1);
 	}
 	
 	/**

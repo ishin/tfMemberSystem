@@ -9,6 +9,7 @@ import org.hibernate.criterion.Restrictions;
 
 import com.organ.common.BaseDao;
 import com.organ.dao.adm.PrivDao;
+import com.organ.model.TMember;
 import com.organ.model.TPriv;
 
 public class PrivDaoImpl extends BaseDao<TPriv, Integer> implements PrivDao {
@@ -57,5 +58,18 @@ public class PrivDaoImpl extends BaseDao<TPriv, Integer> implements PrivDao {
 	public int getMaxPrivId() {
 		String sql = "from t_priv";
 		return getMax("id", sql);
+	}
+
+	@Override
+	public TPriv getSimilarityPrivByUrl(String url, int organId) {
+		String hql = "SELECT new TPriv(t.id,t.parentId,t.name,t.url,t.app) FROM TPriv t WHERE organId="+ organId +" AND url LIKE '"+url+"%'";
+		Query query = getSession().createQuery(hql);
+
+		List<TPriv> list = query.list();
+
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
 	}
 }

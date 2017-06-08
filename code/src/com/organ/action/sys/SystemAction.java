@@ -44,6 +44,7 @@ public class SystemAction extends BaseAction {
 	public String login() throws IOException, ServletException {
 	
 		if (getSessionUser() == null) {
+			int i = 0;
 			return "loginPage";
 		} else {
 			return "loginSuccess";

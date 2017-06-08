@@ -19,6 +19,7 @@ import com.organ.dao.adm.OrgDao;
 import com.organ.dao.adm.PositionDao;
 import com.organ.dao.adm.PrivDao;
 import com.organ.dao.adm.RoleDao;
+import com.organ.dao.adm.RolePrivDao;
 import com.organ.dao.appinfoconfig.AppInfoConfigDao;
 import com.organ.dao.limit.RoleAppSecretDao;
 import com.organ.dao.member.MemberDao;
@@ -31,6 +32,7 @@ import com.organ.model.TPosition;
 import com.organ.model.TPriv;
 import com.organ.model.TRole;
 import com.organ.model.TRoleAppSecret;
+import com.organ.model.TRolePriv;
 import com.organ.service.adm.OrgService;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
@@ -53,6 +55,11 @@ public class OrgServiceImpl implements OrgService {
 	private AppInfoConfigDao appinfoconfigDao;
 	private RoleAppSecretDao roleappsecretDao;
 	private PrivDao privDao;
+	private RolePrivDao rolePrivDao;
+
+	public void setRolePrivDao(RolePrivDao rolePrivDao) {
+		this.rolePrivDao = rolePrivDao;
+	}
 
 	public void setPrivDao(PrivDao privDao) {
 		this.privDao = privDao;
@@ -333,9 +340,7 @@ public class OrgServiceImpl implements OrgService {
 					roleappsecretDao.save(tas);
 					
 					//初始化IM权限
-					initIMPriv(organId);
-					
-					//初始化角色权限（可不用）
+					initIMPriv(organId, role1Id, role2Id);
 					
 					j.put("account", tm.getAccount());
 					j.put("pwd", pwd);
@@ -353,7 +358,7 @@ public class OrgServiceImpl implements OrgService {
 	}
 	
 	//初始化IM权限
-	private void initIMPriv(int organId) {
+	private void initIMPriv(int organId, int role1Id, int role2Id) {
 		List<TPriv> privList = new ArrayList<TPriv>();
 		
 		privList.add(new TPriv(0, "应用APP/PC端", "1", "1", "yyapppcd", "IM", organId, 2));
@@ -390,6 +395,7 @@ public class OrgServiceImpl implements OrgService {
 		privDao.save(privList);
 		privList.clear();
 		privList = null;
+		//为了获取id
 		privList = privDao.getPrivByOrganAndApp("IM", organId);
 		
 		if (privList != null) {
@@ -420,14 +426,38 @@ public class OrgServiceImpl implements OrgService {
 					idMap.put(9, id);
 				}
 			}
+			ArrayList<Integer> idList = new ArrayList<Integer>();
+			
 			for(int i = 0; i < len; i++) {
 				TPriv t = privList.get(i);
 				int pid = t.getParentId();
 				if (pid == 0) continue;
 				if (idMap.get(pid) == null) continue;
 				t.setParentId(idMap.get(pid));
+				idList.add(t.getId());
 			}
 			privDao.saveOrUpdate(privList);
+			
+			//查找登陆权限
+			TPriv tp = privDao.getSimilarityPrivByUrl("DLQX", organId);
+			int dlqxid = 0;
+			if(tp != null) {
+				dlqxid = tp.getId();
+			}
+			//保存角色权限
+			List<TRolePriv> tmrList = new ArrayList<TRolePriv>();
+			
+			for(int j = 0; j < 2; j++) {
+				int roleId = (j == 0) ? role1Id : role2Id;
+				for(int i = 0; i < idList.size(); i++) {
+					tmrList.add(new TRolePriv(roleId, idList.get(i)));
+				}
+				if (dlqxid != 0) {
+					tmrList.add(new TRolePriv(roleId, dlqxid));
+				}
+				rolePrivDao.save(tmrList);
+				tmrList.clear();
+			}
 		}
 		
 	}

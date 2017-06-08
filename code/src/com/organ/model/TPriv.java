@@ -26,6 +26,15 @@ public class TPriv implements java.io.Serializable {
 		this.parentId = parentId;
 		this.listorder = listorder;
 	}
+	
+	public TPriv(Integer id, Integer parentId, String name,String url, String app) {
+		this.id = id;
+		this.parentId = parentId;
+		this.name = name;
+		this.url = url;
+		this.app = app;
+	}
+
 
 	public TPriv(Integer parentId, String name, String category,
 			String grouping, String url, String app, int organId, Integer listorder) {
