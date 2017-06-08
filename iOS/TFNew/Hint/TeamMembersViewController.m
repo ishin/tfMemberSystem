@@ -24,7 +24,7 @@
 #import "RCDUtilities.h"
 
 
-@interface TeamMembersViewController ()<UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
+@interface TeamMembersViewController ()<UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, SearchContactDelegate>
 {
     BOOL _isLoading;
     
@@ -48,6 +48,10 @@
 @synthesize _isChooseModel;
 @synthesize _membs;
 
+- (void) dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (void) viewWillAppear:(BOOL)animated{
 
@@ -91,7 +95,7 @@
     _resultView = [[SearchContactResultView alloc] initWithFrame:CGRectMake(0, 44, SCREEN_WIDTH, SCREEN_HEIGHT-64-44)];
     _resultView._ctrl = self;
     _resultView._isChooseModel = _isChooseModel;
-    
+    _resultView.delegate = self;
     
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 44, SCREEN_WIDTH, SCREEN_HEIGHT-64-44)
                                               style:UITableViewStylePlain];
@@ -101,10 +105,26 @@
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_tableView];
     
-
+    UIView *tfooter = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 120)];
+    _tableView.tableFooterView = tfooter;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(refreshTableSelections:)
+                                                 name:@"ClickToRemoveAndRefresh"
+                                               object:nil];
 }
 
+- (void) refreshTableSelections:(id)sender{
+    
+    if(_isChooseModel)
+        [_tableView reloadData];
+}
 
+- (void) didScroll{
+    
+    if([_searchBar isFirstResponder])
+        [_searchBar resignFirstResponder];
+}
 
 #pragma mark UITableView dataSource
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -475,6 +495,8 @@
     
     [_searchBar setShowsCancelButton:YES animated:YES];
     
+    _resultView._results = nil;
+    [_resultView refreshData];
     [self.view addSubview:_resultView];
     
 }
@@ -492,6 +514,11 @@
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
     
+    [self cancelSearch];
+}
+
+- (void) cancelSearch{
+    
     _searchBar.text=  @"";
     [_searchBar setShowsCancelButton:NO animated:YES];
     
@@ -508,24 +535,31 @@
     
     if([searchText length] > 0)
     {
-        
         [self doSearch:searchText];
-        
     }
     
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
-    
-    
+
     if([searchText length] > 0)
     {
         
         [self doSearch:searchText];
         
     }
-    
-    
+    else
+    {
+        _resultView._mapSelect = nil;
+        _resultView._results = nil;
+        [_resultView refreshData];
+    }
+
+}
+
+- (void) didCancelSearch
+{
+    [self cancelSearch];
 }
 
 
@@ -571,7 +605,24 @@
                 [results addObject:uu];
             }
         }
- 
+        else if([RCDUtilities isContains:uu.cellphone withString:keywords]){
+            
+            id key = [NSNumber numberWithInt:uu.userId];
+            if(![map objectForKey:key])
+            {
+                [map setObject:@"1" forKey:key];
+                [results addObject:uu];
+            }
+        }
+        else if([RCDUtilities isContains:uu.pinyinname withString:keywords]){
+            
+            id key = [NSNumber numberWithInt:uu.userId];
+            if(![map objectForKey:key])
+            {
+                [map setObject:@"1" forKey:key];
+                [results addObject:uu];
+            }
+        }
     }
     
     if([results count])

@@ -13,7 +13,8 @@
 /*
  通知的object为@{@"action":isEnd?@"end":@"start"}
  */
-static NSString *RCPTTSessionStatusChangeNotification ;
+
+FOUNDATION_EXPORT NSString * const RCPTTSessionStatusChangeNotification;
 
 @class RCPTT;
 
@@ -25,7 +26,7 @@ static NSString *RCPTTSessionStatusChangeNotification ;
 
 /**
  ptt会话开始
-
+ 
  @param ptt ptt
  @param session 当前ptt会话对象
  */
@@ -33,7 +34,7 @@ static NSString *RCPTTSessionStatusChangeNotification ;
 
 /**
  ptt会话的参与者发生变化
-
+ 
  @param ptt ptt
  @param userIds 当前ptt的所有参与者
  @param session 当前ptt会话对象
@@ -42,7 +43,7 @@ static NSString *RCPTTSessionStatusChangeNotification ;
 
 /**
  麦克风持有者发生变化
-
+ 
  @param ptt ptt
  @param userId 当前麦克风持有者id，如果没有人持有麦克风，那么为@"null"
  @param session 当前ptt会话对象
@@ -51,7 +52,7 @@ static NSString *RCPTTSessionStatusChangeNotification ;
 
 /**
  ptt会话结束
-
+ 
  @param ptt ptt
  @param session 当前ptt会话对象
  */
@@ -59,7 +60,7 @@ static NSString *RCPTTSessionStatusChangeNotification ;
 
 /**
  说话的时间限制到了
-
+ 
  @param ptt ptt
  @param session 当前ptt会话对象
  */
@@ -74,7 +75,7 @@ static NSString *RCPTTSessionStatusChangeNotification ;
 
 /**
  单例方法
-
+ 
  @return RCPTT单例对象
  */
 + (instancetype)sharedRCPTT;

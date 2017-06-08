@@ -22,4 +22,6 @@
 - (void) searchFriendAndGroupWithKeywords:(NSString*) searchText;
 - (void) searchFrinedWithKeywords:(NSString*) searchText;
 
+- (void) searchFriendOnlyKeywords:(NSString*) searchText;
+
 @end

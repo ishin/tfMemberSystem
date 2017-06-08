@@ -34,7 +34,7 @@
 //        [self addSubview:iconUp];
 //       
         
-        UIImageView *mbg = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-149-2, 56, 149, 97)];
+        UIImageView *mbg = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-149-2, 56, 149, 97+45)];
         //mbg.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
         [self addSubview:mbg];
         mbg.userInteractionEnabled = YES;
@@ -70,16 +70,23 @@
         btn2.layer.cornerRadius = 3;
         btn2.clipsToBounds = YES;
 
-//        line = [[UILabel alloc] initWithFrame:CGRectMake(10, CGRectGetMaxY(btn2.frame)+1,
-//                                                         cw-20, 1)];
-//        line.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.3];
-//        [mbg addSubview:line];
-//        
-//        btn3 = [UIButton buttonWithColor:nil selColor:LINE_COLOR];
-//        btn3.frame = CGRectMake(0, CGRectGetMaxY(line.frame)+1, cw, ch-2);
-//        btn3.backgroundColor = [UIColor clearColor];
-//        [mbg addSubview:btn3];
-    
+        line = [[UILabel alloc] initWithFrame:CGRectMake(10, CGRectGetMaxY(btn2.frame)-2,
+                                                         cw-20, 1)];
+        line.backgroundColor = [UIColor clearColor];
+        [mbg addSubview:line];
+        
+        
+        btn3 = [UIButton buttonWithColor:nil selColor:LINE_COLOR];
+        btn3.frame = CGRectMake(10, CGRectGetMaxY(line.frame), cw, ch-10);
+        btn3.backgroundColor = [UIColor clearColor];
+        [mbg addSubview:btn3];
+        btn3.layer.cornerRadius = 3;
+        btn3.clipsToBounds = YES;
+        
+//        line.hidden = YES;
+//        btn3.hidden = YES;
+//    
+        
         UIImageView *icon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_m_friends.png"]];
         [btn1 addSubview:icon];
         icon.center = CGPointMake(25, 22);
@@ -105,30 +112,29 @@
         tL2.text = @"添加常用";
         
         
+        icon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"scan_sb.png"]];
+        [btn3 addSubview:icon];
+        icon.center = CGPointMake(25, 20);
+        icon.tag = 100;
         
-//        icon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iconfont_groupchat.png"]];
-//        [btn3 addSubview:icon];
-//        icon.center = CGPointMake(15, 20);
-//        icon.tag = 100;
-//        
-//        UILabel *tL3 = [[UILabel alloc] initWithFrame:CGRectMake(35, 10, cw-50, 20)];
-//        tL3.backgroundColor = [UIColor clearColor];
-//        tL3.textColor = [UIColor whiteColor];
-//        tL3.font = [UIFont systemFontOfSize:13];
-//        [btn3 addSubview:tL3];
-//        tL3.text = @"创建群聊";
-    
+        
+        UILabel *tL3 = [[UILabel alloc] initWithFrame:CGRectMake(45, 6, cw-50, 20)];
+        tL3.backgroundColor = [UIColor clearColor];
+        tL3.textColor = COLOR_TEXT_A;
+        tL3.font = [UIFont systemFontOfSize:13];
+        [btn3 addSubview:tL3];
+        tL3.text = @"扫一扫";
     
         
         self._btns = [NSMutableArray array];
         [_btns addObject:btn1];
         [_btns addObject:btn2];
-        //[_btns addObject:btn3];
+        [_btns addObject:btn3];
         
         
         btn1.tag = 0;
         btn2.tag = 1;
-       // btn3.tag = 2;
+        btn3.tag = 2;
     
         
         [btn1 addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];

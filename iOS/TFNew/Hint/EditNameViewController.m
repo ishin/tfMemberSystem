@@ -11,6 +11,7 @@
 #import "SBJson4.h"
 #import "UserDefaultsKV.h"
 #import "WaitDialog.h"
+#import "GoGoDB.h"
 
 @interface EditNameViewController () <UITextFieldDelegate>
 {
@@ -79,6 +80,26 @@
 }
 
 
+- (void) updateGroupName:(NSString*)name{
+    
+    NSString *action = [_rawData objectForKey:@"action"];
+    
+    if([action isEqualToString:API_GROUP_NAME])
+    {
+        NSString *gid = [_rawData objectForKey:@"groupid"];
+        
+        if(gid && name)
+        {
+            NSDictionary *g = [[GoGoDB sharedDBInstance] queryGroup:gid];
+            
+            NSMutableDictionary *mg = [NSMutableDictionary dictionaryWithDictionary:g];
+            [mg setObject:name forKey:@"name"];
+            
+            [[GoGoDB sharedDBInstance] saveGroupInfo:mg];
+        }
+    }
+}
+
 
 - (void) uploadAction:(UIButton*)sender{
 
@@ -99,15 +120,15 @@
         _http._method = [_rawData objectForKey:@"action"];
         _http._httpMethod = @"POST";
         
-        //User *u = [UserDefaultsKV getUser];
-        
         NSMutableDictionary *param = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                      [_rawData objectForKey:@"groupid"],@"groupid",
+                                      [_rawData objectForKey:@"groupid"],
+                                      @"groupid",
                                       nil];
         
         if([_userName.text length])
         {
-            [param setObject:_userName.text forKey:@"groupname"];
+            [param setObject:_userName.text
+                      forKey:@"groupname"];
         }
         
         _http._requestParam = param;
@@ -133,6 +154,8 @@
                     
                     if(code == 1)
                     {
+                        [block_self updateGroupName:[v objectForKey:@"text"]];
+                        
                         [block_self.navigationController popViewControllerAnimated:YES];
                         
                     }

@@ -17,12 +17,16 @@
 @property (nonatomic, assign) int userId;
 @property (nonatomic, strong) NSString *account;
 @property (nonatomic, strong) NSString *fullname;
+
+@property (nonatomic, strong) NSString *pinyinname;
+
 @property (nonatomic, strong) NSString *cellphone;
 @property (nonatomic, strong) NSString *email;
 @property (nonatomic, strong) NSString *avatarurl;
 @property (nonatomic, strong) NSString *address;
 @property (nonatomic, strong) NSString *companyname;
 @property (nonatomic, strong) NSString *ranktitle;
+@property (nonatomic, strong) NSString *orgname;
 @property (nonatomic, strong) NSString *telphone;
 
 @property (nonatomic, strong) NSString *tags;
@@ -30,6 +34,7 @@
 @property (nonatomic, strong) id ctime;
 
 @property (nonatomic, assign) int familiy;
+@property (nonatomic, strong) id gender;
 
 - (void) updateWithDictionary:(NSDictionary*)data;
 

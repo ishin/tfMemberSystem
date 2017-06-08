@@ -84,9 +84,12 @@
     int y0 = CGRectGetMidY(btn.frame);
     
     int rightSpace = 0;
+    int heightSpace = 0;
     if(c)
     {
         int ty =  cy - (c*40 + (c-1)*20)/2;
+        if(ty < 10)
+            ty = 10;
         
         int maxW = 0;
         for(TeamOrg *t in membs)
@@ -133,24 +136,29 @@
         
         rightSpace = _rightX + maxW + 50;
         
+        heightSpace = ty;
+        
         //[self drawSubTiles:membs];
     }
     
+    UIScrollView *content = (UIScrollView*)[self superview];
     
-    if(rightSpace >= SCREEN_WIDTH)
+    if(rightSpace >= SCREEN_WIDTH || heightSpace > content.frame.size.height)
     {
         CGRect rc = self.frame;
-        rc.size.width = rightSpace;
+        int h = content.frame.size.height;
+        
+        if(rightSpace >= SCREEN_WIDTH)
+            rc.size.width = rightSpace;
+        
+        if(heightSpace > content.frame.size.height){
+            rc.size.height = heightSpace;
+            h = heightSpace;
+        }
         self.frame = rc;
         
-        UIScrollView *content = (UIScrollView*)[self superview];
-        [content setContentSize:CGSizeMake(CGRectGetWidth(self.frame), content.frame.size.height)];
-        
-        
+        [content setContentSize:CGSizeMake(CGRectGetWidth(self.frame), h)];
     }
-    
-    
-    
     
     [self setNeedsDisplay];
 }
@@ -158,14 +166,10 @@
 
 
 - (void) buttonAction:(UIButton*)pBtn{
-    
-    
-    
+
     TeamOrg * team = [_indexData objectForKey:[NSNumber numberWithInt:(int)pBtn.tag]];
     if(team)
     {
-        
-        
         UIButton *oldBtn = [_indexLMainBtns objectForKey:[NSNumber numberWithInt:team._levelIndex]];
         [oldBtn setImageColor:[UIColor whiteColor]];
         
@@ -333,11 +337,15 @@
         
         CGRect rc = self.frame;
         rc.size.width = xx + maxW + 50;
+        
+        if(ty+60 > rc.size.height)
+            rc.size.height = ty+60;
+        
         self.frame = rc;
         
         
         UIScrollView *content = (UIScrollView*)[self superview];
-        [content setContentSize:CGSizeMake(CGRectGetWidth(self.frame), content.frame.size.height)];
+        [content setContentSize:CGSizeMake(CGRectGetWidth(self.frame), rc.size.height)];
 
         [content setContentOffset:CGPointMake(_rightX-50, 0) animated:YES];
         
@@ -446,7 +454,11 @@
     _orgView._navictrl = self.navigationController;
     _orgView._ctrl = self;
     
-    [content setContentSize:CGSizeMake(CGRectGetWidth(_orgView.frame), content.frame.size.height)];
+    int h = content.frame.size.height;
+    if(h < CGRectGetHeight(_orgView.frame))
+        h = CGRectGetHeight(_orgView.frame);
+    
+    [content setContentSize:CGSizeMake(CGRectGetWidth(_orgView.frame), h)];
 
 }
 

@@ -37,6 +37,8 @@
 
 @synthesize gender;
 
+@synthesize _organname;
+
 - (id) initWithDicionary:(NSDictionary*)dic{
 
     self = [super init];
@@ -123,6 +125,13 @@
     self.telephone = value;
     
     self.gender = [dic objectForKey:@"sex"];
+    
+    value = [dic objectForKey:@"branchname"];
+    if([value isKindOfClass:[NSNull class]])
+    {
+        value = @"";
+    }
+    self._organname = value;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -156,6 +165,8 @@
         
         self.gender = [aDecoder decodeObjectForKey:@"gender"];
         
+        self._organname = [aDecoder decodeObjectForKey:@"organname"];
+        
     }
     return self;
 }
@@ -186,6 +197,8 @@
     [aCoder encodeObject:self._account forKey:@"account"];
     
     [aCoder encodeObject:self.gender forKey:@"gender"];
+    
+    [aCoder encodeObject:self._organname forKey:@"organname"];
     
 }
 

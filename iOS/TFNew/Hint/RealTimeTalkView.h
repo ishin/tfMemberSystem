@@ -20,4 +20,6 @@
 
 - (void) startRCPTT;
 - (void) endRCPTT;
+
+- (void) updateEmergCallAuth:(BOOL)auth;
 @end

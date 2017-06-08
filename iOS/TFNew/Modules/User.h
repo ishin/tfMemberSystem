@@ -43,6 +43,8 @@
 
 @property (nonatomic, strong) id gender;
 
+@property (nonatomic, strong) NSString *_organname;
+
 - (id) initWithDicionary:(NSDictionary*)dic;
 
 - (void) updateUserInfo:(NSDictionary*)dic;

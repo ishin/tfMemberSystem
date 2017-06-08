@@ -2311,34 +2311,6 @@ startCustomerService:(NSString *)kefuId
 - (void)getVendorToken:(void (^)(NSString *vendorToken))successBlock
                  error:(void (^)(RCErrorCode nErrorCode))errorBlock;
 
-#pragma mark - 用户状态
-//For Private Cloud Only ++
-/*!
- 查询用户的状态
- 
- @param userId       用户ID
- @param successBlock 查询成功的回调[onlineStatusList: 用户状态列表]
- @param errorBlock   查询失败的回调[nErrorCode: 失败的错误码]
- 
- @warning 仅限私有云使用，使用前必须先联系商务开通。
- */
-- (void)getUserOnlineStatus:(NSString *)userId
-                    success:(void (^)(NSArray <RCUserOnlineStatusInfo *> *onlineStatusList))successBlock
-                      error:(void (^)(RCErrorCode nErrorCode))errorBlock;
-
-/*!
- 设置当前用户的自定义在线状态
- 
- @param customerStatus       自定义在线状态值(1 < customerStatus <= 255)
- @param successBlock         设置成功的回调
- @param errorBlock           设置失败的回调[nErrorCode: 失败的错误码]
- 
- @warning 仅限私有云使用，使用前必须先联系商务开通。
- */
-- (void)setUserOnlineStatus:(int)customerStatus
-                    success:(void (^)())successBlock
-                      error:(void (^)(RCErrorCode nErrorCode))errorBlock;
-//For Private Cloud Only --
 
 @end
 

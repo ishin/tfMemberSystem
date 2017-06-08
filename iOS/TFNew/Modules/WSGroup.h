@@ -24,5 +24,5 @@
 
 
 - (id) initWithDictionary:(NSDictionary*)data;
-
+- (void) updateDictionary:(NSDictionary*)data;
 @end

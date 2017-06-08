@@ -21,6 +21,9 @@
 {
     UITableView     *_tableView;
 
+    UILabel         *_emptyL;
+    
+    int             maxHeight;
 }
 
 @end
@@ -30,7 +33,8 @@
 @synthesize _results;
 @synthesize _ctrl;
 @synthesize _isChooseModel;
-
+@synthesize _isForwardSearch;
+@synthesize delegate;
 
 /*
 // Only override drawRect: if you perform custom drawing.
@@ -40,11 +44,26 @@
 }
 */
 
+- (void) dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (id) initWithFrame:(CGRect)frame
 {
-    if(self = [super initWithFrame:frame])
+    int rh = SCREEN_HEIGHT;
+    CGRect rc = frame;
+    rc.size.height = rh;
+    
+    if(self = [super initWithFrame:rc])
     {
-        _tableView = [[UITableView alloc] initWithFrame:self.bounds];
+        UIView *tapMask = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        [self addSubview:tapMask];
+        
+        maxHeight = frame.size.height;
+        
+        
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 70)];
         _tableView.backgroundColor = [UIColor clearColor];
         _tableView.delegate = self;
         _tableView.dataSource = self;
@@ -56,22 +75,80 @@
         self.backgroundColor = RGBA(0x00, 0x27, 0x2C, 0.4);
         
         
+        _emptyL = [[UILabel alloc] initWithFrame:CGRectMake(0,0, self.frame.size.width, 60)];
+        _emptyL.font = [UIFont systemFontOfSize:14.f];
+        _emptyL.textAlignment = NSTextAlignmentCenter;
+        _emptyL.numberOfLines = 0;
+        _emptyL.text = @"没有搜索到相关内容";
+        _emptyL.textColor = RGB(0x99, 0x99, 0x99);
+        _emptyL.backgroundColor = [UIColor whiteColor];
+        //[self addSubview:_emptyL];
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapSelected:)];
+        tap.cancelsTouchesInView = NO;
+        [tapMask addGestureRecognizer:tap];
+        
+        UIView *tfooter = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 120)];
+        _tableView.tableFooterView = tfooter;
         
         
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(refreshTableSelections:)
+                                                     name:@"ClickToRemoveAndRefresh"
+                                                   object:nil];
     }
     
     return self;
 }
 
+- (void) refreshTableSelections:(NSNotification*)notify{
+    
+    if(_isChooseModel){
+        
+        id obj = notify.object;
+        if([obj intValue])
+        {
+            int uid = [obj intValue];
+            for(WSUser *u in _results)
+            {
+                if(u.userId == uid)
+                {
+                    u._isSelect = NO;
+                    break;
+                }
+            }
+        }
+        
+        [_tableView reloadData];
+    }
+}
+
+- (void) onTapSelected:(id)sender{
+    
+    if(delegate && [delegate respondsToSelector:@selector(didCancelSearch)])
+    {
+        [delegate didCancelSearch];
+    }
+}
 
 
 - (void) refreshData{
     
-    
+    if(_isForwardSearch)
+    {
+        self._isChooseModel = NO;
+    }
     
     [_tableView reloadData];
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    if(delegate && [delegate respondsToSelector:@selector(didScroll)])
+    {
+        [delegate didScroll];
+    }
+}
 
 #pragma mark UITableView dataSource
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -175,6 +252,24 @@
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
+    if(_results && [_results count] == 0)
+    {
+        [_tableView addSubview:_emptyL];
+        
+        _tableView.frame = CGRectMake(0, 0, self.frame.size.width, 70);
+    }
+    else
+    {
+        [_emptyL removeFromSuperview];
+        
+        int h = (int)[_results count] * 70;
+        if(h > maxHeight)
+            h = maxHeight;
+        
+        _tableView.frame = CGRectMake(0, 0, self.frame.size.width, h);
+    }
+
+    
     return [_results count];
 }
 
@@ -193,22 +288,32 @@
     
     WSUser* obj = [_results objectAtIndex:indexPath.row];
     
-    if(_isChooseModel)
+    if(_isForwardSearch)
     {
-        obj._isSelect = !obj._isSelect;
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"NotifyRefreshContactSelection" object:obj];
-        
-        [_tableView reloadData];
+        if(delegate && [delegate respondsToSelector:@selector(didContactSelected:)])
+        {
+            [delegate didContactSelected:obj];
+        }
     }
     else
     {
-        UserInfoViewController *info = [[UserInfoViewController alloc] init];
-        info._user = obj;
-        info.hidesBottomBarWhenPushed = YES;
-        //info._isFriend = YES;
-        [self._ctrl.navigationController pushViewController:info animated:YES];
-
+        if(_isChooseModel)
+        {
+            obj._isSelect = !obj._isSelect;
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NotifyRefreshContactSelection" object:obj];
+            
+            [_tableView reloadData];
+        }
+        else
+        {
+            UserInfoViewController *info = [[UserInfoViewController alloc] init];
+            info._user = obj;
+            info.hidesBottomBarWhenPushed = YES;
+            //info._isFriend = YES;
+            [self._ctrl.navigationController pushViewController:info animated:YES];
+            
+        }
     }
     
 }

@@ -34,10 +34,14 @@
 @end
 
 @implementation RCDSearchViewController
+@synthesize _ctrl;
 
 - (UITableView *)resultTableView{
   if (!_resultTableView) {
-    _resultTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStylePlain];
+    _resultTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 44,
+                                                                     self.view.frame.size.width,
+                                                                     self.view.frame.size.height-44)
+                                                    style:UITableViewStylePlain];
     _resultTableView.backgroundColor = [UIColor clearColor];
     _resultTableView.delegate = self;
     _resultTableView.dataSource = self;
@@ -50,66 +54,92 @@
 
 - (UILabel *)emptyLabel{
   if (!_emptyLabel) {
-    _emptyLabel = [[RCDLabel alloc] initWithFrame:CGRectMake(10,45, self.view.frame.size.width-20, 16)];
+    _emptyLabel = [[RCDLabel alloc] initWithFrame:CGRectMake(0,0, self.view.frame.size.width, 60)];
     _emptyLabel.font = [UIFont systemFontOfSize:14.f];
     _emptyLabel.textAlignment = NSTextAlignmentCenter;
     _emptyLabel.numberOfLines = 0;
     [self.resultTableView addSubview:_emptyLabel];
+      _emptyLabel.backgroundColor = [UIColor whiteColor];
+      
   }
   return _emptyLabel;
 }
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  _groupTypeArray = [NSMutableArray array];
+  
+    _groupTypeArray = [NSMutableArray array];
   _resultDictionary = [NSMutableDictionary dictionary];
   [self loadSearchView];
-  self.navigationItem.titleView = self.searchView;
-  self.view.backgroundColor = [UIColor colorWithWhite:1 alpha:0.95];
-  
+    
+    [self.view addSubview:self.searchView];
+    
+  //self.navigationItem.titleView = self.searchView;
+  //self.view.backgroundColor = [UIColor colorWithWhite:1 alpha:0.95];
+    self.view.backgroundColor = RGBA(0x00, 0x27, 0x2C, 0.4);
+    
   UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideSerchBarWhenTapBackground:)];
   tap.delegate = self;
   [self.view addGestureRecognizer:tap];
-}
-
-- (void)viewWillLayoutSubviews{
-  [super viewWillLayoutSubviews];
-  if ([self.resultTableView respondsToSelector:@selector(setSeparatorInset:)]) {
-    [self.resultTableView setSeparatorInset:UIEdgeInsetsMake(0,10, 0, 0)];
     
-  }
-  if ([self.resultTableView respondsToSelector:@selector(setLayoutMargins:)])  {
-    [self.resultTableView setLayoutMargins:UIEdgeInsetsMake(0, 10, 0, 0)];
-  }
-  
+    
+    UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backBtn setImage:[UIImage imageNamed:@"icon_fanhui_white.png"] forState:UIControlStateNormal];
+    backBtn.frame = CGRectMake(0, 0, 25, 44);
+    [backBtn addTarget:self action:@selector(backAction:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
+    self.navigationItem.leftBarButtonItem = backBarButtonItem;
+
 }
 
+- (void) backAction:(id)sender{
+    
+    if([self.delegate respondsToSelector:@selector(onSearchCancelClick)]){
+        [self.delegate onSearchCancelClick];
+    }
+}
+
+//- (void)viewWillLayoutSubviews{
+//  [super viewWillLayoutSubviews];
+//  if ([self.resultTableView respondsToSelector:@selector(setSeparatorInset:)]) {
+//    [self.resultTableView setSeparatorInset:UIEdgeInsetsMake(0,10, 0, 0)];
+//    
+//  }
+//  if ([self.resultTableView respondsToSelector:@selector(setLayoutMargins:)])  {
+//    [self.resultTableView setLayoutMargins:UIEdgeInsetsMake(0, 10, 0, 0)];
+//  }
+//  
+//}
+//
 - (void)viewWillAppear:(BOOL)animated{
   [super viewWillAppear:animated];
-  self.navigationController.navigationBar.barTintColor = HEXCOLOR(0xf0f0f6);
-  [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    
+    self.navigationController.navigationBarHidden = NO;
+  //self.navigationController.navigationBar.barTintColor = HEXCOLOR(0xf0f0f6);
+  //[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
 }
-
-- (void)viewWillDisappear:(BOOL)animated{
-  [super viewWillDisappear:animated];
-  self.navigationController.navigationBar.barTintColor = [UIColor colorWithHexString:@"0099ff" alpha:1.0f];
-  [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
-}
+//
+//- (void)viewWillDisappear:(BOOL)animated{
+//  [super viewWillDisappear:animated];
+// // self.navigationController.navigationBar.barTintColor = [UIColor colorWithHexString:@"0099ff" alpha:1.0f];
+//  //[[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
+//}
 
 - (void)loadSearchView{
   self.searchView = [[UIView alloc] initWithFrame:CGRectMake( 0, 0, RCDscreenWidth, 44)];
-  
+    self.searchView.backgroundColor = RGB(0xf2, 0xf2, 0xf2);
+    
   _searchBars = [[RCDSearchBar alloc] initWithFrame:CGRectZero];
   _searchBars.delegate = self;
   _searchBars.tintColor =[UIColor blueColor];
   [_searchBars becomeFirstResponder];
-  _searchBars.frame = CGRectMake( 0, 0,self.searchView.frame.size.width-65, 44);
+  _searchBars.frame = CGRectMake( 0, 0,self.searchView.frame.size.width-50, 44);
   [self.searchView addSubview:self.searchBars];
   
-  _cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_searchBars.frame)-3, CGRectGetMinY(self.searchBars.frame),55, 44)];
+  _cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_searchBars.frame)-3, CGRectGetMinY(self.searchBars.frame),50, 44)];
   [_cancelButton setTitle:@"取消" forState:UIControlStateNormal];
-  [_cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-  _cancelButton.titleLabel.font = [UIFont systemFontOfSize:18.];
+  [_cancelButton setTitleColor:RGB(0x99, 0x99, 0x99) forState:UIControlStateNormal];
+  _cancelButton.titleLabel.font = [UIFont systemFontOfSize:16.0];
   [_cancelButton addTarget:self action:@selector(cancelButtonClicked) forControlEvents:UIControlEventTouchUpInside];
   [self.searchView addSubview:_cancelButton];
 }
@@ -204,7 +234,7 @@
       });
     }];
       viewController.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:viewController animated:YES];
+    [self._ctrl.navigationController pushViewController:viewController animated:YES];
   }else{
     NSArray *array = self.resultDictionary[self.groupTypeArray[indexPath.section]];
     RCDSearchResultModel *model = array[indexPath.row];
@@ -247,7 +277,7 @@
       }];
         
         viewController.hidesBottomBarWhenPushed = YES;
-      [self.navigationController pushViewController:viewController animated:YES];
+      [self._ctrl.navigationController pushViewController:viewController animated:YES];
       return;
     }
       
@@ -260,12 +290,13 @@
     _conversationVC.unReadMessage = unreadCount;
     _conversationVC.enableNewComingMessageIcon = YES; //开启消息提醒
     _conversationVC.enableUnreadMessageIcon = YES;
+      _conversationVC.hidesBottomBarWhenPushed = YES;
     //如果是单聊，不显示发送方昵称
     if (model.conversationType == ConversationType_PRIVATE) {
       _conversationVC.displayUserNameInCell = NO;
     }
       _conversationVC.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:_conversationVC
+    [self._ctrl.navigationController pushViewController:_conversationVC
                                          animated:YES];
       
   }
@@ -294,9 +325,9 @@
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:str];
     [attributedString addAttribute:NSForegroundColorAttributeName value:HEXCOLOR(0x0099ff) range:NSMakeRange(6, searchText.length)];
     self.emptyLabel.attributedText = attributedString;
-    CGFloat height = [self labelAdaptive:str];
+    //CGFloat height = [self labelAdaptive:str];
     CGRect rect = self.emptyLabel.frame;
-    rect.size.height = height;
+    rect.size.height = 60;
     self.emptyLabel.frame = rect;
     self.emptyLabel.hidden = NO;
   }else{
@@ -346,6 +377,10 @@
 
 - (void)hideSerchBarWhenTapBackground:(id)sender {
   [self.searchBars resignFirstResponder];
+    
+    if([self.delegate respondsToSelector:@selector(onSearchCancelClick)]){
+        [self.delegate onSearchCancelClick];
+    }
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{

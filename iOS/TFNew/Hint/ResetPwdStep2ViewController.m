@@ -268,7 +268,19 @@
                 }
                 else
                 {
+                    NSDictionary* text = [v objectForKey:@"text"];
+                    NSString *message = @"错误";
+                    if(text)
+                    {
+                        message = [text objectForKey:@"context"];
+                    }
                     
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
+                                                                    message:message
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil, nil];
+                    [alert show];
                 }
                 
                 
@@ -478,6 +490,22 @@
                     
                     
                     [block_self.navigationController popToRootViewControllerAnimated:YES];
+                }
+                else
+                {
+                    NSDictionary* text = [v objectForKey:@"text"];
+                    NSString *message = @"错误";
+                    if(text)
+                    {
+                        message = [text objectForKey:@"context"];
+                    }
+                    
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
+                                                                    message:message
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil, nil];
+                    [alert show];
                 }
                 return;
             }

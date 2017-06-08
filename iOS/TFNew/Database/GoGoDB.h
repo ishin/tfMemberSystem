@@ -36,6 +36,8 @@
 - (void) saveGroupMembers:(NSArray*)members groupId:(NSString*)groupId;
 - (NSArray *) queryGroupMembers:(NSString*)groupId;
 - (NSArray *) queryAllGroups;
+- (void) deleteAllGroupsCached;
+
 
 - (int) updateConversationMute:(NSString*)targetId mute:(int)mute;
 - (int) muteStateWithTarget:(NSString*)targetId;
@@ -56,6 +58,7 @@
 
 
 - (NSArray *) queryOrgUnitsByPid:(int)pid;
+- (NSDictionary *)queryUnitById:(int)uid;
 - (int) insertOrgUnit:(NSDictionary*)unit;
 - (void) deleteAllOrgs;
 - (NSArray *)searchOrgPersonsWithKeyword:(NSString *)keyword;

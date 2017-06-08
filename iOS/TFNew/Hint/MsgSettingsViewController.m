@@ -190,8 +190,8 @@
             
             UISwitch *switchCtrl = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
             switchCtrl.center = CGPointMake(SCREEN_WIDTH - 50, 30);
-            [switchCtrl setOn:[[NSUserDefaults standardUserDefaults] boolForKey:@"Renmai_Switch"]];
-            [switchCtrl addTarget:self action:@selector(changeRenmaiSwitch:) forControlEvents:UIControlEventValueChanged];
+            [switchCtrl setOn:[[NSUserDefaults standardUserDefaults] boolForKey:@"PTT_Switch_onoff"]];
+            [switchCtrl addTarget:self action:@selector(changePTTRenmaiSwitch:) forControlEvents:UIControlEventValueChanged];
             [cell.contentView addSubview:switchCtrl];
             
             
@@ -366,6 +366,13 @@
     
 }
 
+- (void) changePTTRenmaiSwitch:(UISwitch*)switchCtrl{
+    
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:switchCtrl.on]
+                                              forKey:@"PTT_Switch_onoff"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+}
 
 - (void) changeRenmaiSwitch:(UISwitch*)switchCtrl{
     

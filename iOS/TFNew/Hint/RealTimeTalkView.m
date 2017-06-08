@@ -11,9 +11,11 @@
 #import "RCPTT.h"
 //#import <RongPTTKit/RongPTTKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "EmergCallView.h"
+#import "WaitDialog.h"
 
 
-@interface RealTimeTalkView () <RCPTTKitDelegate>
+@interface RealTimeTalkView () <RCPTTKitDelegate, EmergCallViewDelegate>
 {
     
     UIImageView *_avatar;
@@ -27,6 +29,7 @@
     
     UIButton *_offBtn;
     UIButton *_mikeBtn;
+    UIButton *_emergBtn;
     
     int _mike;
 }
@@ -122,21 +125,29 @@
         [_voiceBtn addTarget:self action:@selector(voiceButtonTapedStop) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchDragExit];
         
         
+        _mikeBtn =  [UIButton buttonWithType:UIButtonTypeCustom];
+        _mikeBtn.frame = CGRectMake(0, 0, 60, 60);
+        [self addSubview:_mikeBtn];
+        [_mikeBtn setImage:[UIImage imageNamed:@"talk_voice_Private-mode.png"] forState:UIControlStateNormal];
+        _mikeBtn.center = CGPointMake(SCREEN_WIDTH/4, CGRectGetMaxY(_avatar.frame));
+        [_mikeBtn addTarget:self action:@selector(mikeAction:) forControlEvents:UIControlEventTouchUpInside];
+        _mike = 0;
+        
+        _emergBtn =  [UIButton buttonWithType:UIButtonTypeCustom];
+        _emergBtn.frame = CGRectMake(0, 0, 60, 60);
+        [self addSubview:_emergBtn];
+        [_emergBtn setImage:[UIImage imageNamed:@"talk_emerg_pressing.png"] forState:UIControlStateNormal];
+        _emergBtn.center = CGPointMake(SCREEN_WIDTH/2, CGRectGetMaxY(_avatar.frame));
+        [_emergBtn addTarget:self action:@selector(emergAction:) forControlEvents:UIControlEventTouchUpInside];
+        _emergBtn.hidden = YES;
         
         _offBtn =  [UIButton buttonWithType:UIButtonTypeCustom];
         _offBtn.frame = CGRectMake(0, 0, 60, 60);
         [self addSubview:_offBtn];
         [_offBtn setImage:[UIImage imageNamed:@"talk_voice_pressing.png"] forState:UIControlStateNormal];
-        _offBtn.center = CGPointMake(SCREEN_WIDTH/2, CGRectGetMaxY(_avatar.frame));
+        _offBtn.center = CGPointMake(SCREEN_WIDTH/2+SCREEN_WIDTH/4, CGRectGetMaxY(_avatar.frame));
         [_offBtn addTarget:self action:@selector(overAction:) forControlEvents:UIControlEventTouchUpInside];
         
-        _mikeBtn =  [UIButton buttonWithType:UIButtonTypeCustom];
-        _mikeBtn.frame = CGRectMake(0, 0, 60, 60);
-        [self addSubview:_mikeBtn];
-        [_mikeBtn setImage:[UIImage imageNamed:@"talk_voice_Private-mode.png"] forState:UIControlStateNormal];
-        _mikeBtn.center = CGPointMake(SCREEN_WIDTH/4+5, CGRectGetMaxY(_avatar.frame));
-        [_mikeBtn addTarget:self action:@selector(mikeAction:) forControlEvents:UIControlEventTouchUpInside];
-        _mike = 0;
         
         
         if ([[[AVAudioSession sharedInstance] category] isEqualToString:AVAudioSessionCategoryPlayback])
@@ -161,12 +172,93 @@
     return self;
 }
 
+- (void) updateEmergCallAuth:(BOOL)auth{
+    
+    if(auth)
+    {
+        _emergBtn.hidden = NO;
+        
+//        _offBtn.center = CGPointMake(SCREEN_WIDTH/2+SCREEN_WIDTH/4, CGRectGetMaxY(_avatar.frame));
+//        _emergBtn.center = CGPointMake(SCREEN_WIDTH/2, CGRectGetMaxY(_avatar.frame));
+//        _mikeBtn.center = CGPointMake(SCREEN_WIDTH/4, CGRectGetMaxY(_avatar.frame));
+    }
+    else{
+        _emergBtn.hidden = YES;
+        //_offBtn.center = CGPointMake(SCREEN_WIDTH/2+SCREEN_WIDTH/4, CGRectGetMaxY(_avatar.frame));
+//        _offBtn.center = CGPointMake(SCREEN_WIDTH/2, CGRectGetMaxY(_avatar.frame));
+//        _mikeBtn.center = CGPointMake(SCREEN_WIDTH/4, CGRectGetMaxY(_avatar.frame));
+    }
+}
+
 
 - (void) overAction:(id)sender{
     
     [self endRCPTT];
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if(buttonIndex != alertView.cancelButtonIndex && alertView.tag == 2017201)
+    {
+        [self didEmergCallButtonDown:_targetUser.cellphone];
+    }
+}
+
+- (void) emergAction:(id)sender{
+    
+    
+    if([_targetUser.cellphone length])
+    {
+        
+        NSString *version = [[UIDevice currentDevice] systemVersion];
+        if( [version compare:@"10.2"] == NSOrderedAscending )
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                            message:[NSString stringWithFormat:@"%@", _targetUser.cellphone]
+                                                           delegate:self
+                                                  cancelButtonTitle:@"取消" otherButtonTitles:@"呼叫", nil];
+            alert.tag = 2017201;
+            [alert show];
+
+        }
+        else
+        {
+            _emergBtn.enabled = NO;
+            
+            [NSTimer scheduledTimerWithTimeInterval:2.0f
+                                             target:self
+                                           selector:@selector(endLockButton:)
+                                           userInfo:nil
+                                            repeats:NO];
+
+            
+            [self didEmergCallButtonDown:_targetUser.cellphone];
+        }
+    
+    }
+    
+    /*
+    EmergCallView *callAlert = [[EmergCallView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    callAlert.delegate_ = self;
+    [callAlert fillUser:[NSString stringWithFormat:@"%d", _targetUser.userId]];
+    
+    [callAlert animatedShow];
+     */
+}
+
+- (void) endLockButton:(id)sender{
+    
+    _emergBtn.enabled = YES;
+}
+
+- (void) didEmergCallButtonDown:(NSString*)mobile{
+    
+    if([mobile length])
+    {
+        NSString *tel = [NSString stringWithFormat:@"tel://%@", mobile];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:tel]];
+    }
+}
 
 
 - (void) endRCPTT{
@@ -206,11 +298,17 @@
             
         } error:^{
             NSLog(@"join session error");
+            
+            [self showAlertMsg:@"对讲忙，请稍候"];
+            
             [block_self failedCall];
         }];
     }else if (![self._ptt.lastSession isEqual:self._ptt.currentSession]){
         //[self showAlertView:@"Error" message:@"你已经加入了一个语音对讲"];
-        NSLog(@"你已经加入了一个语音对讲");
+        //NSLog(@"你已经加入了一个语音对讲");
+        
+        [self showAlertMsg:@"你已经加入了一个语音对讲"];
+        
         [self failedCall];
     }
 
@@ -275,9 +373,20 @@
     } error:^(RCPTTErrorCode code) {
         //[self showAlertView:nil message:@"抢麦失败"];
         NSLog(@"抢麦失败");
-         [weakSelf performSelector:@selector(stopSpeak) withObject:nil];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf showAlertMsg:@"对讲忙，请稍候"];
+        });
+        
+         //[weakSelf performSelector:@selector(stopSpeak) withObject:nil];
     }];
     
+}
+
+- (void) showAlertMsg:(NSString*)msg
+{
+    [[WaitDialog sharedAlertDialog] setTitle:msg];
+    [[WaitDialog sharedAlertDialog] animateShow];
 }
 
 - (void)voiceButtonTapedStop {
@@ -329,13 +438,8 @@
 }
 
 
-- (BOOL)isInSession:(RCPTTSession *)session {
-    RCPTT *ptt = [RCPTT sharedRCPTT];
-    if(ptt.conversationType == session.conversationType && [ptt.targetId isEqualToString:session.targetId]){
-        return YES;
-    }
-    return NO;
-}
+
+
 
 #pragma mark - RCPTTKitDelegate
 
@@ -377,6 +481,15 @@
     if([self isInSession:session]){
         NSLog(@"对讲超时");
     }
+}
+
+
+- (BOOL)isInSession:(RCPTTSession *)session {
+    RCPTT *ptt = [RCPTT sharedRCPTT];
+    if(ptt.conversationType == session.conversationType && [ptt.targetId isEqualToString:session.targetId]){
+        return YES;
+    }
+    return NO;
 }
 
 @end

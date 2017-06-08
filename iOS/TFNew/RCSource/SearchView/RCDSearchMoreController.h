@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RCDSearchMoreController : UITableViewController
+@interface RCDSearchMoreController : UIViewController
 @property (nonatomic,copy)NSString *searchString;
 @property (nonatomic,copy)NSString *type;
 @property (nonatomic,strong)NSArray *resultArray;

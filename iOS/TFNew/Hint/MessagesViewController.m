@@ -21,8 +21,9 @@
 #import "ChooseContactViewController.h"
 #import "CMNavigationController.h"
 #import "UIImage+Color.h"
-#import "RCDSearchViewController.h"
+//#import "RCDSearchViewController.h"
 #import "RCPTTCallAcionView.h"
+#import "RCDSearchView.h"
 
 
 @interface MessagesViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, RCDSearchViewDelegate, RCPTTCallAcionViewDelegate, TFCellEventViewDelegate>
@@ -47,6 +48,7 @@
 @property (nonatomic, strong) NSArray *displayConversationTypeArray;
 @property (nonatomic, strong) NSMutableArray *conversationListDataSource;
 @property (nonatomic, strong) UINavigationController *searchNavigationController;
+@property (nonatomic, strong) RCDSearchView *_searchView;
 
 @end
 
@@ -55,6 +57,7 @@
 @synthesize displayConversationTypeArray;
 @synthesize conversationListDataSource;
 @synthesize searchNavigationController;
+@synthesize _searchView;
 
 - (void) viewWillAppear:(BOOL)animated
 {
@@ -74,8 +77,9 @@
         _callAlert.delegate_ = self;
     
     }
-}
     
+    
+}
 
 -(id)initWithCoder:(NSCoder *)aDecoder
 {
@@ -83,7 +87,7 @@
     if (self) {
   
         self.displayConversationTypeArray = @[@(ConversationType_PRIVATE),
-                                              @(ConversationType_DISCUSSION),
+                                              @(ConversationType_PUSHSERVICE),
                                               @(ConversationType_APPSERVICE),
                                               @(ConversationType_PUBLICSERVICE),
                                               @(ConversationType_GROUP)//@(ConversationType_SYSTEM)
@@ -126,13 +130,25 @@
     {
         _callAlert._data = data;
         NSString *userid = [data objectForKey:@"userid"];
+        
+        User *u = [UserDefaultsKV getUser];
+        if([u._userId intValue] == [userid intValue])
+            return;
+        
+        
+        
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             
             [_callAlert fillUser:userid];
             
-            AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-            [app.window addSubview:_callAlert];
-            [_callAlert animatedShow];
+            if(![_callAlert superview])
+            {
+                AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+                [app.window addSubview:_callAlert];
+                [_callAlert animatedShow];
+            }
+            
             
         });
         
@@ -267,10 +283,7 @@
     else
     {
        
-   }
-    
-    
-   
+    }
     
 }
 
@@ -305,21 +318,99 @@
 
 #pragma mark - UISearchBarDelegate
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    
+    /*
     RCDSearchViewController *searchViewController = [[RCDSearchViewController alloc] init];
     self.searchNavigationController = [[CMNavigationController alloc] initWithRootViewController:searchViewController];
+    searchNavigationController.view.backgroundColor = [UIColor clearColor];
     searchViewController.delegate = self;
-    [self presentViewController:self.searchNavigationController animated:NO completion:nil];
+    searchViewController._ctrl = self;
     
-   // [self.navigationController.view addSubview:self.searchNavigationController.view];
+    //searchViewController.hidesBottomBarWhenPushed = YES;
+    //[self.navigationController pushViewController:searchViewController animated:YES];
+    //[self presentViewController:self.searchNavigationController animated:NO completion:nil];
+    
+    [self.navigationController.view addSubview:self.searchNavigationController.view];
+     */
+    
+    [_searchBar setShowsCancelButton:YES animated:YES];
+    
+    if(_searchView == nil){
+        self._searchView = [[RCDSearchView alloc] initWithFrame:CGRectMake(0, 44, SCREEN_WIDTH, SCREEN_HEIGHT-114-44)];
+        _searchView.delegate = self;
+        _searchView._ctrl = self;
+    }
+    [self.view addSubview:_searchView];
+    
+    NSString *searchText = searchBar.text;
+    
+    [_searchView doSearchWithWord:searchText];
 }
 
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
+    
+    if([searchBar.text length] == 0)
+    {
+        [_searchBar setShowsCancelButton:NO animated:YES];
+        
+        if([_searchView superview])
+            [_searchView removeFromSuperview];
+    }
+    
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
+    
+    [self cancelSearch];
+}
+
+- (void) cancelSearch{
+    
+    _searchBar.text=  @"";
+    [_searchBar setShowsCancelButton:NO animated:YES];
+    
+    if([_searchBar isFirstResponder])
+        [_searchBar resignFirstResponder];
+    
+    if([_searchView superview])
+        [_searchView removeFromSuperview];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    
+    NSString *searchText = searchBar.text;
+    
+    if([searchText length] > 0)
+    {
+        [_searchView doSearchWithWord:searchText];
+    }
+    
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
+    
+    [_searchView doSearchWithWord:searchText];
+}
+
+- (void) didDragScroll{
+    
+    if([_searchBar isFirstResponder])
+        [_searchBar resignFirstResponder];
+    
+}
+
+
 - (void)onSearchCancelClick{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.searchNavigationController dismissViewControllerAnimated:NO completion:nil];
-        //[self.searchNavigationController removeFromParentViewController];
-        [self.navigationController setNavigationBarHidden:NO animated:YES];
-    });
+    
+    [self cancelSearch];
+    
+    //[self._searchView removeFromSuperview];
+    
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [self.searchNavigationController dismissViewControllerAnimated:NO completion:nil];
+//        //[self.searchNavigationController removeFromParentViewController];
+//        [self.navigationController setNavigationBarHidden:NO animated:YES];
+//    });
 }
 
 
@@ -382,6 +473,9 @@
                          }];
         
     }
+    else{
+        [[ShootQRCode sharedShootCodeInstance] shootCode:self];
+    }
 
 }
 
@@ -396,6 +490,15 @@
 
 - (void) refreshChatList:(NSNotification *)notify{
     
+    __weak typeof(&*self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [weakSelf reloadMessageListData];
+    });
+    
+}
+
+- (void) reloadMessageListData{
     
     if(self.conversationListDataSource ==  nil)
         self.conversationListDataSource  = [NSMutableArray array];
@@ -408,6 +511,17 @@
         if([rc.objectName isEqualToString:@"RC:ContactNtf"] || [rc.objectName isEqualToString:@"RC:CmdMsg"])
         {
             continue;
+        }
+        
+        if([rc.lastestMessage isKindOfClass:[RCInformationNotificationMessage class]])
+        {
+            RCInformationNotificationMessage *msg = (RCInformationNotificationMessage*)rc.lastestMessage;
+            //应对SB需求
+            if([msg.message isEqualToString:@"群组已解散"] ||[msg.message isEqualToString:@"您当前不在此群组"])
+            {
+                continue;
+                
+            }
         }
         
         [conversationListDataSource addObject:rc];
@@ -426,7 +540,6 @@
     
     
     [_tableView reloadData];
-    
 }
 
 
@@ -580,7 +693,9 @@
                                                            isBlocked:on
                                                              success:^(RCConversationNotificationStatus nStatus) {
                                                                  
-                                                                 [block_self refresh];
+                                                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                                                     [block_self refresh];
+                                                                 });
                                                                  
                                                              } error:^(RCErrorCode status) {
                                                                  
@@ -592,8 +707,6 @@
     
     [_tableView reloadData];
     
-    //[_tableView setContentOffset:CGPointMake(0, 10) animated:YES];
-    //[_tableView setContentOffset:CGPointMake(0, 0) animated:YES];
 }
 
 - (void)didReceiveMemoryWarning {

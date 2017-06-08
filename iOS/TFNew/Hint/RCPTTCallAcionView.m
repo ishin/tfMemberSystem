@@ -11,7 +11,8 @@
 #import "WSUser.h"
 #import "SBJson4.h"
 #import "GoGoDB.h"
-
+#import "AudioPlayer.h"
+#import "RCPTT.h"
 
 @interface RCPTTCallAcionView ()
 {
@@ -23,6 +24,8 @@
     UIButton *_btnOff;
     
     WebClient *_http;
+    
+    NSTimer  *_timer;
 }
 @property (nonatomic, strong) NSString *_uid;
 @end
@@ -58,6 +61,16 @@
         
         self.backgroundColor = RGBA(0x00, 0x27, 0x2C, 0.4);
         
+        if([[UIDevice currentDevice].systemVersion floatValue] >= 8.0)
+        {
+            UIBlurEffect *blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+            UIVisualEffectView *effectview = [[UIVisualEffectView alloc] initWithEffect:blur];
+            effectview.frame = content.bounds;
+            [content addSubview:effectview];
+            content.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+            
+        }
+        
         int top = 60;
         int xx  = 20;
         
@@ -86,6 +99,10 @@
         _message.text = @"请求与你对讲";
         
         top = CGRectGetMaxY(_avatar.frame)+40;
+        
+        UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(22, top-10, 300-44, 1)];
+        line.backgroundColor = RGB(0xde, 0xe7, 0xf5);
+        [content addSubview:line];
         
         _btnOn = [UIButton buttonWithColor:RGB(0x53, 0xcc, 0xdd) selColor:nil];
         _btnOn.frame = CGRectMake(xx, top, 120, 40);
@@ -219,6 +236,15 @@
 
 - (void) connectAction:(id)sender{
     
+    RCPTT *pttInstance = [RCPTT sharedRCPTT];
+    if(pttInstance.isInSession && [pttInstance.lastSession isEqual:pttInstance.currentSession]){
+        [pttInstance leaveSession:pttInstance.conversationType targetId:pttInstance.targetId success:^{
+            NSLog(@"leave session success %s",__func__);
+        } error:^{
+            NSLog(@"leave session error %s",__func__);
+        }];
+    }
+    
     if(delegate_ && [delegate_ respondsToSelector:@selector(didTouchJCActionButtonIndex:)])
     {
         [delegate_ didTouchJCActionButtonIndex:0];
@@ -235,8 +261,47 @@
 
 }
 
+
+- (void) startTimer{
+    
+    [self stopTimer];
+    
+    _timer = [NSTimer scheduledTimerWithTimeInterval:30
+                                              target:self
+                                            selector:@selector(endingShowCall:)
+                                            userInfo:nil
+                                             repeats:NO];
+}
+
+- (void) stopTimer{
+    
+    if(_timer && [_timer isValid])
+    {
+        [_timer invalidate];
+        _timer = nil;
+    }
+    _timer = nil;
+}
+
+- (void) endingShowCall:(id)sender{
+
+    [self stopAction:nil];
+    
+}
+
+
 - (void) animatedShow
 {
+    
+    BOOL msgVoiceAlert = [[NSUserDefaults standardUserDefaults] boolForKey:@"PTT_Switch_onoff"];
+    if(msgVoiceAlert)
+    {
+        [[AudioPlayer sharedAudioPlayer] PlayAudio:@"ripple" withType:@"mp3" withLoop:YES];
+    }
+    
+    
+    [self startTimer];
+    
     self.alpha = 0.0;
 
     [UIView animateWithDuration:0.25
@@ -271,6 +336,10 @@
 }
 
 - (void) stopAction:(id)sender{
+    
+    [self stopTimer];
+    
+    [[AudioPlayer sharedAudioPlayer] StopAudioPlayer];
     
 
     [UIView animateWithDuration:0.35

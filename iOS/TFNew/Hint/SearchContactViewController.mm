@@ -16,7 +16,9 @@
 #import "UIButton+Color.h"
 #import "UILabel+ContentSize.h"
 #import "UIImage+Color.h"
-
+#import "ShootQRCode.h"
+#import "DataMatrix.h"
+#import "QREncoder.h"
 
 
 @interface SearchContactViewController ()<UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
@@ -32,12 +34,16 @@
     UIScrollView        *_membsScroll;
     UILabel             *_membsNumL;
     
+    UIView              *_myCodeView;
+    
 }
 @property (nonatomic, strong) NSMutableArray *_headerDatas;
 @property (nonatomic, strong) NSMutableArray *_datas;
 
 @property (nonatomic, strong) NSMutableDictionary *_mapSelect;
 @property (nonatomic, strong) NSMutableArray *_membs;
+
+@property (nonatomic, assign) int _willDelIndex;
 
 @end
 
@@ -46,6 +52,7 @@
 @synthesize _datas;
 @synthesize _membs;
 @synthesize _mapSelect;
+@synthesize _willDelIndex;
 
 
 - (void) viewWillAppear:(BOOL)animated{
@@ -74,6 +81,7 @@
     
     [self.navigationController.navigationBar setTitleTextAttributes:attributes];
     
+    self.view.backgroundColor = RGB(0xf2, 0xf2, 0xf2);
     
     
     UIButton *btnCancel = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -126,16 +134,18 @@
                                               style:UITableViewStylePlain];
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    _tableView.backgroundColor = [UIColor whiteColor];
+    _tableView.backgroundColor = [UIColor clearColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_tableView];
     
+    UIView *tfooter = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 120)];
+    _tableView.tableFooterView = tfooter;
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     _membsChoosedPannel = [app userMembsPannel];
     [app.window addSubview:_membsChoosedPannel];
     
-    [[_membsChoosedPannel subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [app clearMembsPannel];
     
     _membsScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 50, SCREEN_WIDTH, 60)];
     _membsScroll.backgroundColor = [UIColor clearColor];
@@ -157,8 +167,190 @@
     _membsNumL.font = [UIFont systemFontOfSize:13];
     
    
-    //[self loadFriends];
+    
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 150)];
+    _tableView.tableFooterView = footerView;
+    footerView.backgroundColor = [UIColor clearColor];
+    
+    
+    UIButton *bg = [UIButton buttonWithColor:[UIColor whiteColor] selColor:LINE_COLOR];
+    bg.frame = CGRectMake(0, 0, SCREEN_WIDTH, 60);
+    [footerView addSubview:bg];
+    [bg addTarget:self action:@selector(showMyCode:) forControlEvents:UIControlEventTouchUpInside];
+    
+    icon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"QR-code.png"]];
+    [bg addSubview:icon];
+    icon.center = CGPointMake(30, 32);
+    
+    UILabel *tL = [[UILabel alloc] initWithFrame:CGRectMake(60,
+                                                            0,
+                                                            SCREEN_WIDTH-70, 60)];
+    tL.backgroundColor = [UIColor clearColor];
+    [bg addSubview:tL];
+    tL.font = [UIFont systemFontOfSize:15];
+    tL.textAlignment = NSTextAlignmentLeft;
+    tL.textColor  = COLOR_TEXT_A;
+    tL.text = @"我的二维码";
+    
+
+    UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(bg.frame), SCREEN_WIDTH, 1)];
+    line.backgroundColor = LINE_COLOR;
+    [footerView addSubview:line];
+    
+    UIButton *shareWechat = [UIButton buttonWithColor:[UIColor whiteColor] selColor:LINE_COLOR];
+    shareWechat.frame = CGRectMake(0, CGRectGetMaxY(line.frame)+20, SCREEN_WIDTH, 60);
+    [footerView addSubview:shareWechat];
+    [shareWechat addTarget:self action:@selector(scanQR:) forControlEvents:UIControlEventTouchUpInside];
+    
+    icon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"scan_sb.png"]];
+    [shareWechat addSubview:icon];
+    icon.center = CGPointMake(30, 32);
+    
+    tL = [[UILabel alloc] initWithFrame:CGRectMake(60,
+                                                   0,
+                                                   SCREEN_WIDTH-70, 60)];
+    tL.backgroundColor = [UIColor clearColor];
+    [shareWechat addSubview:tL];
+    tL.font = [UIFont systemFontOfSize:15];
+    tL.textAlignment = NSTextAlignmentLeft;
+    tL.textColor  = COLOR_TEXT_A;
+    tL.text = @"扫一扫";
   
+}
+
+- (void) showMyCode:(id)sender{
+    
+    
+    if(_myCodeView)
+    {
+        [self.view addSubview:_myCodeView];
+    }
+    else
+    {
+        User *u = [UserDefaultsKV getUser];
+        
+        NSString *token = u._authtoken;
+        if([token length] > 10)
+            token = [token substringToIndex:10];
+        NSString *qr = [NSString stringWithFormat:@"%@&%@", u._account, token];
+        [self showMyInfo:qr];
+        
+    }
+    
+}
+
+- (void) onTapSelected:(id)sender{
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        _myCodeView.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        
+        [_myCodeView removeFromSuperview];
+        _myCodeView.alpha = 1.0;
+    }];
+}
+
+- (void) showMyInfo:(NSString*)qr{
+    
+    _myCodeView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-64)];
+    _myCodeView.backgroundColor = RGBA(0x00, 0x27, 0x2C, 0.4);
+    
+    [self.view addSubview:_myCodeView];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+                                   initWithTarget:self
+                                   action:@selector(onTapSelected:)];
+    [_myCodeView addGestureRecognizer:tap];
+    
+    int h = SCREEN_HEIGHT - 64;
+    
+    int ww = SCREEN_WIDTH - 30 - 30;
+    int wh = SCREEN_WIDTH - 30 - 30 + 120;
+    
+    int whiteWidth =  SCREEN_WIDTH-30;
+    
+    UIView* whiteView = [[UIView alloc] initWithFrame:CGRectMake(15, 0, whiteWidth, wh)];
+    whiteView.backgroundColor = [UIColor whiteColor];
+    whiteView.layer.cornerRadius = 2;
+    whiteView.clipsToBounds = YES;
+    [_myCodeView addSubview:whiteView];
+    whiteView.center = CGPointMake(SCREEN_WIDTH/2, h/2);
+    
+    UIImageView *qrcode = [[UIImageView alloc] initWithFrame:CGRectMake(20, 80, ww-10, ww-10)];
+    [whiteView addSubview:qrcode];
+    qrcode.layer.contentsGravity = kCAGravityCenter;
+    
+    User *u = [UserDefaultsKV getUser];
+    
+    DataMatrix *data_matrix = [QREncoder encodeWithECLevel:QR_ECLEVEL_AUTO version:QR_VERSION_AUTO string:qr];
+    qrcode.image = [QREncoder renderDataMatrix:data_matrix imageDimension:200];
+    
+    UIImageView* actorLogo = [[UIImageView alloc] initWithFrame:CGRectMake(30, 30, 50, 50)];
+    actorLogo.layer.cornerRadius = 25;
+    actorLogo.clipsToBounds = YES;
+    actorLogo.backgroundColor = [UIColor clearColor];
+    actorLogo.layer.contentsGravity = kCAGravityResizeAspectFill;
+    [whiteView addSubview:actorLogo];
+    [actorLogo setImageWithURL:[NSURL URLWithString:u._avatar]
+              placeholderImage:[UIImage imageNamed:@"defalut_avatar.png"]];
+    
+    
+    UILabel* nameL = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(actorLogo.frame)+10,
+                                                               30,
+                                                               whiteWidth - 100, 25)];
+    nameL.backgroundColor = [UIColor clearColor];
+    [whiteView addSubview:nameL];
+    nameL.font = [UIFont boldSystemFontOfSize:15];
+    nameL.textAlignment = NSTextAlignmentLeft;
+    nameL.textColor  = COLOR_TEXT_A;
+    nameL.text = u._userName;
+    
+    UIImageView* u_gener = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"gender_male.png"]];
+    [whiteView addSubview:u_gener];
+    
+    CGSize s = [nameL.text sizeWithAttributes:@{NSFontAttributeName:nameL.font}];
+    
+    u_gener.center = CGPointMake(CGRectGetMinX(nameL.frame)+s.width+20, nameL.center.y);
+    
+    if([u.gender intValue] == 1)
+    {
+        u_gener.image = [UIImage imageNamed:@"gender_male.png"];
+    }
+    else
+    {
+        u_gener.image = [UIImage imageNamed:@"gender_female.png"];
+    }
+
+    
+    UILabel* cmpL = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(actorLogo.frame)+10,
+                                                              CGRectGetMaxY(nameL.frame),
+                                                              whiteWidth - (CGRectGetMaxX(actorLogo.frame)+30) , 20)];
+    cmpL.backgroundColor = [UIColor clearColor];
+    [whiteView addSubview:cmpL];
+    cmpL.font = [UIFont systemFontOfSize:14];
+    cmpL.textAlignment = NSTextAlignmentLeft;
+    cmpL.textColor  = COLOR_TEXT_B;
+    cmpL.text = [NSString stringWithFormat:@"%@ %@", u.companyname, u.ranktitle];
+    
+    
+    UILabel* alertL = [[UILabel alloc] initWithFrame:CGRectMake(10,
+                                                                CGRectGetMaxY(qrcode.frame)+10,
+                                                                CGRectGetWidth(whiteView.frame)-20, 30)];
+    alertL.backgroundColor = [UIColor clearColor];
+    [whiteView addSubview:alertL];
+    alertL.font = [UIFont systemFontOfSize:12];
+    alertL.textAlignment = NSTextAlignmentCenter;
+    alertL.textColor  = COLOR_TEXT_B;
+    alertL.text = @"扫描上面二维码，加我为联系人";
+
+    
+    
+}
+
+
+- (void) scanQR:(id)sender{
+    
+    [[ShootQRCode sharedShootCodeInstance] shootCode:self];
 }
 
 - (void) showMembersPannel{
@@ -193,8 +385,11 @@
     
     int xx = 10;
     int w = 34;
-    for(WSUser *u in _membs)
+    
+    for(int i = 0; i < [_membs count]; i++)
     {
+        WSUser *u = [_membs objectAtIndex:i];
+        
         UIImageView *avatar = [[UIImageView alloc] initWithFrame:CGRectMake(xx, 5, w, w)];
         avatar.layer.cornerRadius = 17;
         avatar.clipsToBounds = YES;
@@ -215,16 +410,63 @@
         
         tL.text = u.fullname;
         
+        
+        UIButton *btnUser = [UIButton buttonWithType:UIButtonTypeCustom];
+        btnUser.frame = avatar.frame;
+        [_membsScroll addSubview:btnUser];
+        btnUser.tag = i;
+        [btnUser addTarget:self action:@selector(clickedToRemove:) forControlEvents:UIControlEventTouchUpInside];
+
+        
         xx+=w;
         xx+=12;
-        
-        //[UIView beginAnimations:nil context:nil];
         
     }
         
 }
 
+- (void) clickedToRemove:(UIButton*)btn{
+    
+    self._willDelIndex = (int)btn.tag;
+    
+    
+    WSUser *u = [_membs objectAtIndex:_willDelIndex];
+    
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                    message:[NSString stringWithFormat:@"删除\"%@\"？", u.fullname]
+                                                   delegate:self
+                                          cancelButtonTitle:@"取消"
+                                          otherButtonTitles:@"确定", nil];
+    alert.tag = 12017;
+    [alert show];
+}
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    if(alertView.tag == 12017 && buttonIndex != alertView.cancelButtonIndex)
+    {
+         WSUser *u = [_membs objectAtIndex:_willDelIndex];
+        id key = [NSNumber numberWithInt:u.userId];
+        if([_mapSelect objectForKey:key])
+        {
+            [_mapSelect removeObjectForKey:key];
+        }
+        [_membs removeObjectAtIndex:_willDelIndex];
+        
+        [_tableView reloadData];
+        
+        if([_membs count])
+        {
+            [self showMembs];
+        }
+        else
+        {
+            [self hiddenMembersPannel];
+        }
+    }
+}
 
 #pragma mark UITableView dataSource
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -401,7 +643,11 @@
         [u addMyFriend:my._account];
     }
     
-    [self hiddenMembersPannel];
+      
+    
+    //[self hiddenMembersPannel];
+    
+    [self backAction:nil];
     
 }
 
@@ -425,6 +671,11 @@
     _searchBar.text=  @"";
     [_searchBar setShowsCancelButton:NO animated:YES];
     
+    
+    [_datas removeAllObjects];
+    
+    [_tableView reloadData];
+    
     if([_searchBar isFirstResponder])
         [_searchBar resignFirstResponder];
 }
@@ -445,15 +696,7 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
     
-    
-    if([searchText length] > 1)
-    {
-        
-        [self doSearch:searchText];
-        
-    }
-    
-    
+    [self doSearch:searchText];
 }
 
 - (void) doSearch:(NSString*)keywords{
@@ -468,7 +711,7 @@
         _http = [[WebClient alloc] initWithDelegate:self];
     }
     
-    _http._httpMethod = @"GET";
+    _http._httpMethod = @"POST";
     
 
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
@@ -497,12 +740,7 @@
             
             if([v isKindOfClass:[NSArray class]])
             {
-                if([v count])
-                {
-                    
-                    [block_self reloadData:v];
-                    
-                }
+                [block_self reloadData:v];
                 
                 return;
             }
@@ -539,11 +777,18 @@
     
     [_datas removeAllObjects];
     
+   
+    
     for(NSDictionary *dic in list)
     {
-        WSUser *user = [[WSUser alloc] initWithDictionary:dic];
-        [_datas addObject:user];
+        if([dic objectForKey:@"id"])
+        {
+            WSUser *user = [[WSUser alloc] initWithDictionary:dic];
+            [_datas addObject:user];
+        }
     }
+        
+    
     
     [_tableView reloadData];
     

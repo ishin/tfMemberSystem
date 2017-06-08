@@ -15,6 +15,7 @@
 #import <RongIMKit/RongIMKit.h>
 #import <RongIMKit/RCIM.h>
 //#import <RongIMLib/RongIMLib.h>
+#import "RCPTT.h"
 
 #import <RongPTTLib/RongPTTLib.h>
 
@@ -33,7 +34,55 @@
 #define RONG_CLOUD_KEY  @"m7ua80guyso7u"//@"k51hidw10345e"//@"e5t4ouvpe564a"//m7ua80guyso7u
 
 
-@interface AppDelegate () <RCIMConnectionStatusDelegate, RCIMReceiveMessageDelegate, RCIMUserInfoDataSource>
+@interface AvatarMenuView : UIView
+{
+    
+}
+
+@end
+
+@implementation AvatarMenuView
+
+//- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+//{
+//    if(self.tag == 20122012)
+//    {
+//    if(point.x < SCREEN_WIDTH/2)
+//    {
+//        if(point.y < 48)
+//        {
+//            return nil;
+//        }
+//    }
+//    }
+//    
+//    return self;
+//
+//}
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(nullable UIEvent *)event{
+    
+    // 这里的调用者是self，因为point是当前view中的点
+    CGPoint buttonPoint = [self convertPoint:point toView:self];
+    
+   
+    NSLog(@"%f - %f", buttonPoint.x, buttonPoint.y);
+    
+    if(buttonPoint.x < SCREEN_WIDTH/2 && buttonPoint.y > 0)
+    {
+        if(buttonPoint.y < 47)
+        {
+            return NO;
+        }
+    }
+    
+    return [super pointInside:point withEvent:event];
+}
+
+@end
+
+
+@interface AppDelegate () <RCIMConnectionStatusDelegate, RCIMReceiveMessageDelegate, RCIMUserInfoDataSource, RCIMGroupInfoDataSource>
 {
     WebClient *_RChttp;
     
@@ -54,16 +103,17 @@
  
     GlobalTouchButtonView *_globalButton;
     
-    UIView *_membsChoosedPannel;
 }
 @property (strong, nonatomic) NSMutableDictionary *_rcUserInfoMap;
 @property (strong, nonatomic) NSMutableDictionary *_rcGroupInfoMap;
+@property (strong, nonatomic) AvatarMenuView *_membsChoosedPannel;
 
 @end
 
 @implementation AppDelegate
 @synthesize _rcUserInfoMap;
 @synthesize _rcGroupInfoMap;
+@synthesize _membsChoosedPannel;
 
 
 
@@ -106,11 +156,21 @@
         [self application:application didReceiveLocalNotification:notification];
     }
     
+    
+    [[UIBarButtonItem appearanceWhenContainedIn: [UISearchBar class], nil] setTintColor:RGB(0x99, 0x99, 0x99)];
+    [[UIBarButtonItem appearanceWhenContainedIn: [UISearchBar class], nil] setTitle:@"取消"];
+   
+    
    // [self umengTrack];
     
     if(![[NSUserDefaults standardUserDefaults] objectForKey:@"Voice_Switch_onoff"])
     {
         [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:@"Voice_Switch_onoff"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"PTT_Switch_onoff"])
+    {
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:@"PTT_Switch_onoff"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
@@ -126,7 +186,10 @@
     [GoGoDB sharedDBInstance];
     
    
-    _membsChoosedPannel = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 125)];
+    self._membsChoosedPannel = [[AvatarMenuView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 125)];
+    _membsChoosedPannel.tag = 2012;
+    _membsChoosedPannel.clipsToBounds = YES;
+    
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"group_membs_pannel.png"]];
     CGRect rrc = bg.frame;
     rrc.origin.x = SCREEN_WIDTH - rrc.size.width;
@@ -158,6 +221,18 @@
                                                object:nil];
     
     return YES;
+}
+- (void) clearMembsPannel{
+    
+    [[_membsChoosedPannel subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"group_membs_pannel.png"]];
+    CGRect rrc = bg.frame;
+    rrc.origin.x = SCREEN_WIDTH - rrc.size.width;
+    bg.frame = rrc;
+    
+    [_membsChoosedPannel addSubview:bg];
+
 }
 
 - (UIView*) userMembsPannel{
@@ -288,24 +363,19 @@
 }
 
 
-- (void) updatePersonInfo{
+- (void) checkSeesion{
     
     if(_uClient == nil)
     {
         _uClient = [[WebClient alloc] initWithDelegate:self];
     }
     
-    _uClient._method = API_USER_PROFILE;
+    _uClient._method = API_CHECK_SESSION;
     _uClient._httpMethod = @"GET";
     
-    User *u = [UserDefaultsKV getUser];
-    
-    _uClient._requestParam = [NSDictionary dictionaryWithObjectsAndKeys:
-                              u._userId,@"userid",
-                              nil];
     
     
-    // IMP_BLOCK_SELF(AppDelegate);
+    IMP_BLOCK_SELF(AppDelegate);
     
     [_uClient requestWithSusessBlock:^(id lParam, id rParam) {
         
@@ -318,15 +388,12 @@
             
             if([v isKindOfClass:[NSDictionary class]])
             {
-                int code = [[v objectForKey:@"id"] intValue];
+                BOOL auth = [[v objectForKey:@"status"] boolValue];
                 
-                if(code)
+                if(!auth)
                 {
                     
-                    //u._userId = [NSString stringWithFormat:@"%d", [[v objectForKey:@"id"] intValue]];
-                    [u updateUserInfo:v];
-                    
-                    [UserDefaultsKV saveUser:u];
+                    [block_self switchLogin];
                 }
                 
                 return;
@@ -376,7 +443,7 @@
     [self loginRongCloud];
     
 
-   // [self updatePersonInfo];
+    //[self checkSeesion];
     
     [[DataSync sharedDataSync] syncMyContacts];
     [[DataSync sharedDataSync] syncMyGroups];
@@ -390,24 +457,39 @@
 }
 
 
-- (void) pushToChat:(NSString*)targetId type:(int)type{
+- (void) pushToChat:(NSString*)targetId type:(int)type enterCall:(BOOL)enterCall{
+    
+    RCPTT *pttInstance = [RCPTT sharedRCPTT];
+    if(pttInstance.isInSession && [pttInstance.lastSession isEqual:pttInstance.currentSession]){
+        [pttInstance leaveSession:pttInstance.conversationType targetId:pttInstance.targetId success:^{
+            NSLog(@"leave session success %s",__func__);
+        } error:^{
+            NSLog(@"leave session error %s",__func__);
+        }];
+    }
     
     ChatViewController *conversationVC = [[ChatViewController alloc]init];
-    if(type == 0)
-        conversationVC.conversationType = ConversationType_PRIVATE;
-    else
-        conversationVC.conversationType = ConversationType_GROUP;
+    conversationVC.conversationType = type;
     conversationVC.targetId = targetId;
     conversationVC._userName = @"";
     conversationVC.hidesBottomBarWhenPushed = YES;
     
-    if(type == 1)
+    if(type == ConversationType_GROUP)
     {
         conversationVC._groupType = 1;
     }
+
+    conversationVC._enterCallUI = enterCall;
     
     UINavigationController *msgCtrl = [tabbar.viewControllers objectAtIndex:0];
     [tabbar setCurrentTabIndex:0];
+    
+    UIViewController *ctrl = [msgCtrl topViewController];
+    if([ctrl isKindOfClass:[ChatViewController class]])
+    {
+        [msgCtrl popToRootViewControllerAnimated:NO];
+    }
+    
     [msgCtrl pushViewController:conversationVC animated:YES];
     
 
@@ -442,17 +524,19 @@
     //初始化融云SDK，
     [[RCIM sharedRCIM] initWithAppKey:RONG_CLOUD_KEY];
     [RCIM sharedRCIM].userInfoDataSource = self;
+    [RCIM sharedRCIM].groupInfoDataSource = self;
     [RCIM sharedRCIM].receiveMessageDelegate = self;
     
     [[RCIM sharedRCIM] setConnectionStatusDelegate:self];
     
+    [[RCIM sharedRCIM] enableMessageAttachUserInfo];
+    
     
     [RCIM sharedRCIM].globalMessageAvatarStyle = RC_USER_AVATAR_CYCLE;
     
-   //[[RCPTTClient sharedPTTClient] setServerURL:@"http://35.164.107.27:8080/rce/restapi/ptt"];
-    [[RCPTTClient sharedPTTClient] setServerURL:@"http://120.26.42.225:8080/rce/restapi/ptt"];
+    [[RCPTTClient sharedPTTClient] setServerURL:RC_PTT_SERVER];
 
-    [[RCIMClient sharedRCIMClient] setServerInfo:@"103.36.132.10:80" fileServer:@"up.qbox.me/"];
+    [[RCIMClient sharedRCIMClient] setServerInfo:RCP_SERVER fileServer:RCP_QN_FILE];
     
     
     //设置系统音效
@@ -476,11 +560,13 @@
         return;
     
     RCUserInfo *user = [[RCUserInfo alloc] initWithUserId:u._userId
-                                                     name:u._userName portrait:nil];
+                                                     name:u._userName
+                                                 portrait:u._avatar];
     [RCIM sharedRCIM].currentUserInfo = user;
     user.portraitUri = u._avatar;
     [RCIMClient sharedRCIMClient].currentUserInfo = user;
 
+    [[RCIM sharedRCIM] refreshUserInfoCache:user withUserId:user.userId];
     
     NSString *RongCloud_IM_User_Token = [[NSUserDefaults standardUserDefaults] objectForKey:@"RongCloud_IM_User_Token"];
     if(RongCloud_IM_User_Token == nil)
@@ -610,6 +696,16 @@
             [self._rcUserInfoMap setObject:u forKey:userId];
             [u loadUserInfo:userId completion:completion];
         }
+        else if(u._userInfo == nil)
+        {
+            RCUserInfo *user = [[RCUserInfo alloc] init];
+            user.userId = userId;
+            user.name = @"";
+            user.portraitUri = [u._userInfo objectForKey:@"avatarurl"];
+            
+            return completion(user);
+            
+        }
         else
         {
             RCUserInfo *user = [[RCUserInfo alloc] init];
@@ -667,6 +763,49 @@
     
 }
 
+- (void) checkUserInfo:(NSString*)userid{
+    
+    RCUserInfo* cachedUser = [[GoGoDB sharedDBInstance] queryUser:userid];
+    if(cachedUser)
+    {
+        return;
+    }
+    else
+    {
+        RCJUser *u = [self._rcUserInfoMap objectForKey:userid];
+        if(u == nil)
+        {
+            u = [[RCJUser alloc] init];
+            [self._rcUserInfoMap setObject:u forKey:userid];
+            [u loadUserInfo:userid completion:nil];
+        }
+        else if(u._userInfo == nil)
+        {
+            
+            [u loadUserInfo:userid completion:nil];
+        }
+    }
+}
+
+- (void)getGroupInfoWithGroupId:(NSString *)groupId
+                     completion:(void (^)(RCGroup *groupInfo))completion{
+    
+    
+    RCGroup *group = [[RCGroup alloc] init];
+    group.groupId = groupId;
+    
+    NSDictionary* cachedGInfo = [[GoGoDB sharedDBInstance] queryGroup:groupId];
+    if(cachedGInfo)
+    {
+        group.groupName = [cachedGInfo objectForKey:@"name"];
+        group.portraitUri = [NSString stringWithFormat:@"%@/upload/images/%@", WEB_API_URL, [cachedGInfo objectForKey:@"logo"]];
+        
+        return completion(group);
+    }
+
+    
+}
+
 - (void)getGroupInfoWithUserId:(NSString *)targetId completion:(void (^)(RCUserInfo *userInfo))completion{
     
 
@@ -690,8 +829,16 @@
         u = [[RCJUser alloc] init];
         [self._rcGroupInfoMap setObject:u forKey:targetId];
         [u loadGroupInfo:targetId completion:completion];
+    }
+    else if(u._userInfo == nil)
+    {
+        RCUserInfo *user = [[RCUserInfo alloc] init];
+        user.userId = targetId;
+        user.name = @"";
+        user.portraitUri = [NSString stringWithFormat:@"%@/upload/images/%@", WEB_API_URL, [u._userInfo objectForKey:@"logo"]];
         
-
+        [u loadGroupInfo:targetId completion:completion];
+        
     }
     else
     {
@@ -703,7 +850,6 @@
         return completion(user);
         
     }
-    
     
     return completion(group);
     
@@ -735,6 +881,12 @@
 
 - (void)onRCIMReceiveMessage:(RCMessage *)message left:(int)left{
     
+//    if(message.conversationType == ConversationType_PRIVATE)
+//    {
+//        [self checkUserInfo:message.senderUserId];
+//    }
+    
+    
     if([message.content isKindOfClass:[RCPTTBeginMessage class]])
     {
         NSDictionary *dic = @{@"userid":message.senderUserId,
@@ -746,11 +898,40 @@
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PTT_call_notify" object:nil];
     }
+    if([message.content isKindOfClass:[RCInformationNotificationMessage class]])
+    {
+        RCInformationNotificationMessage *msg = (RCInformationNotificationMessage*)message.content;
+        //应对SB需求
+        if([msg.message isEqualToString:@"群组已解散"] ||[msg.message isEqualToString:@"您当前不在此群组"])
+        {
+            [[RCIMClient sharedRCIMClient] removeConversation:message.conversationType
+                                                     targetId:message.targetId];
+
+        }
+        else
+        {
+            
+            NSRange range = [msg.message rangeOfString:@"建立好友关系"];
+            if(range.location != NSNotFound)
+            {
+                __weak typeof(&*self) weakSelf = self;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf syncMyReContacts];
+                });
+                
+            }
+        }
+    }
     
-    NSLog(@"%@", [message.content class]);
+    //NSLog(@"%@", [message.content class]);
     
     
     [self updateBadgeValueForTabBarItem];
+}
+
+- (void) syncMyReContacts{
+    
+    [[DataSync sharedDataSync] syncMyContacts];
 }
 
 - (void)updateBadgeValueForTabBarItem
@@ -760,7 +941,7 @@
         return;
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        int count = [[RCIMClient sharedRCIMClient] getUnreadCount:@[@(ConversationType_PRIVATE),@(ConversationType_DISCUSSION), @(ConversationType_APPSERVICE), @(ConversationType_PUBLICSERVICE),@(ConversationType_GROUP)]];//@(ConversationType_SYSTEM)
+        int count = [[RCIMClient sharedRCIMClient] getUnreadCount:@[@(ConversationType_PRIVATE),@(ConversationType_PUSHSERVICE), @(ConversationType_APPSERVICE), @(ConversationType_PUBLICSERVICE),@(ConversationType_GROUP)]];//@(ConversationType_SYSTEM)
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Refresh_Chat_List"
                                                             object:@{@"count":[NSNumber numberWithInt:count]}];
@@ -796,12 +977,12 @@
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
-//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"
-//                                                    message:[error description]
-//                                                   delegate:nil
-//                                          cancelButtonTitle:@"OK"
-//                                          otherButtonTitles:nil, nil];
-//    [alert show];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                    message:[error description]
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil, nil];
+    [alert show];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -821,7 +1002,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     
-    
+    [self checkSeesion];
     [self updateBadgeValueForTabBarItem];
     
    // [self checkNewRequestMessages];

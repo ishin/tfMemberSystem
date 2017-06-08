@@ -24,21 +24,42 @@
 
 @implementation PhotoMessageViewController
 @synthesize _imageUrl;
-
+@synthesize _showTitle;
+@synthesize _vHeight;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    if(_showTitle)
+    {
+        self.title = _showTitle;
+    }
+    
     self.view.backgroundColor = [UIColor blackColor];
     
-    _content = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    
+    if(_vHeight == 0)
+    {
+        _vHeight = SCREEN_HEIGHT;
+    }
+    else
+    {
+        self.view.backgroundColor = [UIColor whiteColor];
+        UIView *bg = [[UIView alloc] initWithFrame:self.view.bounds];
+        bg.backgroundColor = RGBA(0x00, 0x27, 0x2C, 0.4);
+        [self.view addSubview:bg];
+        
+        //self.view.backgroundColor = RGBA(0x00, 0x27, 0x2C, 0.4);
+    }
+        
+    _content = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, _vHeight)];
     _content.delegate = self;
     [self.view addSubview:_content];
     
     _active = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     [self.view addSubview:_active];
-    _active.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+    _active.center = CGPointMake(SCREEN_WIDTH/2, _vHeight/2);
     _active.hidesWhenStopped = YES;
     
     _photo = [[UIImageView alloc] initWithFrame:CGRectZero];
@@ -79,15 +100,19 @@
                   }];
     
     
-    UIButton *btnCLose = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnCLose.backgroundColor = [UIColor whiteColor];
-    [btnCLose setImage:[UIImage imageNamed:@"icon_delete_photo.png"] forState:UIControlStateNormal];
-    btnCLose.frame = CGRectMake(0, 0, 50, 50);
-    btnCLose.layer.cornerRadius = 25;
-    btnCLose.clipsToBounds = YES;
-    [self.view addSubview:btnCLose];
-    btnCLose.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT-40);
-    [btnCLose addTarget:self action:@selector(tappedAction:) forControlEvents:UIControlEventTouchUpInside];
+    if(_vHeight >= SCREEN_HEIGHT)
+    {
+        UIButton *btnCLose = [UIButton buttonWithType:UIButtonTypeCustom];
+        btnCLose.backgroundColor = [UIColor whiteColor];
+        [btnCLose setImage:[UIImage imageNamed:@"icon_delete_photo.png"] forState:UIControlStateNormal];
+        btnCLose.frame = CGRectMake(0, 0, 50, 50);
+        btnCLose.layer.cornerRadius = 25;
+        btnCLose.clipsToBounds = YES;
+        [self.view addSubview:btnCLose];
+        btnCLose.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT-40);
+        [btnCLose addTarget:self action:@selector(tappedAction:) forControlEvents:UIControlEventTouchUpInside];
+
+    }
     
 //    UITapGestureRecognizer *tapped = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tappedAction:)];
 //    tapped.cancelsTouchesInView = NO;
@@ -142,7 +167,7 @@
     if(dlt > 0)
     {
         int h = SCREEN_WIDTH/dlt;
-        float yy = (SCREEN_HEIGHT-h)/2;
+        float yy = (_vHeight-h)/2;
         
         if(yy < 0)
             yy = 0;

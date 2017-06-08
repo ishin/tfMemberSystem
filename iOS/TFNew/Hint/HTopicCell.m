@@ -14,6 +14,7 @@
 #import "UIButton+Color.h"
 #import "UIImage+Color.h"
 #import <RongPTTLib/RongPTTLib.h>
+#import "SBJson4.h"
 
 
 @implementation TFCellEventView
@@ -117,15 +118,24 @@
     
     UILabel *mask;
     
+    WebClient *_targetClient;
+    WebClient *_senderClient;
+    WebClient *_http;
+    
+    BOOL _isLoadingSender;
+    BOOL _isloadingTargetUser;
+    
     //TFCellEventView *_rowBtn;
 }
 @property (nonatomic, strong) NSString *stateName;
+@property (nonatomic, strong) RCConversationModel *_dataModel;
 
 @end
 
 @implementation HTopicCell
 @synthesize _rowBtn;
 @synthesize stateName;
+@synthesize _dataModel;
 
 
 /*
@@ -211,7 +221,7 @@
         _unreadMsg.font = [UIFont systemFontOfSize:10];
         _unreadMsg.hidden = YES;
         
-        _sliceIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"slice_down.png"]];
+        _sliceIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"block_notification.png"]];
         [self.contentView addSubview:_sliceIcon];
         _sliceIcon.center = CGPointMake(SCREEN_WIDTH-70, 25);
         _sliceIcon.hidden = YES;
@@ -276,7 +286,106 @@
 }
 
 
+- (void) refreshUInfo:(RCUserInfo *)userInfo{
+    
+    [_avatar setImageWithURL:[NSURL URLWithString:userInfo.portraitUri]
+            placeholderImage:[UIImage imageNamed:@"u_touxiang.png"]];
+    
+    _tName.text = userInfo.name;
+    _dataModel.conversationTitle = userInfo.name;
+}
+
+- (void) refreshLastMessage:(RCUserInfo *)userInfo
+{
+    if([_dataModel.lastestMessage isKindOfClass:[RCTextMessage class]])
+    {
+        RCTextMessage *msg = (RCTextMessage*)_dataModel.lastestMessage;
+        _lastMessage.text = [NSString stringWithFormat:@"%@: %@",
+                             userInfo.name, msg.content];
+        
+    }
+    else if([_dataModel.lastestMessage isKindOfClass:[RCImageMessage class]])
+    {
+        _lastMessage.text = [NSString stringWithFormat:@"%@: %@",
+                             userInfo.name, @"[图片]"];
+        
+    }
+    else if([_dataModel.lastestMessage isKindOfClass:[RCVoiceMessage class]])
+    {
+        _lastMessage.text = [NSString stringWithFormat:@"%@: %@",
+                             userInfo.name, @"发了一段语音"];
+        
+    }
+    else if([_dataModel.lastestMessage isKindOfClass:[RCPTTBeginMessage class]])
+    {
+        _lastMessage.text = [NSString stringWithFormat:@"%@: %@",
+                             userInfo.name, @"发起语音对讲"];
+        
+    }
+    else if([_dataModel.lastestMessage isKindOfClass:[RCPTTEndMessage class]])
+    {
+        _lastMessage.text = [NSString stringWithFormat:@"%@: %@",
+                             userInfo.name, @"语音对讲结束"];
+        
+    }
+    else if([_dataModel.lastestMessage isKindOfClass:[RCFileMessage class]])
+    {
+        _lastMessage.text = [NSString stringWithFormat:@"%@: [文件]%@",
+                             userInfo.name, ((RCFileMessage*)_dataModel.lastestMessage).name];
+        
+    }
+    
+   
+}
+
+- (void) refreshGroupInfo:(NSDictionary *)groupInfo{
+    
+    _tName.text = [groupInfo objectForKey:@"name"];
+    _dataModel.conversationTitle = [groupInfo objectForKey:@"name"];
+    
+    NSString *logo = [groupInfo objectForKey:@"logo"];
+    NSString *logourl = [NSString stringWithFormat:@"%@/upload/images/%@", WEB_API_URL, logo];
+    
+    //NSLog(@"%@", logourl);
+    [_avatar setImageWithURL:[NSURL URLWithString:logourl]
+            placeholderImage:[UIImage imageNamed:@"u_touxiang.png"]];
+    
+    NSString *gName = _tName.text;
+    NSString *showName = @"";
+    
+    if([gName length] > 1)
+        showName = [gName substringWithRange:NSMakeRange(1, 1)];
+    else if([gName length] == 1)
+        showName = gName;
+    
+    mask.text = showName;
+}
+
+- (void) refreshGroupUserInfo:(RCUserInfo *)userInfo
+{
+    _tName.text = userInfo.name;
+    _dataModel.conversationTitle = userInfo.name;
+    
+    [_avatar setImageWithURL:[NSURL URLWithString:userInfo.portraitUri]
+            placeholderImage:[UIImage imageNamed:@"u_touxiang.png"]];
+    
+    NSString *gName = _tName.text;
+    NSString *showName = @"";
+    
+    if([gName length] > 1)
+        showName = [gName substringWithRange:NSMakeRange(1, 1)];
+    else if([gName length] == 1)
+        showName = gName;
+    
+    mask.text = showName;
+}
+
 - (void) fillData:(RCConversationModel*)model{
+    
+    _isloadingTargetUser = NO;
+    _isLoadingSender = NO;
+    
+    self._dataModel = model;
     
     self.stateName = @"开启消息免打扰";
     
@@ -297,14 +406,7 @@
         _lastMessage.textColor = COLOR_TEXT_C;
     }
     
-    if([[GoGoDB sharedDBInstance] muteStateWithTarget:model.targetId] == 1)
-    {
-        _sliceIcon.hidden = NO;
-    }
-    else
-    {
-        _sliceIcon.hidden = YES;
-    }
+    _sliceIcon.hidden = YES;
     
     if(unreadCount > 0)
     {
@@ -323,64 +425,27 @@
     
     if(model.conversationType == ConversationType_PRIVATE)
     {
-        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-        [app getUserInfoWithUserId:model.targetId completion:^(RCUserInfo *userInfo) {
-            
-            if(userInfo)
-            {
-                
-                [_avatar setImageWithURL:[NSURL URLWithString:userInfo.portraitUri]
-                        placeholderImage:[UIImage imageNamed:@"empty-avatar.png"]];
-                
-                _tName.text = userInfo.name;
-                model.conversationTitle = userInfo.name;
-                //NSLog(@"%@",userInfo.name);
-                
-            }
-            
-        }];
+        RCUserInfo* cachedUser = [[GoGoDB sharedDBInstance] queryUser:model.targetId];
+        if(cachedUser)
+        {
+            [self refreshUInfo:cachedUser];
+        }
+        else
+        {
+            [self getTargetUserInfo:model.targetId];
+        }
         
-        [app getUserInfoWithUserId:model.senderUserId completion:^(RCUserInfo *userInfo) {
-            
-            if(userInfo)
-            {
-                if([model.lastestMessage isKindOfClass:[RCTextMessage class]])
-                {
-                    RCTextMessage *msg = (RCTextMessage*)model.lastestMessage;
-                    _lastMessage.text = [NSString stringWithFormat:@"%@: %@",
-                                         userInfo.name, msg.content];
-                    
-                }
-                else if([model.lastestMessage isKindOfClass:[RCImageMessage class]])
-                {
-                    _lastMessage.text = [NSString stringWithFormat:@"%@: %@",
-                                         userInfo.name, @"[图片]"];
-                    
-                }
-                else if([model.lastestMessage isKindOfClass:[RCVoiceMessage class]])
-                {
-                    _lastMessage.text = [NSString stringWithFormat:@"%@: %@",
-                                         userInfo.name, @"发了一段语音"];
-                    
-                }
-                else if([model.lastestMessage isKindOfClass:[RCPTTBeginMessage class]])
-                {
-                    _lastMessage.text = [NSString stringWithFormat:@"%@: %@",
-                                         userInfo.name, @"发起语音对讲"];
-                    
-                }
-                else if([model.lastestMessage isKindOfClass:[RCPTTEndMessage class]])
-                {
-                    _lastMessage.text = [NSString stringWithFormat:@"%@: %@",
-                                         userInfo.name, @"语音对讲结束"];
-                    
-                }
-            }
-            
-        }];
-        
-        
-        
+        cachedUser = [[GoGoDB sharedDBInstance] queryUser:model.senderUserId];
+        if(cachedUser)
+        {
+            [block_self refreshLastMessage:cachedUser];
+
+        }
+        else
+        {
+            [self getSenderUserInfo:model.senderUserId];
+        }
+
         NSString *targetId = model.targetId;
         [[RCIMClient sharedRCIMClient] getConversationNotificationStatus:ConversationType_PRIVATE
                                                                 targetId:targetId
@@ -388,7 +453,10 @@
                                                                      
                                                                      if(nStatus == DO_NOT_DISTURB)
                                                                      {
-                                                                         block_self.stateName = @"关闭消息免打扰";
+                                                                         //block_self.stateName = @"关闭消息免打扰";
+                                                                         //_sliceIcon.hidden = NO;
+                                                                         
+                                                                         [block_self refreshStateOn];
                                                                      }
                                                                      
                                                                  } error:^(RCErrorCode status) {
@@ -402,95 +470,28 @@
         mask.hidden = NO;
         mask.backgroundColor = [Utls groupMaskColorWithId:[model.targetId intValue]];
         
-        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         NSDictionary *groupInfo = [[GoGoDB sharedDBInstance] queryGroup:model.targetId];
     
         if(groupInfo)
         {
-            _tName.text = [groupInfo objectForKey:@"name"];
-            model.conversationTitle = [groupInfo objectForKey:@"name"];
-            
-            NSString *logo = [groupInfo objectForKey:@"logo"];
-            NSString *logourl = [NSString stringWithFormat:@"%@/upload/images/%@", WEB_API_URL, logo];
-            
-            [_avatar setImageWithURL:[NSURL URLWithString:logourl]
-                    placeholderImage:[UIImage imageNamed:@"empty-avatar.png"]];
-            
-            NSString *gName = _tName.text;
-            NSString *showName = @"";
-            
-            if([gName length] > 1)
-                showName = [gName substringWithRange:NSMakeRange(1, 1)];
-            else if([gName length] == 1)
-                showName = gName;
-            
-            mask.text = showName;
+            [self refreshGroupInfo:groupInfo];
         }
         else
         {
-            [app getGroupInfoWithUserId:model.targetId completion:^(RCUserInfo *userInfo) {
-                
-                if(userInfo)
-                {
-                    _tName.text = userInfo.name;
-                    model.conversationTitle = userInfo.name;
-                    
-                    [_avatar setImageWithURL:[NSURL URLWithString:userInfo.portraitUri]
-                            placeholderImage:[UIImage imageNamed:@"empty-avatar.png"]];
-                    
-                    NSString *gName = _tName.text;
-                    NSString *showName = @"";
-                    
-                    if([gName length] > 1)
-                        showName = [gName substringWithRange:NSMakeRange(1, 1)];
-                    else if([gName length] == 1)
-                        showName = gName;
-                    
-                    mask.text = showName;
-                }
-                
-            }];
+            [self getGroupInfo:model.targetId];
         }
         
         
-        [app getUserInfoWithUserId:model.senderUserId completion:^(RCUserInfo *userInfo) {
+        RCUserInfo* cachedUser = [[GoGoDB sharedDBInstance] queryUser:model.senderUserId];
+        if(cachedUser)
+        {
+            [block_self refreshLastMessage:cachedUser];
             
-            if(userInfo)
-            {
-                if([model.lastestMessage isKindOfClass:[RCTextMessage class]])
-                {
-                    RCTextMessage *msg = (RCTextMessage*)model.lastestMessage;
-                    _lastMessage.text = [NSString stringWithFormat:@"%@: %@",
-                                         userInfo.name, msg.content];
-                    
-                }
-                else if([model.lastestMessage isKindOfClass:[RCImageMessage class]])
-                {
-                    _lastMessage.text = [NSString stringWithFormat:@"%@: %@",
-                                         userInfo.name, @"[图片]"];
-                    
-                }
-                else if([model.lastestMessage isKindOfClass:[RCVoiceMessage class]])
-                {
-                    _lastMessage.text = [NSString stringWithFormat:@"%@: %@",
-                                         userInfo.name, @"发了一段语音"];
-                    
-                }
-                else if([model.lastestMessage isKindOfClass:[RCPTTBeginMessage class]])
-                {
-                    _lastMessage.text = [NSString stringWithFormat:@"%@: %@",
-                                         userInfo.name, @"发起语音对讲"];
-                    
-                }
-                else if([model.lastestMessage isKindOfClass:[RCPTTEndMessage class]])
-                {
-                    _lastMessage.text = [NSString stringWithFormat:@"%@: %@",
-                                         userInfo.name, @"语音对讲结束"];
-                    
-                }
-            }
-            
-        }];
+        }
+        else
+        {
+            [self getSenderUserInfo:model.senderUserId];
+        }
         
         
         NSString *targetId = model.targetId;
@@ -500,7 +501,10 @@
                                                                      
                                                                      if(nStatus == DO_NOT_DISTURB)
                                                                      {
-                                                                         block_self.stateName = @"关闭消息免打扰";
+                                                                         //block_self.stateName = @"关闭消息免打扰";
+                                                                         
+                                                                         [block_self refreshStateOn];
+
                                                                      }
                                                                      
                                                                  } error:^(RCErrorCode status) {
@@ -517,14 +521,9 @@
         
     }
     
-    //else if([model.lastestMessage isKindOfClass:[RCPTTBeginMessage class]])
-    {
-        NSLog(@"0000");
-    }
-    
-    NSTimeInterval time = model.receivedTime/1000;
+    NSTimeInterval time = model.sentTime/1000;
     NSDate *date1 = [NSDate dateWithTimeIntervalSince1970:time];
-    if(date1)
+    if(time > 0 && date1)
     {
         NSCalendar *calendar = [NSCalendar currentCalendar];
         NSUInteger unitFlags = NSCalendarUnitYear| NSCalendarUnitMonth | NSCalendarUnitDay |NSCalendarUnitHour |NSCalendarUnitMinute;
@@ -552,5 +551,279 @@
     
     
 }
+
+
+- (void) refreshStateOn{
+    
+    self.stateName = @"关闭消息免打扰";
+    _sliceIcon.hidden = NO;
+}
+
+- (void) refreshStateOff{
+    
+    
+}
+
+
+- (void) getSenderUserInfo:(NSString *)userId
+{
+    if(_isLoadingSender)
+        return;
+    _isLoadingSender = YES;
+
+    if(_senderClient == nil)
+    {
+        _senderClient = [[WebClient alloc] initWithDelegate:self];
+    }
+    
+    _senderClient._method = API_USER_PROFILE;
+    _senderClient._httpMethod = @"GET";
+    
+    
+    _senderClient._requestParam = [NSDictionary dictionaryWithObjectsAndKeys:
+                           userId,@"userid",
+                           nil];
+    
+    
+    IMP_BLOCK_SELF(HTopicCell);
+    
+    [_senderClient requestWithSusessBlock:^(id lParam, id rParam) {
+        
+        NSString *response = lParam;
+        // NSLog(@"%@", response);
+        
+        _isLoadingSender = NO;
+        
+        SBJson4ValueBlock block = ^(id v, BOOL *stop) {
+            
+            
+            if([v isKindOfClass:[NSDictionary class]])
+            {
+                int code = [[v objectForKey:@"id"] intValue];
+                
+                if(code)
+                {
+                    RCUserInfo *user = [[RCUserInfo alloc] init];
+                    user.userId = userId;
+                    user.name = [v objectForKey:@"name"];
+                    user.portraitUri = [NSString stringWithFormat:@"%@/upload/images/%@",
+                                        WEB_API_URL,
+                                        [v objectForKey:@"logo"]];
+                    
+                    [block_self saveSendUserToLocal:user];
+                }
+                
+                return;
+            }
+            
+            
+        };
+        
+        SBJson4ErrorBlock eh = ^(NSError* err) {
+            
+            
+            
+            NSLog(@"OOPS: %@", err);
+        };
+        
+        id parser = [SBJson4Parser multiRootParserWithBlock:block
+                                               errorHandler:eh];
+        
+        id data = [response dataUsingEncoding:NSUTF8StringEncoding];
+        [parser parse:data];
+        
+        
+    } FailBlock:^(id lParam, id rParam) {
+        
+        NSString *response = lParam;
+        NSLog(@"%@", response);
+        
+        _isLoadingSender = NO;
+        
+    }];
+}
+
+- (void) saveSendUserToLocal:(RCUserInfo*)user{
+    
+    [[GoGoDB sharedDBInstance] saveUserInfo:user];
+    
+    [self refreshLastMessage:user];
+    
+   
+}
+
+- (void) getTargetUserInfo:(NSString *)userId
+{
+    if(_isloadingTargetUser)
+        return;
+    _isloadingTargetUser = YES;
+    
+    if(_targetClient == nil)
+    {
+        _targetClient = [[WebClient alloc] initWithDelegate:self];
+    }
+    
+    _targetClient._method = API_USER_PROFILE;
+    _targetClient._httpMethod = @"GET";
+    
+    
+    _targetClient._requestParam = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   userId,@"userid",
+                                   nil];
+    
+    
+    IMP_BLOCK_SELF(HTopicCell);
+    
+    [_targetClient requestWithSusessBlock:^(id lParam, id rParam) {
+        
+        NSString *response = lParam;
+        // NSLog(@"%@", response);
+        
+        _isloadingTargetUser = NO;
+        
+        SBJson4ValueBlock block = ^(id v, BOOL *stop) {
+            
+            
+            if([v isKindOfClass:[NSDictionary class]])
+            {
+                int code = [[v objectForKey:@"id"] intValue];
+                
+                if(code)
+                {
+                    RCUserInfo *user = [[RCUserInfo alloc] init];
+                    user.userId = userId;
+                    user.name = [v objectForKey:@"name"];
+                    user.portraitUri = [NSString stringWithFormat:@"%@/upload/images/%@",
+                                        WEB_API_URL,
+                                        [v objectForKey:@"logo"]];
+                    
+                    [block_self saveTargetUserToLocal:user];
+                }
+                
+                return;
+            }
+            
+            
+        };
+        
+        SBJson4ErrorBlock eh = ^(NSError* err) {
+            
+            
+            
+            NSLog(@"OOPS: %@", err);
+        };
+        
+        id parser = [SBJson4Parser multiRootParserWithBlock:block
+                                               errorHandler:eh];
+        
+        id data = [response dataUsingEncoding:NSUTF8StringEncoding];
+        [parser parse:data];
+        
+        
+    } FailBlock:^(id lParam, id rParam) {
+        
+        NSString *response = lParam;
+        NSLog(@"%@", response);
+        
+        _isloadingTargetUser = NO;
+        
+    }];
+}
+
+- (void) saveTargetUserToLocal:(RCUserInfo*)user{
+    
+    [[GoGoDB sharedDBInstance] saveUserInfo:user];
+    
+    [self refreshUInfo:user];
+    
+   
+}
+
+
+- (void) getGroupInfo:(NSString *)groupId{
+    
+
+    if(_http == nil)
+    {
+        _http = [[WebClient alloc] initWithDelegate:self];
+    }
+    
+    _http._method = API_GROUP_INFO;
+    _http._httpMethod = @"GET";
+    
+    
+    _http._requestParam = [NSDictionary dictionaryWithObjectsAndKeys:
+                           groupId,@"groupid",
+                           nil];
+    
+    
+    IMP_BLOCK_SELF(HTopicCell);
+    
+    [_http requestWithSusessBlock:^(id lParam, id rParam) {
+        
+        NSString *response = lParam;
+        // NSLog(@"%@", response);
+        
+        
+        SBJson4ValueBlock block = ^(id v, BOOL *stop) {
+            
+            
+            if([v isKindOfClass:[NSDictionary class]])
+            {
+                int code = [[v objectForKey:@"code"] intValue];
+                
+                if(code == 1)
+                {
+                    
+                    NSMutableDictionary *ginfo = [v objectForKey:@"text"];
+                    
+                    [block_self saveGroupToLocal:ginfo];
+                    
+                    RCUserInfo *user = [[RCUserInfo alloc] init];
+                    user.userId = groupId;
+                    user.name = [ginfo objectForKey:@"name"];
+                    user.portraitUri = [NSString stringWithFormat:@"%@/upload/images/%@",
+                                        WEB_API_URL, [ginfo objectForKey:@"logo"]];
+                
+                    [block_self refreshGroupUserInfo:user];
+                }
+                
+                return;
+            }
+            
+            
+        };
+        
+        SBJson4ErrorBlock eh = ^(NSError* err) {
+            
+            
+            
+            NSLog(@"OOPS: %@", err);
+        };
+        
+        id parser = [SBJson4Parser multiRootParserWithBlock:block
+                                               errorHandler:eh];
+        
+        id data = [response dataUsingEncoding:NSUTF8StringEncoding];
+        [parser parse:data];
+        
+        
+    } FailBlock:^(id lParam, id rParam) {
+        
+        NSString *response = lParam;
+        NSLog(@"%@", response);
+        
+        
+    }];
+}
+
+
+- (void) saveGroupToLocal:(NSMutableDictionary*)ginfo
+{
+    [[GoGoDB sharedDBInstance] saveGroupInfo:ginfo];
+    
+}
+
+
 
 @end

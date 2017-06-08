@@ -8,6 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol SearchContactDelegate <NSObject>
+
+@optional
+- (void) didContactSelected:(id)user;
+- (void) didScroll;
+- (void) didCancelSearch;
+
+@end
+
 @interface SearchContactResultView : UIView
 {
     
@@ -16,6 +25,8 @@
 @property (nonatomic, strong) NSDictionary *_mapSelect;
 @property (nonatomic, weak) UIViewController *_ctrl;
 @property (nonatomic, assign) BOOL _isChooseModel;
+@property (nonatomic, assign) BOOL _isForwardSearch;
+@property (nonatomic, weak) id <SearchContactDelegate> delegate;
 
 - (void) refreshData;
 

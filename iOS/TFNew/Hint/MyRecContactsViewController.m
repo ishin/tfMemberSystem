@@ -20,6 +20,9 @@
 #import "FanCell.h"
 #import "UserInfoViewController.h"
 #import "JRCDSearchView.h"
+#import "SearchContactViewController.h"
+#import "CMNavigationController.h"
+#import "DataSync.h"
 
 @interface MyRecContactsViewController ()<UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, JRCDSearchViewDelegate>
 {
@@ -115,10 +118,48 @@
     [self.view addSubview:_tableView];
     
     
+    UIButton *scanBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    scanBtn.frame = CGRectMake(0, 0, 30, 40);
+    [scanBtn setImage:[UIImage imageNamed:@"friend_add.png"] forState:UIControlStateNormal];
+    [scanBtn addTarget:self action:@selector(addContact:) forControlEvents:UIControlEventTouchDown];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:scanBtn];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(notifyRefreshFriends:)
+                                                 name:@"ReceivedNameCardsSyncMessagesNotify"
+                                               object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(refreshTableSelections:)
+                                                 name:@"ClickToRemoveAndRefresh"
+                                               object:nil];
   
+    
 }
 
+- (void) notifyRefreshFriends:(id)sender{
+    __weak typeof(&*self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakSelf loadFromDBCache];
+    });
+}
+
+- (void) refreshTableSelections:(id)sender{
+    
+    if(_isChooseModel)
+        [_tableView reloadData];
+}
+
+- (void) addContact:(id)sender{
+    
+    SearchContactViewController *search = [[SearchContactViewController alloc] init];
+    CMNavigationController *navi = [[CMNavigationController alloc] initWithRootViewController:search];
+    [self presentViewController:navi
+                       animated:YES
+                     completion:^{
+                         
+                     }];
+}
 
 
 #pragma mark UITableView dataSource
@@ -393,19 +434,13 @@
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
     
     
-    if([searchText length] > 0)
-    {
-        
-        [self doSearch:searchText];
-        
-    }
-    
+  [self doSearch:searchText];
     
 }
 
 - (void) doSearch:(NSString*)searchTxt{
     
-    [_searchView searchFrinedWithKeywords:searchTxt];
+    [_searchView searchFriendOnlyKeywords:searchTxt];
 }
 
 - (void) onSearchCancelClick{
@@ -422,6 +457,12 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void) dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 
 /*
 #pragma mark - Navigation

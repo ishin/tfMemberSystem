@@ -13,6 +13,7 @@
 #import "GoGoDB.h"
 #import "WSUser.h"
 #import "WaitDialog.h"
+#import "PhotoMessageViewController.h"
 
 
 @interface SetUInfoViewController ()<UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate>
@@ -381,7 +382,9 @@
             
     
             [cell.contentView addSubview:_uName];
-            _uName.text = _user._userName;
+            
+            if(_user._userName && [_user._userName isKindOfClass:[NSString class]])
+                _uName.text = _user._userName;
             
             UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 59, SCREEN_WIDTH, 1)];
             [cell.contentView addSubview:line];
@@ -401,7 +404,9 @@
             
             
             [cell.contentView addSubview:_uEmail];
-            _uEmail.text = _user._email;
+            
+            if(_user._email && [_user._email isKindOfClass:[NSString class]])
+                _uEmail.text = _user._email;
             
             UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 59, SCREEN_WIDTH, 1)];
             [cell.contentView addSubview:line];
@@ -421,7 +426,9 @@
             
             
             [cell.contentView addSubview:_uMobile];
-            _uMobile.text = _user._cellphone;
+            
+            if(_user._cellphone && [_user._cellphone isKindOfClass:[NSString class]])
+                _uMobile.text = _user._cellphone;
             
             UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 59, SCREEN_WIDTH, 1)];
             [cell.contentView addSubview:line];
@@ -441,7 +448,10 @@
             
             
             [cell.contentView addSubview:_uTel];
-            _uTel.text = _user.telephone;
+            
+            if(_user.telephone && [_user.telephone isKindOfClass:[NSString class]])
+                _uTel.text = _user.telephone;
+            
             
             UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 59, SCREEN_WIDTH, 1)];
             [cell.contentView addSubview:line];
@@ -464,7 +474,9 @@
             
             
             [cell.contentView addSubview:_uCompany];
-            _uCompany.text = _user.companyname;
+            
+            if(_user.companyname && [_user.companyname isKindOfClass:[NSString class]])
+                _uCompany.text = _user.companyname;
             
             UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 59, SCREEN_WIDTH, 1)];
             [cell.contentView addSubview:line];
@@ -493,7 +505,9 @@
             addressL.font = [UIFont systemFontOfSize:14];
             addressL.textAlignment = NSTextAlignmentLeft;
             addressL.textColor  = COLOR_TEXT_A;
-            addressL.text = _user.address;
+            
+            if(_user.address && [_user.address isKindOfClass:[NSString class]])
+                addressL.text = _user.address;
 
             
             UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 59, SCREEN_WIDTH, 1)];
@@ -527,7 +541,9 @@
             dptL.font = [UIFont systemFontOfSize:14];
             dptL.textAlignment = NSTextAlignmentLeft;
             dptL.textColor  = COLOR_TEXT_A;
-            dptL.text = @"产品部";
+            
+            if(_user._organname && [_user._organname isKindOfClass:[NSString class]])
+                dptL.text = _user._organname;
             
             UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 59, SCREEN_WIDTH, 1)];
             [cell.contentView addSubview:line];
@@ -547,7 +563,8 @@
             
             
             [cell.contentView addSubview:_uTitle];
-            _uTitle.text = _user.ranktitle;
+            if(_user.ranktitle && [_user.ranktitle isKindOfClass:[NSString class]])
+                _uTitle.text = _user.ranktitle;
             
             UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 59, SCREEN_WIDTH, 1)];
             [cell.contentView addSubview:line];
@@ -619,10 +636,27 @@
     
     if(indexPath.section == 0)
     {
-        [_avatarView setImageWithURL:[NSURL URLWithString:_user._avatar]];
-        [self.view addSubview:_maskView];
-        
+        /*
+        if([_user._avatar length] > 5)
+        {
+               PhotoMessageViewController *photo = [[PhotoMessageViewController alloc] init];
+               photo._imageUrl = _user._avatar;
+            photo._showTitle = @"我的头像";
+            photo._vHeight = SCREEN_HEIGHT - 64;
+               [self.navigationController pushViewController:photo animated:YES];
+               
+        }
+        else
+        {
+            [self chooseAvatar:nil];
+        }
+         */
+           
+//        [_avatarView setImageWithURL:[NSURL URLWithString:_user._avatar]];
+//        [self.view addSubview:_maskView];
+//        
         [self chooseAvatar:nil];
+        
         
     }
 }

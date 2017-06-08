@@ -247,7 +247,7 @@
 
 - (void) updateUnReadMessages:(NSNotification*)notify{
     
-    int countMsgs = [[RCIMClient sharedRCIMClient] getUnreadCount:@[@(ConversationType_PRIVATE),@(ConversationType_DISCUSSION), @(ConversationType_APPSERVICE), @(ConversationType_PUBLICSERVICE),@(ConversationType_GROUP),@(ConversationType_SYSTEM)]];;
+    int countMsgs = [[RCIMClient sharedRCIMClient] getUnreadCount:@[@(ConversationType_PRIVATE),@(ConversationType_PUSHSERVICE), @(ConversationType_APPSERVICE), @(ConversationType_PUBLICSERVICE),@(ConversationType_GROUP),@(ConversationType_SYSTEM)]];;
     if(countMsgs > 0)
     {
         numberMsgs.hidden = NO;

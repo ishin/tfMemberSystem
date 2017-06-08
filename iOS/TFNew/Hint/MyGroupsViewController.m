@@ -23,6 +23,9 @@
 #import "DataSync.h"
 #import "JRCDSearchView.h"
 
+#import "CMNavigationController.h"
+#import "ChooseContactViewController.h"
+
 
 @interface MyGroupsViewController ()<UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, JRCDSearchViewDelegate>
 {
@@ -123,11 +126,29 @@
     [self.view addSubview:_tableView];
     
     
+    UIButton *scanBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    scanBtn.frame = CGRectMake(0, 0, 30, 40);
+    [scanBtn setImage:[UIImage imageNamed:@"friend_add.png"] forState:UIControlStateNormal];
+    [scanBtn addTarget:self action:@selector(addGroup:) forControlEvents:UIControlEventTouchDown];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:scanBtn];
+    
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(notifyRefreshGroups:)
                                                  name:@"GroupsSyncMessagesNotify"
                                                object:nil];
   
+}
+
+- (void) addGroup:(id)sender{
+    
+    ChooseContactViewController *choose = [[ChooseContactViewController alloc] init];
+    CMNavigationController *navi = [[CMNavigationController alloc] initWithRootViewController:choose];
+    [self presentViewController:navi
+                       animated:YES
+                     completion:^{
+                         
+                     }];
 }
 
 
@@ -487,6 +508,7 @@
     [_searchBar setShowsCancelButton:YES animated:YES];
     
     [self.view addSubview:_searchView];
+    [_searchView searchGroupWithKeywords:@""];
     
 }
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
@@ -529,13 +551,7 @@
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
     
     
-    if([searchText length] > 0)
-    {
-        
-        [self doSearch:searchText];
-        
-    }
-    
+    [self doSearch:searchText];
     
 }
 

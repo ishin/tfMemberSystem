@@ -15,5 +15,6 @@
 @interface RCDSearchViewController : UIViewController<UINavigationControllerDelegate>
 
 @property (nonatomic,weak) id<RCDSearchViewDelegate> delegate;
+@property (nonatomic, weak) UIViewController *_ctrl;
 
 @end

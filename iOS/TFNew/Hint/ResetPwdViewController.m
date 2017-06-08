@@ -210,7 +210,12 @@
                 }
                 else
                 {
-                    NSString *message = [v objectForKey:@"msg"];
+                    NSDictionary* text = [v objectForKey:@"text"];
+                    NSString *message = @"错误";
+                    if(text)
+                    {
+                        message = [text objectForKey:@"context"];
+                    }
                     
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
                                                                     message:message

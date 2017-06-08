@@ -12,6 +12,7 @@
 #import "RCDUtilities.h"
 #import <RongIMKit/RongIMKit.h>
 #import "GoGoDB.h"
+#import "WSUser.h"
 
 
 @implementation RCDSearchDataManager
@@ -52,17 +53,99 @@
       [array addObject:@"聊天记录"];
     }
   }
+    
+    if (searchType == RCDSearchFriendOnly) {
+        NSArray *friendArray = [self searchMyFriendBysearchText:searchText];
+        if (friendArray.count > 0) {
+            [dic setObject:friendArray forKey:@"联系人"];
+            [array addObject:@"联系人"];
+        }
+    }
+    
+    
   result(dic.copy,array.copy);
 }
+
+- (NSArray *)searchMyFriendBysearchText:(NSString *)searchText{
+    NSMutableArray *friendResults = [NSMutableArray array];
+    NSArray *friendArray = [[GoGoDB sharedDBInstance] queryAllFriends];
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    
+    for (NSDictionary *infoDic in friendArray) {
+        
+        RCDUserInfo *user = [[RCDUserInfo alloc] init];
+        user.displayName = [infoDic objectForKey:@"fullname"];
+        user.name = [infoDic objectForKey:@"fullname"];
+        user.email = [infoDic objectForKey:@"mobile"];
+        user.userId = [NSString stringWithFormat:@"%d", [[infoDic objectForKey:@"id"] intValue]];
+        user.portraitUri = [NSString stringWithFormat:@"%@/upload/images/%@",WEB_API_URL, [infoDic objectForKey:@"logo"]];
+        
+        NSString *enname = [self convPinyinFromCharactor:user.displayName];
+        user.name = enname;
+        
+        
+        if (user.displayName && [RCDUtilities isContains:user.displayName withString:searchText]) {
+            
+            RCDSearchResultModel *model = [[RCDSearchResultModel alloc] init];
+            model.conversationType = ConversationType_PRIVATE;
+            model.targetId = user.userId;
+            model.otherInformation = user.displayName;
+            model.portraitUri = user.portraitUri;
+            model.searchType = RCDSearchFriend;
+            [friendResults addObject:model];
+            
+            [dic setObject:@"1" forKey:user.userId];
+        }else if([RCDUtilities isContains:user.name withString:searchText]){
+            
+            RCDSearchResultModel *model = [[RCDSearchResultModel alloc] init];
+            model.conversationType = ConversationType_PRIVATE;
+            model.targetId = user.userId;
+            model.name = user.name;
+            model.portraitUri = user.portraitUri;
+            if(user.displayName){
+                model.otherInformation = user.displayName;
+            }
+            model.searchType = RCDSearchFriend;
+            
+            [friendResults addObject:model];
+            
+            [dic setObject:@"1" forKey:user.userId];
+        }
+        else if([RCDUtilities isContains:user.email withString:searchText]){
+            
+            RCDSearchResultModel *model = [[RCDSearchResultModel alloc] init];
+            model.conversationType = ConversationType_PRIVATE;
+            model.targetId = user.userId;
+            model.name = user.name;
+            model.portraitUri = user.portraitUri;
+            if(user.displayName){
+                model.otherInformation = user.displayName;
+            }
+            model.searchType = RCDSearchFriend;
+            
+            [friendResults addObject:model];
+            
+            [dic setObject:@"1" forKey:user.userId];
+        }
+    }
+    
+    return friendResults;
+}
+
 
 - (NSArray *)searchFriendBysearchText:(NSString *)searchText{
   NSMutableArray *friendResults = [NSMutableArray array];
   NSArray *friendArray = [[GoGoDB sharedDBInstance] queryAllFriends];
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    
   for (NSDictionary *infoDic in friendArray) {
       
       RCDUserInfo *user = [[RCDUserInfo alloc] init];
       user.displayName = [infoDic objectForKey:@"fullname"];
       user.name = [infoDic objectForKey:@"fullname"];
+      user.email = [infoDic objectForKey:@"mobile"];
       user.userId = [NSString stringWithFormat:@"%d", [[infoDic objectForKey:@"id"] intValue]];
       user.portraitUri = [NSString stringWithFormat:@"%@/upload/images/%@",WEB_API_URL, [infoDic objectForKey:@"logo"]];
       
@@ -75,6 +158,8 @@
           model.portraitUri = user.portraitUri;
           model.searchType = RCDSearchFriend;
           [friendResults addObject:model];
+          
+          [dic setObject:@"1" forKey:user.userId];
       }else if([RCDUtilities isContains:user.name withString:searchText]){
           
           RCDSearchResultModel *model = [[RCDSearchResultModel alloc] init];
@@ -88,9 +173,73 @@
           model.searchType = RCDSearchFriend;
           
           [friendResults addObject:model];
+          
+          [dic setObject:@"1" forKey:user.userId];
+      }
+      else if([RCDUtilities isContains:user.email withString:searchText]){
+          
+          RCDSearchResultModel *model = [[RCDSearchResultModel alloc] init];
+          model.conversationType = ConversationType_PRIVATE;
+          model.targetId = user.userId;
+          model.name = user.name;
+          model.portraitUri = user.portraitUri;
+          if(user.displayName){
+              model.otherInformation = user.displayName;
+          }
+          model.searchType = RCDSearchFriend;
+          
+          [friendResults addObject:model];
+          
+          [dic setObject:@"1" forKey:user.userId];
       }
   }
+    
+    NSArray *orgUsers = [[GoGoDB sharedDBInstance] searchOrgPersonsWithKeyword:searchText];
+    for(WSUser *u in orgUsers)
+    {
+        NSString* key = [NSString stringWithFormat:@"%d", u.userId];
+        if(![dic objectForKey:key])
+        {
+            RCDUserInfo *user = [[RCDUserInfo alloc] init];
+            user.displayName = u.fullname;
+            user.name = u.fullname;
+            user.email = u.cellphone;
+            user.userId = key;
+            user.portraitUri = u.avatarurl;
+            
+            
+            RCDSearchResultModel *model = [[RCDSearchResultModel alloc] init];
+            model.conversationType = ConversationType_PRIVATE;
+            model.targetId = user.userId;
+            model.otherInformation = user.displayName;
+            model.portraitUri = user.portraitUri;
+            model.searchType = RCDSearchFriend;
+            [friendResults addObject:model];
+            
+            [dic setObject:@"1" forKey:user.userId];
+        }
+    }
+    
   return friendResults;
+}
+
+
+//获取拼音首字母(传入汉字字符串, 返回大写拼音首字母)
+- (NSString *)convPinyinFromCharactor:(NSString *)aString
+{
+    //转成了可变字符串
+    NSMutableString *str = [NSMutableString stringWithString:aString];
+    //先转换为带声调的拼音
+    CFStringTransform((CFMutableStringRef)str,NULL, kCFStringTransformMandarinLatin,NO);
+    //再转换为不带声调的拼音
+    CFStringTransform((CFMutableStringRef)str,NULL, kCFStringTransformStripDiacritics,NO);
+    //转化为大写拼音
+    NSString *pinYin = [str lowercaseString];
+    
+    pinYin = [pinYin stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    //获取并返回首字母
+    return pinYin;
 }
 
 - (NSArray *)searchGroupBysearchText:(NSString *)searchText{
@@ -103,7 +252,8 @@
       group.groupName = [gInfo objectForKey:@"name"];
       group.creatorId = [NSString stringWithFormat:@"%d", [[gInfo objectForKey:@"mid"] intValue]];
       group.portraitUri = [NSString stringWithFormat:@"%@/upload/images/%@",WEB_API_URL, [gInfo objectForKey:@"logo"]];
-
+      
+      NSString *enname = [self convPinyinFromCharactor:group.groupName];
       
     if ([RCDUtilities isContains:group.groupName withString:searchText]) {
       RCDSearchResultModel *model = [[RCDSearchResultModel alloc] init];
@@ -116,35 +266,17 @@
 
       [groupResults addObject:model];
       continue;
-    }else{
-        /*
-      NSArray *groupMember = [[RCDataBaseManager shareInstance] getGroupMember:group.groupId];
-      NSString *str = nil;
-      for (RCUserInfo *user in groupMember) {
-        RCDUserInfo *friendUser = [[RCDataBaseManager shareInstance] getFriendInfo:user.userId];
-        if (friendUser && friendUser.displayName.length>0) {
-          if ([RCDUtilities isContains:friendUser.displayName withString:searchText]) {
-            str = [self changeString:str appendStr:friendUser.displayName];
-          }else if([RCDUtilities isContains:user.name withString:searchText]){
-            str = [self changeString:str appendStr:[NSString stringWithFormat:@"%@(%@)",friendUser.displayName,user.name]];
-          }
-        }else{
-          if([RCDUtilities isContains:user.name withString:searchText]){
-            str = [self changeString:str appendStr:user.name];
-          }
-        }
-      }
-      if (str.length>0) {
+    }else if([RCDUtilities isContains:enname withString:searchText]){
         RCDSearchResultModel *model = [[RCDSearchResultModel alloc] init];
         model.conversationType = ConversationType_GROUP;
         model.targetId = group.groupId;
         model.name = group.groupName;
         model.portraitUri = group.portraitUri;
-        model.otherInformation = str;
         model.searchType = RCDSearchGroup;
+        // model.otherInformation = @"11";
+        
         [groupResults addObject:model];
-      }
-         */
+        continue;
     }
   }
   return groupResults;

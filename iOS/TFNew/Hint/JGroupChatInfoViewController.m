@@ -17,7 +17,7 @@
 #import "ChooseContactViewController.h"
 #import "CMNavigationController.h"
 #import "RCDSearchHistoryMessageController.h"
-#import "PhotosViewController.h"
+#import "ChatFilesViewController.h"
 #import "GMembersViewController.h"
 #import "ChooseManagerViewController.h"
 #import "WaitDialog.h"
@@ -33,6 +33,7 @@
     WebClient  *_httpUser;
     
     WebClient  *_client;
+    WebClient *_httpGroup;
 }
 @property (nonatomic, strong) NSMutableDictionary *_groupNameData;
 
@@ -51,6 +52,7 @@
     self.navigationController.navigationBarHidden = NO;
     
     [self syncGroupMembers];
+    
 }
 
 - (void)viewDidLoad {
@@ -94,6 +96,102 @@
 
     [self reloadData];
     
+}
+
+- (void) syncGroupInfo{
+    
+    if(_group == nil)
+        return;
+ 
+    if(_httpGroup == nil)
+        _httpGroup = [[WebClient alloc] initWithDelegate:self];
+    
+    _httpGroup._method = API_GROUP_INFO;
+    _httpGroup._httpMethod = @"GET";
+    
+    // User *u = [UserDefaultsKV getUser];
+    
+    
+    _httpGroup._requestParam = [NSDictionary dictionaryWithObjectsAndKeys:
+                                //u._authtoken,@"token",
+                                _group.groupId,@"groupid",
+                                nil];
+    
+    
+    IMP_BLOCK_SELF(JGroupChatInfoViewController);
+    
+    
+    [_httpGroup requestWithSusessBlock:^(id lParam, id rParam) {
+        
+        NSString *response = lParam;
+        // NSLog(@"%@", response);
+        
+        
+        SBJson4ValueBlock block = ^(id v, BOOL *stop) {
+            
+            
+            if([v isKindOfClass:[NSDictionary class]])
+            {
+                int code = [[v objectForKey:@"code"] intValue];
+                
+                if(code == 1)
+                {
+                    NSDictionary *text = [v objectForKey:@"text"];
+                    [block_self updateGroup:text];
+                }
+                
+                return;
+            }
+            
+            
+        };
+        
+        SBJson4ErrorBlock eh = ^(NSError* err) {
+            
+            
+            
+            NSLog(@"OOPS: %@", err);
+        };
+        
+        id parser = [SBJson4Parser multiRootParserWithBlock:block
+                                               errorHandler:eh];
+        
+        id data = [response dataUsingEncoding:NSUTF8StringEncoding];
+        [parser parse:data];
+        
+        
+        
+    } FailBlock:^(id lParam, id rParam) {
+        
+        NSString *response = lParam;
+        NSLog(@"%@", response);
+        
+        
+    }];
+}
+
+- (void) updateGroup:(NSDictionary*)g{
+    
+    [_group updateDictionary:g];
+    [_groupNameData setObject:@"群名称" forKey:@"title"];
+    [_groupNameData setObject:API_GROUP_NAME forKey:@"action"];
+    
+    if(_group.groupId)
+        [_groupNameData setObject:_group.groupId forKey:@"groupid"];
+    
+    if(_group)
+        [_groupNameData setObject:_group.groupName forKey:@"value"];
+    
+    
+    _myIsGroupManager = NO;
+    User *my = [UserDefaultsKV getUser];
+    if([my._userId intValue] == _group.creator.userId)
+    {
+        _myIsGroupManager = YES;
+    }
+    
+    
+    [self reloadData];
 }
 
 - (void) showGroupMembers{
@@ -277,6 +375,8 @@
     }
     
     [self showGroupMembers];
+    
+    [self syncGroupInfo];
 }
 
 
@@ -559,7 +659,7 @@
         }
         else if(indexPath.row == 0)
         {
-            PhotosViewController *photos = [[PhotosViewController alloc] init];
+            ChatFilesViewController *photos = [[ChatFilesViewController alloc] init];
             photos._targetId =_group.groupId;
             photos.converType = ConversationType_GROUP;
             [self.navigationController pushViewController:photos animated:YES];
@@ -649,6 +749,10 @@
             NSString *targetId = _group.groupId;
             [[RCIMClient sharedRCIMClient] clearMessages:ConversationType_GROUP
                                                 targetId:targetId];
+            
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"Clear_ChatLog_List"
+                                                                object:nil];
             
         }
     }

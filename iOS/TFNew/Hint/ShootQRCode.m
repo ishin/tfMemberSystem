@@ -13,6 +13,8 @@
 #import "UserDefaultsKV.h"
 #import "SBJson4.h"
 #import "WaitDialog.h"
+#import "DataSync.h"
+#import <AVFoundation/AVFoundation.h>
 
 static ShootQRCode* shootInstance = nil;
 
@@ -56,6 +58,7 @@ static ShootQRCode* shootInstance = nil;
 }
 
 - (void) showMyCode:(UIViewController*)sender{
+    
     
     self._viewController = sender;
     
@@ -203,6 +206,22 @@ static ShootQRCode* shootInstance = nil;
 
 - (void) shootCode:(UIViewController*)sender{
     
+    NSString *mediaType = AVMediaTypeVideo;
+    
+    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
+    if(authStatus == AVAuthorizationStatusRestricted || authStatus == AVAuthorizationStatusDenied){
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                        message:@"您的应用被拒绝访问摄像头，请去设置->隐私授权允许访问。"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+        
+        return;
+        
+    }
+    
     self._viewController = sender;
     
     if(_zbar && [_zbar.view superview])
@@ -215,14 +234,12 @@ static ShootQRCode* shootInstance = nil;
 
 - (void)cancelZbarController {
     
-    //test;
-   // NSString *qr = @"http://www.hint.com/qr/c+IkDIhhNvW5QA2XlshKlolBerB6g5t28kK3WYX3N/E=";
     
     
     [self._viewController.navigationController popViewControllerAnimated:YES];
     self._zbar = nil;
 
-    //[self parseQRCodeString:@"Jh2uegdGl7Kw-SRaQ0ogig"];
+    //[self parseQRCodeString:@"lmy3&2323"];
 }
 
 
@@ -286,16 +303,15 @@ static ShootQRCode* shootInstance = nil;
     
     NSString *qrcode = qr;
     
-    NSRange range = [qr rangeOfString:URL_QR_HOST];
-    if(range.location != NSNotFound)
+    NSArray *cma = [qrcode componentsSeparatedByString:@"&"];
+    if([cma count])
     {
-        qrcode = [qr substringFromIndex:(range.location+range.length)];
+        self.r_qrcode = [cma objectAtIndex:0];
+        
+        [self testQRCode:qrcode];
+        
+        
     }
-    
-    self.r_qrcode = qrcode;
-    
-    [self testQRCode:qrcode];
-    
     
    // [self sendReg:qr];
 }
@@ -303,8 +319,7 @@ static ShootQRCode* shootInstance = nil;
 
 - (void) testQRCode:(NSString*)qrcode{
     
-    
-    
+    [self sendReg:r_qrcode];
     
 }
 
@@ -324,15 +339,27 @@ static ShootQRCode* shootInstance = nil;
         _httpChecker = [[WebClient alloc] initWithDelegate:self];
     }
     
-    _httpChecker._method = API_INVITE_FRIEND;
+    _httpChecker._method = API_SCAN_FRIEND;
     _httpChecker._httpMethod = @"POST";
     
-    User *u = [UserDefaultsKV getUser];
+   int timestamp = [[NSDate date] timeIntervalSince1970];
+    
+    NSMutableArray *arr = [NSMutableArray array];
+    NSString *str = [NSString stringWithFormat:@"friend=%@", qrcode];
+    for(int i = 0; i < [str length]; i++)
+    {
+        [arr addObject:[NSString stringWithFormat:@"%c",[str characterAtIndex:i]]];
+    }
+    NSArray *tmp = [arr sortedArrayUsingSelector:@selector(compare:)];
+    NSString *sort = [tmp componentsJoinedByString:@""];
+    NSString *sign = md5Encode([NSString stringWithFormat:@"%@%@%d",@"@q3$fd12%", sort, timestamp]);
     
     NSMutableDictionary *param = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                  u._authtoken,@"token",
-                                  qrcode, @"invitee",
-                                  @"QR",@"type",
+                                  //u._authtoken,@"token",
+                                  sign, @"sign",
+                                  qrcode, @"friend",
+                                  @"@q3$fd12%",@"imkey",
+                                  [NSString stringWithFormat:@"%d", timestamp],@"timestamp",
                                   nil];
     
     _httpChecker._requestParam = param;
@@ -351,16 +378,25 @@ static ShootQRCode* shootInstance = nil;
             
             if([v isKindOfClass:[NSDictionary class]])
             {
-                int code = [[v objectForKey:@"code"] intValue];
                 
-                if(code == 0)
+                int code = [[v objectForKey:@"code"] intValue];
+                if(code == 1)
                 {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshContactListNotify" object:nil];
+                    [block_self syncMyContacts];
                     
                     [[WaitDialog sharedAlertDialog] setTitle:@"已加为好友"];
                     [[WaitDialog sharedAlertDialog] animateShow];
-                    
                 }
+                else
+                {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                                    message:@"无效的二维码"
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil, nil];
+                    [alert show];
+                }
+                
             }
             
             [block_self cancelZbarController];
@@ -391,6 +427,10 @@ static ShootQRCode* shootInstance = nil;
     
 }
 
+- (void) syncMyContacts{
+    
+    [[DataSync sharedDataSync] syncMyContacts];
+}
 
 - (void) openAlbum:(id)sender{
     

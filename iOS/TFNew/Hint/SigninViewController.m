@@ -229,7 +229,7 @@
     NSString *cachedCode = [UserDefaultsKV getCachedOrgCode];
     _orgCode.text = cachedCode;
     
-    _orgCode.text = @"C887TFXX";
+    //_orgCode.text = @"C887TFXX";
     
     User *u = [UserDefaultsKV getUser];
     if(u)
@@ -364,7 +364,7 @@
 - (void) loginAction:(UIButton*)btn{
     
     
-    if([_loginName.text length] < 3)
+    if([_orgCode.text length] < 1)
     {
         UIAlertView *alert  = [[UIAlertView alloc] initWithTitle:nil
                                                          message:@"请输入企业码！"
@@ -375,7 +375,7 @@
         return;
     }
     
-    if([_loginName.text length] < 3)
+    if([_loginName.text length] < 1)
     {
         UIAlertView *alert  = [[UIAlertView alloc] initWithTitle:nil
                                                          message:@"请输入正确的用户名！"

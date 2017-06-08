@@ -25,7 +25,7 @@
 #import "SearchContactResultView.h"
 
 
-@interface ChooseContactViewController ()<UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, MyRecContactsViewControllerDelegate>
+@interface ChooseContactViewController ()<UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, MyRecContactsViewControllerDelegate, SearchContactDelegate>
 {
     BOOL _isLoading;
     
@@ -53,6 +53,8 @@
 
 @property (nonatomic, strong) NSMutableArray *_membsOfFriendSelect;
 
+@property (nonatomic, assign) int _willDelIndex;
+
 @end
 
 @implementation ChooseContactViewController
@@ -66,6 +68,8 @@
 
 @synthesize _mapSelect;
 @synthesize _groupId;
+
+@synthesize _willDelIndex;
 
 - (void) viewWillAppear:(BOOL)animated{
     
@@ -139,8 +143,8 @@
     [self.view addSubview:footer];
     
     
-    _resultView = [[SearchContactResultView alloc] initWithFrame:CGRectMake(0, 44, SCREEN_WIDTH, SCREEN_HEIGHT-64-44-216)];
-    
+    _resultView = [[SearchContactResultView alloc] initWithFrame:CGRectMake(0, 44, SCREEN_WIDTH, SCREEN_HEIGHT-64-44)];
+    _resultView.delegate = self;
     
 
     self._datas = [NSMutableArray array];
@@ -155,6 +159,9 @@
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_tableView];
     
+    UIView *tfooter = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 120)];
+    _tableView.tableFooterView = tfooter;
+    
     self._membs = [NSMutableArray array];
     self._membsOfFriendSelect = [NSMutableArray array];
     self._mapSelect = [NSMutableDictionary dictionary];
@@ -163,7 +170,7 @@
     _membsChoosedPannel = [app userMembsPannel];
     [app.window addSubview:_membsChoosedPannel];
     
-    [[_membsChoosedPannel subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [app clearMembsPannel];
     
     _membsScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 50, SCREEN_WIDTH, 70)];
     _membsScroll.backgroundColor = [UIColor clearColor];
@@ -196,6 +203,11 @@
 
 }
 
+- (void) didScroll{
+    
+    if([_searchBar isFirstResponder])
+        [_searchBar resignFirstResponder];
+}
 
 - (void) loadOrgData{
     
@@ -317,8 +329,10 @@
     
     int xx = 15;
     int w = 46;
-    for(WSUser *u in _membs)
+    for(int i = 0; i < [_membs count]; i++)
     {
+        WSUser *u = [_membs objectAtIndex:i];
+        
         UIImageView *avatar = [[UIImageView alloc] initWithFrame:CGRectMake(xx, 5, w, w)];
         avatar.layer.cornerRadius = w/2;
         avatar.clipsToBounds = YES;
@@ -339,12 +353,68 @@
         
         tL.text = u.fullname;
         
+        UIButton *btnUser = [UIButton buttonWithType:UIButtonTypeCustom];
+        btnUser.frame = avatar.frame;
+        [_membsScroll addSubview:btnUser];
+        btnUser.tag = i;
+        [btnUser addTarget:self action:@selector(clickedToRemove:) forControlEvents:UIControlEventTouchUpInside];
+        
         xx+=w;
         xx+=12;
     }
     
     _membsScroll.contentSize = CGSizeMake(xx, _membsScroll.frame.size.height);
         
+}
+
+- (void) clickedToRemove:(UIButton*)btn{
+    
+    self._willDelIndex = (int)btn.tag;
+    
+    
+    WSUser *u = [_membs objectAtIndex:_willDelIndex];
+    
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                    message:[NSString stringWithFormat:@"删除\"%@\"？", u.fullname]
+                                                   delegate:self
+                                          cancelButtonTitle:@"取消"
+                                          otherButtonTitles:@"确定", nil];
+    alert.tag = 12017;
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    if(alertView.tag == 12017 && buttonIndex != alertView.cancelButtonIndex)
+    {
+        WSUser *obj = [_membs objectAtIndex:_willDelIndex];
+        id key = [NSNumber numberWithInt:obj.userId];
+        obj._isSelect = NO;
+        
+        
+        WSUser *objcopy = [_mapSelect objectForKey:key];
+        if(objcopy)
+            objcopy._isSelect = NO;
+        [_mapSelect removeObjectForKey:key];
+        
+        [_membsOfFriendSelect removeObject:obj];
+        [_membs removeObjectAtIndex:_willDelIndex];
+        
+        [_tableView reloadData];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ClickToRemoveAndRefresh" object:key];
+        
+        if([_membs count])
+        {
+            [self showMembs];
+        }
+        else
+        {
+            [self hiddenMembersPannel];
+        }
+    }
 }
 
 - (void) createGroup:(id)sender{
@@ -424,7 +494,7 @@
             if([v isKindOfClass:[NSDictionary class]])
             {
                 int code = [[v objectForKey:@"code"] intValue];
-                if(code == 200)
+                if(code == 200 || (_groupId && code == 1))
                 {
                     [block_self saveGroup:nil];
                 }
@@ -990,6 +1060,10 @@
     
     [_searchBar setShowsCancelButton:YES animated:YES];
     
+    _resultView._results = nil;
+    [_resultView refreshData];
+    [self.view addSubview:_resultView];
+    
 }
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
     
@@ -1021,23 +1095,23 @@
     
     if([searchText length] > 0)
     {
-        
         [self doSearch:searchText];
-        
     }
 
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
     
-    
     if([searchText length] > 0)
     {
-        
         [self doSearch:searchText];
-        
     }
-    
+    else
+    {
+        _resultView._mapSelect = nil;
+        _resultView._results = nil;
+        [_resultView refreshData];
+    }
     
 }
 
@@ -1084,8 +1158,6 @@
             
             [results addObject:uu];
         }
-        
-        
     }
     
     _resultView._mapSelect = _mapSelect;
@@ -1093,9 +1165,6 @@
     [_resultView refreshData];
     
 }
-
-
-
 
 
 - (void)didReceiveMemoryWarning {

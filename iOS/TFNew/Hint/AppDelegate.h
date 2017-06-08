@@ -26,10 +26,11 @@
 - (void) skipLogin;
 
 - (void) checkXFQ;
-- (void) pushToChat:(NSString*)targetId type:(int)type;
+- (void) pushToChat:(NSString*)targetId type:(int)type enterCall:(BOOL)enterCall;
 - (void) switchAtTabIndex:(int)index;
 
 - (UIView*) userMembsPannel;
+- (void) clearMembsPannel;
 
 @end
 
