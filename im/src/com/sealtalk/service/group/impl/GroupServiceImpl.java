@@ -1003,6 +1003,7 @@ public class GroupServiceImpl implements GroupService {
 				int userIdInt = StringUtils.getInstance().strToInt(userId);
 				List<TGroupMember> groupMembers = groupMemberDao
 						.getGroupMemberForUserId(userIdInt);
+				JSONArray groupArr = new JSONArray();
 
 				if (groupMembers != null && groupMembers.size() > 0) {
 					ArrayList<Integer> temp = new ArrayList<Integer>();
@@ -1057,8 +1058,6 @@ public class GroupServiceImpl implements GroupService {
 					if (dontDistrubList != null) {
 						lenDistrub = dontDistrubList.size();
 					}
-
-					JSONArray groupArr = new JSONArray();
 
 					for (int j = 0; j < groupList.size(); j++) {
 						TGroup tg = groupList.get(j);
@@ -1113,19 +1112,15 @@ public class GroupServiceImpl implements GroupService {
 							tmp.put("dontdistrub", 0);
 					}
 
-					jo.put("code", 1);
-					jo.put("text", groupArr);
-				} else {
-					jo.put("code", 0);
-					jo.put("text", Tips.FAIL.getText());
 				}
+				jo.put("code", 1);
+				jo.put("text", groupArr);
 			}
 		} catch (Exception e) {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
-		//logger.info(jo.toString());
 		return jo.toString();
 	}
 	
@@ -1142,7 +1137,9 @@ public class GroupServiceImpl implements GroupService {
 			} else {
 				List<TGroupMember> groupMembers = groupMemberDao
 						.getGroupMemberForUserId(userIdInt);
-
+				JSONArray ja = new JSONArray();
+				JSONArray ja1 = new JSONArray();
+				JSONObject type = new JSONObject();
 				if (groupMembers != null && groupMembers.size() > 0) {
 					ArrayList<Integer> temp = new ArrayList<Integer>();
 					ArrayList<Integer> groupIdsList = new ArrayList<Integer>();
@@ -1182,7 +1179,6 @@ public class GroupServiceImpl implements GroupService {
 					JSONObject ret = JSONUtils.getInstance().stringToObj(
 							memberStr);
 					JSONArray text = new JSONArray();
-
 					if (ret.getInt("code") == 1) {
 						text = JSONUtils.getInstance().stringToArrObj(
 								ret.getString("text"));
@@ -1251,9 +1247,6 @@ public class GroupServiceImpl implements GroupService {
 							tmp.put("dontdistrub", 0);
 					}
 
-					JSONArray ja = new JSONArray();
-					JSONArray ja1 = new JSONArray();
-
 					// 处理我加入的和我创建的
 					for (int i = 0; i < groupArr.size(); i++) {
 						JSONObject tmp = groupArr.getJSONObject(i);
@@ -1268,23 +1261,17 @@ public class GroupServiceImpl implements GroupService {
 						}
 					}
 
-					JSONObject type = new JSONObject();
 					type.put("ICreate", ja.toString());
 					type.put("IJoin", ja1.toString());
-
-					jo.put("code", 1);
-					jo.put("text", type.toString());
-				} else {
-					jo.put("code", Integer.valueOf(0));
-					jo.put("text", Tips.FAIL.getText());
-				}
+				} 
+				jo.put("code", 1);
+				jo.put("text", type.toString());
 			}
 		} catch (Exception e) {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
-		//logger.info(jo.toString());
 		return jo.toString();
 	}
 

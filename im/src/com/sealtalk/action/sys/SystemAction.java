@@ -101,6 +101,7 @@ public class SystemAction extends BaseAction {
 		}
 		
 		String appId = getAppId();
+		//暂时屏蔽
 		boolean appIdExist = appSecretService.checkAppIdOfOrgan(appId, organId);
 		
 		if (!appIdExist) {
@@ -418,8 +419,7 @@ public class SystemAction extends BaseAction {
 				//request.setAttribute(LOGIN_ERROR_MESSAGE, Tips.FALSECOMPAREPWD.getText());
 				//return "fogetpwd";
 			} else {
-
-				boolean updateState = false;
+				boolean updateState = false; 
 	
 				if (flag == 1) {
 					updateState = memberService.updateUserPwdForAccount(account,newpwd, organId);

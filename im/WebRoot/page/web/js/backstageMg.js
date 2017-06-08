@@ -217,7 +217,7 @@ $(document).ready(function(){
             }else{
                 sInfoContent=eTarget.find('span').html();
                 sInfoContent = sInfoContent.replace(/(\<span\s)style=".*?(name="(.*?)")\>\<b.*?\<\/b\>\<\/span\>/ig,"$3");
-                sInfoContent=html_decode(sInfoContent);
+                //sInfoContent=html_decode(sInfoContent);
                 oCopy={};
                 oCopy.infoContent=sInfoContent;
                 var sCopy=JSON.stringify(oCopy);
@@ -363,7 +363,7 @@ $(document).ready(function(){
             sendByRongImg(oPast,targetId,targetType,nSendTime);
         }else if(sInfoContent){
             var sNewInfo=sInfoContent;
-            sNewInfo = html_encodes(sNewInfo);
+            //sNewInfo = html_encodes(sNewInfo);
             $('#chatBox #message-content').append(sNewInfo);
         }else if(sFile){
             sFile.filepaste=1;

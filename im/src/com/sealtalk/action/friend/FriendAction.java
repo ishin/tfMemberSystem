@@ -188,7 +188,7 @@ public class FriendAction extends BaseAction {
 			if (StringUtils.getInstance().isBlank(account)) {
 				jo.put("code", -1);
 				jo.put("text", Tips.NULLUSER.getName());
-			} else {
+			} else {	
 				int organId = getSessionUserOrganId();
 				result = friendService.getMemberFriends(clearChar(account), organId);
 			}

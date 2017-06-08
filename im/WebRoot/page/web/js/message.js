@@ -217,6 +217,7 @@ $(function(){
         //var targetID =
         var targetID = $(this).parents('.myContextMenu').attr('memship');
         var targetType = $(this).parents('.myContextMenu').attr('targettype');
+        var displaylimit = $(this).attr('displaylimit');
         $('.myContextMenu').remove();
         var index = $(this).closest('ul').find('li').index($(this));
         switch (index)
@@ -283,9 +284,10 @@ $(function(){
                 break;
             case 3:
                 //添加新成员
+
                 var limit = $('body').attr('limit');
                 //var oLimit = JSON.parse(limit);
-                if(limit.indexOf('qzcjq')==-1) {//没有权限
+                if(displaylimit=='false') {//没有权限
                     return false;
                 }else{
                     var data = localStorage.getItem('getBranchTree');
@@ -433,7 +435,7 @@ $(function(){
                         fshowContexMenu(arr,style,sysId,'','','');
                         return;
                     }else {
-                        var arr = [{limit:'',value:sTopChat},{limit:'ltszwjsc',value:'发送文件'},{limit:'',value:'查看资料'},{limit:'ltszqzlt',value:'添加新成员'},{limit:'aaaa',value:'定位到所在组织'},{limit:'',value:'从消息列表删除'}];
+                        var arr = [{limit:'',value:sTopChat},{limit:'ltszwjsc',value:'发送文件'},{limit:'',value:'查看资料'},{limit:'znsqz',value:'添加新成员'},{limit:'aaaa',value:'定位到所在组织'},{limit:'',value:'从消息列表删除'}];
 
                     }
                     var style = 'left:'+left+'px;top:'+top+'px';
@@ -441,7 +443,7 @@ $(function(){
                     var memberShip = $topEle.attr('targetid');
                     fshowContexMenu(arr,style,id,memberShip,targeType,bTopHas);
                 }else{
-                    var arr = [{limit:'',value:'置顶会话'},{limit:'ltszqzlt',value:'发送文件'},{limit:'',value:'查看资料'},{limit:'qzcjq',value:'添加新成员'},{limit:'',value:'定位到所在组织'},{limit:'',value:'从消息列表删除'}];
+                    var arr = [{limit:'',value:'置顶会话'},{limit:'ltszqzlt',value:'发送文件'},{limit:'',value:'查看资料'},{limit:'znsqz',value:'添加新成员'},{limit:'',value:'定位到所在组织'},{limit:'',value:'从消息列表删除'}];
                     var style = 'left:'+left+'px;top:'+top+'px';
                     var id = 'newsLeftClick';
                     var memberShip = $topEle.attr('targetid');
@@ -644,7 +646,7 @@ $(function(){
             var top = e.clientY;
             //var arr = ['群成员管理','解散群','转让群'];
             //var arr = [{limit:'qzxgqcjz',value:'群成员管理'},{limit:'qzjsq',value:'解散群'},{limit:'qzxgqcjz',value:'转让群'}];
-            var arr = [{limit:'qzxgqcjz',value:'群成员管理'},{limit:'znsqz',value:'解散群'},{limit:'znsqz',value:'转让群'}];
+            var arr = [{limit:'znsqz',value:'群成员管理'},{limit:'znsqz',value:'解散群'},{limit:'znsqz',value:'转让群'}];
 
             var style = 'left:'+left+'px;top:'+top+'px';
             var id = 'groupLeftClick'
@@ -683,30 +685,49 @@ $(function(){
         var groupid = $('.mesContainerGroup').attr('targetid');
         var data = localStorage.getItem('getBranchTree');
         var datas = JSON.parse(data)
-        creatDialogTree(datas,'groupConvers','群组管理',function(){
-            var sConverseACount = JSON.stringify(converseACount);
-            sendAjax('group!manageGroupMem',{groupid:groupid,groupids:sConverseACount},function(data){
-                if(data){
-                    $('.manageCancle').click();
-                    var datas = JSON.parse(data);
-                    if(datas.code==1){
-                        new Window().alert({
-                            title   : '',
-                            content : '修改群组成功！',
-                            hasCloseBtn : false,
-                            hasImg : true,
-                            textForSureBtn : false,
-                            textForcancleBtn : false,
-                            autoHide:true
-                        });
-                        getGroupList(accountID);
-                        getGroupMembersList(groupid)
-                    }else{
-                        alert('失败',datas.text);
+        //只有群主可以管理群成员
+        //var groupid=$(this).attr('data-groupid');
+        var sdata = localStorage.getItem('datas');
+        var accountID = JSON.parse(sdata).id;
+        var groupInfo = groupInfoFromList(groupid);
+        //console.log(groupInfo);
+        if(accountID==groupInfo.mid){
+            creatDialogTree(datas,'groupConvers','群组管理',function(){
+                var sConverseACount = JSON.stringify(converseACount);
+                sendAjax('group!manageGroupMem',{groupid:groupid,groupids:sConverseACount},function(data){
+                    if(data){
+                        $('.manageCancle').click();
+                        var datas = JSON.parse(data);
+                        if(datas.code==1){
+                            new Window().alert({
+                                title   : '',
+                                content : '修改群组成功！',
+                                hasCloseBtn : false,
+                                hasImg : true,
+                                textForSureBtn : false,
+                                textForcancleBtn : false,
+                                autoHide:true
+                            });
+                            getGroupList(accountID);
+                            getGroupMembersList(groupid)
+                        }else{
+                            alert('失败',datas.text);
+                        }
                     }
-                }
-            })
-        },memShipArr,'',groupid);
+                })
+            },memShipArr,'',groupid);
+        }else{
+            new Window().alert({
+                title   : '',
+                content : '群主可以管理群成员！',
+                hasCloseBtn : false,
+                hasImg : true,
+                textForSureBtn : false,
+                textForcancleBtn : false,
+                autoHide:true
+            });
+        }
+
     })
 
     //群组右键菜单
@@ -729,30 +750,36 @@ $(function(){
                         case 0:
                             //群成员管理
                             //creatDialogTree四个参数 1结构数据 2类名(groupConvers/privateConvers) 3title 4已选联系人
-                            creatDialogTree(datas,'groupConvers','群组管理',function(){
-                                var sConverseACount = JSON.stringify(converseACount);
-                                sendAjax('group!manageGroupMem',{groupid:groupid,groupids:sConverseACount},function(data){
-                                    if(data){
-                                        $('.manageCancle').click();
-                                        var datas = JSON.parse(data);
-                                        if(datas.code==1){
-                                            new Window().alert({
-                                                title   : '',
-                                                content : '修改群组成功！',
-                                                hasCloseBtn : false,
-                                                hasImg : true,
-                                                textForSureBtn : false,
-                                                textForcancleBtn : false,
-                                                autoHide:true
-                                            });
-                                            getGroupList(accountID);
-                                            getGroupMembersList(groupid);
-                                        }else{
-                                            alert('失败',datas.text);
+                            if(_this.attr('displaylimit')=='false'){
+                                return false;
+
+                            }else{
+                                creatDialogTree(datas,'groupConvers','群组管理',function(){
+                                    var sConverseACount = JSON.stringify(converseACount);
+                                    sendAjax('group!manageGroupMem',{groupid:groupid,groupids:sConverseACount},function(data){
+                                        if(data){
+                                            $('.manageCancle').click();
+                                            var datas = JSON.parse(data);
+                                            if(datas.code==1){
+                                                new Window().alert({
+                                                    title   : '',
+                                                    content : '修改群组成功！',
+                                                    hasCloseBtn : false,
+                                                    hasImg : true,
+                                                    textForSureBtn : false,
+                                                    textForcancleBtn : false,
+                                                    autoHide:true
+                                                });
+                                                getGroupList(accountID);
+                                                getGroupMembersList(groupid);
+                                            }else{
+                                                alert('失败',datas.text);
+                                            }
                                         }
-                                    }
-                                })
-                            },memShipArr,'',groupid);
+                                    })
+                                },memShipArr,'',groupid);
+                            }
+
                             break;
                         case 1:
                             //解散群

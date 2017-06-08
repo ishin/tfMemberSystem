@@ -41,13 +41,11 @@ $(function(){
             if(event.keyCode==17)
             {
                 down=1;      //ctrl按下
-            }
-            if (event.which == 13) {
-
+            }else if(event.which == 13){
                 if(down==1)//ctrl+enter
                 {
                     var oldContent = _this.html();
-                    var newContent = oldContent+'\n';
+                    var newContent = oldContent+'<br>';
                     _this.html(newContent);
                     placeCaretAtEnd(jsThis)
                     down=0;
@@ -58,7 +56,10 @@ $(function(){
                     event.stopPropagation();
                     sendMsgBoxMsg(_this);
                 }
+            }else{
+                down=0;
             }
+
         })
     })
 
@@ -182,12 +183,12 @@ function sendMsg(content,targetId,way,extra,callback,uniqueTime){
                 '<em class="infoLoading"  infoTime="'+nSendTime+'"></em></div></li>';
         }
     }else{//如果是普通消息
-        content = html_encode(content);
+        content = change_html_format(content);
         var str = RongIMLib.RongIMEmoji.symbolToHTML(content);
         //str = html_encode(str);
         var sHTML = '<li class="mr-chatContentR clearfix" uniqueTime="'+uniqueTime+'">'+
             '<div class="mr-ownChat">'+
-            '<span name="'+content+'">' + str + '</span>'+
+            '<span name="">' + str + '</span>'+
             '<i></i><em class="infoLoading"  infoTime="'+nSendTime+'"></em>'+
             '</div>'+
             sGroupConverLisit+
@@ -352,6 +353,16 @@ function sendByRongImg(content,targetId,way,uniqueTime){
         }
     });
 }
+function change_html_format(s)
+{
+    var a = s;
+    s = s.replace(/<br>/g, "\n");
+    if (s.length == 0) return "";
+    //s = str.replace(/&/g, "&gt;");
+    s = s.replace(/<([^>]*)\/*>|<\/([^>]*)>/g, "");
+    s = s.replace(/\n/g, "<br>");
+    return s;
+}
 function html_decode(s)
 {
     //var s = "";
@@ -362,6 +373,7 @@ function html_decode(s)
     s = s.replace(/&gt;/g, ">");
     //s = s.replace(/&nbsp;/g, " ");
     s = s.replace(/&amp;/g, "&");
+
     //s = s.replace(/&#39;/g, "\'");
     //s = s.replace(/&quot;/g, "\"");
     //s = s.replace(/<br>/g, "\n");
@@ -372,14 +384,9 @@ function html_decodes(s)
     //var s = "";
     if (s.length == 0) return "";
     s = s.replace(/&/g, "&amp;");
-    s = s.replace(/<br>/g, "\n");
-    //s = s.replace(/&lt;/g, "<");
-    //s = s.replace(/&gt;/g, ">");
-    //s = s.replace(/&nbsp;/g, " ");
-
-    //s = s.replace(/&#39;/g, "\'");
-    //s = s.replace(/&quot;/g, "\"");
-    //s = s.replace(/<br>/g, "\n");
+    s = s.replace(/</g, "&lt;");
+    s = s.replace(/>/g, "&gt;");
+    s = s.replace(/\n/g, "<br>");
     return s;
 }
 function sendByRong(content,targetId,way,extra,uniqueTime){
@@ -790,12 +797,12 @@ function sessionContent(sDoM,sTargetId,sContent,extra,sSentTime,targetType){
                 break;
             case "TextMessage":
 
-                str = html_encode(sContent);
+                str = html_decodes(sContent);
                 var str = RongIMLib.RongIMEmoji.symbolToHTML(str);
                 sDoM += ' <li class="mr-chatContentL clearfix" data-t="' + sSentTime + '">\
                             <img class="headImg" src="' + sImg + '">\
                             <div class="mr-chatBox">\
-                                <span name="'+sContent+'">' + str + '</span>\
+                                <span name="">' + str + '</span>\
                                 <i></i>\
                             </div>\
                             <span class="sendSuccess"></span>\
@@ -907,11 +914,11 @@ function sessionContent(sDoM,sTargetId,sContent,extra,sSentTime,targetType){
                 break;
             case "TextMessage":
 
-                str = html_encode(sContent);
+                str = html_decodes(sContent);
                 var str = RongIMLib.RongIMEmoji.symbolToHTML(str);
                 sDoM += '<li class="mr-chatContentR clearfix" data-t="'+sSentTime+'">\
                             <div class="mr-ownChat">\
-                            <span name="'+sContent+'">' + str + '</span>\
+                            <span name="">' + str + '</span>\
                             <i></i>\
                             </div>\
                             <span class="sendSuccess"></span>\
@@ -1340,7 +1347,7 @@ function getChatRecord(aList,sClass){
                     break;
                 case "TextMessage":
                     var sTextContent=sContent.content;
-                    sTextContent = html_encode(sTextContent);
+                    sTextContent = html_decodes(sTextContent);
                     var  str= RongIMLib.RongIMEmoji.symbolToHTML(sTextContent);
                     sContent='<span><span ></span>'+str+'</span><i></i>';
                     break;
@@ -1681,7 +1688,7 @@ function creatTopList(sHTML,list,bFlg,systemMsg){
         }else if(extra=="InformationNotificationMessage"){
             content="系统消息";
         }else if(extra=="TextMessage"){
-            content = html_encode(content);
+            content = html_decodes(content);
         }else{
             content="系统消息";
         }
@@ -1845,34 +1852,7 @@ function KBtoM(kb){
         return Math.floor(kb/1024 * 100) / 100;
     }
 }
-function html_encodes(s)
-{
-//     var s = "";
-    if (s.length == 0) return "";
-    //s = str.replace(/&/g, "&gt;");
-    s = s.replace(/</g, "&lt;");
-    s = s.replace(/>/g, "&gt;");
-    //s = s.replace(/ /g, "&nbsp;");
-    s = s.replace(/\'/g, "&#39;");
-    s = s.replace(/\"/g, "&quot;");
-   // s = s.replace(/\n/g, "<br>");
-    s = s.replace(/&nbsp/g, "&amp;nbsp");
-    return s;
-}
-function html_encode(s)
-{
-//     var s = "";
-    if (s.length == 0) return "";
-    //s = str.replace(/&/g, "&gt;");
-    s = s.replace(/</g, "&lt;");
-    s = s.replace(/>/g, "&gt;");
-    //s = s.replace(/ /g, "&nbsp;");
-    s = s.replace(/\'/g, "&#39;");
-    s = s.replace(/\"/g, "&quot;");
-    s = s.replace(/\n/g, "<br>");
-    s = s.replace(/&nbsp/g, "&amp;nbsp");
-    return s;
-}
+
 //接收到的消息显示在盒子里或者在消息列表中显示
 function reciveInBox(msg){
     //打包后的程序收到消息的弹层提示
@@ -1998,7 +1978,7 @@ function reciveInBox(msg){
 
                 break;
             case "TextMessage":
-                str = html_encode(content)
+                str = html_decodes(content)
                 var str = RongIMLib.RongIMEmoji.symbolToHTML(str);
 
                 var sHTML = '<li messageUId="' + msg.messageUId + '" sentTime="' + msg.sentTime + '" class="mr-chatContentL clearfix">' +

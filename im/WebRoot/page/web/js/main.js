@@ -11,7 +11,7 @@ $(function(){
 
 
     $('.chatHeaderOper li')[0].onclick = function(){
-        sendAjax('system!logOut','',function(){
+        sendAjaxLogOut('system!logOut','',function(){
             if (window.Electron) {
                 RongIMLib.RongIMClient.getInstance().logout();
 
@@ -205,7 +205,32 @@ function sendAjax(url,data,callback,callbackB){
         url: url,
         data:data,
         success: function(data){
-            callback && callback(data);
+            if(data && data.indexOf("<!DOCTYPE html") != -1){
+                //登出断开监听并返回到登录页面
+            	if (window.Electron) {
+                    RongIMLib.RongIMClient.getInstance().logout();
+                    var curWindow = window.Electron.remote.getCurrentWindow().reload();
+                }else{
+                    window.location.href = 'system!login';
+                }
+            } else{
+                callback && callback(data);
+            }
+        },
+        error:function(){
+            callbackB&&callbackB();
+        }
+    })
+}
+function sendAjaxLogOut(url,data,callback,callbackB){
+    $.ajax({
+        type: "POST",
+        url: url,
+        data:data,
+        success: function(data){
+            if(data){
+                callback && callback(data);
+            }
         },
         error:function(){
             callbackB&&callbackB();
