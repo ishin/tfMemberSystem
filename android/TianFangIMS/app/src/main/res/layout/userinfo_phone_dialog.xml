@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="301dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_border_shape"
+        android:orientation="vertical"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp">
+
+        <RelativeLayout
+            android:id="@+id/rl_dialog_phone"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:background="@drawable/nav_title_shape">
+
+            <TextView
+                style="@style/userinfo_dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="拨打手机电话" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_dialog_copy"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:background="@drawable/nav_title_shape">
+
+            <TextView
+                style="@style/userinfo_dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="复制" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_dialog_maillist"
+            android:layout_width="match_parent"
+            android:layout_height="62dp">
+
+            <TextView
+                style="@style/userinfo_dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="存手机入通讯录" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_dialog_cencal"
+        android:layout_width="301dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/dialog_border_shape">
+
+        <TextView
+            style="@style/userinfo_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="取消" />
+    </RelativeLayout>
+
+</LinearLayout>

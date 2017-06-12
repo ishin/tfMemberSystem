@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/edittext_top"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <ImageView
+            android:id="@+id/iv_search_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/icon_search" />
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv_search_icon"
+            android:background="@null"
+            android:focusable="false"
+            android:hint="@string/search"
+            android:maxLines="1"
+            android:paddingLeft="9dp"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="取消"
+            android:textColor="#B3B3B3"
+            android:textSize="14dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/White"
+        android:paddingLeft="30dp">
+
+        <TextView
+            android:id="@+id/tv_contacts_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="联系人首页"
+            android:textColor="#FFA256"
+            android:textSize="14dp" />
+
+        <ImageView
+            android:id="@+id/iv_iaotou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/tv_contacts_text"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/icon_right_jiao" />
+
+        <TextView
+            android:id="@+id/tv_contacts_text_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/iv_iaotou"
+            android:text="获取上一层公司名称"
+            android:textColor="#B3B3B3"
+            android:textSize="14dp"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/iv_iaotou2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/tv_contacts_text_2"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/icon_right_jiao" />
+
+        <TextView
+            android:id="@+id/tv_contacts_text_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/iv_iaotou2"
+            android:text="部门"
+            android:textColor="#B3B3B3"
+            android:textSize="14dp"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/White">
+
+        <ListView
+            android:id="@+id/lv_person_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/fengexian"
+            android:dividerHeight="1dp">
+
+        </ListView>
+    </RelativeLayout>
+</LinearLayout>

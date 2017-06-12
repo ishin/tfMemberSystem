@@ -1,0 +1,110 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.tianfangIMS.im"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
+    }
+    buildTypes {
+        release {
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+//    android.applicationVariants.all { variant ->
+//        variant.outputs.each { output ->
+//            def outputFile = output.outputFile
+//            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+//                //这里修改apk文件名
+//                def fileName = outputFile.name.replace("app","${defaultConfig.applicationId }_${releaseTime() }")
+//                output.outputFile = new File(outputFile.parent, fileName)
+//            }
+//        }
+//    }
+    sourceSets {
+        main {
+            res.srcDirs = ['src/main/res']
+            assets.srcDirs = ['src/main/assets']
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            jni.srcDirs = []
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+        // 防止在发布的时候出现因MissingTranslation导致Build Failed!
+        disable 'MissingTranslation'
+    }
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
+
+    dexOptions {
+        incremental true
+        javaMaxHeapSize "4g"
+    }
+}
+def releaseTime() {
+    return new Date().time.hashCode()
+}
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.0.2'
+    testCompile 'junit:junit:4.12'
+    compile 'com.readystatesoftware.systembartint:systembartint:1.0.4'
+    compile 'org.xutils:xutils:3.3.36'
+    //版本号使用 + 可以自动引用最新版
+    compile 'com.lzy.net:okgo:+'
+    compile 'com.lzy.net:okrx:+'
+    //版本号使用 + 可以自动引用最新版
+    compile 'com.lzy.net:okserver:+'
+    //版本号使用 + 可以自动引用最新版
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile project(':pttkit')
+    compile project(':IMKit')
+    compile 'net.qiujuer.genius:blur:2.0.0'
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.zhy:percent-support-extends:1.1.1'
+    //百分比布局
+
+    //图片加载
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    //图片图形转换
+    compile 'jp.wasabeef:glide-transformations:2.0.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'net.qiujuer.genius:blur:2.0.0-beta4'
+    compile 'com.android.support:multidex:1.0.1'
+    //    compile project(path: ':imagepicker')
+    compile 'com.github.promeg:tinypinyin:2.0.2'
+    // TinyPinyin核心包，约80KB
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    //PhotoView
+    compile 'com.github.chrisbanes.photoview:library:1.2.4'
+    compile project(path: ':imagepicker')
+    compile 'com.journeyapps:zxing-android-embedded:3.5.0'
+    compile 'com.google.zxing:core:3.3.0'
+    compile 'com.android.support:recyclerview-v7:25.3.0'
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.8.3'
+    compile files('libs/MiPush_SDK_Client_3_1_2.jar')
+    compile 'me.imid.swipebacklayout.lib:library:1.0.0'
+}
+
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+}

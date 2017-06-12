@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/login_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="0dp">
+
+        <ImageView
+            android:id="@+id/login_top_img"
+            android:layout_width="match_parent"
+            android:layout_height="299dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/login_top" />
+
+        <ImageView
+            android:id="@+id/login_top_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="70dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/login_logo" />
+        <!--企业代码-->
+        <RelativeLayout
+            android:id="@+id/login_edit_daima"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignBottom="@+id/login_top_img"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@mipmap/login_edit_top"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp">
+
+            <ImageView
+                android:id="@+id/img_icon_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/icon_companycode" />
+
+            <EditText
+                android:id="@+id/et_login_daima"
+                style="@style/txt_login_forget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/img_icon_user"
+                android:background="@null"
+                android:hint="企业码"
+                android:imeOptions="actionNext"
+                android:maxLines="1"
+                android:nextFocusForward="@+id/et_login_user"
+                android:singleLine="true"
+                android:textColor="#373E61"
+                android:textColorHint="#BFC9D9" />
+
+            <ImageView
+                android:id="@+id/img_login_clean_daima_et"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/login_clean"
+                android:visibility="invisible" />
+        </RelativeLayout>
+        <!--登陆-->
+        <RelativeLayout
+            android:id="@+id/login_edit_top"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/login_top_img"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@mipmap/login_edit_top"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp">
+
+            <ImageView
+                android:id="@+id/img_icon_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/icon_login_user" />
+
+            <EditText
+                android:id="@+id/et_login_user"
+                style="@style/txt_login_forget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/img_icon_user"
+                android:background="@null"
+                android:hint="@string/edittext_login"
+                android:imeOptions="actionNext"
+                android:maxLines="1"
+                android:nextFocusForward="@+id/et_login_password"
+                android:singleLine="true"
+                android:textColor="#373E61"
+                android:textColorHint="#BFC9D9" />
+
+            <ImageView
+                android:id="@+id/img_login_clean_user_et"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/login_clean"
+                android:visibility="invisible" />
+        </RelativeLayout>
+        <!--注册-->
+        <RelativeLayout
+            android:id="@+id/login_edit_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:layout_below="@+id/login_edit_top"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@mipmap/login_edit_bottom"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp">
+
+            <ImageView
+                android:id="@+id/img_icon_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/icon_login_password" />
+
+            <EditText
+                android:id="@+id/et_login_password"
+                style="@style/txt_login_forget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/img_icon_password"
+                android:background="@null"
+                android:hint="@string/edittext_password"
+                android:imeOptions="actionGo"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textColor="#373E61"
+                android:textColorHint="#BFC9D9" />
+
+            <ImageView
+                android:id="@+id/img_login_clean_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/login_clean"
+                android:visibility="invisible" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:id="@+id/img_icon_forget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="72dip"
+            android:layout_marginTop="2dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/icon_login_fotget" />
+
+        <TextView
+            android:id="@+id/tx_forgetpassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/img_icon_forget"
+            android:layout_marginLeft="105dp"
+            android:text="@string/tx_forgetpassword" />
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tx_forgetpassword"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/btn_login_selector"
+            android:enabled="false" />
+    </RelativeLayout>
+
+</LinearLayout>
