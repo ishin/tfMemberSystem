@@ -554,6 +554,11 @@
         nameL.textAlignment = NSTextAlignmentCenter;
         nameL.textColor  = YELLOW_THEME_COLOR;
         nameL.text = @"删除并退出";
+        
+        if(_myIsGroupManager)
+        {
+            nameL.text = @"解散该群";
+        }
     }
     else if(indexPath.section == 4)
     {
@@ -595,7 +600,7 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     
     if(_myIsGroupManager)
-        return 5;
+        return 4;
     
     return 4;
 }
@@ -668,7 +673,14 @@
     }
     else if(indexPath.section == 3)
     {
-        [self quitGroupAsk];
+        if(_myIsGroupManager)
+        {
+            [self releaseGroupAsk];
+        }
+        else
+        {
+            [self quitGroupAsk];
+        }
     }
     else if(indexPath.section == 4)
     {

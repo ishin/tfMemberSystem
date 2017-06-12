@@ -560,19 +560,19 @@
     
     if([locations count])
     {
-        CLLocation*newLocation = [locations objectAtIndex:0];
+        CLLocation* newLocation = [locations objectAtIndex:0];
         
-        
+        CLLocationCoordinate2D loc = [RCLocationConvert wgs84ToGcj02:newLocation.coordinate];
+        CLLocation* fixeNewLocation = [[CLLocation alloc] initWithCoordinate:loc
+                                                                    altitude:newLocation.altitude
+                                                          horizontalAccuracy:newLocation.horizontalAccuracy
+                                                            verticalAccuracy:newLocation.verticalAccuracy
+                                                                   timestamp:newLocation.timestamp];
         
         if(self.isFristTimeToLoad)
         {
-            [self uploadingMyGPSLocation:newLocation];
+            [self uploadingMyGPSLocation:fixeNewLocation];
         }
-        
-//        NSString *lat = [NSString stringWithFormat:@"%0.5f", newLocation.coordinate.latitude];
-//        NSString *lng = [NSString stringWithFormat:@"%0.5f", newLocation.coordinate.longitude];
-//        self.title = [NSString stringWithFormat:@"%@ - %@  %d", lat, lng, -1 ];
-//       
         
         if([locations count] >  1)
         {
@@ -580,21 +580,16 @@
             
             int span = ([newLocation.timestamp timeIntervalSinceDate:oldLocation.timestamp]);
             
-//            NSString *lat = [NSString stringWithFormat:@"%0.5f", newLocation.coordinate.latitude];
-//            NSString *lng = [NSString stringWithFormat:@"%0.5f", newLocation.coordinate.longitude];
-//            self.title = [NSString stringWithFormat:@"%@ - %@  %d", lat, lng, span];
-//       
-            
             if(span >= 30)
             {
-                [self uploadingMyGPSLocation:newLocation];
+                [self uploadingMyGPSLocation:fixeNewLocation];
             }
         }
         else
         {
-            [self uploadingMyGPSLocation:newLocation];
+            [self uploadingMyGPSLocation:fixeNewLocation];
         }
-        [self onReceiveLocation:newLocation fromUserId:_myUid];
+        [self onReceiveLocation:fixeNewLocation fromUserId:_myUid];
 
     }
     
@@ -604,20 +599,28 @@
 //协议中的方法，作用是每当位置发生更新时会调用的委托方法
 -(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
+    
+    CLLocationCoordinate2D loc = [RCLocationConvert wgs84ToGcj02:newLocation.coordinate];
+    CLLocation* fixeNewLocation = [[CLLocation alloc] initWithCoordinate:loc
+                                                                altitude:newLocation.altitude
+                                                      horizontalAccuracy:newLocation.horizontalAccuracy
+                                                        verticalAccuracy:newLocation.verticalAccuracy
+                                                               timestamp:newLocation.timestamp];
+    
 
     if(self.isFristTimeToLoad)
     {
-        [self uploadingMyGPSLocation:newLocation];
+        [self uploadingMyGPSLocation:fixeNewLocation];
     }
     
     int span = ([newLocation.timestamp timeIntervalSinceDate:oldLocation.timestamp]);
     if(span >= 30)
     {
-        [self uploadingMyGPSLocation:newLocation];
+        [self uploadingMyGPSLocation:fixeNewLocation];
     }
     
     
-    [self onReceiveLocation:newLocation fromUserId:_myUid];
+    [self onReceiveLocation:fixeNewLocation fromUserId:_myUid];
 }
 
 - (void)locationManager:(CLLocationManager *)manager
@@ -703,7 +706,7 @@
   if (annotaton == nil) {
     RCLocationView *annotatonView = [[RCLocationView alloc] init];
     annotatonView.userId = userId;
-    annotatonView.coordinate = [RCLocationConvert wgs84ToGcj02:location.coordinate];
+      annotatonView.coordinate = location.coordinate;//[RCLocationConvert wgs84ToGcj02:location.coordinate];
     RCAnnotation *ann = [[RCAnnotation alloc] initWithThumbnail:annotatonView];
     [self.mapView addAnnotation:ann];
     [self.userAnnotationDic setObject:ann forKey:userId];
@@ -744,9 +747,8 @@
   else
   {
       dispatch_async(dispatch_get_main_queue(), ^{
-      annotaton.coordinate = [RCLocationConvert wgs84ToGcj02:location.coordinate];
-      annotaton.thumbnail.coordinate =
-          [RCLocationConvert wgs84ToGcj02:location.coordinate];
+          annotaton.coordinate = location.coordinate;//[RCLocationConvert wgs84ToGcj02:location.coordinate];
+          annotaton.thumbnail.coordinate = location.coordinate;//[RCLocationConvert wgs84ToGcj02:location.coordinate];
       annotaton.thumbnail.isMyLocation = NO;
       if ([userId isEqualToString:[RCIM sharedRCIM].currentUserInfo.userId]) {
         annotaton.thumbnail.isMyLocation = YES;
@@ -770,7 +772,7 @@
       RCLocationView *annotatonView = [[RCLocationView alloc] init];
       annotatonView.userId = userId;
       RCAnnotation *ann = [[RCAnnotation alloc] initWithThumbnail:annotatonView];
-      annotatonView.coordinate = [RCLocationConvert wgs84ToGcj02:CLLocationCoordinate2DMake(userInfo._latitude, userInfo._longitude)];
+      annotatonView.coordinate = CLLocationCoordinate2DMake(userInfo._latitude, userInfo._longitude);//[RCLocationConvert wgs84ToGcj02:];
       annotatonView.isMyLocation = NO;
       if ([userId isEqualToString:[RCIM sharedRCIM].currentUserInfo.userId]) {
           annotatonView.isMyLocation = YES;
@@ -797,9 +799,10 @@
   }
   else{
       dispatch_async(dispatch_get_main_queue(), ^{
-          annotaton.coordinate = [RCLocationConvert wgs84ToGcj02:CLLocationCoordinate2DMake(userInfo._latitude, userInfo._longitude)];
-          annotaton.thumbnail.coordinate =
-          [RCLocationConvert wgs84ToGcj02:CLLocationCoordinate2DMake(userInfo._latitude, userInfo._longitude)];
+          annotaton.coordinate = CLLocationCoordinate2DMake(userInfo._latitude, userInfo._longitude);
+          //[RCLocationConvert wgs84ToGcj02:CLLocationCoordinate2DMake(userInfo._latitude, userInfo._longitude)];
+          annotaton.thumbnail.coordinate = CLLocationCoordinate2DMake(userInfo._latitude, userInfo._longitude);
+          //[RCLocationConvert wgs84ToGcj02:CLLocationCoordinate2DMake(userInfo._latitude, userInfo._longitude)];
           annotaton.thumbnail.isMyLocation = NO;
           if ([userId isEqualToString:[RCIM sharedRCIM].currentUserInfo.userId]) {
               annotaton.thumbnail.isMyLocation = YES;
