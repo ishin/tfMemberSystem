@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_border_shape"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_dialog_cleanchatlog"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:background="@drawable/nav_title_shape">
+
+            <TextView
+                android:id="@+id/tv_dialog_disturb"
+                style="@style/userinfo_dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="清空聊天记录" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_dialog_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:background="@drawable/nav_title_shape">
+
+            <TextView
+                style="@style/userinfo_dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="取消" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

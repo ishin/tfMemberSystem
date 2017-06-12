@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="59dp"
+            android:background="@color/White">
+
+            <ImageView
+                android:id="@+id/iv_resetpwd_oldpwd"
+                style="@style/resetpwd_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+
+                android:scaleType="centerCrop"
+                android:src="@mipmap/icon_forgetpassword" />
+
+            <EditText
+                android:id="@+id/et_oldpassword"
+                style="@style/resetpwd_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/iv_resetpwd_oldpwd"
+                android:hint="输入当前密码"
+                android:maxLines="1" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="59dp"
+            android:background="@color/White">
+
+            <ImageView
+                android:id="@+id/iv_resetpwd_newpwd"
+                style="@style/resetpwd_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+
+                android:scaleType="centerCrop"
+                android:src="@mipmap/icon_forgetpassword" />
+
+            <EditText
+                android:id="@+id/ed_newpassword"
+                style="@style/resetpwd_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/iv_resetpwd_newpwd"
+                android:hint="输入新密码（6-32位）"
+                android:maxLines="1" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="59dp"
+            android:background="@color/White">
+
+            <ImageView
+                android:id="@+id/iv_resetpwd_newpwdreset"
+                style="@style/resetpwd_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+
+                android:scaleType="centerCrop"
+                android:src="@mipmap/icon_forgetpassword" />
+
+            <EditText
+                android:id="@+id/ed_comparepwd"
+                style="@style/resetpwd_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/iv_resetpwd_newpwdreset"
+                android:hint="确认新密码（6-32位）"
+                android:maxLines="1" />
+        </RelativeLayout>
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/btn_submit"
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:layout_marginTop="56dp"
+        android:background="#FFFFFF">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="确认修改"
+            android:textColor="#FFA256"
+            android:textSize="14dp" />
+    </RelativeLayout>
+</LinearLayout>
