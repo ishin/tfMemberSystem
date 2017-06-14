@@ -201,10 +201,11 @@ function fShowTable(data) {
 			if(newPaging.args.pageCount<pagenumber){
 				newPaging.args.pageCount++;
 				newPaging.fillHtml($('.paging'),newPaging.args);
+				fShowTable(data)
 			}else if(newPaging.args.pageCount>pagenumber){
-				newPaging.args.pageCount--;
+				newPaging.args.pageCount=pagenumber;
 				newPaging.fillHtml($('.paging'),newPaging.args);
-				loadpage(newPaging.args.current);
+				fShowTable(data)
 				return;
 			}
 		}
