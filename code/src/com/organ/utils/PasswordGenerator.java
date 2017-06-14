@@ -116,12 +116,14 @@ public class PasswordGenerator {
 	 */
 	public boolean valideMd5(JSONObject params, String timeStamp, long validTime, String key) {
 		long now = TimeGenerator.getInstance().getUnixTime();
+		
 		long maxTime = now + validTime;
 		long minTime = now - validTime;
 		
 		long timeStampLong = timeStamp != null ? Long.parseLong(timeStamp) : 0;
 		
 		if (timeStampLong < minTime || timeStampLong > maxTime) {
+			logger.info("TimeOut request");
 			return false;
 		}
 		

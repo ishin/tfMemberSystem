@@ -106,7 +106,7 @@ public class LimitServiceImpl implements LimitService {
 		logger.info("Name: " + Name + ",pagesize: " + pagesize + ",pageindex: " + pageindex);
 		try {
 			List privlist = limitDao.searchPriv(organId, Name, pagesize, pageindex);
-			int count = limitDao.getSearchCount(organId, Name);
+			//int count = limitDao.getSearchCount(organId, Name);
 			
 			if (privlist == null) {
 				JSONObject jo = new JSONObject();
@@ -125,7 +125,7 @@ public class LimitServiceImpl implements LimitService {
 					jo.put("parent_name", isBlank(priv[6]));
 					ja.add(jo);
 				}
-				jsonObject.put("count", count + "");
+				jsonObject.put("count", privlist.size());
 				jsonObject.put("content", ja);
 			}
 		} catch (Exception e) {

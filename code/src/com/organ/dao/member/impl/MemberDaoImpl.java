@@ -8,6 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
 
+import com.mchange.v1.identicator.IdList;
 import com.organ.common.BaseDao;
 import com.organ.dao.member.MemberDao;
 import com.organ.model.TMember;
@@ -350,8 +351,10 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 
 			List list = query.list();
-
-			if (list.size() > 0) {
+			ArrayList<String> idlist = new ArrayList<String>();
+			ArrayList<Object[]> objList = new ArrayList<Object[]>();
+			
+			if (list != null && list.size() > 0) {
 				return list;
 			}
 

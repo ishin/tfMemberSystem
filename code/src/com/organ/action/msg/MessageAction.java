@@ -43,7 +43,7 @@ public class MessageAction extends BaseAction {
 			jo.put("text", AuthTips.WORNGAPPID.getText());
 			result = jo.toString();
 		}
-
+		
 		returnToClient(result);
 		return "text";
 	}

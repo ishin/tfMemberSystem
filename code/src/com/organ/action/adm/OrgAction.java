@@ -88,8 +88,6 @@ public class OrgAction extends BaseAction {
 	}
 
 	public String getInfo() {
-
-		System.out.println(this.getOrganId());
 		TOrgan organ = orgService.getInfo(this.getOrganId());
 		JSONObject js = new JSONObject();
 		js.put("code", organ.getCode());

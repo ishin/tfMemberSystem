@@ -141,8 +141,8 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 		try {
 			if (!StringUtils.isBlank(name)) {
 				sql="select count(*) from (("
-					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app FROM t_priv pr WHERE pr.parent_id IN (SELECT  pv.id FROM t_priv pv WHERE pv.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0))) as aa) "
-					+"where aa.organid=" + organId + " and (aa.name like '%"+name+"%' or aa.url like '%" + name + "%')";
+					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app,pr.organid FROM t_priv pr WHERE pr.parent_id IN (SELECT  pv.id FROM t_priv pv WHERE pv.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0))) as pr) "
+					+"where pr.organid=" + organId + " and (pr.name like '%"+name+"%' or pr.url like '%" + name + "%')";
 			} else {
 				sql = "select count(*) from (" 
 					+"SELECT pr.id,pr.parent_id,pr.name,pr.category,pr.url,pr.app FROM t_priv pr WHERE pr.parent_id IN (SELECT  pv.id FROM t_priv pv WHERE pv.parent_id IN (SELECT tp.id  FROM  t_priv tp WHERE tp.parent_id=0)) and pr.organid=" + organId + ") AS tt";
