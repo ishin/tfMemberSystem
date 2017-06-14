@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import jxl.write.WriteException;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -826,7 +828,6 @@ public class MemberServiceImpl implements MemberService {
 				String sys = PropertiesUtils.getStringByKey("im.sys");
 				String urlStr = protocol + "://" + host + "/" + sys + "/";
 
-				
 				String result = HttpRequest.getInstance().sendPost(
 						SysInterface.DELBYMEMIDS.getName(), params, urlStr, host);
 				
@@ -847,13 +848,13 @@ public class MemberServiceImpl implements MemberService {
 		
 		if (organ != null && organ.size() > 0) {
 			Object[] o = (Object[]) organ.get(0);
-			String organName = String.valueOf(o[1]);
+			String organCode = String.valueOf(o[2]);
 			List<TMember> memberList = memberDao.getAllMemberInfo(organId);
 			
 			if (memberList != null && memberList.size() > 0) {
 				ArrayList<String[]> exportMemList = new ArrayList<String[]>();
 				
-				exportMemList.add(new String[]{"0", "0", organName + "-成员表"});
+				exportMemList.add(new String[]{"0", "0", o[1] + "-成员表"});
 				//生成标题
 				exportMemList.add(new String[]{"0", "1", "ID"});
 				exportMemList.add(new String[]{"1", "1", "账号"});
@@ -890,12 +891,12 @@ public class MemberServiceImpl implements MemberService {
 					line++;
 				}
 				
-				String fileName = organName + "-Member-" + TimeGenerator.getInstance().formatNow("yyyyMMddhhmmss") + ".xls";
-				String fileAllName = realPath + "exports/" + fileName;
+				String fileName = "exports" + PropertiesUtils.getStringByKey("dir.seperate") + organCode + "-Member-" + TimeGenerator.getInstance().formatNow("yyyyMMddhh") + ".xls";
+				String fileAllName = realPath + fileName;
 				
 				try {
 					OutputStream os = new FileOutputStream(fileAllName);
-					XlsUtils.getInstance().createTitleExcel("成员表", 13, exportMemList, os);
+					XlsUtils.getInstance().createTitleExcel("成员数据", 13, exportMemList, os);
 					if (FileUtil.isExists(fileAllName)) {
 						return fileName;
 					}
@@ -912,12 +913,149 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
+	public String exportsMember2(int organId, String realPath) {
+		List organ = branchDao.getOrgan(organId);
+		
+		if (organ != null && organ.size() > 0) {
+			Object[] o = (Object[]) organ.get(0);
+			String organCode = String.valueOf(o[2]);
+			List<TMember> memberList = memberDao.getExportsMember(organId);
+			JSONArray ja = new JSONArray();
+			
+			if (memberList != null && memberList.size() > 0) {
+				int len = memberList.size();
+				StringBuilder sb = new StringBuilder();
+				
+				for(int i = 0; i < len; i++) {
+					TMember t = memberList.get(i);
+					JSONObject jo = new JSONObject();
+					jo.put("mobile", isBlank(t.getMobile()));
+					jo.put("name", isBlank(t.getFullname()));
+					jo.put("workno", isBlank(t.getWorkno()));
+					jo.put("sex", StringUtils.getInstance().isBlank(t.getSex()) ? "" : (t.getSex().equals("1") ? "男" : "女"));
+					jo.put("telephone", isBlank(t.getTelephone()));
+					jo.put("email", isBlank(t.getEmail()));
+					jo.put("id", t.getId());
+					ja.add(jo);
+					sb.append(t.getId());
+					if (i < len - 1) {
+						sb.append(",");
+					}
+				}
+				
+				List bmList = branchMemberDao.getBranchMemberByMemberIds(sb.toString());
+				
+				//组合职位，部门
+				if (bmList != null && bmList.size() > 0) {
+					int bmLen = bmList.size();
+					Map<String, Object[]> bmMap = new HashMap<String, Object[]>();
+					
+					//去除重复
+					for(int i = 0; i < bmLen; i++) {
+						Object[] jo = (Object[])bmList.get(i);
+						String id = String.valueOf(jo[0]);
+						if(!bmMap.containsKey(id)) {
+							bmMap.put(id, jo);
+						} else {
+							if (String.valueOf(jo[3]).equals("1")) {
+								bmMap.remove(id);
+								bmMap.put(id, jo);
+							}
+						}
+					}
+					
+					for (int i = 0; i < len; i++) {
+						JSONObject jo = ja.getJSONObject(i);
+						for(Entry<String, Object[]> m: bmMap.entrySet()){
+							String id = m.getKey();
+							Object[] bmJo = m.getValue();
+							if (jo.getString("id").equals(id)) {
+								String bname = String.valueOf(bmJo[2]);
+								String pname = String.valueOf(bmJo[1]);
+								String master = String.valueOf(bmJo[4]);
+								
+								bname = isBlank(bname);
+								pname = isBlank(pname);
+								master = StringUtils.getInstance().isBlank("master") ? "0" : master;
+								
+								jo.put("bname", bname);
+								jo.put("pname", pname);
+								jo.put("master", master);
+								bmMap.remove(id);
+								break;
+							}
+						}
+					}
+					for(int i = 0; i < len; i++) {
+						JSONObject jo = ja.getJSONObject(i);
+						for(int j = 0; j < len; j++) {
+							JSONObject jo1 = ja.getJSONObject(j);
+							if (jo.getString("master").equals(jo1.getString("id"))) {
+								jo.remove("master");
+								jo.put("master", jo1.getString("name"));
+								break;
+							}
+						}
+					}
+				}
+				
+				ArrayList<String[]> exportMemList = new ArrayList<String[]>();
+				exportMemList.add(new String[]{"0", "0", "手机"});
+				exportMemList.add(new String[]{"1", "0", "姓名"});
+				exportMemList.add(new String[]{"2", "0", "工号"});
+				exportMemList.add(new String[]{"3", "0", "性别"});
+				exportMemList.add(new String[]{"4", "0", "属性部门"});
+				exportMemList.add(new String[]{"5", "0", "部门领导"});
+				exportMemList.add(new String[]{"6", "0", "职务"});
+				exportMemList.add(new String[]{"7", "0", "座机"});
+				exportMemList.add(new String[]{"8", "0", "邮箱"});
+				
+				int line = 1;
+				
+				for(int i = 0; i < ja.size(); i++) {
+					JSONObject jo = ja.getJSONObject(i);
+					String lineStr = String.valueOf(line);
+					exportMemList.add(new String[]{"0", lineStr, jo.getString("mobile")});
+					exportMemList.add(new String[]{"1", lineStr, jo.getString("name")});
+					exportMemList.add(new String[]{"2", lineStr, jo.getString("workno")});
+					exportMemList.add(new String[]{"3", lineStr, jo.getString("sex")});
+					exportMemList.add(new String[]{"4", lineStr, jo.getString("bname")});
+					exportMemList.add(new String[]{"5", lineStr, jo.getString("master")});
+					exportMemList.add(new String[]{"6", lineStr, jo.getString("pname")});
+					exportMemList.add(new String[]{"7", lineStr, jo.getString("telephone")});
+					exportMemList.add(new String[]{"8", lineStr, jo.getString("email")});
+					line++;
+				}
+				
+				String fileName = "exports" + PropertiesUtils.getStringByKey("dir.seperate") + organCode + "-Member-" + TimeGenerator.getInstance().formatNow("yyyyMMddhh") + ".xls";
+				String fileAllName = realPath + fileName;
+				
+				try {
+					OutputStream os = new FileOutputStream(fileAllName);
+					XlsUtils.getInstance().createSimpleExcel("成员数据", exportMemList, os);
+					if (FileUtil.isExists(fileAllName)) {
+						return fileName;
+					}
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (WriteException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	@Override
 	public void updateBySql(int organId, String address) {
 		memberDao.update("update TMember set address='" + address + "' where organId=" + organId);
 	}
 	
 	private String isBlank(Object o) {
-		return o == null ? "" : o + "";
+		return (o == null || o.equals("null")) ? "" : o + "";
 	}
 
 	private TextCodeDao textCodeDao;

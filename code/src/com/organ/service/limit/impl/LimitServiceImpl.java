@@ -107,6 +107,7 @@ public class LimitServiceImpl implements LimitService {
 		try {
 			List privlist = limitDao.searchPriv(organId, Name, pagesize, pageindex);
 			int count = limitDao.getSearchCount(organId, Name);
+			
 			if (privlist == null) {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
@@ -154,9 +155,8 @@ public class LimitServiceImpl implements LimitService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List getLimitbyRole(Integer roleId, String appName) {
-		logger.info("roleId: " + roleId + ", appName: " + appName);
-		return limitDao.getLimitbyRole(roleId, appName);
+	public List getLimitbyRole(Integer roleId, int organId, String appName) {
+		return limitDao.getLimitbyRole(roleId, organId, appName);
 	}
 	
 	@Override

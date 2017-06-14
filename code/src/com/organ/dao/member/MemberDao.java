@@ -227,5 +227,6 @@ public interface MemberDao extends IBaseDao<TMember, Integer> {
 	public int logicDelMemberByUserIds(String userids, String isLogic);
 	public List<String> getNotDelIds(String userids, String isLogic);
 	public TMember getMemberByWorkNo(String memberWorkNo, int organId);
+	public List<TMember> getExportsMember(int organId);
 } 
 

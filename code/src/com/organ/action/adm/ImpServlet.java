@@ -15,6 +15,7 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
 
 import com.googlecode.sslplugin.annotation.Secured;
 import com.organ.common.Constants;
+import com.organ.model.SessionUser;
 import com.organ.service.adm.ImpService;
 
 import net.sf.json.JSONObject;
@@ -38,30 +39,36 @@ public class ImpServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		JSONObject js = new JSONObject();
-
-		this.impService = new ImpService(this.getSessionFactory(req));
-
-		Part part = req.getPart("impfile");
-		String contentType = part.getContentType();
+		SessionUser su = (SessionUser) req.getSession().getAttribute(Constants.ATTRIBUTE_NAME_OF_SESSIONUSER);
 		
-		if (!contentType.equals(Constants.XLS) && !contentType.equals(Constants.XLSX)) {
-			js.put("status", 1);//文件类型错
-		}
-		else {
-			if (contentType.equals(Constants.XLS)) {
-				js = impService.handleXls(part);
+		if (su == null) {
+			
+		} else {
+			int organId = su.getOrganId();
+			this.impService = new ImpService(this.getSessionFactory(req));
+			
+			Part part = req.getPart("impfile");
+			String contentType = part.getContentType();
+			
+			if (!contentType.equals(Constants.XLS) && !contentType.equals(Constants.XLSX)) {
+				js.put("status", 1);//文件类型错
 			}
 			else {
-				js = impService.handleXlsx(part);
+				if (contentType.equals(Constants.XLS)) {
+					js = impService.handleXls(part, organId);
+				}
+				else {
+					js = impService.handleXlsx(part, organId);
+				}
 			}
+	
+			this.context.close();
+			
+			res.setContentType("application/json;charset=utf-8");
+			PrintWriter out = res.getWriter();
+			
+			out.println(js.toString());
 		}
-
-		this.context.close();
-		
-		res.setContentType("application/json;charset=utf-8");
-		PrintWriter out = res.getWriter();
-		
-		out.println(js.toString());
 	}
 	
 	private SessionFactory getSessionFactory(HttpServletRequest req) {

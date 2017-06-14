@@ -65,5 +65,7 @@ public interface AppSecretService {
 	 */
 	public String getAppSecretByAppIdAndSecret(String appId, String secret);
 
+	public boolean checkAppIdOfOrganAb(String appId, int organId);
+
 
 }

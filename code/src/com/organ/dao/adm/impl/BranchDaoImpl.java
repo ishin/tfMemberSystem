@@ -29,7 +29,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements BranchDa
 	@Override
 	public List getOrgan(Integer organId) {
 
-		String sql = "select id, name from t_organ where id = " + organId;
+		String sql = "select id, name, code from t_organ where id = " + organId;
 		return runSql(sql);
 	}
 
@@ -145,7 +145,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements BranchDa
 	}
 
 	@Override
-	public JSONObject testUsers(JSONArray ja) {
+	public JSONObject testUsers(JSONArray ja, int organId) {
 
 		ImpService impService = new ImpService(this.getSessionFactory());
 
@@ -158,7 +158,7 @@ public class BranchDaoImpl extends BaseDao<TBranch, Integer> implements BranchDa
 		while (i-- > 0) {
 			JSONObject j = (JSONObject) ja.get(i);
 			ImpUser user = jsonToUser(j);
-			if (impService.handleUser(user)) {
+			if (impService.handleUser(user, organId)) {
 				JSONArray jn = (JSONArray) js.get(impService.getStatus());
 				jn.add(impService.getJson());
 			} else {

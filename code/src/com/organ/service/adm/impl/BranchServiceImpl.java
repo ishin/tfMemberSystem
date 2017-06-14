@@ -44,6 +44,7 @@ import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
 import com.organ.utils.PasswordGenerator;
 import com.organ.utils.PinyinGenerator;
+import com.organ.utils.PropertiesUtils;
 import com.organ.utils.StringUtils;
 import com.organ.utils.TextHttpSender;
 import com.organ.utils.TimeGenerator;
@@ -560,8 +561,8 @@ public class BranchServiceImpl implements BranchService {
 	public void movMember(Integer memberId, Integer pId, Integer toId) {
 		
 		TBranchMember bm = this.getBranchMemberByBranchMember(pId, memberId);
-
 		TBranchMember tobm = this.getBranchMemberByBranchMember(toId, memberId);
+		
 		if (tobm == null) {
 			bm.setBranchId(toId);
 			branchMemberDao.saveOrUpdate(bm);
@@ -595,9 +596,9 @@ public class BranchServiceImpl implements BranchService {
 	}
 
 	@Override
-	public JSONObject testUsers(JSONArray ja) {
+	public JSONObject testUsers(JSONArray ja, int organId) {
 		
-		return branchDao.testUsers(ja);
+		return branchDao.testUsers(ja, organId);
 	}
 	
 	@Override
@@ -649,21 +650,26 @@ public class BranchServiceImpl implements BranchService {
 		while(it.hasNext()) {
 			ImpUser user = it.next();
 			TBranch br = this.getBranchByName(user.getBranch(),organId);
+			int mar = 0;
 			if (br == null) {
 				br = new TBranch();
 				br.setName(user.getBranch());
 				br.setOrganId(organId);
 				br.setParentId(0);
+				br.setIsDel("1");
+				br.setNoGroup("0");
 				TMember m = memberDao.getMemberByName(user.getManager(), organId);
 				if (m == null) {
 					br.setManagerId(0);
 				}
 				else {
 					br.setManagerId(m.getId());
+					mar = m.getId();
 				}
 				br.setListorder(0);
 				branchDao.save(br);
-			}
+			} 
+			user.setManager(String.valueOf(mar));
 			user.setBranchId(br.getId());
 		}
 		
@@ -694,6 +700,20 @@ public class BranchServiceImpl implements BranchService {
 			bm.setListorder(0);
 			bm.setIsDel("1");
 			branchMemberDao.save(bm);
+			if (!user.getManager().equals("0")) {
+				int id = Integer.parseInt(user.getManager());
+				TBranchMember tbm = branchMemberDao.getBranchMemberByBranchMember(user.getBranchId(), id);
+				if (tbm == null) {
+					TBranchMember bm1 = new TBranchMember();
+					bm1.setBranchId(user.getBranchId());
+					bm1.setMemberId(id);
+					bm1.setPositionId(0);
+					bm1.setIsMaster("0");
+					bm1.setListorder(0);
+					bm1.setIsDel("1");
+					branchMemberDao.save(bm1);
+				}
+			}
 		}		
 		
 	}
@@ -1233,12 +1253,12 @@ public class BranchServiceImpl implements BranchService {
 		List organ = branchDao.getOrgan(organId);
 		if (organ != null && organ.size() > 0) {
 			Object[] o = (Object[]) organ.get(0);
-			String organName = String.valueOf(o[1]);
+			String organCode = String.valueOf(o[2]);
 			List<TBranch> list = branchDao.getAllBranch(organId);
 			if (list != null && list.size() > 0) {
 				ArrayList<String[]> branchList = new ArrayList<String[]>();
 				
-				branchList.add(new String[]{"0", "0", organName + "-组织结构表"});
+				branchList.add(new String[]{"0", "0", o[1] + "-组织结构表"});
 				//生成标题
 				branchList.add(new String[]{"0", "1", "ID"});
 				branchList.add(new String[]{"1", "1", "父ID"});
@@ -1266,8 +1286,8 @@ public class BranchServiceImpl implements BranchService {
 					branchList.add(new String[]{"8", lineStr, tb.getIntro()});
 					line++;
 				}
-				String fileName = organName + "-Branch-" + TimeGenerator.getInstance().formatNow("yyyyMMddhhmmss") + ".xls";
-				String fileAllName = path + "exports/" + fileName;
+				String fileName = "exports" + PropertiesUtils.getStringByKey("dir.seperate") + organCode + "-Branch-" + TimeGenerator.getInstance().formatNow("yyyyMMddhh") + ".xls";
+				String fileAllName = path + fileName;
 				
 				try {
 					OutputStream os = new FileOutputStream(fileAllName);
@@ -1288,6 +1308,10 @@ public class BranchServiceImpl implements BranchService {
 		return null;
 	}
 
+	@Override
+	public TMember getSuperManager(int organId) {
+		return memberDao.getSuperMember(organId);
+	}
 	
 	@Override
 	public TMember getMemberByWorkNo(String memberWorkNo, int organId) {

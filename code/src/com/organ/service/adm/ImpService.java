@@ -33,7 +33,7 @@ public class ImpService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public JSONObject handleXls(Part part) {
+	public JSONObject handleXls(Part part, int organId) {
 
 		JSONObject js = new JSONObject();
 		js.put(Constants.GOOD, new JSONArray());
@@ -49,7 +49,7 @@ public class ImpService {
 				while(ri.hasNext()) {
 					Row row = ri.next();
 					ImpUser user = rowToUser(row);
-					if (this.handleUser(user)) {
+					if (this.handleUser(user, organId)) {
 						JSONArray ja = (JSONArray)js.get(this.getStatus());
 						ja.add(this.getJson());
 					}
@@ -73,7 +73,7 @@ public class ImpService {
 		return this.clean(js);
 	}
 	
-	public JSONObject handleXlsx(Part part) {
+	public JSONObject handleXlsx(Part part, int organId) {
 		
 		JSONObject js = new JSONObject();
 		js.put(Constants.GOOD, new JSONArray());
@@ -89,7 +89,7 @@ public class ImpService {
 				while(ri.hasNext()) {
 					Row row = ri.next();
 					ImpUser user = rowToUser(row);
-					if (this.handleUser(user)) {
+					if (this.handleUser(user, organId)) {
 						JSONArray ja = (JSONArray)js.get(this.getStatus());
 						ja.add(this.getJson());
 					}
@@ -172,7 +172,7 @@ public class ImpService {
 		return false;
 	}
 	
-	public boolean handleUser(ImpUser user) {
+	public boolean handleUser(ImpUser user, int organId) {
 	
 		this.user = user;
 		impDao.setUser(user);
@@ -189,7 +189,7 @@ public class ImpService {
 			else if (impDao.testMobileExist()) {
 				this.status = Constants.WELL;
 			}
-			else if (impDao.testWorkNoExist()) {
+			else if (impDao.testWorkNoExist(organId)) {
 				this.status = Constants.WELL;
 			}
 			else if (impDao.testEmailNoExist()) {

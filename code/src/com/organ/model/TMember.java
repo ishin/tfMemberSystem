@@ -32,6 +32,16 @@ public class TMember implements java.io.Serializable {
 	public TMember(Integer id) {
 		this.id = id;
 	}
+	
+	public TMember(Integer id, String mobile, String fullname, String workno, String sex, String telephone, String email) {
+		this.id = id;
+		this.mobile = mobile;
+		this.fullname = fullname;
+		this.workno = workno;
+		this.sex = sex;
+		this.telephone = telephone;
+		this.email = email;
+	}
 
 	public TMember(String account, String password, String fullname,
 			String pinyin, String allpinyin, String workno, String sex, String birthday,

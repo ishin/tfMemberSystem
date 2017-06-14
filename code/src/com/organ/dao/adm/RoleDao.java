@@ -29,5 +29,6 @@ public interface RoleDao extends IBaseDao<TRole, Integer> {
 	 * @return
 	 */
 	public List<Object[]> getPrivilegeByRoleIds(Integer[] ids);
+	public TRole getOneLevelRole(int organId);
 	
 }

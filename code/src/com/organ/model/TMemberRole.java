@@ -31,6 +31,12 @@ public class TMemberRole implements java.io.Serializable {
 		this.listorder = listorder;
 	}
 
+	public TMemberRole(Integer memberId, Integer roleId, Integer listorder, String isDel) {
+		this.memberId = memberId;
+		this.roleId = roleId;
+		this.listorder = listorder;
+		this.isDel = isDel;
+	}
 	// Property accessors
 
 	public Integer getId() {

@@ -1,30 +1,23 @@
 package com.organ.service.adm.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import net.sf.json.JSONObject;
-
 import com.organ.dao.adm.MemberRoleDao;
 import com.organ.dao.adm.PrivDao;
 import com.organ.dao.adm.RoleDao;
 import com.organ.dao.adm.RolePrivDao;
-import com.organ.model.AppSecret;
 import com.organ.model.TMemberRole;
 import com.organ.model.TPriv;
 import com.organ.model.TRole;
-import com.organ.model.TRoleAppSecret;
 import com.organ.model.TRolePriv;
 import com.organ.service.adm.PrivService;
 import com.organ.utils.JSONUtils;
 import com.organ.utils.LogUtils;
-import com.organ.utils.StringUtils;
 
 public class PrivServiceImpl implements PrivService {
 	private static final Logger logger = LogManager.getLogger(PrivServiceImpl.class);
@@ -299,6 +292,21 @@ public class PrivServiceImpl implements PrivService {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	@Override
+	public boolean isOneLevelRole(Integer roleId, int organId) {
+		TRole tr = roleDao.getOneLevelRole(organId);
+		return tr != null && tr.getId() == roleId.intValue();
+	}
+	@Override
+	public boolean checkManagerRole(Integer id, int organId) {
+		TMemberRole trm = memberRoleDao.get(id);
+		
+		if(trm != null) {
+			int roleId = trm.getRoleId();
+			return this.isOneLevelRole(roleId, organId);
+		}
+		return false;
 	}
 	
 }

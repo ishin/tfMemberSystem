@@ -52,7 +52,7 @@ public interface BranchDao extends IBaseDao<TBranch, Integer> {
 	/*
 	 * 导入
 	 */
-	public JSONObject testUsers(JSONArray ja);
+	public JSONObject testUsers(JSONArray ja, int organId);
 
 	/*
 	 * 取部门关系树

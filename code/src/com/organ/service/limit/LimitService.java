@@ -44,7 +44,7 @@ public interface LimitService {
 	
 	public int getCount(int organId);
 	
-	public List getLimitbyRole(Integer roleid2, String appName);
+	public List getLimitbyRole(Integer roleid2, int organId, String appName);
 	
 	public String getRoleList(Integer appId, int organId);
 	

@@ -107,4 +107,18 @@ public class AppSecretDaoImpl extends BaseDao<AppSecret, Integer> implements
 		return null;
 	}
 
+	@Override
+	public AppSecret getAppSecretByAppIdAndOrganId(String appId, int organId) {
+		Criteria ctr = getCriteria();
+		ctr.add(Restrictions.and(Restrictions.eq("appId", appId), Restrictions.eq("organId", organId)));
+
+		List<AppSecret> list = ctr.list();
+
+		if (list != null && list.size() > 0) {
+			return (AppSecret) list.get(0);
+		}
+
+		return null;
+	}
+
 }

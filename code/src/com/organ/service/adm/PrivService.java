@@ -42,5 +42,7 @@ public interface PrivService {
 	public String getRolePrivsByPrivs(String[] strToArray);
 	
 	public String getMemberRolesByRoleIds(String[] strToArray);
+	public boolean isOneLevelRole(Integer roleId, int organId);
+	public boolean checkManagerRole(Integer id, int organId);
 	
 }

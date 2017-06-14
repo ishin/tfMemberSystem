@@ -20,7 +20,8 @@ import com.organ.utils.TimeGenerator;
  * @date 2017/01/04
  * @since jdk1.7
  */
-public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDao {
+public class MemberDaoImpl extends BaseDao<TMember, Integer> implements
+		MemberDao {
 
 	@Override
 	public TMember getMemberByName(String name, Integer organId) {
@@ -43,7 +44,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	public List getMemberPosition(Integer memberId) {
 
 		String sql = "select position_id, branch_id, id from t_branch_member"
-				+ " where member_id = " + memberId + " and isdel='1' order by is_master desc";
+				+ " where member_id = " + memberId
+				+ " and isdel='1' order by is_master desc";
 		SQLQuery query = this.getSession().createSQLQuery(sql);
 
 		List list = query.list();
@@ -92,10 +94,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 			int organId) {
 
 		String hql = (new StringBuilder("update TMember set password='")
-				.append(md5Pwd).append("' where account='")
-				.append(account)
-				.append("' and organId=")
-				.append(organId)).toString();
+				.append(md5Pwd).append("' where account='").append(account)
+				.append("' and organId=").append(organId)).toString();
 
 		boolean status = true;
 
@@ -161,23 +161,26 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 					+ "left join t_position P on BM.position_id=P.id "
 					+ "inner join t_organ O on M.organ_id=O.id "
 					+ "where M.id=" + id + " and M.isdel=1";
-			
+
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 
 			List list = query.list();
 
 			if (list != null) {
 				int len = list.size();
-				if(len == 1) {
-					return (Object[])list.get(0);
+				if (len == 1) {
+					return (Object[]) list.get(0);
 				} else if (len > 1) {
 					Object[] ret = null;
-					for(int i = 0; i < len; i++) {
+					for (int i = 0; i < len; i++) {
 						Object[] t = (Object[]) list.get(i);
 						if (String.valueOf(t[19]).equals("1")) {
 							ret = t;
 							break;
 						}
+					}
+					if (ret == null) {
+						ret = (Object[])list.get(0);
 					}
 					return ret;
 				}
@@ -192,7 +195,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TMember> getMultipleMemberForAccounts(String[] mulMemberStr, int organId) {
+	public List<TMember> getMultipleMemberForAccounts(String[] mulMemberStr,
+			int organId) {
 		try {
 
 			Criteria ctr = getCriteria();
@@ -300,7 +304,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	@Override
 	public List searchUser(String account, int organId) {
 		try {
-			String hql = "select "
+			
+			/*String hql = "select "
 					+ "M.id MID,"
 					+ "M.account,"
 					+ "M.fullname,"
@@ -322,12 +327,26 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 					+ "left join t_position P on BM.position_id=P.id "
 					+ "inner join t_organ O on M.organ_id=O.id "
 					+ "where M.isdel=1 and M.organ_id=" + organId
-					+ " and M.account like '%" + account
+					+ " and (M.account like '%" + account
 					+ "%' or M.fullname like '%" + account
 					+ "%' or M.pinyin like '%" + account
 					+ "%' or M.allpinyin like '%" + account
-					+ "%' or M.mobile='" + account + "'";
-
+					+ "%' or M.mobile='" + account + "')";
+			 */
+			String mSql = "(SELECT M1.id MID,M1.account,M1.fullname,M1.logo,M1.telephone,M1.email,M1.address,M1.birthday,M1.workno,M1.mobile,M1.intro,M1.sex,M1.isdel,M1.pinyin,M1.allpinyin,M1.organ_id FROM t_member M1 WHERE M1.organ_id="+organId+" and  M1.isdel=1) M ";
+			String hql = (new StringBuilder("SELECT M.MID,M.account,M.fullname,M.logo,M.telephone,M.email,M.address,M.birthday,M.workno,M.mobile,M.intro,M.sex,B.name BNAME,P.name PNAME,O.name ONAME,M.isdel FROM ")
+						.append(mSql)
+						.append("inner join t_organ O on M.organ_id=O.id ")
+						.append("left join t_branch_member BM on M.MID=BM.member_id ")
+						.append("left join t_branch B on BM.branch_id=B.id ")
+						.append("left join t_position P on BM.position_id=P.id ")
+						.append("WHERE M.account like '%").append(account)
+						.append("%' or M.fullname like '%").append(account)
+						.append("%' or M.pinyin like '%").append(account)
+						.append("%' or M.allpinyin like '%").append(account)
+						.append("%' or M.mobile='").append(account).append("'")
+						).toString();
+			
 			SQLQuery query = this.getSession().createSQLQuery(hql);
 
 			List list = query.list();
@@ -514,7 +533,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	@Override
 	public List<TMember> getLimitMemberIds(int limit, int organId) {
 		String sql = (new StringBuilder(
-				"select new TMember(t.id) from TMember t where t.organId=").append(organId).append(" and t.idDel=1")).toString();
+				"select new TMember(t.id) from TMember t where t.organId=")
+				.append(organId).append(" and t.isDel=1")).toString();
 
 		try {
 			Query query = getSession().createQuery(sql);
@@ -538,7 +558,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	@Override
 	public TMember getMemberByToken(String token) {
 		try {
-			String hql = (new StringBuilder("from TMember t where t.token='").append(token).append("' and t.isDel=1")).toString();
+			String hql = (new StringBuilder("from TMember t where t.token='")
+					.append(token).append("' and t.isDel=1")).toString();
 
 			List<TMember> list = getSession().createQuery(hql).list();
 
@@ -556,7 +577,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<TMember> getAllMemberInfo(int organId) {
-		String sql = (new StringBuilder("from TMember t where t.organId=").append(organId).append(" and t.isDel=1")).toString();
+		String sql = (new StringBuilder("from TMember t where t.organId=")
+				.append(organId).append(" and t.isDel=1")).toString();
 
 		try {
 			Query query = getSession().createQuery(sql);
@@ -586,7 +608,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 					+ "M.account,"
 					+ "S.name SNAME,"
 					+ "P.name PNAME,"
-					+ "O.name ONAME "
+					+ "O.name ONAME,"
+					+ "BM.is_master "
 					+ "from t_member M left join t_branch_member BM on M.id=BM.member_id "
 					+ "left join t_branch B on BM.branch_id=B.id "
 					+ "left join t_position P on BM.position_id=P.id "
@@ -602,16 +625,19 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 
 			if (list.size() > 0) {
 				int len = list.size();
-				if(len == 1) {
-					return (Object[])list.get(0);
+				if (len == 1) {
+					return (Object[]) list.get(0);
 				} else if (len > 1) {
 					Object[] ret = null;
-					for(int i = 0; i < len; i++) {
-						Object[] t = (Object[]) list.get(0);
-						if (String.valueOf(t[8]).equals("1")) {
+					for (int i = 0; i < len; i++) {
+						Object[] t = (Object[]) list.get(i);
+						if (String.valueOf(t[10]).equals("1")) {
 							ret = t;
 							break;
 						}
+					}
+					if (ret == null) {
+						ret = (Object[])list.get(0);
 					}
 					return ret;
 				}
@@ -627,7 +653,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	@Override
 	public int getMemberCount(int organId) {
 		try {
-			return count("from TMember where organId=" + organId + " and isDel=1");
+			return count("from TMember where organId=" + organId
+					+ " and isDel=1");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -638,7 +665,8 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	public List getMemberIdsByAccount(String[] targetNames, int organId) {
 		try {
 			StringBuilder sql = new StringBuilder(
-					"select id from t_member where organ_id=").append(organId).append(" and isdel=1").append(" and account in(");
+					"select id from t_member where organ_id=").append(organId)
+					.append(" and isdel=1").append(" and account in(");
 			int len = targetNames.length;
 
 			for (int i = 0; i < len; i++) {
@@ -806,10 +834,14 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 	public int logicDelMemberByUserIds(String userids, String isLogic) {
 		try {
 			if (isLogic.equals("1")) {
-				String hql = (new StringBuilder("update TMember set isDel=0 where id in(").append(userids).append(")")).toString();
+				String hql = (new StringBuilder(
+						"update TMember set isDel=0 where id in(")
+						.append(userids).append(")")).toString();
 				return update(hql);
 			} else {
-				String hql = (new StringBuilder("delete from TMember where id in(").append(userids).append(")")).toString();
+				String hql = (new StringBuilder(
+						"delete from TMember where id in(").append(userids)
+						.append(")")).toString();
 				return delete(hql);
 			}
 		} catch (Exception e) {
@@ -823,24 +855,28 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 		try {
 			String hql = null;
 			if (isLogic.equals("1")) {
-				hql = (new StringBuilder("select id from t_member t where t.isdel!=0 and t.id in(").append(userids).append(")")).toString();
+				hql = (new StringBuilder(
+						"select id from t_member t where t.isdel!=0 and t.id in(")
+						.append(userids).append(")")).toString();
 			} else {
-				hql = (new StringBuilder("select id from t_member t where t.id in(").append(userids).append(")")).toString();
+				hql = (new StringBuilder(
+						"select id from t_member t where t.id in(")
+						.append(userids).append(")")).toString();
 			}
 			List list = runSql(hql);
 			List<String> ids = new ArrayList<String>();
-			
+
 			if (list != null && list.size() > 0) {
-				for(int i = 0; i < list.size(); i++) {
+				for (int i = 0; i < list.size(); i++) {
 					ids.add(String.valueOf(list.get(i)));
 				}
 			}
-			
+
 			return ids;
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
@@ -863,6 +899,22 @@ public class MemberDaoImpl extends BaseDao<TMember, Integer> implements MemberDa
 			e.printStackTrace();
 		}
 
+		return null;
+	}
+
+	@Override
+	public List<TMember> getExportsMember(int organId) {
+		String hql = (new StringBuilder(
+				"select new TMember(t.id,t.mobile,t.fullname,t.workno,t.sex,t.telephone,t.email) from TMember t where t.organId=")
+				.append(organId).append(" and t.isDel=1")).toString();
+
+		Query query = getSession().createQuery(hql);
+
+		List<TMember> list = query.list();
+
+		if (list != null && list.size() > 0) {
+			return list;
+		}
 		return null;
 	}
 }
