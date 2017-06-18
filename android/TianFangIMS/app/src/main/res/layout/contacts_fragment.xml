@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="-10dp"
+    android:background="@color/backgroundColor"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/contacts_search"
+        layout="@layout/search_layout" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/view_float"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00272c"
+            android:visibility="gone" />
+
+        <com.zhy.android.percent.support.PercentLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+
+            <com.zhy.android.percent.support.PercentRelativeLayout
+                android:id="@+id/rl_mine_contacts"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/White">
+
+                <ImageView
+                    android:id="@+id/iv_mine_chatroom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="25dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/icon_mine_chatroom" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/iv_mine_chatroom"
+                    android:text="我的群组" />
+            </com.zhy.android.percent.support.PercentRelativeLayout>
+
+            <com.zhy.android.percent.support.PercentRelativeLayout
+                android:id="@+id/rl_mine_topcontacts"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/White">
+
+                <ImageView
+                    android:id="@+id/iv_topcontacts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="25dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/icon_topcontacts" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/iv_topcontacts"
+                    android:text="常用联系人" />
+            </com.zhy.android.percent.support.PercentRelativeLayout>
+
+            <ListView
+                android:id="@+id/fragment_contacts_lv_departments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/white"
+                android:divider="@color/fengexian" />
+        </com.zhy.android.percent.support.PercentLinearLayout>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/show_no_friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:text="@string/No_friends"
+        android:visibility="gone" />
+</com.zhy.android.percent.support.PercentLinearLayout>

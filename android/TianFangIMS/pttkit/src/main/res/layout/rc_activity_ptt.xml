@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_ptt"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="io.rong.ptt.kit.PTTSessionActivity">
+
+    <RelativeLayout
+        android:id="@+id/rc_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="69dp">
+
+        <ImageView
+            android:id="@+id/exitImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:paddingBottom="19dp"
+            android:paddingLeft="9dp"
+            android:paddingRight="19dp"
+            android:paddingTop="10dp"
+            android:src="@drawable/rc_real_time_location_exit" />
+
+        <io.rong.imkit.widget.AsyncImageView
+            android:id="@+id/micHolderImageView"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_centerHorizontal="true"
+            android:background="@android:color/transparent"
+            app:RCCornerRadius="3dp"
+            app:RCDefDrawable="@drawable/rc_default_portrait"
+            tools:src="@drawable/rc_default_portrait" />
+
+        <ImageView
+            android:id="@+id/hideImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingBottom="19dp"
+            android:paddingLeft="19dp"
+            android:paddingRight="9dp"
+            android:paddingTop="10dp"
+            android:src="@drawable/rc_real_time_location_hide" />
+
+        <TextView
+            android:id="@+id/rc_user_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="2dp"
+            android:padding="0dp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/micHolderTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/rce_ptt_hold_to_request_mic" />
+
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="4"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <ImageView
+        android:id="@+id/holdToSpeakImageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="#000000" />
+</LinearLayout>
