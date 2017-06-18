@@ -42,12 +42,7 @@
 #define SCREEN_WIDTH    ([[UIScreen mainScreen] bounds].size.width)
 
 
-#define DATE_COMPANYNAME  @"DATE_COMPANYNAME"
-#define DATE_POSITION     @"DATE_POSITION"
-#define DATE_AREA         @"DATE_AREA"
-#define DATE_INDUSTRY     @"DATE_INDUSTRY"  //行业
-#define DATE_TRUENAME     @"DATE_TRUENAME"
-#define DATE_EMAIL        @"DATE_EMAIL"
+
 
 #define URL_QR_HOST      @"http://wx.cr-expo.com/qr/"
 #define WX_URL_HOST      @"http://wx.cr-expo.com"

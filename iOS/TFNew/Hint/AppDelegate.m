@@ -176,8 +176,6 @@
     
     _globalButton = [[GlobalTouchButtonView alloc] initWithFrame:CGRectMake(0, 0, 56, 56)];
     
-   
-    
     self._rcUserInfoMap = [[NSMutableDictionary alloc] init];
     self._rcGroupInfoMap = [[NSMutableDictionary alloc] init];
     //初始化融云IM

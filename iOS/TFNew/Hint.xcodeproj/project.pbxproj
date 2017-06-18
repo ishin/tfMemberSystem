@@ -315,10 +315,7 @@
 		04D5EC661B2FD6B8004D8CD9 /* UIButton+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5E9BA1B2FD6B6004D8CD9 /* UIButton+Color.m */; };
 		04D5EC671B2FD6B8004D8CD9 /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5E9BC1B2FD6B6004D8CD9 /* UIImage+Color.m */; };
 		04D5EC681B2FD6B8004D8CD9 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5E9BE1B2FD6B6004D8CD9 /* UIImage+ImageEffects.m */; };
-		04D5EC691B2FD6B8004D8CD9 /* UILabel+ContentSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5E9C01B2FD6B6004D8CD9 /* UILabel+ContentSize.m */; };
-		04D5EC6A1B2FD6B8004D8CD9 /* UserDefaultsKV.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5E9C21B2FD6B6004D8CD9 /* UserDefaultsKV.m */; };
 		04D5EC6B1B2FD6B8004D8CD9 /* Utls.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5E9C41B2FD6B6004D8CD9 /* Utls.m */; };
-		04D5EC6C1B2FD6B8004D8CD9 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5E9C71B2FD6B6004D8CD9 /* User.m */; };
 		04D5EC6D1B2FD6B8004D8CD9 /* CMNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5E9CA1B2FD6B6004D8CD9 /* CMNavigationController.m */; };
 		04D5EC6E1B2FD6B8004D8CD9 /* CMTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5E9CC1B2FD6B6004D8CD9 /* CMTabBarController.m */; };
 		04D5EE961B2FD6B8004D8CD9 /* iHttpAdmin.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5EC0A1B2FD6B8004D8CD9 /* iHttpAdmin.m */; };
@@ -416,6 +413,7 @@
 		344B5DBB1EBD718900D76135 /* block_notification@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 344B5DBA1EBD718900D76135 /* block_notification@2x.png */; };
 		344B5DBE1EBD797600D76135 /* QR-code@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 344B5DBC1EBD797600D76135 /* QR-code@2x.png */; };
 		344B5DBF1EBD797600D76135 /* QR-code@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 344B5DBD1EBD797600D76135 /* QR-code@3x.png */; };
+		347B83371EF6CB940068EC87 /* libLCDefaults.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 347B83361EF6CB940068EC87 /* libLCDefaults.a */; };
 		34AB8CE71EC95A4000B342D4 /* RCPTTBeginMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AB8CD81EC95A4000B342D4 /* RCPTTBeginMessageCell.m */; };
 		34AB8CE81EC95A4000B342D4 /* RCPTTEndMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AB8CDA1EC95A4000B342D4 /* RCPTTEndMessageCell.m */; };
 		34AB8CE91EC95A4000B342D4 /* RCPTTKitExtensionModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AB8CDD1EC95A4000B342D4 /* RCPTTKitExtensionModule.m */; };
@@ -860,13 +858,10 @@
 		04D5E9BD1B2FD6B6004D8CD9 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		04D5E9BE1B2FD6B6004D8CD9 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		04D5E9BF1B2FD6B6004D8CD9 /* UILabel+ContentSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+ContentSize.h"; sourceTree = "<group>"; };
-		04D5E9C01B2FD6B6004D8CD9 /* UILabel+ContentSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+ContentSize.m"; sourceTree = "<group>"; };
 		04D5E9C11B2FD6B6004D8CD9 /* UserDefaultsKV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsKV.h; sourceTree = "<group>"; };
-		04D5E9C21B2FD6B6004D8CD9 /* UserDefaultsKV.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsKV.m; sourceTree = "<group>"; };
 		04D5E9C31B2FD6B6004D8CD9 /* Utls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utls.h; sourceTree = "<group>"; };
 		04D5E9C41B2FD6B6004D8CD9 /* Utls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utls.m; sourceTree = "<group>"; };
-		04D5E9C61B2FD6B6004D8CD9 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
-		04D5E9C71B2FD6B6004D8CD9 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		04D5E9C61B2FD6B6004D8CD9 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = ../Modules/User.h; sourceTree = "<group>"; };
 		04D5E9C91B2FD6B6004D8CD9 /* CMNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMNavigationController.h; sourceTree = "<group>"; };
 		04D5E9CA1B2FD6B6004D8CD9 /* CMNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMNavigationController.m; sourceTree = "<group>"; };
 		04D5E9CB1B2FD6B6004D8CD9 /* CMTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMTabBarController.h; sourceTree = "<group>"; };
@@ -1029,6 +1024,7 @@
 		344B5DBA1EBD718900D76135 /* block_notification@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "block_notification@2x.png"; sourceTree = "<group>"; };
 		344B5DBC1EBD797600D76135 /* QR-code@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "QR-code@2x.png"; sourceTree = "<group>"; };
 		344B5DBD1EBD797600D76135 /* QR-code@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "QR-code@3x.png"; sourceTree = "<group>"; };
+		347B83361EF6CB940068EC87 /* libLCDefaults.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libLCDefaults.a; sourceTree = "<group>"; };
 		34AB8CD71EC95A4000B342D4 /* RCPTTBeginMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPTTBeginMessageCell.h; sourceTree = "<group>"; };
 		34AB8CD81EC95A4000B342D4 /* RCPTTBeginMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPTTBeginMessageCell.m; sourceTree = "<group>"; };
 		34AB8CD91EC95A4000B342D4 /* RCPTTEndMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPTTEndMessageCell.h; sourceTree = "<group>"; };
@@ -1081,6 +1077,7 @@
 				04D5EEB31B2FDA87004D8CD9 /* SystemConfiguration.framework in Frameworks */,
 				043AD7F71E78FA00004A2529 /* RongPTTLib.framework in Frameworks */,
 				04D5EEB11B2FDA7A004D8CD9 /* CFNetwork.framework in Frameworks */,
+				347B83371EF6CB940068EC87 /* libLCDefaults.a in Frameworks */,
 				341193B01E7F76BE0001332B /* MapKit.framework in Frameworks */,
 				04D5EEAF1B2FDA6B004D8CD9 /* CoreTelephony.framework in Frameworks */,
 			);
@@ -1908,9 +1905,9 @@
 				04D5E9BD1B2FD6B6004D8CD9 /* UIImage+ImageEffects.h */,
 				04D5E9BE1B2FD6B6004D8CD9 /* UIImage+ImageEffects.m */,
 				04D5E9BF1B2FD6B6004D8CD9 /* UILabel+ContentSize.h */,
-				04D5E9C01B2FD6B6004D8CD9 /* UILabel+ContentSize.m */,
 				04D5E9C11B2FD6B6004D8CD9 /* UserDefaultsKV.h */,
-				04D5E9C21B2FD6B6004D8CD9 /* UserDefaultsKV.m */,
+				04D5E9C61B2FD6B6004D8CD9 /* User.h */,
+				347B83361EF6CB940068EC87 /* libLCDefaults.a */,
 				04DB97CA1D10F90400DB95D7 /* WaitDialog.h */,
 				04DB97CB1D10F90400DB95D7 /* WaitDialog.m */,
 				04D5E9C31B2FD6B6004D8CD9 /* Utls.h */,
@@ -1932,8 +1929,6 @@
 				04D758121C8329D400B62544 /* WSUser.m */,
 				04DC65171B81AB5B00F46825 /* RCJUser.h */,
 				04DC65181B81AB5B00F46825 /* RCJUser.m */,
-				04D5E9C61B2FD6B6004D8CD9 /* User.h */,
-				04D5E9C71B2FD6B6004D8CD9 /* User.m */,
 			);
 			path = Modules;
 			sourceTree = SOURCE_ROOT;
@@ -2471,7 +2466,6 @@
 				0443C62F1C58A2EC00EE25A1 /* DataSync.m in Sources */,
 				04D5EC341B2FD6B8004D8CD9 /* MJRefreshFooterView.m in Sources */,
 				04B48BDF1E63F28C006F7C99 /* FMDatabaseAdditions.m in Sources */,
-				04D5EC6A1B2FD6B8004D8CD9 /* UserDefaultsKV.m in Sources */,
 				04B48BFC1E63F28C006F7C99 /* RCAnimatedImagesView.m in Sources */,
 				04B48BE51E63F28C006F7C99 /* RCDUserInfo.m in Sources */,
 				04B48BE01E63F28C006F7C99 /* FMDatabasePool.m in Sources */,
@@ -2562,7 +2556,6 @@
 				0476BE161BA02C6600C75FB2 /* EditNameViewController.m in Sources */,
 				04B48C011E63F28C006F7C99 /* RCDUtilities.m in Sources */,
 				04D5EEA21B2FD834004D8CD9 /* MessagesViewController.m in Sources */,
-				04D5EC6C1B2FD6B8004D8CD9 /* User.m in Sources */,
 				04D5F8291B3281D400BDE010 /* MeViewController.m in Sources */,
 				04D5EC6D1B2FD6B8004D8CD9 /* CMNavigationController.m in Sources */,
 				04B48B6D1E63F23F006F7C99 /* GlobalTouchButtonView.m in Sources */,
@@ -2609,7 +2602,6 @@
 				04B48BEA1E63F28C006F7C99 /* RCLocationView.m in Sources */,
 				04D5EC651B2FD6B8004D8CD9 /* RRStyleLabel.m in Sources */,
 				04B48BEF1E63F28C006F7C99 /* JRCDSearchView.m in Sources */,
-				04D5EC691B2FD6B8004D8CD9 /* UILabel+ContentSize.m in Sources */,
 				04D5EC461B2FD6B8004D8CD9 /* SDWebImagePrefetcher.m in Sources */,
 				04B48BDE1E63F28C006F7C99 /* FMDatabase.m in Sources */,
 				04DBF2851C5F1144004DCDAD /* PhotoView.m in Sources */,
@@ -2781,6 +2773,7 @@
 					"$(PROJECT_DIR)/SupportAddons/ZBarSDK",
 					"$(PROJECT_DIR)/SupportAddons/UMAnalytics_Sdk_3.6.6",
 					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/RongCloud_iOS_IMLib_2.8.6_PrivateCloud_V1.4",
+					"$(PROJECT_DIR)/Common",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = cn.rongcloud.livechat;
@@ -2816,6 +2809,7 @@
 					"$(PROJECT_DIR)/SupportAddons/ZBarSDK",
 					"$(PROJECT_DIR)/SupportAddons/UMAnalytics_Sdk_3.6.6",
 					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/RongCloud_iOS_IMLib_2.8.6_PrivateCloud_V1.4",
+					"$(PROJECT_DIR)/Common",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = cn.rongcloud.livechat;

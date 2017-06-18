@@ -5,7 +5,7 @@
 //  Created by jack on 2/22/14.
 //
 //
-
+#import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import "User.h"
 
@@ -24,7 +24,6 @@
 + (void) saveUserPwd:(NSString*)pwd;
 + (NSString *) getUserPwd;
 
-+ (int) networkCheckStatus;
 
 
 #pragma mark- - mydata
@@ -52,5 +51,7 @@
 + (NSHTTPCookie*)getCookie;
 
 + (CGSize) testLabelTextSize:(NSString*)txt frame:(CGRect)frame font:(UIFont*)font;
+
++ (int) checkTimestamp;
 
 @end
