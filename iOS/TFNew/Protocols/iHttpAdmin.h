@@ -6,7 +6,7 @@
 //  Copyright 2009 Jack. All rights reserved.
 //
 
-
+#import <UIKit/UIKit.h>
 
 
 @protocol iHttpAdminDelegate;
