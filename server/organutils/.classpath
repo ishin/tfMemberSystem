@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_80"/>
+	<classpathentry kind="lib" path="D:/Work/java/sealtalklibs/json-lib-2.4-jdk15.jar"/>
+	<classpathentry kind="lib" path="D:/Work/java/sealtalklibs/commons-lang3-3.4.jar"/>
+	<classpathentry kind="lib" path="D:/Work/java/sealtalklibs/pinyin4j-2.5.0.jar"/>
+	<classpathentry kind="lib" path="D:/Work/java/sealtalklibs/org.springframework.core-3.0.1.RELEASE-A.jar"/>
+	<classpathentry kind="lib" path="D:/Work/java/web/tfMemberSystem/code/WebRoot/WEB-INF/lib/jxl.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
