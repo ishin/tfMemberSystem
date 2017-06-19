@@ -318,7 +318,6 @@
 		04D5EC6B1B2FD6B8004D8CD9 /* Utls.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5E9C41B2FD6B6004D8CD9 /* Utls.m */; };
 		04D5EC6D1B2FD6B8004D8CD9 /* CMNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5E9CA1B2FD6B6004D8CD9 /* CMNavigationController.m */; };
 		04D5EC6E1B2FD6B8004D8CD9 /* CMTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5E9CC1B2FD6B6004D8CD9 /* CMTabBarController.m */; };
-		04D5EE961B2FD6B8004D8CD9 /* iHttpAdmin.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5EC0A1B2FD6B8004D8CD9 /* iHttpAdmin.m */; };
 		04D5EE971B2FD6B8004D8CD9 /* NetworkChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5EC0D1B2FD6B8004D8CD9 /* NetworkChecker.m */; };
 		04D5EE981B2FD6B8004D8CD9 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5EC0F1B2FD6B8004D8CD9 /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		04D5EE991B2FD6B8004D8CD9 /* WebClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D5EC111B2FD6B8004D8CD9 /* WebClient.m */; };
@@ -868,7 +867,6 @@
 		04D5E9CC1B2FD6B6004D8CD9 /* CMTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMTabBarController.m; sourceTree = "<group>"; };
 		04D5EC081B2FD6B8004D8CD9 /* Configure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configure.h; sourceTree = "<group>"; };
 		04D5EC091B2FD6B8004D8CD9 /* iHttpAdmin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iHttpAdmin.h; sourceTree = "<group>"; };
-		04D5EC0A1B2FD6B8004D8CD9 /* iHttpAdmin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iHttpAdmin.m; sourceTree = "<group>"; };
 		04D5EC0C1B2FD6B8004D8CD9 /* NetworkChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkChecker.h; sourceTree = "<group>"; };
 		04D5EC0D1B2FD6B8004D8CD9 /* NetworkChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkChecker.m; sourceTree = "<group>"; };
 		04D5EC0E1B2FD6B8004D8CD9 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -1961,7 +1959,6 @@
 				04D7A2171D2A147300D67EC6 /* HttpFileGetter.h */,
 				04D7A2181D2A147300D67EC6 /* HttpFileGetter.m */,
 				04D5EC091B2FD6B8004D8CD9 /* iHttpAdmin.h */,
-				04D5EC0A1B2FD6B8004D8CD9 /* iHttpAdmin.m */,
 				04D5EC0B1B2FD6B8004D8CD9 /* NetWork */,
 				04D5EC101B2FD6B8004D8CD9 /* WebClient.h */,
 				04D5EC111B2FD6B8004D8CD9 /* WebClient.m */,
@@ -2586,7 +2583,6 @@
 				04D5EC5E1B2FD6B8004D8CD9 /* CircleProgressView.m in Sources */,
 				04D41F361D040A99009F66C4 /* NSMutableAttributedString+M80.m in Sources */,
 				04B48BED1E63F28C006F7C99 /* RealTimeLocationStatusView.m in Sources */,
-				04D5EE961B2FD6B8004D8CD9 /* iHttpAdmin.m in Sources */,
 				04D7CDDF1D36723C00AC2099 /* PhotoGetter.m in Sources */,
 				04E1076C1B9EC5B200A5280B /* ProfileViewController.m in Sources */,
 				04D7581C1C832A3700B62544 /* wsDB.m in Sources */,
