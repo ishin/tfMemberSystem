@@ -1,1 +1,1 @@
-include ':app', ':pttkit', ':IMKit', ':ptt', ':IMLib', ':imagepicker'
+include ':app', ':pttkit', ':IMKit', ':ptt', ':IMLib', ':imagepicker', ':mylibraryss'

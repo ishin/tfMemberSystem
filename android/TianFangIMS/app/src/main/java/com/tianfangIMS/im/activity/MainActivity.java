@@ -163,7 +163,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         RongIM.setUserInfoProvider(this, true);
         RongIM.setGroupInfoProvider(this, true);
         setHeadVisibility(View.GONE);
-        Log.e("asdasd", "---:" + getOkHttpUtils());
+        Log.e("asdasd", "---:" + System.currentTimeMillis());
         SystemBarTranslucentType(this);//改变状态栏的沉浸样式
         mLoginBeanList = new ArrayList<LoginBean>();
         mLoginBeanList.add(GetUesrBean());

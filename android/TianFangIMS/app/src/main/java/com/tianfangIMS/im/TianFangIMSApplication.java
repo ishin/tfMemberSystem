@@ -30,7 +30,7 @@ import android.view.WindowManager;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
-import com.pro.rc.mylibrarys.Okhttpinit;
+import com.pro.rc.mylibraryss.Okhttpinit;
 import com.tianfangIMS.im.activity.LoginActivity;
 import com.tianfangIMS.im.activity.MainActivity;
 import com.tianfangIMS.im.bean.TopFiveUserInfoBean;
