@@ -38,7 +38,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/hibernate-commons-annotations.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/hibernate3.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/http.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/io.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/java-property-utils-1.9.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/javassist-3.18.1-GA.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/json-lib-2.4-jdk15.jar"/>
@@ -74,7 +73,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/struts2-core-2.3.16.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/struts2-spring-plugin-2.1.6.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/struts2-ssl-plugin-1.2.1.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/utils.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/xwork-core-2.3.16.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
