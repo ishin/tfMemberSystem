@@ -1,0 +1,22 @@
+/*body{ overflow: hidden; background: url(../assets/img/webBg.png) 0 0/10px 10px !important;}*/
+/*.footer { display: none !important; }*/
+/*左侧菜单与上边距*/
+.LeftNav { padding-top: 14px !important; }
+button,input {
+  -webkit-app-region: no-drag;
+}
+.chatList .portrait{line-height: 50px !important;}
+
+/*聊天页面返回按钮与上边距*/
+/*.chatBox .chatBoxInner.client .clientHd{
+ display: block;
+}
+.chatBox .chatBoxInner.client .box_hd{
+ height: 68px;
+}
+#Messages{
+ top: 68px!important;
+}
+#functionBox{
+ top: 68px!important;
+}*/
