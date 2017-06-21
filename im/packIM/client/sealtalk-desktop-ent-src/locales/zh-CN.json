@@ -1,0 +1,83 @@
+{
+	"menus": {
+		"Product": "嗨豹",
+		"ProductSub": {
+			"About": "关于嗨豹",
+			"Settings": "账号设置...",
+			"Services": "服务",
+			"CheckUpdate": "检查更新",
+			"HSealTalk": "隐藏嗨豹",
+			"HOthers": "隐藏其它",
+			"SAll": "全部显示",
+			"Quit": "退出"
+		},
+		"Edit": "编辑",
+		"EditSub": {
+			"SearchUser": "查找用户",
+			"Undo": "撤消",
+			"Redo": "重做",
+			"Cut": "剪切",
+			"Copy": "拷贝",
+			"Paste": "粘贴",
+			"SelectAll": "全选"
+		},
+		"View": "视图",
+		"ViewSub": {
+			"Languages": "语言",
+			"Reload": "重载"
+		},
+		"Window": "窗口",
+		"WindowSub": {
+			"Minimize": "最小化窗口",
+			"Close": "关闭窗口",
+			"AllToFront": "前置全部窗口"
+		},
+		"Application": "应用",
+		"ApplicationSub": {
+			"takeScreenshot": "截图"
+		},
+		"Help": "帮助",
+		"HelpSub": {
+			"Search": "搜索",
+			"Homepage": "主页"
+		}
+	},
+	"winTrayMenus": {
+		"Open": "打开",
+		"Exit": "退出",
+		"CheckUpdate": "winTrayMenus.CheckUpdate"
+	},
+	"main": {
+		"UncaughtException": {
+			"Title": "应用出了点问题，我们会尽快解决",
+			"Content": "如果影响到您使用请尽快联系我们",
+			"Website": "网站",
+			"Email": "邮箱"
+		}
+	},
+	"autoUpdate": {
+		"onUpdateNotAvailable": {
+			"Message": "没有可用的更新",
+			"Title": "没有可用的更新",
+			"Detail": "版本 s% 是当前最新版本。",
+			"Buttons": {
+				"OK": "确定"
+			}
+		},
+		"onUpdateError": {
+			"Message": "更新时发生了错误。",
+			"Title": "更新失败",
+			"Buttons": {
+				"OK": "确定"
+			}
+		},
+		"onUpdateDownloaded": {
+			"Message": "发现更新 s%",
+			"Title": "应用更新",
+			"Buttons": {
+				"OK": "安装并启动",
+				"Cancel": "取消"
+			}
+		}
+	}
+}

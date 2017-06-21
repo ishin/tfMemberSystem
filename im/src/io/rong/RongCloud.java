@@ -35,6 +35,8 @@ public class RongCloud {
 	}
 
 	public static RongCloud getInstance(String appKey, String appSecret) {
+		
+		
 		if (null == rongCloud.get(appKey)) {
 			rongCloud.putIfAbsent(appKey, new RongCloud(appKey, appSecret));
 		}

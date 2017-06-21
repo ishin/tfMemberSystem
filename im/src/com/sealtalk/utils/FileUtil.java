@@ -106,7 +106,7 @@ public class FileUtil {
 				if(overwrite){ 
 					newFile.renameTo(
 							new File(newFile.getParentFile().getAbsoluteFile()+File.separator+newFile.getName()
-							+"."+UimpUtil.DateToString(new Date(), "yyyyMMddHHmmss"))
+							+"."+PinyinGenerator.DateToString(new Date(), "yyyyMMddHHmmss"))
 					);
 				}
 				else{
