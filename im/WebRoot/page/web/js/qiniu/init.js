@@ -60,7 +60,7 @@
         return obj||"";
     };
 
-    var getThumbnail = function(file, opts, callback) {
+    var getThumbnail = function(file, opts, callback,callback2) {
         var canvas = document.createElement("canvas"),
             context = canvas.getContext('2d');
         var img = new Image();
@@ -73,18 +73,25 @@
                 var base64 = canvas.toDataURL(file.type, opts.quality);
                 var reg = new RegExp('^data:image/[^;]+;base64,');
                 base64 = base64.replace(reg, '');
-                //callback(base64);
+                callback(base64);
             } catch (e) {
                 throw new Error(e);
             }
         };
-        img.src = typeof file == 'string' ? 'data:image/png;base64,' + file : getBlobUrl(file,callback);
+        if(file.name.indexOf('.jpg')!=-1||file.name.indexOf('.png')!=-1){
+            //是图片
+            img.src = typeof file == 'string' ? 'data:image/png;base64,' + file : getBlobUrl(file,callback2);
+
+        }else{
+            img.src = typeof file == 'string' ? 'data:image/png;base64,' + file : getBlobUrl(file,callback);
+
+        }
     };
 
-    var _compress = function(data, callback) {
+    var _compress = function(data, callback,callback2) {
         var file = data.file;
         var opts = data.compress;
-        getThumbnail(file, opts, callback);
+        getThumbnail(file, opts, callback,callback2);
     };
 
     _init = function(config, callback) {
@@ -125,6 +132,8 @@
                     compress(data, function(thumbnail) {
                         result.thumbnail = thumbnail;
                         callback.onCompleted(result);
+                    },function(thumbnail){
+                        result.thumbnail = thumbnail;
                     });
                 } else {
                     callback.onCompleted(result);

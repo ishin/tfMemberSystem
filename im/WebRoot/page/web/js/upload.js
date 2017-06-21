@@ -50,7 +50,8 @@
 		var form = new FormData();
 		if (opts.unique_key) {
 			var suffix = file.name.substr(file.name.lastIndexOf('.'));
-			var unique_value = genUId() + suffix;
+			var unique_value = new Date().getTime() +'/'+file.name;
+			//var unique_value = file.name;
 			form.append(opts.unique_key, unique_value);
 			opts.unique_value = unique_value;
 		}

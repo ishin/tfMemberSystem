@@ -8,7 +8,21 @@
     width: auto;
     white-space: nowrap; /* for at message */
 }
-
+.addGroupNameBox{
+    position: absolute;
+    top: 65px;
+}
+.addGroupNameBox span{
+    /*font-family: sans-serif;*/
+}
+.addGroupNameBox .addGroupGroupName{
+    margin-left: 30px;
+    border: 1px solid #e6e6e6;
+    background-color: white;
+    padding: 0 0 0 10px;
+    height: 32px;
+    width: 400px;
+}
 [contenteditable=true]:empty:before{
     content: attr(placeholder);
     display: block; /* For Firefox */
@@ -121,7 +135,10 @@ fieldset, img {
 button, input, select, textarea {
     font-size: 100%;
 }
-
+textarea{
+    padding: 5px 0 0 10px !important;
+    line-height: 24px !important;
+}
 /* 使得表单元素在 ie 下能继承字体大小 */
 /* 注：optgroup 无法扶正 */
 
@@ -153,6 +170,8 @@ input::-ms-clear{display:none;}
     /*background: -ms-linear-gradient(top, #000000 0%,#ffffff 100%);*/
     background: linear-gradient(to right, #30c0da 0%,#40d4a3 100%);
     box-shadow: 0px 0px 10px #cbcbcb;
+    position: relative;
+    z-index: 2;
 }
 .chatHeaderMenu{
     height: 100%;
@@ -180,7 +199,10 @@ input::-ms-clear{display:none;}
     box-shadow: 0px 0px 10px #e3e9f0;
 
 }
+.chatContent.chatBoxShadow{
+    box-shadow: 0px 8px 10px #e3e9f0;
 
+}
 .chatHeaderOper{
     height: 100%;
     float: right;
@@ -205,6 +227,15 @@ input::-ms-clear{display:none;}
     background-position: -115px 3px;
     /*background-color: palevioletred;*/
 }
+div#zhanwei {
+    position: relative;
+    top: -22px;
+    z-index: 0;
+    width: 100%;
+    /*background: palegoldenrod;*/
+    height: 35%;
+}
+
 .chatHeaderOper li:nth-child(3){
     background-position: 9px 2px;
     /*background-color: palegoldenrod;*/
@@ -623,9 +654,10 @@ span.defaultText{
 }
 
 .organizationList{
-    padding: 19px 10px 19px 10px;
     overflow: scroll;
     height: calc(100% - 100px);
+    padding-top: 19px;
+    padding-left: 19px;
 }
 
 .organizationList li .groupImg{
@@ -642,6 +674,7 @@ span.defaultText{
     float: left;
     line-height: 44px;
     text-indent: 8px;
+    max-width: 70px;
 }
 .organizationList li .positionName{
     display: inline-block;
@@ -649,6 +682,7 @@ span.defaultText{
     float: left;
     line-height: 44px;
     text-indent: 8px;
+    max-width: 80px;
 }
 .organizationList li {
     cursor: pointer;
@@ -671,22 +705,24 @@ span.defaultText{
     top: 1px;
 }
 .groupCollspanO{
-    float: right;
+    float: left;
     height: 20px;
-    width: 20px;
+    width: 19px;
     display: inline-block;
     /* background: red; */
     margin-top: 10px;
     background-position: -206px -339px;
+    margin-left: 10px;
 }
 .groupCollspanC{
-    float: right;
+    float: left;
     height: 20px;
     width: 20px;
     display: inline-block;
     /* background: red; */
     margin-top: 10px;
     background-position: -206px -373px;
+    margin-left: 10px;
 }
 .BreadcrumbsOuter{
     width: 100%;
@@ -719,8 +755,10 @@ span.defaultText{
 }
 .chatBox .orgNavClick1{
     margin: 38px 42px;
+    overflow-y: auto;
+    height: calc(100% - 140px);
     overflow: hidden;
-    /*padding-top: 61px;*/
+    overflow-y: auto;
 }
 .chatBox .orgNavClick1 .orgNavTitle{
     display: block;
@@ -1235,7 +1273,11 @@ div.contactSearchResult{
 }
 .contactsList ul li div span{
     float: left;
-    max-width: 270px;
+    max-width: 260px;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .dialogCollspanO{
     display: inline-block;

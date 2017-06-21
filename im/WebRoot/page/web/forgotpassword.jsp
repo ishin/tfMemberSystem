@@ -10,10 +10,11 @@
     <link rel="stylesheet" href="<%=request.getContextPath() %>/page/web/css/window.css"/>
 
     <script src="<%=request.getContextPath() %>/page/web/js/jquery-2.1.1.min.js"></script>
+    <script src="<%=request.getContextPath() %>/page/web/js/RongIMLib.js"></script>
+
     <script src="<%=request.getContextPath() %>/page/web/js/signin.js"></script>
     <script src="<%=request.getContextPath() %>/page/web/js/md5.js"></script>
     <script src="<%=request.getContextPath() %>/page/web/js/window.js"></script>
-
 
     </head>
 <body>

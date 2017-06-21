@@ -11,8 +11,10 @@ $(function(){
 
 
     $('.chatHeaderOper li')[0].onclick = function(){
-        sendAjax('system!logOut','',function(){
+        sendAjaxLogOut('system!logOut','',function(){
             if (window.Electron) {
+                RongIMLib.RongIMClient.getInstance().logout();
+
                 var curWindow = window.Electron.remote.getCurrentWindow().reload();
             }else{
                 window.location.href = 'system!login';
@@ -108,6 +110,7 @@ function initEmoji(){
     $('.rongyun-emoji').perfectScrollbar();
 }
 function brforeClose(){
+
     if(win){
         win.close();
     }
@@ -121,7 +124,7 @@ function jumpToBack(fresh){
             const BrowserWindow = window.Electron.remote.BrowserWindow;
             win = new BrowserWindow({ width: 1000, height: 700 })
             win.on('close', function () { win = null ;ifWinClose = true;});
-            win.loadURL('http://42.62.4.82:8080/im/page/admin/13.jsp');
+            win.loadURL(origin+'/im/page/admin/13.jsp');
             win.show();
             ifWinClose = false;
         }else{
@@ -133,20 +136,32 @@ function jumpToBack(fresh){
 }
 //memShip表示与此操作相关的人员account
 function fshowContexMenu(arr,style,id,memShip,targettype,bTopHas,eTarget){
-
+    var curGroup = groupInfoFromList(memShip);
     var listHTML = '';
     for(var i = 0;i<arr.length;i++){
         var limit = $('body').attr('limit');
+        if(arr[i].limit=='znsqz'){
+            if(parseInt(curGroup.mid)==parseInt(accountID)){
+                listHTML+='<li>'+arr[i].value+'</li>'
+            }else{
+                listHTML+='<li displaylimit="false">'+arr[i].value+'</li>'
+            }
+            continue;
+        }
         if(arr[i].limit!=''&&limit.indexOf(arr[i].limit)==-1){
             listHTML+='<li displaylimit="false">'+arr[i].value+'</li>'
         }else{
             if(i==0 || i==5){
                 if(bTopHas){
+                    //if(curGroup.mid!=accountID){
+                    //    listHTML+='<li displaylimit="false">'+arr[i].value+'</li>'
+                    //}
                     listHTML+='<li data-top="1">'+arr[i].value+'</li>'
                 }else{
                     listHTML+='<li data-top="0">'+arr[i].value+'</li>'
                 }
             }else{
+               
                 listHTML+='<li>'+arr[i].value+'</li>'
             }
 
@@ -190,7 +205,32 @@ function sendAjax(url,data,callback,callbackB){
         url: url,
         data:data,
         success: function(data){
-            callback && callback(data);
+            if(data && data.indexOf("<!DOCTYPE html") != -1){
+                //登出断开监听并返回到登录页面
+            	if (window.Electron) {
+                    RongIMLib.RongIMClient.getInstance().logout();
+                    var curWindow = window.Electron.remote.getCurrentWindow().reload();
+                }else{
+                    window.location.href = 'system!login';
+                }
+            } else{
+                callback && callback(data);
+            }
+        },
+        error:function(){
+            callbackB&&callbackB();
+        }
+    })
+}
+function sendAjaxLogOut(url,data,callback,callbackB){
+    $.ajax({
+        type: "POST",
+        url: url,
+        data:data,
+        success: function(data){
+            if(data){
+                callback && callback(data);
+            }
         },
         error:function(){
             callbackB&&callbackB();

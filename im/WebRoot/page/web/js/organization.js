@@ -68,8 +68,9 @@ $(function(){
         $(this).unbind('keypress');
         $(this).on('input',function(){
             var inputVal = $(this).val();
+            var keyWord = encodeURI(inputVal);
             if(inputVal){
-                sendAjax('member!searchUser',{account:inputVal},function(data){
+                sendAjax('member!searchUser',{account:keyWord},function(data){
                     var datas = JSON.parse(data);
                     var parentDom = $('.orgnized');
                     if(datas.length==0){
@@ -124,47 +125,45 @@ $(function(){
         },1000)
     })
     $('.orgnized').delegate('.searchResultUL li','click',function(){
-        var targetAccount = $(this).attr('targetaccount');
-        var account = localStorage.getItem('account');
-        if(account){
-            var accpunts = JSON.parse(account);
-            var account = accpunts.text.account
-        }
-        if($('.usualChatList').find('li[account='+targetAccount+']').length==0){
+        var targetID = $(this).attr('targetid');
 
-
-            addFriendAndRefreshList(account,targetAccount)
-            //sendAjax('friend!addFriend',{account:account,friend:targetAccount},function(data){
-            //    //var datas = JSON.parse(data);
-            //    //console.log(data);
-            //    //if(datas.code==1){
-            //    //刷新常用联系人
-            //    getMemberFriends(account,function(){
-            //        $('.searchResult').remove();
-            //        $('.chatHeaderMenu li')[0].click();
-            //        $('.chatMenu .chatLeftIcon')[1].click();
-            //        var targetDon = $('.usualChatList').find('li')
-            //        targetDon.removeClass('active');
-            //        var targetMember = $('.usualChatList').find('li[account='+targetAccount+']');
-            //        targetMember.addClass('active').click();
-            //        var targetID = targetMember.attr('targetid');
-            //        var targeType = 'PRIVATE';
-            //        conversationSelf(targetID,targeType);
-            //    });
-            //})
-        }else{
-            $('.searchResult').remove();
-            jumpToFriendListOpen(targetAccount)
-            //$('.chatHeaderMenu li')[0].click();
-            //$('.chatMenu .chatLeftIcon')[1].click();
-            //var targetDon = $('.usualChatList').find('li')
-            //targetDon.removeClass('active');
-            //var targetMember = $('.usualChatList').find('li[account='+targetAccount+']');
-            //targetMember.addClass('active').click();
-            //var targetID = targetMember.attr('targetid');
-            //var targeType = 'PRIVATE';
-            //conversationSelf(targetID,targeType);
-        }
+        var targeType = 'PRIVATE';
+        newContactList(targeType,targetID);
+        //if($('.usualChatList').find('li[account='+targetAccount+']').length==0){
+        //
+        //
+        //    addFriendAndRefreshList(account,targetAccount)
+        //    //sendAjax('friend!addFriend',{account:account,friend:targetAccount},function(data){
+        //    //    //var datas = JSON.parse(data);
+        //    //    //console.log(data);
+        //    //    //if(datas.code==1){
+        //    //    //刷新常用联系人
+        //    //    getMemberFriends(account,function(){
+        //    //        $('.searchResult').remove();
+        //    //        $('.chatHeaderMenu li')[0].click();
+        //    //        $('.chatMenu .chatLeftIcon')[1].click();
+        //    //        var targetDon = $('.usualChatList').find('li')
+        //    //        targetDon.removeClass('active');
+        //    //        var targetMember = $('.usualChatList').find('li[account='+targetAccount+']');
+        //    //        targetMember.addClass('active').click();
+        //    //        var targetID = targetMember.attr('targetid');
+        //    //        var targeType = 'PRIVATE';
+        //    //        conversationSelf(targetID,targeType);
+        //    //    });
+        //    //})
+        //}else{
+        //    $('.searchResult').remove();
+        //    jumpToFriendListOpen(targetAccount)
+        //    //$('.chatHeaderMenu li')[0].click();
+        //    //$('.chatMenu .chatLeftIcon')[1].click();
+        //    //var targetDon = $('.usualChatList').find('li')
+        //    //targetDon.removeClass('active');
+        //    //var targetMember = $('.usualChatList').find('li[account='+targetAccount+']');
+        //    //targetMember.addClass('active').click();
+        //    //var targetID = targetMember.attr('targetid');
+        //    //var targeType = 'PRIVATE';
+        //    //conversationSelf(targetID,targeType);
+        //}
     })
 
 

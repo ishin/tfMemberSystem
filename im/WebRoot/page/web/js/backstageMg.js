@@ -20,12 +20,16 @@ $(document).ready(function(){
             var curValue = $(this).val();
             if(curValue!=lastValur){
                 //掉接口，修改群组名称
+
+
                 var groupid = $('#groupContainer').attr('targetid');
                 sendAjax('group!changeGroupName',{groupid:groupid,groupname:curValue},function(data){
                     var datas = JSON.parse(data);
                     if(datas&&datas.code==1){
-
+                        //修改群组列表里面的群组名称
                         $('.groupChatListUl').find('li.active .groupName').html(curValue);
+                        //修改最近联系人里的群组名称
+                        $('.newsChatList').find('li[targetid='+groupid+']').html(curValue);
                         new Window().alert({
                             title   : '',
                             content : '群组名称已修改！',
@@ -89,6 +93,9 @@ $(document).ready(function(){
             if(sURL.indexOf('token')!=-1){//有%
                 sURL = fileFromApp(sURL);
             }
+            if(sURL.indexOf('uniquetime')!=-1){//有%
+                sURL = getFileUniqueNameFromPC(sURL)
+            }
 
             var localPath = sURL?window.Electron.chkFileExists(sURL):'';
 
@@ -133,6 +140,9 @@ $(document).ready(function(){
                 var sURL = $(this).parent().find('.downLoadFile').attr('href');
                 if(sURL.indexOf('token')!=-1){//有%
                     var sURL = fileFromApp(sURL)
+                }
+                if(sURL.indexOf('uniquetime')!=-1){//有%
+                    var sURL = getFileUniqueNameFromPC(sURL)
                 }
                 var localPath = sURL?window.Electron.chkFileExists(sURL):'';
                 if(localPath){
@@ -205,10 +215,12 @@ $(document).ready(function(){
                 var sCopy=JSON.stringify(oCopy);
                 window.localStorage.setItem('copy',sCopy);
             }else{
-                sInfoContent=eTarget.find('span').attr('name')||eTarget.find('span').html();
+                sInfoContent=eTarget.find('span').html();
+                sInfoContent = sInfoContent.replace(/(\<span\s)style=".*?(name="(.*?)")\>\<b.*?\<\/b\>\<\/span\>/ig,"$3");
+                //sInfoContent=html_decode(sInfoContent);
                 oCopy={};
                 oCopy.infoContent=sInfoContent;
-               var sCopy=JSON.stringify(oCopy);
+                var sCopy=JSON.stringify(oCopy);
                 window.localStorage.setItem('copy',sCopy);
             }
         }
@@ -351,6 +363,7 @@ $(document).ready(function(){
             sendByRongImg(oPast,targetId,targetType,nSendTime);
         }else if(sInfoContent){
             var sNewInfo=sInfoContent;
+            //sNewInfo = html_encodes(sNewInfo);
             $('#chatBox #message-content').append(sNewInfo);
         }else if(sFile){
             sFile.filepaste=1;
@@ -565,13 +578,13 @@ $(document).ready(function(){
                     showGroupMemberInfo(aText[i],pos);
                 }
             }
-        },1000);
+        },500);
     });
     $('.groupChatList').delegate('li .groupImg','mouseleave',function(e){
         clearTimeout(groupTimer);
         groupTimer1 = setTimeout(function(){
             $('.groupDataBox').remove();
-        },1000)
+        },100)
     });
     $('body').delegate('.groupDataBox','mouseenter',function(){
         clearTimeout(groupTimer1);
@@ -661,7 +674,7 @@ $(document).ready(function(){
         $('.retMewPw').html('');
     });
     /*修改密码保存*/
-    $('#chatBox').delegate('#systemSet-savepsd','click',function(){
+    $('#systemSet-savepsd').click(function(){
         var sAccount=localStorage.getItem('account');
         var oAccount=JSON.parse(sAccount);
         if(oAccount) {
@@ -897,41 +910,41 @@ function fSearchPersonalHistory(){
     var sVal=$('#personalData').find('.infoDet-search input').val();
     //var sVal=$(this).prev().val();
     sVal=sVal.replace(/^\s+|\s+$/g,'').replace(/\s+/g,' ');
-    if(sVal==''){
-        new Window().alert({
-            title   : '',
-            content : '请输入您要搜索的内容！',
-            hasCloseBtn : false,
-            hasImg : true,
-            textForSureBtn : false,
-            textForcancleBtn : false,
-            autoHide:true
-        });
-    }else{
+    //if(sVal==''){
+        //new Window().alert({
+        //    title   : '',
+        //    content : '请输入您要搜索的内容！',
+        //    hasCloseBtn : false,
+        //    hasImg : true,
+        //    textForSureBtn : false,
+        //    textForcancleBtn : false,
+        //    autoHide:true
+        //});
+    //}else{
         var $perEle=$('#infoDetailsBox .infoDet-chatRecord').find('.infoDet-page');
         var oPagetest = new PageObj({divObj:$perEle,pageSize:20,searchstr:sVal,conversationtype:sTargettype,targetId:sTargetid},function(type,list,callback)//声明page1
         {
             getChatRecord(list,'#infoDetailsBox .infoDet-chatRecord .chatRecordSel');
 
         });
-    }
+    //}
 }
 function fSearchGroupHistory(){
     var sTargettype=$('#groupContainer').attr('targettype');
     var sTargetid=$('#groupContainer').attr('targetid');
     var sVal=$('#groupData').find('.infoDet-search input').val();
     sVal=sVal.replace(/^\s+|\s+$/g,'').replace(/\s+/g,' ');
-    if(sVal==''){
-        new Window().alert({
-            title   : '',
-            content : '请输入您要搜索的内容！',
-            hasCloseBtn : false,
-            hasImg : true,
-            textForSureBtn : false,
-            textForcancleBtn : false,
-            autoHide:true
-        });
-    }else{
+    //if(sVal==''){
+    //    new Window().alert({
+    //        title   : '',
+    //        content : '请输入您要搜索的内容！',
+    //        hasCloseBtn : false,
+    //        hasImg : true,
+    //        textForSureBtn : false,
+    //        textForcancleBtn : false,
+    //        autoHide:true
+    //    });
+    //}else{
         var $groupEle=$('#groupDetailsBox .infoDet-chatRecord').find('.infoDet-page');
         var oPagetest = new PageObj({divObj:$groupEle,pageSize:20,searchstr:sVal,conversationtype:sTargettype,targetId:sTargetid},function(type,list,callback)//声明page1
         {
@@ -939,7 +952,7 @@ function fSearchGroupHistory(){
             //showHistoryMessages(list);
 
         });
-    }
+    //}
 }
 
 //查询单个群信息
@@ -985,7 +998,7 @@ function fPersonalSet(){
             var sPosition=oPerInfo.positionname|| '';//职位
             var sBranch=oPerInfo.branchname || '';//部门
             var sEmail=oPerInfo.email || '';//邮箱
-            var sTelephone=oPerInfo.telephone || '';//电话
+            var sTelephone=oPerInfo.mobile || '';//电话
             var sSign=oPerInfo.organname || '';//工作签名
             var sHeaderImg=oPerInfo.logo?globalVar.imgSrc+oPerInfo.logo:globalVar.defaultLogo;//头像
             var limit = $('body').attr('limit');
@@ -1066,6 +1079,9 @@ function fPersonalSet(){
                 sendAjax('branch!getPosition',{},function(data){
                     var oPosData=JSON.parse(data);
                     var sDom='';
+                    if(oPosData.text){
+                        oPosData = oPosData.text;
+                    }
                     for(var i=0;i<oPosData.length;++i){
                         var nPosId=oPosData[i].id;
                         var sPosName=oPosData[i].name;
@@ -1089,10 +1105,10 @@ function showGroupMemberInfo(oGroupInfo,pos){
     var sCreatorAcconut=oGroupInfo.account//群创建者帐号
     var sCreatedate=subTimer(oGroupInfo.createdate);//创建时间
     var oCreator=searchFromList(1,sCreatorId);
-    if(!oCreator.logo){
-        var sImg=globalVar.defaultLogo;
-    }else{
+    if(oCreator&&oCreator.logo){
         var sImg=globalVar.imgSrc+oCreator.logo;
+    }else{
+        var sImg=globalVar.defaultLogo;
     }
    /* var sImg=oCreator.logo || globalVar.defaultLogo;*/
     //console.log(findMemberInList(sCreatorId));
@@ -1382,3 +1398,25 @@ function getHeadImgList(){
 
 
 
+function getFileUniqueNameFromPC(fileURL){
+    if(fileURL){
+        var UniqueName = fileURL.split('&uniquetime=')[0];
+        //var fileName = aURM.split('_');
+        //var UniqueName = fileName[fileName.length-1];
+        UniqueName = decodeURI(UniqueName.replace(/\\u/g, '%u'));;
+        return UniqueName;
+    }else{
+        return "";
+    }
+}
+function getFileNameFromPC(fileURL){
+    if(fileURL){
+        var UniqueName = fileURL.split('&uniquetime=')[1];
+        //var fileName = aURM.split('_');
+        //var UniqueName = fileName[fileName.length-1];
+
+        return UniqueName;
+    }else{
+        return "";
+    }
+}

@@ -31,10 +31,10 @@
 		<div class="infotitle">
 			<div class="title">群组管理</div>
 		</div>
-		<div style="width:100%;padding:0 30px;">
+		<div style="width:100%;padding:0 30px;height: calc(100% - 50px);overflow: auto;">
 			<table class="t112">
 				<thead>
-					<tr">
+					<tr>
 						<th width="15%">群号</th>
 						<th width="25%">群名称</th>
 						<th width="20%">创建者</th>

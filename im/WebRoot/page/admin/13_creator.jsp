@@ -36,7 +36,7 @@
 				</tr>
  -->		</tbody>
 		</table>
-		<div>
+		<div style="width: 100%;height: 20px;position: absolute;right: 42px;bottom: 50px;">
 			<div class='toright leftspace15' id='pageclast'><img id='imglast2' src='images/lastpage_1.png' /></div>
 			<div class='toright leftspace15' id='pagecnext'><img id='imgnext2' src='images/next_1.png' /></div>
 			<div class='toright leftspace15' id='pageccurr'>1/10</div>
@@ -46,7 +46,7 @@
 	</div>
 	<div>
 		<div class='dialogtitle'>
-			<button class='toright leftspace15 cancel' onclick="$('#creator').modal('hide');">取消</button>
+			<button style="margin-right: 10px;" class='toright leftspace15 cancel' onclick="$('#creator').modal('hide');">取消</button>
 			<button class='toright leftspace15' onclick="$('#creator').modal('hide');">确定</button>
 		</div>
 	</div>	

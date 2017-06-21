@@ -4,6 +4,8 @@
 
 
 var globalVar={
+    maxLevel:0,
+    fileStroage:{},
     //系统声音
     SYSTEMSOUND:1,//系统声音
     MESSAGESOUND:1,//消息免打扰
@@ -27,8 +29,10 @@ var globalVar={
     defaultGroupLogo:'page/web/css/img/group_chart.jpg',
     defaultComLogo:'page/web/css/img/defaultComLogo.jpg',
     defaultDepLogo:'page/web/css/img/defaultDepLogo.jpg',
-    //
+    defaultSystemLogo:'page/web/css/img/defaultDepLogo.jpg',
+    //群组在线人数刷新时间
     refreshGroupOnline:30000,
+    //个人在线状态刷新时间
     refreshPersonalOnline:30000,
     newsChatListTime:2505600000,
     disconnectTimer:null,

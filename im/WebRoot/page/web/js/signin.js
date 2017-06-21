@@ -2,10 +2,51 @@
  * Created by zhu_jq on 2017/1/4.
  */
 window.onload = function(){
+    //account:accout,organCode:organCode
+    var saveSigninData = window.localStorage.saveSigninData;
+    if(saveSigninData){
+        saveSigninData =JSON.parse(saveSigninData);
+        $('#organCode').val(saveSigninData.organCode);
+        $('#username').val(saveSigninData.account);
 
+    }
     //点击发送验证码
+    $('#pwdIn').unbind('blur');
+    $('#pwdIn').blur(function(){
+        $(this).parent().find('label').css('backgroundPosition','-464px -127px');
+
+    })
     $('#pwdIn').unbind('focus');
     $('#pwdIn').focus(function(){
+        $(this).parent().find('label').css('backgroundPosition','-463px -86px');
+        $(this).keypress(function(event) {
+            if (event.which == 13) {
+                signin();
+            }
+        })
+    })
+    $('#username').unbind('blur');
+    $('#username').blur(function(){
+        $(this).parent().find('label').css('backgroundPosition','-462px -51px');
+
+    })
+    $('#username').unbind('focus');
+    $('#username').focus(function(){
+        $(this).parent().find('label').css('backgroundPosition','-462px -16px');
+        $(this).keypress(function(event) {
+            if (event.which == 13) {
+                signin();
+            }
+        })
+    })
+    $('#organCode').unbind('blur');
+    $('#organCode').blur(function(){
+        $(this).parent().find('label').css('backgroundPosition','-819px -62px');
+
+    })
+    $('#organCode').unbind('focus');
+    $('#organCode').focus(function(){
+        $(this).parent().find('label').css('backgroundPosition','-819px -12px');
         $(this).keypress(function(event) {
             if (event.which == 13) {
                 signin();
@@ -14,10 +55,22 @@ window.onload = function(){
     })
     window.clickFlag = true;
     $('.SendCheakCode').click(function(){
-        //fSendCheakCode();
+        var phoneNum = $('#phoneNum').val();
+        if(!phoneNum){
+            new Window().alert({
+                title   : '',
+                content : '请输入手机号！',
+                hasCloseBtn : false,
+                hasImg : true,
+                textForSureBtn : false,
+                textForcancleBtn : false,
+                autoHide:true
+            });
+            return;
+        }
         if(clickFlag){
             var _this = $(this);
-            var phoneNum = $('#phoneNum').val();
+
             var isPhone = phoneNum.match(/^1[3|4|5|8][0-9]\d{4,8}$/)
             if(phoneNum&&isPhone){
                 sendAjax('system!requestText',{phone:phoneNum},function(){
@@ -45,7 +98,6 @@ function countDown(curDom,clickFlag){
             $(curDom).html(sec+'s后再次发送');
 
         }
-        //sec--;
     }
 
     var timer = setInterval(function(){
@@ -53,7 +105,6 @@ function countDown(curDom,clickFlag){
         changeSec(maxSecond);
     },1000)
 }
-
 
 /*
 * 通用AJAX
@@ -69,7 +120,6 @@ function sendAjax(url,data,callback){
     })
 }
 
-
 /*
 *
 * 跳转到第二部
@@ -77,60 +127,84 @@ function sendAjax(url,data,callback){
 function fToStep2(dom){
     var phoneNum = $('#phoneNum').val();
     var textcode = $('#checkCode').val();
-    $('.sealtalk-forgetpassword').attr('account',phoneNum);
-    sendAjax('system!testText',{phone:phoneNum,textcode:textcode},function(data){
-        if(data){
-            var datas = JSON.parse(data);
-            if(datas.code=='1'){
-                fToNext(dom)
-            }else if(datas.code=='0'){
-                new Window().alert({
-                    title   : '',
-                    content : '验证码错误！',
-                    hasCloseBtn : false,
-                    hasImg : true,
-                    textForSureBtn : false,
-                    textForcancleBtn : false,
-                    autoHide:true
-                });
+    if(phoneNum&&textcode){
+        $('.sealtalk-forgetpassword').attr('account',phoneNum);
+        sendAjax('system!testText',{phone:phoneNum,textcode:textcode},function(data){
+            if(data){
+                var datas = JSON.parse(data);
+                if(datas.code=='1'){
+                    fToNext(dom)
+                }else if(datas.code=='0'){
+                    new Window().alert({
+                        title   : '',
+                        content : '验证码错误！',
+                        hasCloseBtn : false,
+                        hasImg : true,
+                        textForSureBtn : false,
+                        textForcancleBtn : false,
+                        autoHide:true
+                    });
+                }
             }
-        }
+        });
+    }else{
+        phoneNum?fn1():fn2();
+    }
+}
+
+function fn1(){
+    new Window().alert({
+        title   : '',
+        content : '请输入验证码！',
+        hasCloseBtn : false,
+        hasImg : true,
+        textForSureBtn : false,
+        textForcancleBtn : false,
+        autoHide:true
+    });
+}
+function fn2(){
+    new Window().alert({
+        title   : '',
+        content : '请输入手机号！',
+        hasCloseBtn : false,
+        hasImg : true,
+        textForSureBtn : false,
+        textForcancleBtn : false,
+        autoHide:true
     });
 }
 function fToStep3(dom){
     var newpwd = $('#newpassword').val();
     var comparepwd = $('#newpasswordCertain').val();
-    var newPWD = hex_md5(newpwd);
-    var comparePWD = hex_md5(comparepwd);
-    if(newPWD!=comparePWD){
-        alert('两次密码不一致')
-    }else{
-        var account = $('.sealtalk-forgetpassword').attr('account');
-        sendAjax('system!newPassword',{newpwd:newPWD,comparepwd:comparePWD,account:account},function(data){
-            if(data){
-                var datas = JSON.parse(data);
-                if(datas.code=='1'){
-                    fToNext(dom)
+    if(newpwd&&comparepwd){
+        var newPWD = hex_md5(newpwd);
+        var comparePWD = hex_md5(comparepwd);
+        if(newPWD!=comparePWD){
+            alert('两次密码不一致')
+        }else{
+            var account = $('.sealtalk-forgetpassword').attr('account');
+            sendAjax('system!newPassword',{newpwd:newPWD,comparepwd:comparePWD,account:account,type:'web'},function(data){
+                if(data){
+                    var datas = JSON.parse(data);
+                    if(datas.code=='1'){
+                        fToNext(dom)
+                    }
                 }
-            }
+            });
+        }
+    }else{
+        new Window().alert({
+            title   : '',
+            content : '请输入密码！',
+            hasCloseBtn : false,
+            hasImg : true,
+            textForSureBtn : false,
+            textForcancleBtn : false,
+            autoHide:true
         });
     }
-
-
-
 }
-
-
-/*
-*
-* 发送验证码
-*
-*/
-//function fSendCheakCode(){
-//    var phoneNum = $('#username').val();
-//    var data = JSON.stringify({'phoneNum':phoneNum})
-//    sendAjax('system!requestText',data);
-//}
 
 /*
 *
@@ -150,6 +224,9 @@ function signin(){
         var datas = JSON.parse(datas);
         if(datas &&	datas.code == 1){
             data.token = datas.text.token;
+            var saveSigninData = {account:accout,organCode:organCode}
+            saveSigninData = JSON.stringify(saveSigninData);
+            window.localStorage.saveSigninData = saveSigninData;
             window.localStorage.account=JSON.stringify(data);
             window.location.href = 'system!login';
         } else {
@@ -172,7 +249,8 @@ function signin(){
 *
 */
 function fBackToSignin(){
-    window.location.href = 'system!login';
+    var origin = window.location.origin
+    window.location.href = origin+'/im/system!login';
 }
 
 function addMD5(){

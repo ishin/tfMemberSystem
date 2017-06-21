@@ -50,8 +50,8 @@
 }
 .perSetBox-leftCont .perSetBox-contDetails{
     padding: 34px 0 0 42px;
-    height: calc(100% - 80px);
-    overflow: auto;
+    /*height: calc(100% - 80px);*/
+    /*overflow: auto;*/
 }
 .perSetBox-contDetails li{
     line-height:34px;
@@ -187,6 +187,7 @@
     text-align: center;
     border-radius: 5px;
     margin:0 auto;
+    cursor: pointer;
    /* margin-top:134px;*/
 }
 .changePassword{
@@ -448,6 +449,18 @@
     height: 2px;
     background: palegreen;
 }
+#down_process {
+    background: red;
+    height: 2px;
+    margin-top: 47px;
+    width: 150px;
+    margin-left: 70px;
+}
+#down_precent{
+    height: 2px;
+    background: palegreen;
+}
+
 
 .mr-chatContentLFile .mr-ownChat{
     border: 1px solid #b9c1ca;
@@ -579,6 +592,15 @@ p.voiceSecond2 {
     float: left;
     margin-left: 10px;
     line-height: 46px;
+}
+.mr-sysHistory {
+    position: relative;
+    height: calc(100% - 60px);
+    overflow: auto;
+}
+.mr-sysHistory li{
+    list-style: none;
+
 }
 .mr-chatContent li {
     margin-bottom: 18px;
@@ -1093,10 +1115,12 @@ p.converLimit {
     background-position: -69px -304px;
 }
 input.groupSetBox-name{
-    height: 20px;
+    height: 31px;
     vertical-align: middle;
     line-height: 30px;
-    margin-top: -1px;
+    margin-top: 0px;
+    text-indent: 4px;
+    border: 1px solid #e6e6e6;
 }
 .chatFile li strong{
     float:right;
@@ -1118,7 +1142,9 @@ input.groupSetBox-name{
     overflow: hidden;
 }
 .groupInfo .groupInfo-name{
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+    height: 35px;
+    /*background: palegoldenrod;*/
 }
 .groupInfo .groupInfo-setTime{
 
@@ -1165,14 +1191,15 @@ input.groupSetBox-name{
     height:38px;
     background-size: 80%;
 }
-
-div#fileOperate {
-    /* height: 20px; */
-    /*width: 100%;*/
-    /* background: palegreen; */
-    margin-top: -10px;
-    margin-left: 70px;
+.groupInfo-name span{
+    line-height: 35px !important;
     display: inline-block;
+}
+div#fileOperate {
+    margin-top: 23px;
+    margin-left: -110px;
+    display: inline-block;
+    position: absolute;
 }
 
 div#personSettingId {
@@ -1181,8 +1208,8 @@ div#personSettingId {
 }
 .perSetBox-content.clearfix {
     overflow: auto;
-    min-height: 500px;
-    height: calc(100% - 62px);
+    /*min-height: 500px;*/
+    height: calc(100% - 80px);
     /*background: paleturquoise;*/
 }
 
