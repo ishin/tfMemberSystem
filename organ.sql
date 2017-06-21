@@ -102,7 +102,7 @@ CREATE TABLE `t_member` (
   `workno` VARCHAR(50) COMMENT '工号',
   `sex` CHAR(1) not null default '1' comment '性别1男2女',
   `birthday` VARCHAR(8) comment '生日', 
-  `logo` VARCHAR(256) comment '头像logo',
+  `logo` VARCHAR(256) default 'PersonImg.pn' comment '头像logo',
   `email` VARCHAR(256) comment 'email',
   `mobile` VARCHAR(50) comment '手机',
   `telephone` VARCHAR(50) comment '电话',
@@ -111,7 +111,7 @@ CREATE TABLE `t_member` (
   `groupmax` INT DEFAULT 0 COMMENT '可建群数量',
   `groupuse` INT DEFAULT 0 COMMENT '已建群数量',
   `intro` VARCHAR(1024) comment '介绍',
-  `superadmin` int(1) comment '是否可管理独立后台',
+  `superadmin` int(1) default 0 comment '是否可管理独立后台',
   `isdel` int(1) default 1 comment '是否为未分组,1是0否',
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
@@ -131,7 +131,7 @@ CREATE TABLE `t_branch_member` (
   `position_id` INT NOT NULL DEFAULT 0 comment '职位id',
   `is_master` CHAR(1) DEFAULT '0' COMMENT '0非主要职能，1主要智能',
   `isdel` char(1) default '1' comment '0已删除,1未删除',
-  `listorder` INT NULL DEFAULT 0,
+  `listorder` INT NOT NULL DEFAULT 0,
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
@@ -145,8 +145,8 @@ CREATE TABLE `t_role` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(256) comment '角色名称',
   `organid` int not null default 0 comment '公司id',	
-  `rolelevel` char(1) not null default 0 comment '角色等级',
-  `listorder` INT NOT NULL DEFAULT 0 comment '',
+  `rolelevel` char(1) default 0 comment '角色等级',
+  `listorder` INT DEFAULT 0 comment '',
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
@@ -325,26 +325,29 @@ CREATE TABLE `t_cutlogtemp` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL DEFAULT '0' comment '成员id',
   `log_name` VARCHAR(256) NOT NULL DEFAULT '0' comment '头像',
-  `isDel` char(1) default '1' comment '是否为未分组,1是0否',
+  `isdel` char(1) default '1' comment '逻辑删除,1否0是',
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
-
+--
 --应用数据表
+--
 CREATE TABLE `t_appsecret` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `appname` VARCHAR(50) NOT NULL DEFAULT '0' comment '应用名',
   `appId` VARCHAR(100) NOT NULL DEFAULT '0' comment '应用appid',
   `secert` VARCHAR(200) NOT NULL DEFAULT '0' comment '应用secert',
   `callbackurl` VARCHAR(300) NOT NULL DEFAULT '0' comment '应用回调地址',
-  `apptime` BIGINT(11) NOT NULL DEFAULT 0 comment '应用修改时间',
+  `apptime` BIGINT(11) DEFAULT 0 comment '应用修改时间',
   `isopen` int(1) not null default 1 comment '0关闭1开启',
   `organ_id` int not null default 0 comment '组织id',
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
 
+--
 --登陆用户数据表
+--
 CREATE TABLE `t_uservalid` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `asid` int default 0 comment '应用id',
@@ -354,20 +357,21 @@ CREATE TABLE `t_uservalid` (
   `unauthtokentime` BIGINT(11) default 0 comment '未授权token生成时间',
   `authtokentime` BIGINT(11) DEFAULT 0 comment '授权token生成时间',
   `visittokentime` BIGINT(11) DEFAULT 0 comment '访问toke生成时间',
-  `userid` int comment '成员id',
+  `userid` int default 0 comment '成员id',
   `info` int default 3 comment '成员信息等级',
-  `isdel` char(1) default '1' comment '是否为未分组,1是0否',
+  `isdel` char(1) default '1' comment '逻辑删除',
    PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
-
----角色应用关系表
+--
+--角色应用关系表
+--
 create table `t_role_appsecret` (
-	`id` int NOT NULL AUTO_INCREMENT(11),
+	`id` int NOT NULL AUTO_INCREMENT,
 	`role_id` int(11) default 0 comment '角色id',
 	`appsecret_id` int(11) default 0 comment '应用id',
-	PRIMARY KEY(id);	
-); 
+	PRIMARY KEY(id)	
+) ENGINE=InnoDB;
 
 
 
