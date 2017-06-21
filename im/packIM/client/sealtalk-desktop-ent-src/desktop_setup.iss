@@ -8,7 +8,7 @@
 #define MyAppURL "http://42.62.4.82:8080/im/system!login"
 #define MyAppExeName "120IM.exe"     
 #define UninstallName "Uninstall"
-#define BaseDir "D:\git\im-indepartment\packIM\client\sealtalk-desktop-ent-src"
+#define BaseDir "D:\git\ims_new\im\packIM\client\sealtalk-desktop-ent-src"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
