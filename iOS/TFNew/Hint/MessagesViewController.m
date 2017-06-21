@@ -753,7 +753,9 @@
                     u._avatar = [NSString stringWithFormat:@"%@/upload/images/%@", WEB_API_URL, [v objectForKey:@"logo"]];
                     u._userName = [v objectForKey:@"name"];
                     
-                    [u updateUserInfo:v];
+                    NSMutableDictionary *info = [NSMutableDictionary dictionaryWithDictionary:v];
+                    [info setObject:WEB_API_URL forKey:@"basePath"];
+                    [u updateUserInfo:info];
                     
                     [UserDefaultsKV saveUser:u];
                     
