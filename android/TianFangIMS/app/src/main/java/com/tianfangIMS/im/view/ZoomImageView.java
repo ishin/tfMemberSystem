@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import com.tianfangIMS.im.TianFangIMSApplication;
 
 /**
+ * Lmy
  * 自定义的ImageView控制，可对图片进行多点触控缩放和拖动
  */
 public class ZoomImageView extends ImageView {

@@ -16,7 +16,7 @@
 #import "CMNavigationController.h"
 #import "UserInfoViewController.h"
 #import "RCDSearchHistoryMessageController.h"
-#import "PhotosViewController.h"
+#import "ChatFilesViewController.h"
 
 
 @interface JPrivateChatInfoViewController ()<UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
@@ -303,7 +303,7 @@
         else if(indexPath.row == 0)
         {
             
-            PhotosViewController *photos = [[PhotosViewController alloc] init];
+            ChatFilesViewController *photos = [[ChatFilesViewController alloc] init];
             photos._targetId =[NSString stringWithFormat:@"%d", self._targetUser.userId];
             photos.converType = ConversationType_PRIVATE;
             [self.navigationController pushViewController:photos animated:YES];
@@ -366,6 +366,9 @@
         NSString *targetId = [NSString stringWithFormat:@"%d", self._targetUser.userId];
         [[RCIMClient sharedRCIMClient] clearMessages:ConversationType_PRIVATE targetId:targetId];
         
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Clear_ChatLog_List"
+                                                            object:nil];
+
     }
     
 }

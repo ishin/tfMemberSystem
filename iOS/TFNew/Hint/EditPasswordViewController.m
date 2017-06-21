@@ -48,7 +48,7 @@
     
     _oldPassword = [[UITextField alloc] initWithFrame:CGRectMake(CGRectGetMaxX(tL.frame)+10,
                                                               15,
-                                                              SCREEN_WIDTH-90,
+                                                              SCREEN_WIDTH-60,
                                                               31)];
     _oldPassword.backgroundColor = [UIColor clearColor];
     _oldPassword.font = [UIFont systemFontOfSize:16];
@@ -58,6 +58,7 @@
     [self.view addSubview:_oldPassword];
     _oldPassword.secureTextEntry = YES;
     _oldPassword.returnKeyType = UIReturnKeyDone;
+    _oldPassword.clearButtonMode = UITextFieldViewModeWhileEditing;
     _oldPassword.delegate = self;
     
    
@@ -68,7 +69,7 @@
     
     _password = [[UITextField alloc] initWithFrame:CGRectMake(CGRectGetMaxX(tL.frame)+10,
                                                               60+15,
-                                                              SCREEN_WIDTH-90,
+                                                              SCREEN_WIDTH-60,
                                                               31)];
     _password.backgroundColor = [UIColor clearColor];
     _password.font = [UIFont systemFontOfSize:16];
@@ -78,6 +79,7 @@
     [self.view addSubview:_password];
     _password.returnKeyType = UIReturnKeyDone;
     _password.delegate = self;
+    _password.clearButtonMode = UITextFieldViewModeWhileEditing;
     _password.secureTextEntry = YES;
     
     
@@ -89,7 +91,7 @@
     
     _password1 = [[UITextField alloc] initWithFrame:CGRectMake(CGRectGetMaxX(tL.frame)+10,
                                                               120+15,
-                                                              SCREEN_WIDTH-90,
+                                                              SCREEN_WIDTH-60,
                                                               31)];
     _password1.backgroundColor = [UIColor clearColor];
     _password1.font = [UIFont systemFontOfSize:16];
@@ -99,21 +101,35 @@
     [self.view addSubview:_password1];
     _password1.returnKeyType = UIReturnKeyDone;
     _password1.delegate = self;
+    _password1.clearButtonMode = UITextFieldViewModeWhileEditing;
     _password1.secureTextEntry = YES;
     
     
     
-    btnSignin = [UIButton buttonWithColor:[UIColor whiteColor] selColor:LINE_COLOR];
-    btnSignin.frame = CGRectMake(0, 180+40, SCREEN_WIDTH, 60);
-    [self.view addSubview:btnSignin];
-    btnSignin.layer.cornerRadius = 4;
-    btnSignin.clipsToBounds = YES;
-    [btnSignin setTitleColor:YELLOW_THEME_COLOR forState:UIControlStateNormal];
-    [btnSignin setTitle:@"确认修改" forState:UIControlStateNormal];
-    btnSignin.titleLabel.font = [UIFont boldSystemFontOfSize:15];
-    [btnSignin addTarget:self action:@selector(uploadAction:) forControlEvents:UIControlEventTouchUpInside];
+//    btnSignin = [UIButton buttonWithColor:[UIColor whiteColor] selColor:LINE_COLOR];
+//    btnSignin.frame = CGRectMake(0, 180+40, SCREEN_WIDTH, 60);
+//    [self.view addSubview:btnSignin];
+//    btnSignin.layer.cornerRadius = 4;
+//    btnSignin.clipsToBounds = YES;
+//    [btnSignin setTitleColor:YELLOW_THEME_COLOR forState:UIControlStateNormal];
+//    [btnSignin setTitle:@"确认修改" forState:UIControlStateNormal];
+//    btnSignin.titleLabel.font = [UIFont boldSystemFontOfSize:15];
+//    [btnSignin addTarget:self action:@selector(uploadAction:) forControlEvents:UIControlEventTouchUpInside];
+//    
+//    btnSignin.enabled = NO;
     
+    
+    btnSignin = [UIButton buttonWithType:UIButtonTypeCustom];
+    btnSignin.frame = CGRectMake((SCREEN_WIDTH-242)/2, 220, 242, 52);
+    [self.view addSubview:btnSignin];
+    [btnSignin setImage:[UIImage imageNamed:@"btn_submit.png"] forState:UIControlStateNormal];
+    //[btnSignin setImage:[UIImage imageNamed:@"login_btn_down.png"] forState:UIControlStateHighlighted];
+    
+    [btnSignin addTarget:self action:@selector(uploadAction:) forControlEvents:UIControlEventTouchUpInside];
+    [btnSignin setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+
     btnSignin.enabled = NO;
+
     
     //btnSignin.center = CGPointMake((SCREEN_WIDTH - 140*2 - 10)/2+140/2, btnSignin.center.y);
 //
@@ -201,7 +217,7 @@
     
     [params setObject:_u._account forKey:@"account"];
     [params setObject:@"CN" forKey:@"countrycode"];
-   /// [params setObject:vcode forKey:@"textcode"];
+    [params setObject:md5Encode(oldPwd) forKey:@"oldpwd"];
     [params setObject:md5Encode(pwd) forKey:@"newpwd"];
     [params setObject:md5Encode(pwd) forKey:@"comparepwd"];
     
@@ -236,6 +252,22 @@
                     [[NSNotificationCenter defaultCenter] removeObserver:block_self];
                     
                     [block_self.navigationController popViewControllerAnimated:YES];
+                }
+                else
+                {
+                    NSDictionary* text = [v objectForKey:@"text"];
+                    NSString *message = @"错误";
+                    if(text)
+                    {
+                        message = [text objectForKey:@"context"];
+                    }
+                    
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
+                                                                    message:message
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil, nil];
+                    [alert show];
                 }
                 return;
             }

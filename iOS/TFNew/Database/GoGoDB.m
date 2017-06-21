@@ -147,14 +147,14 @@ static GoGoDB* gogoDBInstance = nil;
 #pragma mark ---创建好友表
 - (void) checkAndCreateFriendsTable{
     
-    NSString *s = @"SELECT * FROM sqlite_master WHERE type='table' AND name='tf_tblMyFriends'";
+    NSString *s = @"SELECT * FROM sqlite_master WHERE type='table' AND name='tf_tbFriends'";
     
     const char *sqlStatement = [s UTF8String];
     sqlite3_stmt *statement;
     
     int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
     if (success != SQLITE_OK) {
-        NSLog(@"Error: failed to tf_tblMyFriends");
+        NSLog(@"Error: failed to tf_tbFriends");
         return;
     }
     
@@ -167,13 +167,13 @@ static GoGoDB* gogoDBInstance = nil;
     
     if(!have)
     {
-        s = @"CREATE TABLE tf_tblMyFriends(uid INTEGER, name TEXT, cellphone TEXT, pinyin TEXT, data BLOB)";
+        s = @"CREATE TABLE tf_tbFriends(uid INTEGER, name TEXT, cellphone TEXT, pinyin TEXT, account TEXT, data BLOB)";
         
         const char * sql = [s UTF8String];
         sqlite3_stmt *delete_statement = nil;
         
         if (sqlite3_prepare_v2(database_, sql, -1, &delete_statement, NULL) != SQLITE_OK) {
-            NSLog(@"Not Prepared DataBase! -- tf_tblMyFriends");
+            NSLog(@"Not Prepared DataBase! -- tf_tbFriends");
         }
         
         sqlite3_step(delete_statement);
@@ -186,13 +186,13 @@ static GoGoDB* gogoDBInstance = nil;
     @synchronized(self)
     {
         
-        NSString *s = @"delete from tf_tblMyFriends";
+        NSString *s = @"delete from tf_tbFriends";
         
         const char * sql = [s UTF8String];
         sqlite3_stmt *delete_statement = nil;
         
         if (sqlite3_prepare_v2(database_, sql, -1, &delete_statement, NULL) != SQLITE_OK) {
-            NSLog(@"Not delete from tf_tblMyFriends!");
+            NSLog(@"Not delete from tf_tbFriends!");
         }
         
         sqlite3_step(delete_statement);
@@ -202,14 +202,14 @@ static GoGoDB* gogoDBInstance = nil;
 
 - (NSArray *)searchFriendsWithKeyword:(NSString *)keyword{
     
-    NSString *sql = [NSString stringWithFormat:@"select data from tf_tblMyFriends where name like '%%%@%%' or cellphone like '%@%%' or pinyin like'%%%@%%'", keyword, keyword, [keyword lowercaseString]];
+    NSString *sql = [NSString stringWithFormat:@"select data from tf_tbFriends where name like '%%%@%%' or cellphone like '%@%%' or pinyin like'%%%@%%' or account like'%%%@%%'", keyword, keyword, [keyword lowercaseString], keyword];
     
     const char *sqlStatement = [sql UTF8String];
     sqlite3_stmt *statement;
     
     int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
     if (success != SQLITE_OK) {
-        NSLog(@"Error: failed to tf_tblMyFriends");
+        NSLog(@"Error: failed to tf_tbFriends");
         return nil;
     }
     
@@ -252,6 +252,9 @@ static GoGoDB* gogoDBInstance = nil;
     CFStringTransform((CFMutableStringRef)str,NULL, kCFStringTransformStripDiacritics,NO);
     //转化为大写拼音
     NSString *pinYin = [str lowercaseString];
+    
+    pinYin = [pinYin stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
     //获取并返回首字母
     return pinYin;
 }
@@ -270,12 +273,12 @@ static GoGoDB* gogoDBInstance = nil;
             return 0;
         }
         
-        const char *sqlStatement = "insert into tf_tblMyFriends (uid, name, cellphone, pinyin, data) VALUES (?, ?, ?, ?, ?)";
+        const char *sqlStatement = "insert into tf_tbFriends (uid, name, cellphone, pinyin, account, data) VALUES (?, ?, ?, ?, ?, ?)";
         sqlite3_stmt *statement;
         
         int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
         if (success != SQLITE_OK) {
-            NSLog(@"Error: failed to tf_tblMyFriends");
+            NSLog(@"Error: failed to tf_tbFriends");
             return -1;
         }
         
@@ -287,7 +290,7 @@ static GoGoDB* gogoDBInstance = nil;
             name = @"";
         sqlite3_bind_text(statement, 2, [name UTF8String], -1, SQLITE_TRANSIENT);
         
-        NSString* value = [user objectForKey:@"cellphone"];
+        NSString* value = [user objectForKey:@"mobile"];
         if(value == nil)
             value = @"";
         sqlite3_bind_text(statement, 3, [value UTF8String], -1, SQLITE_TRANSIENT);
@@ -300,15 +303,21 @@ static GoGoDB* gogoDBInstance = nil;
         sqlite3_bind_text(statement, 4, [value UTF8String], -1, SQLITE_TRANSIENT);
         
         
+        value = [user objectForKey:@"account"];
+        if(value == nil)
+            value = @"";
+        sqlite3_bind_text(statement, 5, [value UTF8String], -1, SQLITE_TRANSIENT);
+        
+        
         NSData *archiveData = [NSKeyedArchiver archivedDataWithRootObject:user];
-        sqlite3_bind_blob(statement, 5, [archiveData bytes], (int)[archiveData length], NULL);
+        sqlite3_bind_blob(statement, 6, [archiveData bytes], (int)[archiveData length], NULL);
         
         
         success = sqlite3_step(statement);
         sqlite3_finalize(statement);
         
         if (success == SQLITE_ERROR) {
-            NSLog(@"Error: failed to insert into tf_tblMyFriends with message.");
+            NSLog(@"Error: failed to insert into tf_tbFriends with message.");
             return -1;
         }
         
@@ -325,12 +334,12 @@ static GoGoDB* gogoDBInstance = nil;
     @synchronized(self)
     {
         
-        const char *sqlStatement = "select * from tf_tblMyFriends where uid = ?";
+        const char *sqlStatement = "select * from tf_tbFriends where uid = ?";
         sqlite3_stmt *statement;
         
         int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
         if (success != SQLITE_OK) {
-            NSLog(@"Error: failed to tf_tblMyFriends");
+            NSLog(@"Error: failed to tf_tbFriends");
             return NO;
         }
         
@@ -355,12 +364,12 @@ static GoGoDB* gogoDBInstance = nil;
     
     @synchronized(self)
     {
-        const char *sqlStatement = "delete from tf_tblMyFriends where uid = ?";
+        const char *sqlStatement = "delete from tf_tbFriends where uid = ?";
         sqlite3_stmt *statement;
         
         int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
         if (success != SQLITE_OK) {
-            NSLog(@"Error: failed to tf_tblMyFriends");
+            NSLog(@"Error: failed to tf_tbFriends");
             return;
         }
         
@@ -376,12 +385,12 @@ static GoGoDB* gogoDBInstance = nil;
     
     @synchronized(self)
     {
-        const char *sqlStatement = "UPDATE tf_tblMyFriends set name = ?, cellphone = ?, pinyin = ?, data = ? where uid = ?";
+        const char *sqlStatement = "UPDATE tf_tbFriends set name = ?, cellphone = ?, pinyin = ?, account = ?, data = ? where uid = ?";
         sqlite3_stmt *statement;
         
         int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
         if (success != SQLITE_OK) {
-            NSLog(@"Error: failed to tf_tblMyFriends");
+            NSLog(@"Error: failed to tf_tbFriends");
             return;
         }
         
@@ -391,7 +400,7 @@ static GoGoDB* gogoDBInstance = nil;
             name = @"";
         sqlite3_bind_text(statement, 1, [name UTF8String], -1, SQLITE_TRANSIENT);
         
-        NSString* value = [user objectForKey:@"cellphone"];
+        NSString* value = [user objectForKey:@"mobile"];
         if(value == nil)
             value = @"";
         sqlite3_bind_text(statement, 2, [value UTF8String], -1, SQLITE_TRANSIENT);
@@ -401,18 +410,23 @@ static GoGoDB* gogoDBInstance = nil;
             value = @"";
         sqlite3_bind_text(statement, 3, [value UTF8String], -1, SQLITE_TRANSIENT);
         
+        value = [user objectForKey:@"account"];
+        if(value == nil)
+            value = @"";
+        sqlite3_bind_text(statement, 4, [value UTF8String], -1, SQLITE_TRANSIENT);
+        
         
         NSData *archiveData = [NSKeyedArchiver archivedDataWithRootObject:user];
-        sqlite3_bind_blob(statement, 4, [archiveData bytes], (int)[archiveData length], NULL);
+        sqlite3_bind_blob(statement, 5, [archiveData bytes], (int)[archiveData length], NULL);
         
         int uid = [[user objectForKey:@"id"] intValue];
-        sqlite3_bind_int(statement, 5, uid);
+        sqlite3_bind_int(statement, 6, uid);
         
         success = sqlite3_step(statement);
         sqlite3_finalize(statement);
         
         if (success == SQLITE_ERROR) {
-            NSLog(@"Error: failed to insert into tf_tblMyFriends with message.");
+            NSLog(@"Error: failed to insert into tf_tbFriends with message.");
             return;
         }
     }
@@ -422,12 +436,12 @@ static GoGoDB* gogoDBInstance = nil;
     
     @synchronized(self)
     {
-        const char *sqlStatement = "select data from tf_tblMyFriends";
+        const char *sqlStatement = "select data from tf_tbFriends";
         sqlite3_stmt *statement;
         
         int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
         if (success != SQLITE_OK) {
-            NSLog(@"Error: failed to tf_tblMyFriends");
+            NSLog(@"Error: failed to tf_tbFriends");
             return nil;
         }
         
@@ -478,7 +492,7 @@ static GoGoDB* gogoDBInstance = nil;
     
     if(!have)
     {
-        s = @"CREATE TABLE tblTFOrgs(id INTEGER, pid INTEGER, flag INTEGER, name TEXT, cellphone TEXT, data BLOB)";
+        s = @"CREATE TABLE tblTFOrgs(id INTEGER, pid INTEGER, flag INTEGER, name TEXT, account TEXT, cellphone TEXT, pinyin TEXT, data BLOB)";
         
         const char * sql = [s UTF8String];
         sqlite3_stmt *delete_statement = nil;
@@ -509,7 +523,7 @@ static GoGoDB* gogoDBInstance = nil;
 
 - (int) insertOrgUnit:(NSDictionary*)unit{
     
-    const char *sqlStatement = "insert into tblTFOrgs (id, pid, flag, name, cellphone, data) VALUES (?, ?, ?, ?, ?, ?)";
+    const char *sqlStatement = "insert into tblTFOrgs (id, pid, flag, name, account,cellphone,pinyin, data) VALUES (?, ?, ?, ?, ?, ?,?,?)";
     sqlite3_stmt *statement;
     
     int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
@@ -530,23 +544,37 @@ static GoGoDB* gogoDBInstance = nil;
     
     NSString *account = @"";
     NSString *name = @"";
+    NSString *mobile = @"";
+    NSString *pinyin = @"";
     if(flag == 1)
     {
         account = [unit objectForKey:@"account"];
         name = [unit objectForKey:@"name"];
+        mobile = [unit objectForKey:@"mobile"];
         
         if(account == nil)
             account = @"";
         if(name == nil)
             name = @"";
+        if(mobile == nil)
+            mobile = @"";
+        
+        if([name length])
+            pinyin = [self convPinyinFromCharactor:name];
     }
+    
+    
     
     sqlite3_bind_text(statement, 4, [name UTF8String], -1, SQLITE_TRANSIENT);
     
     sqlite3_bind_text(statement, 5, [account UTF8String], -1, SQLITE_TRANSIENT);
     
+    sqlite3_bind_text(statement, 6, [mobile UTF8String], -1, SQLITE_TRANSIENT);
+    
+    sqlite3_bind_text(statement, 7, [pinyin UTF8String], -1, SQLITE_TRANSIENT);
+    
     NSData *archiveData = [NSKeyedArchiver archivedDataWithRootObject:unit];
-    sqlite3_bind_blob(statement, 6, [archiveData bytes], (int)[archiveData length], NULL);
+    sqlite3_bind_blob(statement, 8, [archiveData bytes], (int)[archiveData length], NULL);
     
     
     success = sqlite3_step(statement);
@@ -561,6 +589,40 @@ static GoGoDB* gogoDBInstance = nil;
     
     return lastRow;
     
+}
+
+- (NSDictionary *)queryUnitById:(int)uid{
+ 
+    const char *sqlStatement = "select data from tblTFOrgs where id = ?";
+    sqlite3_stmt *statement;
+    
+    int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
+    if (success != SQLITE_OK) {
+        NSLog(@"Error: failed to tblTFOrgs");
+        return nil;
+    }
+    
+    sqlite3_bind_int(statement, 1, uid);
+    
+    
+    NSDictionary *result = nil;
+    
+    while (sqlite3_step(statement) == SQLITE_ROW) {
+        
+        const void* achievement_id       = sqlite3_column_blob(statement, 0);
+        int achievement_idSize           = sqlite3_column_bytes(statement, 0);
+        
+        if(achievement_id)
+        {
+            NSData *data = [[NSData alloc]initWithBytes:achievement_id length:achievement_idSize];
+            result = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            
+            break;
+        }
+    }
+    sqlite3_finalize(statement);
+    
+    return result;
 }
 
 - (NSArray *) queryOrgUnitsByPid:(int)pid{
@@ -600,9 +662,9 @@ static GoGoDB* gogoDBInstance = nil;
 
 - (NSArray *)searchOrgPersonsWithKeyword:(NSString *)keyword{
     
-    NSString *sql = [NSString stringWithFormat:@"select data from tblTFOrgs where flag = 1 and (name like '%%%@%%' or cellphone like '%@%%')",
+    NSString *sql = [NSString stringWithFormat:@"select data from tblTFOrgs where flag = 1 and (account like'%%%@%%' or name like '%%%@%%' or cellphone like '%@%%' or pinyin like '%%%@%%')",
                      keyword,
-                     keyword];
+                     keyword,keyword,keyword];
     
     const char *sqlStatement = [sql UTF8String];
     sqlite3_stmt *statement;
@@ -1259,9 +1321,20 @@ static GoGoDB* gogoDBInstance = nil;
         return;
     }
     
-    sqlite3_bind_text(statement, 1, [uInfo.name UTF8String], -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(statement, 2, [uInfo.portraitUri UTF8String], -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(statement, 3, [uInfo.userId UTF8String], -1, SQLITE_TRANSIENT);
+    NSString *value = uInfo.name;
+    if(value == nil)
+        value = @"";
+    sqlite3_bind_text(statement, 1, [value UTF8String], -1, SQLITE_TRANSIENT);
+    
+    value = uInfo.portraitUri;
+    if(value == nil)
+        value = @"";
+    sqlite3_bind_text(statement, 2, [value UTF8String], -1, SQLITE_TRANSIENT);
+    
+    value = uInfo.userId;
+    if(value == nil)
+        value = @"";
+    sqlite3_bind_text(statement, 3, [value UTF8String], -1, SQLITE_TRANSIENT);
     
     
     success = sqlite3_step(statement);
@@ -1316,14 +1389,14 @@ static GoGoDB* gogoDBInstance = nil;
 #pragma mark ---Group表
 - (void) checkAndCreateGroupTable{
     
-    NSString *s = @"SELECT * FROM sqlite_master WHERE type='table' AND name='tblGroupCache'";
+    NSString *s = @"SELECT * FROM sqlite_master WHERE type='table' AND name='tfGroupCache'";
     
     const char *sqlStatement = [s UTF8String];
     sqlite3_stmt *statement;
     
     int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
     if (success != SQLITE_OK) {
-        NSLog(@"Error: failed to tblGroupCache");
+        NSLog(@"Error: failed to tfGroupCache");
         return;
     }
     
@@ -1336,7 +1409,7 @@ static GoGoDB* gogoDBInstance = nil;
     
     if(!have)
     {
-        s = @"CREATE TABLE tblGroupCache (group_id TEXT,  group_name TEXT, group_avatar TEXT, g_members BLOB, g_data BLOB)";
+        s = @"CREATE TABLE tfGroupCache (group_id INTEGER,  group_name TEXT, group_avatar TEXT, g_members BLOB, g_data BLOB)";
         
         const char * sql = [s UTF8String];
         sqlite3_stmt *delete_statement = nil;
@@ -1363,19 +1436,19 @@ static GoGoDB* gogoDBInstance = nil;
         return 1;
     }
     
-    const char *sqlStatement = "insert into tblGroupCache (group_id, group_name, group_avatar, g_data) VALUES (?, ?, ?, ?)";
+    const char *sqlStatement = "insert into tfGroupCache (group_id, group_name, group_avatar, g_data) VALUES (?, ?, ?, ?)";
     sqlite3_stmt *statement;
     
     int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
     if (success != SQLITE_OK) {
-        NSLog(@"Error: failed to tblGroupCache");
+        NSLog(@"Error: failed to tfGroupCache");
         return -1;
     }
     
-    NSString *value = @"";
-    if(gid)
-        value = sGid;
-    sqlite3_bind_text(statement, 1, [value UTF8String], -1, SQLITE_TRANSIENT);
+    NSString *value = nil;
+    
+    
+    sqlite3_bind_int(statement, 1, gid);
     
     
     value = [gInfo objectForKey:@"name"];
@@ -1398,7 +1471,7 @@ static GoGoDB* gogoDBInstance = nil;
     sqlite3_finalize(statement);
     
     if (success == SQLITE_ERROR) {
-        NSLog(@"Error: failed to insert into tblGroupCache with message.");
+        NSLog(@"Error: failed to insert into tfGroupCache with message.");
         return -1;
     }
     
@@ -1411,16 +1484,16 @@ static GoGoDB* gogoDBInstance = nil;
 
 - (int) checkGroupExsit:(NSString*)userId{
     
-    const char *sqlStatement = "select group_id from tblGroupCache where group_id = ?";
+    const char *sqlStatement = "select group_id from tfGroupCache where group_id = ?";
     sqlite3_stmt *statement;
     
     int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
     if (success != SQLITE_OK) {
-        NSLog(@"Error: failed to tblGroupCache");
+        NSLog(@"Error: failed to tfGroupCache");
         return 0;
     }
     
-    sqlite3_bind_text(statement, 1, [userId UTF8String], -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(statement, 1, [userId intValue]);
     
     int iRes = 0;
     while (sqlite3_step(statement) == SQLITE_ROW) {
@@ -1436,17 +1509,16 @@ static GoGoDB* gogoDBInstance = nil;
 
 - (void) updateGroupInfo:(NSDictionary*)gInfo{
     
-    const char *sqlStatement = "UPDATE tblGroupCache set group_name = ?, group_avatar = ?, g_data = ? where group_id = ?";
+    const char *sqlStatement = "UPDATE tfGroupCache set group_name = ?, group_avatar = ?, g_data = ? where group_id = ?";
     sqlite3_stmt *statement;
     
     int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
     if (success != SQLITE_OK) {
-        NSLog(@"Error: failed to tblGroupCache");
+        NSLog(@"Error: failed to tfGroupCache");
         return;
     }
     
     int gid = [[gInfo objectForKey:@"GID"] intValue];
-    NSString *sGid = [NSString stringWithFormat:@"%d", gid];
     
     NSString* value = [gInfo objectForKey:@"name"];
     if(value == nil)
@@ -1464,14 +1536,14 @@ static GoGoDB* gogoDBInstance = nil;
     sqlite3_bind_blob(statement, 3, [archiveData bytes], (int)[archiveData length], NULL);
     
     
-    sqlite3_bind_text(statement, 4, [sGid UTF8String], -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(statement, 4, gid);
     
     
     success = sqlite3_step(statement);
     sqlite3_finalize(statement);
     
     if (success == SQLITE_ERROR) {
-        NSLog(@"Error: failed to insert into tblGroupCache with message.");
+        NSLog(@"Error: failed to insert into tfGroupCache with message.");
         return;
     }
     
@@ -1479,16 +1551,16 @@ static GoGoDB* gogoDBInstance = nil;
 
 - (NSDictionary *)queryGroup:(NSString*)groupId{
     
-    const char *sqlStatement = "select g_data from tblGroupCache where group_id = ?";
+    const char *sqlStatement = "select g_data from tfGroupCache where group_id = ?";
     sqlite3_stmt *statement;
     
     int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
     if (success != SQLITE_OK) {
-        NSLog(@"Error: failed to tblGroupCache");
+        NSLog(@"Error: failed to tfGroupCache");
         return nil;
     }
     
-    sqlite3_bind_text(statement, 1, [groupId UTF8String], -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(statement, 1, [groupId intValue]);
     
     
     NSDictionary *result = nil;
@@ -1515,12 +1587,12 @@ static GoGoDB* gogoDBInstance = nil;
 
 - (NSArray *) queryAllGroups{
     
-    const char *sqlStatement = "select g_data from tblGroupCache";
+    const char *sqlStatement = "select g_data from tfGroupCache order by group_id DESC";
     sqlite3_stmt *statement;
     
     int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
     if (success != SQLITE_OK) {
-        NSLog(@"Error: failed to tblGroupCache");
+        NSLog(@"Error: failed to tfGroupCache");
         return nil;
     }
     
@@ -1548,41 +1620,41 @@ static GoGoDB* gogoDBInstance = nil;
 - (void) saveGroupMembers:(NSArray*)members groupId:(NSString*)groupId{
     
     //说明是新数据
-    const char *sqlStatement = "update tblGroupCache set g_members = ? where group_id = ?";
+    const char *sqlStatement = "update tfGroupCache set g_members = ? where group_id = ?";
     sqlite3_stmt *statement;
     
     int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
     if (success != SQLITE_OK) {
-        NSLog(@"Error: failed to tblGroupCache");
+        NSLog(@"Error: failed to tfGroupCache");
         return;
     }
     
     NSData *archiveData = [NSKeyedArchiver archivedDataWithRootObject:members];
     sqlite3_bind_blob(statement, 1, [archiveData bytes], (int)[archiveData length], NULL);
     
-    sqlite3_bind_text(statement, 2, [groupId UTF8String], -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(statement, 2, [groupId intValue]);
     
     success = sqlite3_step(statement);
     sqlite3_finalize(statement);
     
     if (success == SQLITE_ERROR) {
-        NSLog(@"Error: failed to insert into tblGroupCache with message.");
+        NSLog(@"Error: failed to insert into tfGroupCache with message.");
         return;
     }
     
 }
 - (NSArray *) queryGroupMembers:(NSString*)groupId{
     
-    const char *sqlStatement = "select g_members from tblGroupCache where group_id = ?";
+    const char *sqlStatement = "select g_members from tfGroupCache where group_id = ?";
     sqlite3_stmt *statement;
     
     int success = sqlite3_prepare_v2(database_, sqlStatement, -1, &statement, NULL);
     if (success != SQLITE_OK) {
-        NSLog(@"Error: failed to tblGroupCache");
+        NSLog(@"Error: failed to tfGroupCache");
         return nil;
     }
     
-    sqlite3_bind_text(statement, 1, [groupId UTF8String], -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(statement, 1, [groupId intValue]);
     
     NSMutableArray *result = nil;
     
@@ -1605,6 +1677,20 @@ static GoGoDB* gogoDBInstance = nil;
     return result;
 }
 
+- (void) deleteAllGroupsCached{
+    
+    NSString *s = @"delete from tfGroupCache";
+    
+    const char * sql = [s UTF8String];
+    sqlite3_stmt *delete_statement = nil;
+    
+    if (sqlite3_prepare_v2(database_, sql, -1, &delete_statement, NULL) != SQLITE_OK) {
+        NSLog(@"Not delete from tfGroupCache!");
+    }
+    
+    sqlite3_step(delete_statement);
+    sqlite3_finalize(delete_statement);
+}
 
 
 @end

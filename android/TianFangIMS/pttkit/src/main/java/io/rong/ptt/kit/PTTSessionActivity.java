@@ -2,7 +2,6 @@ package io.rong.ptt.kit;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,8 +48,7 @@ public class PTTSessionActivity extends Activity implements PTTSessionStateListe
         pttClient = PTTClient.getInstance();
         PTTSession pttSession = pttClient.getCurrentPttSession();
         participants = pttSession.getParticipantIds();
-        Log.e("你好","::"+participants);
-        pttClient.setPttSessionStateListener(this);
+//        pttClient.setPttSessionStateListener(this);
         micHolderImageView = (AsyncImageView) findViewById(R.id.micHolderImageView);
         micHolderTextView = (TextView) findViewById(R.id.micHolderTextView);
         holdToSpeakImageView = (ImageView) findViewById(R.id.holdToSpeakImageView);
@@ -74,13 +72,11 @@ public class PTTSessionActivity extends Activity implements PTTSessionStateListe
         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
             micHolderTextView.setText(getString(R.string.rce_ptt_prepare_to_speak));
             pttClient.requestToSpeak(new RequestToSpeakCallback() {
-
                 //抢麦成功
                 @Override
                 public void onReadyToSpeak(long maxDurationMillis) {
                     updateMicHolder(RongIMClient.getInstance().getCurrentUserId());
                 }
-
                 //抢麦失败
                 @Override
                 public void onFail(String msg) {

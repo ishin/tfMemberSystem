@@ -6,6 +6,9 @@ import java.util.List;
 
 import net.sf.json.JSONObject;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.sealtalk.common.SysInterface;
 import com.sealtalk.common.Tips;
 import com.sealtalk.model.TCutLogoTemp;
@@ -15,12 +18,15 @@ import com.sealtalk.utils.HTTPPostUploadUtil;
 import com.sealtalk.utils.HttpRequest;
 import com.sealtalk.utils.ImageUtils;
 import com.sealtalk.utils.JSONUtils;
+import com.sealtalk.utils.LogUtils;
 import com.sealtalk.utils.PropertiesUtils;
 import com.sealtalk.utils.StringUtils;
 import com.sealtalk.utils.TimeGenerator;
 
 public class UploadServiceImpl implements UploadService {
 
+	private static final Logger logger = LogManager.getLogger(UploadServiceImpl.class);
+	
 	@Override
 	public String cutImage(String userId, String x, String y, String width,
 			String height, String angle, File imageFile, String realPath) {
@@ -155,11 +161,13 @@ public class UploadServiceImpl implements UploadService {
 						jo.put("text", Tips.FAIL.getText());
 					}
 				} catch (Exception e) {
+					logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 					e.printStackTrace();
 				}
 			}
 		}
 
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 
@@ -184,8 +192,10 @@ public class UploadServiceImpl implements UploadService {
 
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
+		logger.info(ret);
 		return ret;
 	}
 
@@ -214,12 +224,16 @@ public class UploadServiceImpl implements UploadService {
 					jo.put("text", Tips.USEDLOGO.getText());
 					result = jo.toString();
 				} else {
+					p.remove("sign");
+					p.remove("timestamp");
 					result = HttpRequest.getInstance().sendPost(SysInterface.DELUSERLOGS.getName(), p);
 				}
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
+		logger.info(result);
 		return result;
 	}
 
@@ -239,8 +253,10 @@ public class UploadServiceImpl implements UploadService {
 				result = HttpRequest.getInstance().sendPost(SysInterface.GETUSERLOGOS.getName(), p);
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
+		logger.info(result);
 		return result;
 	}
 
@@ -297,7 +313,7 @@ public class UploadServiceImpl implements UploadService {
 					if (json.getInt("code") == 1) {
 						//FileUtil.deleteFile(picUploadName);
 						jo.put("code", 1);
-						jo.put("text", newName);
+						jo.put("text", newName); 
 					} else {
 						this.delUserLogos(userId, newName);
 						jo.put("code", 0);
@@ -305,11 +321,13 @@ public class UploadServiceImpl implements UploadService {
 					}
 					//this.saveSelectedPic(userId, newName);
 				} catch (Exception e) {
+					logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 					e.printStackTrace();
 				}
 			}
 		}
 
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 

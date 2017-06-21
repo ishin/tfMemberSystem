@@ -1,129 +1,371 @@
 package com.tianfangIMS.im.activity;
 
-import android.content.Context;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tianfangIMS.im.R;
-import com.tianfangIMS.im.adapter.SelectPhoto_GridView_Adapter;
-import com.tianfangIMS.im.bean.ViewMode;
-import com.tianfangIMS.im.dialog.BigImagedialog;
-import com.tianfangIMS.im.utils.CommonUtil;
+import com.tianfangIMS.im.adapter.ItemJiLvAdapter;
+import com.tianfangIMS.im.bean.JiLvMessage;
+import com.tianfangIMS.im.utils.FileMessageTypeUtils;
+import com.tianfangIMS.im.utils.JsonUtil;
+import com.tianfangIMS.im.utils.NToast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import io.rong.imkit.RongIM;
+import io.rong.imlib.RongIMClient;
+import io.rong.imlib.model.Conversation;
+import io.rong.imlib.model.Message;
+import io.rong.message.FileMessage;
+import io.rong.message.ImageMessage;
 
 /**
  * Created by LianMengYu on 2017/2/14.
  */
-public class SelectPhoteActivity extends BaseActivity implements AdapterView.OnItemClickListener, SelectPhoto_GridView_Adapter.OnDepartmentCheckedChangeListener,
-        View.OnClickListener {
+public class SelectPhoteActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "SelectPhoteActivity";
-    private Context mContext;
-    private GridView gridView;
-    SelectPhoto_GridView_Adapter adapter;
-    private TextView tv_select;
-    List<Uri> list;
-    private ArrayList<Uri> allChecked;
-    private Map<Integer, Boolean> checkedMap;
-    ArrayList<String> ImgMesList;//发送图片消息的传递值
-    private SelectPhoto_GridView_Adapter.ViewHodler hodler;
-    ViewMode mode;
+    private List<JiLvMessage> jiLvMessageList;
+    TextView tv_select;
     Boolean flag = true;
+    private RecyclerView rv_list;
+    private LinearLayout ll_jilv_image;
+    private LinearLayout ll_jilv_video;
+    private LinearLayout ll_jilv_qita;
+    private TextView tv_jilv_image;
+    private TextView tv_jilv_video;
+    private TextView tv_jilv_qita;
+    private View v_jilv_image;
+    private View v_jilv_video;
+    private View v_jilv_qita;
+    private ItemJiLvAdapter itemJiLvAdapter;
+    private List<Message> messageList = new ArrayList<>();
+    private ImageView iv_retransmission;
+    private ImageView iv_del;
+    private Conversation.ConversationType mConversationType;
+    private String fromConversationId;
+    private int jilv_type = 1;
 
+
+    private Dialog simpledialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.selectphont_layout);
         setTitle("聊天文件");
-        mode = ViewMode.NORMAL;
         setTv_completeVisibiliy(View.VISIBLE);
         mContext = this;
-        gridView = (GridView) this.findViewById(R.id.grid);
-        gridView.setOnItemClickListener(this);
         tv_select = getTv_title();
         tv_select.setText("选择");
-        List alist = (List<Object>) getIntent().getSerializableExtra("photouri");
-        list = new ArrayList<>();
-        if (alist.size() > 0 && alist != null) {
-            list = alist;
-            SetInfo();
-        } else {
-            return;
-        }
         tv_select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG, "TextView：" + tv_select.getText());
-                if (flag) {
-                    mode = ViewMode.CHECK;
-                    SetInfo();
+                if (itemJiLvAdapter.is_opt()) {
+                    tv_select.setText("选择");
+                    itemJiLvAdapter.setIs_opt(false);
+                    itemJiLvAdapter.notifyDataSetChanged();
                 } else {
-                    SendImageMessage();
+                    tv_select.setText("取消");
+                    itemJiLvAdapter.setIs_opt(true);
+                    itemJiLvAdapter.notifyDataSetChanged();
                 }
             }
         });
-    }
-
-    private void SetInfo() {
-        adapter = new SelectPhoto_GridView_Adapter(list, mContext, mode);
-        gridView.setAdapter(adapter);
-        adapter.setOnDepartmentCheckedChangeListener(this);
-        gridView.deferNotifyDataSetChanged();
-    }
-
-    private void getCount() {
-        checkedMap = adapter.getCheckedMap();//获取选中的人，true是选中的，false是没选中的
-        Log.e(TAG, "checkedMap：" + checkedMap);
-        allChecked = new ArrayList<Uri>();//创建一个存储选中的人的集合
-        for (int i = 0; i < checkedMap.size(); i++) {//循环获取选中人的集合
-            if (checkedMap.get(i) == null) {    //防止出现空指针,如果为空,证明没有被选中
-                continue;
-            } else if (checkedMap.get(i)) {//判断是否有值，如果为空证明没有被选中
-                Uri uri = list.get(i);
-                allChecked.add(uri);
-                Log.e(TAG, "allChecked：" + allChecked);
+        messageList = (List<Message>) getIntent().getSerializableExtra("messageList");
+        mConversationType = (Conversation.ConversationType) getIntent().getSerializableExtra("mConversationType");
+        fromConversationId = getIntent().getStringExtra("fromConversationId");
+        jiLvMessageList = new ArrayList<>();
+        for (Message message : messageList) {
+            if (message.getContent() instanceof ImageMessage) {
+                jiLvMessageList.add(new JiLvMessage(JiLvMessage.TYPE_1, message));
             }
         }
+
+        rv_list = (RecyclerView) findViewById(R.id.rv_list);
+        iv_retransmission = (ImageView) findViewById(R.id.iv_retransmission);
+        iv_del = (ImageView) findViewById(R.id.iv_del);
+        iv_retransmission.setOnClickListener(this);
+        iv_del.setOnClickListener(this);
+
+        ll_jilv_image = (LinearLayout) findViewById(R.id.ll_jilv_image);
+        ll_jilv_video = (LinearLayout) findViewById(R.id.ll_jilv_video);
+        ll_jilv_qita = (LinearLayout) findViewById(R.id.ll_jilv_qita);
+
+        ll_jilv_image.setOnClickListener(this);
+        ll_jilv_video.setOnClickListener(this);
+        ll_jilv_qita.setOnClickListener(this);
+
+
+        tv_jilv_image = (TextView) findViewById(R.id.tv_jilv_image);
+        tv_jilv_video = (TextView) findViewById(R.id.tv_jilv_video);
+        tv_jilv_qita = (TextView) findViewById(R.id.tv_jilv_qita);
+
+        v_jilv_image = findViewById(R.id.v_jilv_image);
+        v_jilv_video = findViewById(R.id.v_jilv_video);
+        v_jilv_qita = findViewById(R.id.v_jilv_qita);
+
+        rv_list.setLayoutManager(new GridLayoutManager(this, 3));
+
+        itemJiLvAdapter = new ItemJiLvAdapter(this, jiLvMessageList);
+        rv_list.setAdapter(itemJiLvAdapter);
+    }
+    private void finishDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("提示");
+        builder.setMessage("是否确认删除");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                delFile();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        simpledialog = builder.create();
+        simpledialog.setCanceledOnTouchOutside(false);
+        simpledialog.setCancelable(false);
+        simpledialog.show();
     }
 
-    private void SendImageMessage() {
-        ImgMesList = new ArrayList<>();
-        for (int i = 0; i < allChecked.size(); i++) {
-            ImgMesList.add(allChecked.get(i).toString());
+    private void delFile() {
+        if (itemJiLvAdapter.getOpt_message().size() > 0) {
+            List<Integer> list_id = new ArrayList<>();
+            for (Message message : itemJiLvAdapter.getOpt_message()) {
+                list_id.add(message.getMessageId());
+            }
+            Integer[] l = list_id.toArray(new Integer[list_id.size()]);
+
+            int[] array = new int[l.length];
+            for (int i = 0; i < l.length; i++) {
+                Integer integer = Integer.valueOf(l[i]);
+                array[i] = integer;
+            }
+            RongIM.getInstance().deleteMessages(array, new RongIMClient.ResultCallback<Boolean>() {
+                @Override
+                public void onSuccess(Boolean aBoolean) {
+                    if (aBoolean) {
+                        final List<Message> all_list = new ArrayList<Message>(RongIMClient.getInstance().getHistoryMessages(mConversationType, fromConversationId, -1, Integer.MAX_VALUE));
+                        jiLvMessageList = new ArrayList<JiLvMessage>();
+                        //刷新聊天记录列表
+                        switch (jilv_type) {
+                            case 1:
+                                jiLvMessageList.clear();
+
+                                for (Message message : all_list) {
+                                    if (message.getContent() instanceof ImageMessage) {
+                                        jiLvMessageList.add(new JiLvMessage(JiLvMessage.TYPE_1, message));
+                                    }
+                                }
+                                itemJiLvAdapter.setNewData(jiLvMessageList);
+
+                                itemJiLvAdapter.setIs_opt(false);
+                                if (itemJiLvAdapter.is_opt()) {
+                                    tv_select.setText("取消");
+                                    itemJiLvAdapter.setIs_opt(true);
+                                    itemJiLvAdapter.notifyDataSetChanged();
+                                } else {
+                                    tv_select.setText("选择");
+                                    itemJiLvAdapter.setIs_opt(false);
+                                    itemJiLvAdapter.notifyDataSetChanged();
+                                }
+
+                                itemJiLvAdapter.notifyDataSetChanged();
+                                NToast.shortToast(SelectPhoteActivity.this, "删除图片成功");
+
+                                break;
+                            case 2:
+                                jiLvMessageList.clear();
+                                for (Message message : all_list) {
+                                    if (message.getContent() instanceof FileMessage) {
+                                        FileMessage fileMessage = (FileMessage) message.getContent();
+                                        String type = FileMessageTypeUtils.fileMessageType(fileMessage.getName());
+                                        switch (type) {
+                                            case "VIDEO":
+                                                jiLvMessageList.add(new JiLvMessage(JiLvMessage.TYPE_2, message));
+                                                break;
+                                        }
+                                    }
+                                }
+                                itemJiLvAdapter.setNewData(jiLvMessageList);
+                                itemJiLvAdapter.setIs_opt(false);
+
+                                if (itemJiLvAdapter.is_opt()) {
+                                    tv_select.setText("取消");
+                                    itemJiLvAdapter.setIs_opt(true);
+                                    itemJiLvAdapter.notifyDataSetChanged();
+                                } else {
+                                    tv_select.setText("选择");
+                                    itemJiLvAdapter.setIs_opt(false);
+                                    itemJiLvAdapter.notifyDataSetChanged();
+                                }
+                                itemJiLvAdapter.notifyDataSetChanged();
+                                NToast.shortToast(SelectPhoteActivity.this, "删除音频成功");
+                                break;
+                            case 3:
+                                jiLvMessageList.clear();
+                                for (Message message : all_list) {
+                                    if (message.getContent() instanceof FileMessage) {
+                                        FileMessage fileMessage = (FileMessage) message.getContent();
+                                        String type = FileMessageTypeUtils.fileMessageType(fileMessage.getName());
+                                        switch (type) {
+                                            case "IMAGE":
+                                            case "TXT":
+                                            case "AUDIO":
+                                            case "WORD":
+                                            case "EXCEL":
+                                            case "UN_KNOW":
+                                                jiLvMessageList.add(new JiLvMessage(JiLvMessage.TYPE_3, message));
+                                                break;
+                                        }
+                                    }
+                                }
+                                itemJiLvAdapter.setNewData(jiLvMessageList);
+                                itemJiLvAdapter.setIs_opt(false);
+                                if (itemJiLvAdapter.is_opt()) {
+                                    tv_select.setText("取消");
+                                    itemJiLvAdapter.setIs_opt(true);
+                                    itemJiLvAdapter.notifyDataSetChanged();
+                                } else {
+                                    tv_select.setText("选择");
+                                    itemJiLvAdapter.setIs_opt(false);
+                                    itemJiLvAdapter.notifyDataSetChanged();
+                                }
+                                itemJiLvAdapter.notifyDataSetChanged();
+                                NToast.shortToast(SelectPhoteActivity.this, "删除文件成功");
+                                break;
+                        }
+                    } else {
+                        NToast.shortToast(SelectPhoteActivity.this, "删除失败");
+                    }
+
+                }
+                @Override
+                public void onError(RongIMClient.ErrorCode errorCode) {
+                    NToast.shortToast(SelectPhoteActivity.this, "删除失败");
+                }
+            });
+        } else {
+            NToast.shortToast(SelectPhoteActivity.this, "请先选择文件");
         }
-        Log.e(TAG, "allChecked2：" + allChecked);
-        Intent intent = new Intent(mContext, SendMessageActivity.class);
-        intent.putStringArrayListExtra("ListUri", ImgMesList);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        hodler = (SelectPhoto_GridView_Adapter.ViewHodler) view.getTag();
-        BigImagedialog bigImagedialog = new BigImagedialog(mContext, list.get(position).toString(), R.style.Dialog_Fullscreen);
-        bigImagedialog.getWindow().setBackgroundDrawable(new ColorDrawable());
-        bigImagedialog.show();
-        CommonUtil.SetDialogStyle(bigImagedialog);
     }
 
     @Override
     public void onClick(View v) {
-    }
+        switch (v.getId()) {
+            case R.id.ll_jilv_image:
+                tv_select.setText("选择");
+                itemJiLvAdapter.setIs_opt(false);
+                jilv_type = 1;
+                v_jilv_image.setBackgroundResource(R.drawable.item_tab_box2);
+                v_jilv_video.setBackgroundResource(R.drawable.item_tab_box);
+                v_jilv_qita.setBackgroundResource(R.drawable.item_tab_box);
+                jiLvMessageList.clear();
+                for (Message message : messageList) {
+                    if (message.getContent() instanceof ImageMessage) {
+                        jiLvMessageList.add(new JiLvMessage(JiLvMessage.TYPE_1, message));
+                    }
 
-    @Override
-    public void onCheckedChange(View v) {
-        tv_select.setText("发送");
-        flag = false;
-        getCount();
+                }
+
+                rv_list.setLayoutManager(new GridLayoutManager(this, 3));
+                itemJiLvAdapter = new ItemJiLvAdapter(this, jiLvMessageList);
+                rv_list.setAdapter(itemJiLvAdapter);
+                break;
+            case R.id.ll_jilv_video:
+                tv_select.setText("选择");
+                itemJiLvAdapter.setIs_opt(false);
+                jilv_type = 2;
+                v_jilv_image.setBackgroundResource(R.drawable.item_tab_box);
+                v_jilv_video.setBackgroundResource(R.drawable.item_tab_box2);
+                v_jilv_qita.setBackgroundResource(R.drawable.item_tab_box);
+                jiLvMessageList.clear();
+                for (Message message : messageList) {
+                    if (message.getContent() instanceof FileMessage) {
+                        FileMessage fileMessage = (FileMessage) message.getContent();
+                        String type = FileMessageTypeUtils.fileMessageType(fileMessage.getName());
+                        switch (type) {
+                            case "VIDEO":
+                                jiLvMessageList.add(new JiLvMessage(JiLvMessage.TYPE_2, message));
+                                break;
+                        }
+                    }
+                }
+
+                rv_list.setLayoutManager(new LinearLayoutManager(this));
+                itemJiLvAdapter = new ItemJiLvAdapter(this, jiLvMessageList);
+                rv_list.setAdapter(itemJiLvAdapter);
+                break;
+            case R.id.ll_jilv_qita:
+                tv_select.setText("选择");
+                itemJiLvAdapter.setIs_opt(false);
+                jilv_type = 3;
+                v_jilv_image.setBackgroundResource(R.drawable.item_tab_box);
+                v_jilv_video.setBackgroundResource(R.drawable.item_tab_box);
+                v_jilv_qita.setBackgroundResource(R.drawable.item_tab_box2);
+                jiLvMessageList.clear();
+                for (Message message : messageList) {
+                    if (message.getContent() instanceof FileMessage) {
+                        FileMessage fileMessage = (FileMessage) message.getContent();
+                        String type = FileMessageTypeUtils.fileMessageType(fileMessage.getName());
+                        switch (type) {
+                            case "IMAGE":
+                            case "TXT":
+                            case "AUDIO":
+                            case "WORD":
+                            case "EXCEL":
+                            case "UN_KNOW":
+                                jiLvMessageList.add(new JiLvMessage(JiLvMessage.TYPE_3, message));
+                                break;
+                        }
+                    }
+                }
+
+                rv_list.setLayoutManager(new LinearLayoutManager(this));
+                itemJiLvAdapter = new ItemJiLvAdapter(this, jiLvMessageList);
+                rv_list.setAdapter(itemJiLvAdapter);
+                break;
+            case R.id.iv_del:
+              //TODO
+                finishDialog();
+                break;
+            case R.id.iv_retransmission:
+                Log.d("iv_retransmission", itemJiLvAdapter.getOpt_message().size() + "onClick: " + JsonUtil.toJson(itemJiLvAdapter.getOpt_message()));
+                if (itemJiLvAdapter.getOpt_message().size() > 0) {
+                    switch (jilv_type) {
+                        case 1:
+                            Intent intent = new Intent(SelectPhoteActivity.this, SendMessageActivity.class);
+                            intent.putParcelableArrayListExtra("allMessage", itemJiLvAdapter.getOpt_message());
+                            startActivity(intent);
+                            finish();
+                            break;
+                        case 2:
+                        case 3:
+                            Intent intentfile = new Intent(SelectPhoteActivity.this, SendMessageActivity.class);
+                            intentfile.putParcelableArrayListExtra("allFile", itemJiLvAdapter.getOpt_message());
+                            startActivity(intentfile);
+                            finish();
+                            break;
+                    }
+                } else {
+                    NToast.shortToast(SelectPhoteActivity.this, "请先选择文件");
+                }
+                break;
+        }
     }
 }

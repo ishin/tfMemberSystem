@@ -15,6 +15,7 @@ import com.lzy.okgo.callback.StringCallback;
 import com.tianfangIMS.im.ConstantValue;
 import com.tianfangIMS.im.R;
 import com.tianfangIMS.im.adapter.DepartmentAndPersonAdapter;
+import com.tianfangIMS.im.utils.NToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +72,12 @@ public class DepartmentPerson_Activity extends BaseActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        if (!TextUtils.isEmpty(s)) {
+                        if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                            if((s.trim()).startsWith("<!DOCTYPE")){
+                                NToast.shortToast(mContext,"Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                finish();
+                            }
                             Gson gson = new Gson();
 //                            DepartmentAndPersonBean departmentAndPersonBean= gson.fromJson(s,DepartmentAndPersonBean.class);
                             List<Map<String, String>> list = gson.fromJson(s, new TypeToken<ArrayList<Map<String, String>>>() {

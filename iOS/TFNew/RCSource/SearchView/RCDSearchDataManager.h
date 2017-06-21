@@ -12,6 +12,7 @@ typedef NS_ENUM(NSInteger, RCDSearchType) {
   RCDSearchGroup,
   RCDSearchChatHistory,
   RCDSearchAll,
+  RCDSearchFriendOnly,
 };
 
 @interface RCDSearchDataManager : NSObject

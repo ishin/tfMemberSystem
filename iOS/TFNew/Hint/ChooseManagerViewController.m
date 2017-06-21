@@ -418,7 +418,14 @@
        {
            [tmp addObject:u];
        }
-       
+       else if([RCDUtilities isContains:u.cellphone withString:keywords]){
+           
+           [tmp addObject:u];
+       }
+       else if([RCDUtilities isContains:u.pinyinname withString:keywords]){
+           
+           [tmp addObject:u];
+       }
    }
     
     if([tmp count])

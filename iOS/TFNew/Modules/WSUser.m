@@ -8,6 +8,7 @@
 
 #import "WSUser.h"
 #import "SBJson4.h"
+#import "WaitDialog.h"
 
 
 @interface WSUser ()
@@ -50,10 +51,16 @@
         self.companyname    = [data objectForKey:@"organname"];
         self.telphone       = [data objectForKey:@"telephone"];
         self.ranktitle      = [data objectForKey:@"postitionname"];
+        
+        self.orgname    = [data objectForKey:@"branchname"];
 
         
         self.ctime          = [data objectForKey:@"ctime"];
       
+        self.gender = [data objectForKey:@"sex"];
+        
+        if([self.fullname length])
+            self.pinyinname = [self convertToPinyin:self.fullname];
     }
     
     
@@ -79,11 +86,31 @@
     self.telphone       = [data objectForKey:@"telephone"];
     self.ranktitle      = [data objectForKey:@"postitionname"];
     
+    self.orgname    = [data objectForKey:@"branchname"];
     
     self.ctime          = [data objectForKey:@"ctime"];
     
+    self.gender = [data objectForKey:@"sex"];
     
+    if([self.fullname length])
+        self.pinyinname = [self convertToPinyin:self.fullname];
 }
+
+//获取拼音
+- (NSString *)convertToPinyin:(NSString *)aString
+{
+    //转成了可变字符串
+    NSMutableString *str = [NSMutableString stringWithString:aString];
+    //先转换为带声调的拼音
+    CFStringTransform((CFMutableStringRef)str,NULL, kCFStringTransformMandarinLatin,NO);
+    //再转换为不带声调的拼音
+    CFStringTransform((CFMutableStringRef)str,NULL, kCFStringTransformStripDiacritics,NO);
+    //转化为大写拼音
+    NSString *pinYin = [str lowercaseString];
+    //获取并返回首字母
+    return pinYin;
+}
+
 
 - (void) addMyFriend:(NSString*)friendAccount{
     
@@ -108,7 +135,42 @@
     
     [_http requestWithSusessBlock:^(id lParam, id rParam) {
         
+        NSString *response = lParam;
+        // NSLog(@"%@", response);
         
+        
+        SBJson4ValueBlock block = ^(id v, BOOL *stop) {
+            
+            
+            if([v isKindOfClass:[NSDictionary class]])
+            {
+                int code = [[v objectForKey:@"code"] intValue];
+                
+                if(code == 1)
+                {
+                    
+                    [[WaitDialog sharedAlertDialog] setTitle:@"添加好友成功!"];
+                    [[WaitDialog sharedAlertDialog] animateShow];
+                }
+                
+                return;
+            }
+            
+            
+        };
+        
+        SBJson4ErrorBlock eh = ^(NSError* err) {
+            
+            
+            
+            NSLog(@"OOPS: %@", err);
+        };
+        
+        id parser = [SBJson4Parser multiRootParserWithBlock:block
+                                               errorHandler:eh];
+        
+        id data = [response dataUsingEncoding:NSUTF8StringEncoding];
+        [parser parse:data];
         
     } FailBlock:^(id lParam, id rParam) {
         

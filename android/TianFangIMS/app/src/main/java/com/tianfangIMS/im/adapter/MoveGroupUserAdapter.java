@@ -60,15 +60,17 @@ public class MoveGroupUserAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHodler hodler = null;
+        final ViewHodler hodler;
         if (convertView == null) {
             hodler = new ViewHodler();
             convertView = View.inflate(mContext, R.layout.movegroupuser_item, null);
             hodler.img = (ImageView) convertView.findViewById(R.id.iv_movegroupuser_photo);
             hodler.name = (TextView) convertView.findViewById(R.id.tv_movegroupuser_departmentName);
             hodler.cb_adddel = (CheckBox) convertView.findViewById(R.id.cb_adddel);
+            hodler.iv_checkbox_grouptop = (ImageView) convertView.findViewById(R.id.iv_checkbox_grouptop);
             if (flag) {
-                hodler.cb_adddel.setVisibility(View.VISIBLE);
+                hodler.cb_adddel.setVisibility(View.INVISIBLE);
+                hodler.iv_checkbox_grouptop.setVisibility(View.VISIBLE);
             }
             convertView.setTag(hodler);
         } else {
@@ -77,7 +79,12 @@ public class MoveGroupUserAdapter extends BaseAdapter {
         hodler.cb_adddel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                chackedMap.put(position,isChecked);
+                chackedMap.put(position, isChecked);
+                if (buttonView.isChecked()) {
+                    hodler.iv_checkbox_grouptop.setImageResource(R.mipmap.checkbox_selected);
+                } else {
+                    hodler.iv_checkbox_grouptop.setImageResource(R.mipmap.checkbox_selectring);
+                }
             }
         });
         hodler.cb_adddel.setChecked(chackedMap.get(position));
@@ -96,12 +103,15 @@ public class MoveGroupUserAdapter extends BaseAdapter {
         public CheckBox cb_adddel;
         ImageView img;
         TextView name;
+        ImageView iv_checkbox_grouptop;
     }
+
     /**
      * 得到勾选状态的集合
+     *
      * @return
      */
-    public Map<Integer,Boolean> getCheckedMap() {
+    public Map<Integer, Boolean> getCheckedMap() {
         return chackedMap;
     }
 }

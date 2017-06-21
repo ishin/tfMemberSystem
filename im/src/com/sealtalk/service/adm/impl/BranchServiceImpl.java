@@ -2,14 +2,20 @@ package com.sealtalk.service.adm.impl;
 
 import net.sf.json.JSONObject;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.sealtalk.common.SysInterface;
+import com.sealtalk.common.Tips;
 import com.sealtalk.model.TMember;
 import com.sealtalk.service.adm.BranchService;
 import com.sealtalk.utils.HttpRequest;
 import com.sealtalk.utils.JSONUtils;
+import com.sealtalk.utils.LogUtils;
 
 public class BranchServiceImpl implements BranchService {
-
+	private static final Logger logger = LogManager.getLogger(BranchServiceImpl.class);
+	
 	@Override
 	public String getBranchTreeAndMember(int organId) {
 		String result = null;
@@ -19,8 +25,10 @@ public class BranchServiceImpl implements BranchService {
 			result = HttpRequest.getInstance().sendPost(
 					SysInterface.BRANCHMEMBER.getName(), jo);
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
+		logger.info(result);
 		return result;
 	}
 	
@@ -34,8 +42,10 @@ public class BranchServiceImpl implements BranchService {
 			result = HttpRequest.getInstance().sendPost(
 					SysInterface.MEMBEROFBRANCH.getName(), jo);
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
+		logger.info(result);
 		return result;
 	}
 
@@ -48,44 +58,58 @@ public class BranchServiceImpl implements BranchService {
 			result = HttpRequest.getInstance().sendPost(
 					SysInterface.BRANCHTREE.getName(), jo);
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
+		logger.info(result);
 		return result;
 	}
 
 	@Override
 	public String getPosition(int organId) {
+		String result = null;
+		
 		try {
 			JSONObject jo = new JSONObject();
 			jo.put("organId", organId);
-			String result = HttpRequest.getInstance().sendPost(
+			String ret = HttpRequest.getInstance().sendPost(
 					SysInterface.GETPOSITION.getName(), jo);
-			JSONObject ret = JSONUtils.getInstance().stringToObj(result);
-			return ret.getString("text");
+			if (ret != null) {
+				result = ret;
+			} else {
+				JSONObject r = new JSONObject();
+				r.put("code", 0);
+				r.put("text", Tips.FAIL.getText());
+			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
-		
-		return null;
+		logger.info(result);
+		return result;
 	}
 
 	@Override
 	public TMember getMemberByAccount(String account, int organId) {
+		
 		try {
 			JSONObject p = new JSONObject();
 			p.put("account", account);
 			p.put("organId", organId);
 			String result = HttpRequest.getInstance().sendPost(
 					SysInterface.GETMEMBERBYACCOUNT.getName(), p);
-			JSONObject ret = JSONUtils.getInstance().stringToObj(result);
+			JSONObject json = JSONUtils.getInstance().stringToObj(result);
 			
-			if (ret.getInt("code") == 1) {
-				JSONObject text = JSONUtils.getInstance().stringToObj(ret.getString("text"));
+			if (json.getInt("code") == 1) {
+				JSONObject text = JSONUtils.getInstance().stringToObj(json.getString("text"));
 				TMember tm = JSONUtils.getInstance().jsonObjToBean(text, TMember.class);
-				
+				logger.info(text.toString());
 				return tm;
+			} else {
+				logger.warn("abmember!getMemberByAccountAb result is null");
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
@@ -94,18 +118,37 @@ public class BranchServiceImpl implements BranchService {
 
 	@Override
 	public int getOrganIdByOrganCode(String organCode) {
+		int oid= -1;
+		
 		try {
 			JSONObject jo = new JSONObject();
 			jo.put("organCode", organCode);
 			String result = HttpRequest.getInstance().sendPost(
 					SysInterface.GETORGANCODE.getName(), jo);
 			
-			return Integer.parseInt(result);
+			oid = Integer.parseInt(result);
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
-		
-		return -1;
+		logger.info("oid: " + oid);
+		return oid;
 	}
-	
+
+	@Override
+	public String getMembersByOrgan(int organId) {
+		
+		try {
+			JSONObject jo = new JSONObject();
+			jo.put("organId", organId);
+			String result = HttpRequest.getInstance().sendPost(
+					SysInterface.GETORGANTREE.getName(), jo);
+			return result;
+		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

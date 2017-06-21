@@ -2,6 +2,7 @@ package com.tianfangIMS.im.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,7 +53,7 @@ public class SendImageMessageDialog extends Dialog implements View.OnClickListen
         this.ImageMessageList = imageMessageList;
         this.conversationType = conversationType;
         this.uri = uri;
-        this.Pos = Pos;
+        this.Pos = Pos;//zhiye
     }
 
     @Override
@@ -78,6 +79,10 @@ public class SendImageMessageDialog extends Dialog implements View.OnClickListen
         Picasso.with(mContext)
                 .load(uri)
                 .resize(80, 80)
+                .centerCrop()
+                .placeholder(R.mipmap.default_portrait)
+                .config(Bitmap.Config.ARGB_8888)
+                .error(R.mipmap.default_portrait)
                 .into(iv_movegroupuser_photo);
         btn_quxiao_move.setOnClickListener(this);
         btn_submit_move.setOnClickListener(this);
@@ -116,6 +121,9 @@ public class SendImageMessageDialog extends Dialog implements View.OnClickListen
                             Log.e("asdsadasdsa", "消息：" + message + "---进度:" + i);
                         }
                     });
+
+
+
         }
     }
 

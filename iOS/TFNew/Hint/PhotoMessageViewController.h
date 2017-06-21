@@ -13,5 +13,6 @@
     
 }
 @property (nonatomic, strong) NSString *_imageUrl;
-
+@property (nonatomic, strong) NSString *_showTitle;
+@property (nonatomic, assign) int _vHeight;
 @end

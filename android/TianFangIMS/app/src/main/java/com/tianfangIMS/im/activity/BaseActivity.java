@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import com.tianfangIMS.im.R;
 
+import me.imid.swipebacklayout.lib.SwipeBackLayout;
+
 /**
  * Created by LianMengYu on 2016/12/29.
  * 所有Activity的基类
@@ -39,6 +41,8 @@ public class BaseActivity extends FragmentActivity {
     private ImageButton iv_conversation_contacts;
     private ImageView iv_talk_message, iv_talk_intercom, iv_talk_call;
     private LinearLayout ll_talk;
+    private ImageView basemain_plus;
+    private SwipeBackLayout mSwipeBackLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +52,10 @@ public class BaseActivity extends FragmentActivity {
         SystemBarTranslucentType(this);
         mContext = this;
         init();
+//        mSwipeBackLayout = getSwipeBackLayout();
+        //设置滑动方向，可设置EDGE_LEFT, EDGE_RIGHT, EDGE_ALL, EDGE_BOTTOM
+//        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
     }
-
     //    public abstract void initView();
     private void init() {
         btn_left_back = (ImageButton) super.findViewById(R.id.btn_left);
@@ -64,6 +70,7 @@ public class BaseActivity extends FragmentActivity {
         iv_talk_call = (ImageView) super.findViewById(R.id.iv_talk_call);
         ll_talk = (LinearLayout) super.findViewById(R.id.ll_talk);
         tv_complete = (TextView) super.findViewById(R.id.tv_complete);
+        basemain_plus = (ImageView) super.findViewById(R.id.basemain_plus);
     }
 
     @Override
@@ -77,7 +84,6 @@ public class BaseActivity extends FragmentActivity {
     public void setContentView(int layoutResID) {
         View view = LayoutInflater.from(this).inflate(layoutResID, null);
         setContentView(view);
-
     }
 
     /**
@@ -89,6 +95,9 @@ public class BaseActivity extends FragmentActivity {
         layout_head.setVisibility(visibility);
     }
 
+    public FrameLayout setBody() {
+        return mContentView;
+    }
 
     /**
      * 设置左边是否可见
@@ -97,6 +106,17 @@ public class BaseActivity extends FragmentActivity {
      */
     public void setHeadLeftButtonVisibility(int visibility) {
         btn_left_back.setVisibility(visibility);
+    }
+
+    /**
+     * 设置右边“+”号
+     */
+    public void setHeadRightButtonVisibility(int visibility) {
+        basemain_plus.setVisibility(visibility);
+    }
+
+    public ImageView getMain_plus() {
+        return basemain_plus;
     }
 
     /**
@@ -253,7 +273,5 @@ public class BaseActivity extends FragmentActivity {
             window.setStatusBarColor(Color.TRANSPARENT);
             window.setNavigationBarColor(Color.TRANSPARENT);
         }
-
-
     }
 }

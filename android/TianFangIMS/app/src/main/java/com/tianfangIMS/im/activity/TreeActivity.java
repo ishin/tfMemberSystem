@@ -50,6 +50,7 @@ public class TreeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tree);
+        setTitle("组织结构");
         mInflater = LayoutInflater.from(this);
         mContext = this;
         keys = new ArrayList<>();
@@ -110,7 +111,7 @@ public class TreeActivity extends BaseActivity {
                     public int compare(TreeInfo o1, TreeInfo o2) {
                         if (o1.getPid() < o2.getPid()) {
                             return -1;
-                        } else if (o1.getPid() > o2.getPid()) {
+                        } else if (o1.getPid()> o2.getPid()) {
                             return 1;
                         } else {
                             return o1.getId() < o2.getId() ? -1 : 1;
@@ -153,7 +154,6 @@ public class TreeActivity extends BaseActivity {
                                 Collections.reverse(mTreeInfos);
                                 Intent mIntent = new Intent();
                                 mIntent.putExtra("parentLevel", parentLevel);
-
                                 mIntent.putExtra("clickHistory", mTreeInfos);
                                 mIntent.putExtra("currentLevel", currentLevel);
                                 setResult(RESULT_OK, mIntent);

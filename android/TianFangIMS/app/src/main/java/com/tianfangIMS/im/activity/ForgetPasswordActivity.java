@@ -115,15 +115,23 @@ public class ForgetPasswordActivity extends Activity implements View.OnClickList
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         LoadDialog.dismiss(mContext);
-                        if (!TextUtils.isEmpty(s)) {
-                            Gson gson = new Gson();
-                            SubmitCodeBean submitCodeBean = gson.fromJson(s, SubmitCodeBean.class);
-                            if (submitCodeBean.getCode() == 1) {
-                                String Message = submitCodeBean.getMessagetext();
-                                String phoneNumber = (et_forgetpassword_phoneNumber.getText().toString()).replaceAll(" ", "").trim();
-                                NToast.shortToast(mContext, Message);
-                                GetPhoneToGetCode(phoneNumber);
-
+                        if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                            if((s.trim()).startsWith("<!DOCTYPE")){
+                                NToast.shortToast(mContext,"Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                finish();
+                            }else{
+                                Gson gson = new Gson();
+                                SubmitCodeBean submitCodeBean = gson.fromJson(s, SubmitCodeBean.class);
+                                if (submitCodeBean.getCode() == 1) {
+                                    String Message = submitCodeBean.getMessagetext();
+                                    String phoneNumber = (et_forgetpassword_phoneNumber.getText().toString()).replaceAll(" ", "").trim();
+                                    NToast.shortToast(mContext, Message);
+                                    GetPhoneToGetCode(phoneNumber);
+                                }
+                                if(submitCodeBean.getCode() == 0){
+                                    NToast.shortToast(mContext,"短信验证码发送未成功");
+                                }
                             }
                         }
                     }
@@ -155,6 +163,7 @@ public class ForgetPasswordActivity extends Activity implements View.OnClickList
     //自获取手机号跳转至获取验证码
     private void GetPhoneToGetCode(String PhoneNumber) {
         startActivity(new Intent(mContext, GetVerificationCode_Activity.class).putExtra("PhoneNumber", PhoneNumber));
+        finish();
     }
 
     @Override
@@ -234,8 +243,6 @@ public class ForgetPasswordActivity extends Activity implements View.OnClickList
 
     /**
      * 获取InputMethodManager，隐藏软键盘
-     *
-     * @param token
      */
     private void hideKeyboard(IBinder token) {
         if (token != null) {

@@ -6,25 +6,11 @@ package com.tianfangIMS.im;
  */
 
 public class ConstantValue {
-    //测试服务器访问地址
-//    public static String Urls = "http://35.164.107.27:8080/im/";
-
-    //天坊服务器120.26.42.225
-//    public static String Urls = "http://120.26.42.225:8080/sealtalk/";
-    //天坊服务器--多公司地址
+    //服务器地址
     public static String Urls = "http://120.26.42.225:8080/im/";
-
-
-    //多公司服务器
-//    public static String Urls = "http://42.62.4.82:8080/im/";
-
-    public static final String AFTERLOGINUSERINFO = "member!getOneOfMember";//获取登录后用户单独的信息接口
-
+    public static final String AFTERLOGINUSERINFO =Urls + "member!getOneOfMember";//获取登录后用户单独的信息接口
+    public static final int SUBSTRINGDATA = 7;
     public static String ImageFile = Urls + "upload/images/";//网络图片路径
-
-    public static final String SEALTALK_LOGING_PHONE = "loginphone";
-
-    public static final String SEALTALK_LOGING_PASSWORD = "loginpassword";
 
     public static final String AFTERLOGIN = Urls + "system!afterLogin";//登录接口
 
@@ -87,4 +73,10 @@ public class ConstantValue {
     public static final String ISSESSION = Urls+"system!attemptSession";//判断session是否失效
 
     public static final String LOGOUT = Urls+"system!logOut";//登出
+
+    public static final String SCANADDCONTACTS = Urls+"  friend!scanAddFriend";//扫码添加联系人
+
+    public static final String CALLPHONE = Urls+"adm!getTTTPriv";//紧急呼叫权限
+
+
 }

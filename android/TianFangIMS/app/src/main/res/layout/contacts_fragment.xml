@@ -13,6 +13,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <View
             android:id="@+id/view_float"
             android:layout_width="match_parent"
@@ -73,6 +74,7 @@
                     android:layout_toRightOf="@+id/iv_topcontacts"
                     android:text="常用联系人" />
             </com.zhy.android.percent.support.PercentRelativeLayout>
+
             <ListView
                 android:id="@+id/fragment_contacts_lv_departments"
                 android:layout_width="match_parent"
@@ -81,8 +83,6 @@
                 android:background="@android:color/white"
                 android:divider="@color/fengexian" />
         </com.zhy.android.percent.support.PercentLinearLayout>
-
-
     </FrameLayout>
 
     <TextView

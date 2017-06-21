@@ -142,4 +142,6 @@ public interface MemberService {
 	 */
 	public int countMember(int organId);
 
+	public boolean memberIsDel(int id);
+
 }

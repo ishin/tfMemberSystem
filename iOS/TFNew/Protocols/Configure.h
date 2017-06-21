@@ -25,8 +25,11 @@
 
 
 //
-#define WEB_API_URL                 @"http://120.26.42.225:8080/im/"
-                                    //@"http://120.26.42.225:8080/sealtalk/"
+#define WEB_API_URL             @"http://120.26.42.225:8080/im/"
+                                //@"http://120.26.42.225:8080/sealtalk/"
+#define RCP_SERVER              @"103.36.132.10:80"
+#define RCP_QN_FILE             @"up.qbox.me/"
+#define RC_PTT_SERVER           @"http://120.26.42.225:8080/rce/restapi/ptt"
 
 
 #define API_LOGIN               @"/system!afterLogin"
@@ -52,6 +55,10 @@
 #define API_GROUP_LISTING       @"/group!groupList"
 #define API_GROUP_MEMBS         @"/group!listGroupMemebersData"
 #define API_GROUP_INFO          @"/group!groupInfo"
+
+#define API_SCAN_FRIEND         @"/friend!scanAddFriend"
+
+#define API_CHECK_AUTH          @"/adm!getTTTPriv"
 
 
 #define   DRAG_OFF_SET		60

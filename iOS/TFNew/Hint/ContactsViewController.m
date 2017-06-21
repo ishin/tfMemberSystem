@@ -25,7 +25,7 @@
 #import "SearchContactResultView.h"
 
 
-@interface ContactsViewController ()<UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
+@interface ContactsViewController ()<UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, SearchContactDelegate>
 {
     BOOL _isLoading;
     
@@ -91,6 +91,7 @@
     footer.backgroundColor = [UIColor whiteColor];
     
     
+    
     UIView *colorLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 44)];
     colorLine.backgroundColor = RGB(0xf2, 0xf2, 0xf2);
     [footer addSubview:colorLine];
@@ -125,7 +126,7 @@
     _resultView = [[SearchContactResultView alloc] initWithFrame:CGRectMake(0, 44, SCREEN_WIDTH, SCREEN_HEIGHT-114-44)];
     _resultView._ctrl = self;
     _resultView._isChooseModel = NO;
-    
+    _resultView.delegate = self;
     
     
     
@@ -149,6 +150,12 @@
                                                  name:@"NotifyRefreshMyContacts"
                                                object:nil];
   
+}
+
+- (void) didScroll{
+    
+    if([_searchBar isFirstResponder])
+        [_searchBar resignFirstResponder];
 }
 
 - (void) refreshFriends:(NSNotification*)notify{
@@ -520,6 +527,8 @@
     
     [_searchBar setShowsCancelButton:YES animated:YES];
     
+    _resultView._results = nil;
+    [_resultView refreshData];
     [self.view addSubview:_resultView];
     
 }
@@ -537,14 +546,7 @@
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
     
-    _searchBar.text=  @"";
-    [_searchBar setShowsCancelButton:NO animated:YES];
-    
-    if([_searchBar isFirstResponder])
-        [_searchBar resignFirstResponder];
-    
-    if([_resultView superview])
-        [_resultView removeFromSuperview];
+    [self cancelSearch];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
@@ -560,25 +562,42 @@
     
 }
 
+- (void) cancelSearch{
+    
+    _searchBar.text=  @"";
+    [_searchBar setShowsCancelButton:NO animated:YES];
+    
+    if([_searchBar isFirstResponder])
+        [_searchBar resignFirstResponder];
+    
+    if([_resultView superview])
+        [_resultView removeFromSuperview];
+}
+
+- (void) didCancelSearch
+{
+    [self cancelSearch];
+}
+
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
-    
-    
-    if([searchText length] > 0)
-    {
-        
-        [self doSearch:searchText];
-        
-    }
-    
+
+    [self doSearch:searchText];
     
 }
 
 - (void) doSearch:(NSString*)keywords{
     
+    if([keywords length] == 0)
+    {
+        _resultView._mapSelect = nil;
+        _resultView._results = nil;
+        [_resultView refreshData];
+
+        return;
+    }
     
     NSArray *frs = [[GoGoDB sharedDBInstance] searchFriendsWithKeyword:keywords];
-    
-    
+
     NSMutableArray *results = [NSMutableArray arrayWithArray:frs];
     NSMutableDictionary *map = [NSMutableDictionary dictionary];
     
@@ -586,7 +605,6 @@
     for(WSUser *uu in frs)
     {
         id key = [NSNumber numberWithInt:uu.userId];
-        
         [map setObject:@"1" forKey:key];
     }
     

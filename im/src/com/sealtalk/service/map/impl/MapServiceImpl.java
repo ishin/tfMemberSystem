@@ -6,6 +6,9 @@ import java.util.List;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.sealtalk.common.SysInterface;
 import com.sealtalk.common.Tips;
 import com.sealtalk.dao.friend.FriendDao;
@@ -15,17 +18,18 @@ import com.sealtalk.model.TFriend;
 import com.sealtalk.model.TGroupMember;
 import com.sealtalk.model.TMap;
 import com.sealtalk.model.TMember;
-import com.sealtalk.model.TPriv;
 import com.sealtalk.service.map.MapService;
 import com.sealtalk.utils.HttpRequest;
 import com.sealtalk.utils.JSONUtils;
+import com.sealtalk.utils.LogUtils;
 import com.sealtalk.utils.PropertiesUtils;
 import com.sealtalk.utils.StringUtils;
 import com.sealtalk.utils.TimeGenerator;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public class MapServiceImpl implements MapService {
 
+	private Logger logger = LogManager.getLogger(MapServiceImpl.class);
+	
 	@Override
 	public String getLocation(String userId, String targetId, String type, String isInit, int organId) {
 		JSONObject jo = new JSONObject();
@@ -87,10 +91,8 @@ public class MapServiceImpl implements MapService {
 						}
 					}
 				} else {		//所有好友
-					int mapMax = StringUtils.getInstance().strToInt(
-							PropertiesUtils.getStringByKey("map.max"));
-					List<TFriend> friends = friendDao
-							.getFriendRelationForIdWithLimit(userIdInt, mapMax);
+					int mapMax = StringUtils.getInstance().strToInt(PropertiesUtils.getStringByKey("map.max"));
+					List<TFriend> friends = friendDao.getFriendRelationForIdWithLimit(userIdInt, mapMax);
 					if (friends != null) {
 						int len = friends.size();
 
@@ -103,7 +105,7 @@ public class MapServiceImpl implements MapService {
 					}
 				}
 
-				System.out.println("map->type: " + type + "->ids: " + idStr);
+				logger.info("map->type: " + type + "->ids: " + idStr);
 
 				if (idStr.size() == 0) {
 					status = false;
@@ -137,6 +139,10 @@ public class MapServiceImpl implements MapService {
 							
 							for (int i = 0; i < arr.size(); i++) {
 								JSONObject tmp = arr.getJSONObject(i);
+								if (StringUtils.getInstance().isBlank(tmp.getString("logo"))) {
+									tmp.remove("logo");
+									tmp.put("logo", PropertiesUtils.getStringByKey("cfg.defaultlogo"));
+								}
 								for(int j = 0; j < map.size(); j++) {
 									TMap tm = map.get(j);
 									if (tm.getUserId() == tmp.getInt("userID")) {
@@ -173,15 +179,17 @@ public class MapServiceImpl implements MapService {
 					jo.put("text", Tips.FAIL.getText());
 				}
 			} catch (Exception e) {
+				logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 				e.printStackTrace();
 			}
 		}
 
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 
 	@Override
-	public String subLocation(String userId, String latitude, String longtitude) {
+	public String subLocation(String userId, String latitude, String longtitude) { 
 		JSONObject jo = new JSONObject();
 
 		try {
@@ -197,22 +205,19 @@ public class MapServiceImpl implements MapService {
 				TMap t = mapDao.getLaLongtitudeForUserId(userIdInt);
 
 				if (t != null) {
-					String la = t.getLatitude();
-					String longt = t.getLongitude();
+					//String la = t.getLatitude();
+					//String longt = t.getLongitude();
 
-					if (la.equals(latitude)) {
-						latitude = null;
-					}
-					if (longt.equals(longtitude)) {
-						longtitude = null;
-					}
-
-					mapDao.updateLocation(userIdInt, latitude, longtitude, now);
+					//if (!la.equals(latitude) || !longt.equals(longtitude)) {
+					//必须更新，因为要更新时间，做超时检测
+						mapDao.updateLocation(userIdInt, latitude, longtitude, now);
+					//}
 				} else {
 					TMap tm = new TMap();
 					tm.setUserId(userIdInt);
 					tm.setLatitude(latitude);
 					tm.setLongitude(longtitude);
+					tm.setIsDel("1");
 					tm.setSubDate(now);
 
 					mapDao.saveLocation(tm);
@@ -222,11 +227,11 @@ public class MapServiceImpl implements MapService {
 				jo.put("text", Tips.OK.getText());
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
-			jo.put("code", 0);
-			jo.put("text", Tips.FAIL.getText());
 		}
 
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 

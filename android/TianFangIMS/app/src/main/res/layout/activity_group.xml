@@ -13,6 +13,8 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/edittext_top"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
@@ -31,6 +33,7 @@
             android:layout_toRightOf="@+id/iv_search_icon"
             android:background="@null"
             android:hint="@string/search"
+
             android:maxLines="1"
             android:paddingLeft="9dp"
             android:textSize="14sp" />
@@ -46,19 +49,53 @@
             android:textSize="14dp" />
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/activity_group_lv_data"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:background="@color/White"
-        android:descendantFocusability="blocksDescendants"
-        android:divider="@color/fengexian"
-        android:dividerHeight="1dp" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_groupIsNull"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        <ListView
+            android:id="@+id/activity_group_lv_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@color/White"
+            android:descendantFocusability="blocksDescendants"
+            android:divider="@color/fengexian"
+            android:dividerHeight="1dp" />
+
+        <LinearLayout
+            android:id="@+id/ll_minegroup_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="#8000272C"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ListView
+                android:id="@+id/lv_minegroup_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/fengexian"
+                android:background="@android:color/white" />
+
+            <LinearLayout
+                android:id="@+id/no_result_contacts"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/White"
+                android:gravity="center_vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="35dp"
+                    android:text="暂时没有更多信息"
+                    android:textColor="#b2b2b2"
+                    android:textSize="14dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
 </com.zhy.android.percent.support.PercentLinearLayout>

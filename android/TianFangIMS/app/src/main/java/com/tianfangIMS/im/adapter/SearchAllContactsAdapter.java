@@ -100,7 +100,11 @@ public class SearchAllContactsAdapter extends BaseAdapter {
                         .into(detailHolder.logo);
                 detailHolder.name.setText(mlist.get(position).getName());
                 detailHolder.pos.setText(mlist.get(position).getPosition());
-                detailHolder.index.setText(mlist.get(position).getName().substring(1, 2));
+                if(mlist.get(position).getName().length() == 1){
+                    detailHolder.index.setText(mlist.get(position).getName());
+                }else{
+                    detailHolder.index.setText(mlist.get(position).getName().substring(1, 2));
+                }
                 break;
         }
         return convertView;

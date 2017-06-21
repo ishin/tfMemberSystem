@@ -41,19 +41,17 @@ public class Example {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		String appKey = "e5t4ouvpe564a";//替换成您的appkey
-		String appSecret = "mE8DaEjCSs0";//替换成匹配上面key的secret
-		//String appKey = "m7ua80guyso7u";
-		//String appSecret = "agD7awpwx6w";
+		//String appKey = "e5t4ouvpe564a";//替换成您的appkey
+		//String appSecret = "mE8DaEjCSs0";//替换成匹配上面key的secret
+		String appKey = "m7ua80guyso7u";
+		String appSecret = "agD7awpwx6w";
 		
 		Reader reader = null ;
 		RongCloud rongCloud = RongCloud.getInstance(appKey, appSecret);
-				
 		
 		System.out.println("************************User********************");
 		// 获取 Token 方法 
-		//TokenReslut userGetTokenResult = rongCloud.user.getToken("userId1", "username", "http://www.rongcloud.cn/images/logo.png");
-		TokenReslut userGetTokenResult = rongCloud.user.getToken("10001", "superman", "http://127.0.0.1:8080/sealtalk?//update/images/??PersonImg.png");
+		TokenReslut userGetTokenResult = rongCloud.user.getToken("10001", "admin", "http://www.rongcloud.cn/images/logo.png");
 		System.out.println("getToken:  " + userGetTokenResult.toString());
 		
 		// 刷新用户信息方法 
@@ -61,7 +59,7 @@ public class Example {
 		System.out.println("refresh:  " + userRefreshResult.toString());
 		
 		// 检查用户在线状态 方法 
-		CheckOnlineReslut userCheckOnlineResult = rongCloud.user.checkOnline("10009");
+		CheckOnlineReslut userCheckOnlineResult = rongCloud.user.checkOnline("userId1");
 		System.out.println("checkOnline:  " + userCheckOnlineResult.toString());
 		
 		// 封禁用户方法（每秒钟限 100 次） 
@@ -164,8 +162,6 @@ public class Example {
 		CodeSuccessReslut messageDeleteMessageResult = rongCloud.message.deleteMessage("2014010101");
 		System.out.println("deleteMessage:  " + messageDeleteMessageResult.toString());
 		
-		
-		
 		System.out.println("************************Wordfilter********************");
 		// 添加敏感词方法（设置敏感词后，App 中用户不会收到含有敏感词的消息内容，默认最多设置 50 个敏感词。） 
 		CodeSuccessReslut wordfilterAddResult = rongCloud.wordfilter.add("money");
@@ -177,9 +173,7 @@ public class Example {
 		
 		// 移除敏感词方法（从敏感词列表中，移除某一敏感词。） 
 		CodeSuccessReslut wordfilterDeleteResult = rongCloud.wordfilter.delete("money");
-		System.out.println("delete:  " + wordfilterDeleteResult.toString());
-		
-		
+		System.out.println("delete:  " + wordfilterDeleteResult.toString());		
 		
 		System.out.println("************************Group********************");
 		// 创建群组方法（创建群组，并将用户加入该群组，用户将可以收到该群的消息，同一用户最多可加入 500 个群，每个群最大至 3000 人，App 内的群组数量没有限制.注：其实本方法是加入群组方法 /group/join 的别名。） 
@@ -202,7 +196,7 @@ public class Example {
 		System.out.println("join:  " + groupJoinResult.toString());
 		
 		// 查询群成员方法 
-		GroupUserQueryReslut groupQueryUserResult = rongCloud.group.queryUser("20001");
+		GroupUserQueryReslut groupQueryUserResult = rongCloud.group.queryUser("19");
 		System.out.println("queryUser:  " + groupQueryUserResult.toString());
 		
 		// 退出群组方法（将用户从群中移除，不再接收该群组的消息.） 

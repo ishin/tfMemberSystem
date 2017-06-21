@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -155,11 +156,11 @@ public class ConversationFragment extends UriFragment implements
     private List<String> mLocationShareParticipants;
     private CustomServiceConfig mCustomServiceConfig;
     private CSEvaluateDialog mEvaluateDialg;
-
     private RongKitReceiver mKitReceiver;
 
     private final int CS_HUMAN_MODE_CUSTOMER_EXPIRE = 0;
     private final int CS_HUMAN_MODE_SEAT_EXPIRE = 1;
+    private Long messageId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -214,7 +215,8 @@ public class ConversationFragment extends UriFragment implements
                 if (mHasMoreLocalMessages) {
                     getHistoryMessage(mConversationType, mTargetId, DEFAULT_HISTORY_MESSAGE_COUNT, SCROLL_MODE_NORMAL);
                 } else {
-                    getRemoteHistoryMessages(mConversationType, mTargetId, DEFAULT_REMOTE_MESSAGE_COUNT);
+                    mList.onRefreshComplete(0, 0, false);
+//                    getRemoteHistoryMessages(mConversationType, mTargetId, DEFAULT_REMOTE_MESSAGE_COUNT);
                 }
             }
 
@@ -223,7 +225,6 @@ public class ConversationFragment extends UriFragment implements
 
             }
         });
-
         mList.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -233,7 +234,8 @@ public class ConversationFragment extends UriFragment implements
                         getHistoryMessage(mConversationType, mTargetId, DEFAULT_HISTORY_MESSAGE_COUNT, SCROLL_MODE_NORMAL);
                     } else {
                         if (mList.getRefreshState() != AutoRefreshListView.State.REFRESHING) {
-                            getRemoteHistoryMessages(mConversationType, mTargetId, DEFAULT_REMOTE_MESSAGE_COUNT);
+                            mList.onRefreshComplete(0, 0, false);
+//                            getRemoteHistoryMessages(mConversationType, mTargetId, DEFAULT_REMOTE_MESSAGE_COUNT);
                         }
                     }
                     return true;
@@ -302,6 +304,11 @@ public class ConversationFragment extends UriFragment implements
             }
         });
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -380,7 +387,6 @@ public class ConversationFragment extends UriFragment implements
                 public void onError(RongIMClient.ErrorCode e) {
                 }
             });
-
             mCurrentConversationInfo = ConversationInfo.obtain(mConversationType, mTargetId);
             RongContext.getInstance().registerConversationInfo(mCurrentConversationInfo);
             mNotificationContainer = (LinearLayout) mMsgListView.findViewById(R.id.rc_notification_container);
@@ -417,15 +423,15 @@ public class ConversationFragment extends UriFragment implements
                                         @Override
                                         public void onPositiveButtonClicked() {
                                             int result = LocationManager.getInstance().joinLocationSharing();
-                                            if(result == 0) {
+                                            if (result == 0) {
                                                 Intent intent = new Intent(ConversationFragment.this.getActivity(), AMapRealTimeActivity.class);
                                                 if (mLocationShareParticipants != null) {
                                                     intent.putStringArrayListExtra("participants", (ArrayList<String>) mLocationShareParticipants);
                                                 }
                                                 startActivity(intent);
-                                            }else if(result == 1){
+                                            } else if (result == 1) {
                                                 Toast.makeText(getActivity(), R.string.rc_network_exception, Toast.LENGTH_SHORT).show();
-                                            }else if((result == 2)){
+                                            } else if ((result == 2)) {
                                                 Toast.makeText(getActivity(), R.string.rc_location_sharing_exceed_max, Toast.LENGTH_SHORT).show();
                                             }
                                         }
@@ -597,7 +603,20 @@ public class ConversationFragment extends UriFragment implements
                     if (conversation.getMentionedCount() > 0) {
                         getLastMentionedMessageId(mConversationType, mTargetId);
                     }
-
+                    List<io.rong.imlib.model.Message> messages = RongIM.getInstance().getHistoryMessages(mConversationType, mTargetId, -1, Integer.MAX_VALUE);
+                    Bundle bundle = getActivity().getIntent().getExtras();
+                    if (bundle != null && bundle.containsKey("messageid")) {
+                        long messageId = (Long) bundle.get("messageid");
+                        Log.e("MessageID", "111--:" + messageId);
+                        for (io.rong.imlib.model.Message message : messages) {
+                            Log.e("MessageID", "pos--:" + message.getMessageId() + "---:");
+                            if (message.getMessageId() == messageId) {
+                                TextMessage textMessage = (TextMessage) message.getContent();
+                                Log.e("MessageID", "--:" + message.getMessageId() + "content---:" + textMessage.getContent());
+                                int pos = mListAdapter.findPosition(messageId);
+                            }
+                        }
+                    }
                     if (unreadCount > 10 && mUnreadBtn != null) {
                         if (unreadCount > 150) {
                             mUnreadBtn.setText(String.format("%s%s", "150+", getActivity().getResources().getString(R.string.rc_new_messages)));
@@ -880,8 +899,11 @@ public class ConversationFragment extends UriFragment implements
         @Override
         public void onQuit(String msg) {
             RLog.i(TAG, "CustomService onQuit.");
-            stopTimer(CS_HUMAN_MODE_CUSTOMER_EXPIRE);
-            stopTimer(CS_HUMAN_MODE_SEAT_EXPIRE);
+//            stopTimer(CS_HUMAN_MODE_CUSTOMER_EXPIRE);
+//            stopTimer(CS_HUMAN_MODE_SEAT_EXPIRE);
+            if (getHandler() != null) {
+                getHandler().removeCallbacksAndMessages(null);
+            }
             if (mEvaluateDialg == null) {
                 onCustomServiceWarning(msg, mCustomServiceConfig.quitSuspendType == CustomServiceConfig.CSQuitSuspendType.NONE, robotType);
             } else {
@@ -916,9 +938,11 @@ public class ConversationFragment extends UriFragment implements
     public void onPause() {
         if (getActivity().isFinishing()) {
             RongIM.getInstance().clearMessagesUnreadStatus(mConversationType, mTargetId, null);
-            stopTimer(CS_HUMAN_MODE_SEAT_EXPIRE);
-            stopTimer(CS_HUMAN_MODE_CUSTOMER_EXPIRE);
-
+//            stopTimer(CS_HUMAN_MODE_SEAT_EXPIRE);
+//            stopTimer(CS_HUMAN_MODE_CUSTOMER_EXPIRE);
+            if (getHandler() != null) {
+                getHandler().removeCallbacksAndMessages(null);
+            }
             if (mEnableMention
                     && (mConversationType.equals(Conversation.ConversationType.DISCUSSION)
                     || (mConversationType.equals(Conversation.ConversationType.GROUP)))) {
@@ -1009,7 +1033,8 @@ public class ConversationFragment extends UriFragment implements
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
             case CS_HUMAN_MODE_CUSTOMER_EXPIRE: {
-                if (getActivity() == null) {
+//                if (getActivity() == null) {
+                if (getActivity() == null || mCustomServiceConfig == null) {
                     return true;
                 }
                 InformationNotificationMessage info = new InformationNotificationMessage(mCustomServiceConfig.userTipWord);
@@ -1017,7 +1042,8 @@ public class ConversationFragment extends UriFragment implements
                 return true;
             }
             case CS_HUMAN_MODE_SEAT_EXPIRE: {
-                if (getActivity() == null) {
+//                if (getActivity() == null) {
+                if (getActivity() == null || mCustomServiceConfig == null) {
                     return true;
                 }
                 InformationNotificationMessage info = new InformationNotificationMessage(mCustomServiceConfig.adminTipWord);
@@ -2126,5 +2152,14 @@ public class ConversationFragment extends UriFragment implements
 
     public String getTargetId() {
         return mTargetId;
+    }
+
+    //lmy添加滚动到制定位置
+    public void ScrollToPosition(Long messageid) throws NullPointerException {
+        int pos = mListAdapter.findPosition(messageid);
+        Log.e("asdljasld", "查找位置：" + pos);
+        if (pos >= 0) {
+            mList.setSelection(pos);
+        }
     }
 }

@@ -11,12 +11,14 @@ public class SearchGroupBean implements Serializable {
     private String id;
     private String position;
     private String logo;
+    private String account;
 
-    public SearchGroupBean(String name, String id, String position, String logo) {
+    public SearchGroupBean(String name, String id, String position, String logo, String account) {
         this.name = name;
         this.id = id;
         this.position = position;
         this.logo = logo;
+        this.account = account;
     }
 
     public String getLogo() {
@@ -51,11 +53,22 @@ public class SearchGroupBean implements Serializable {
         this.id = id;
     }
 
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
     @Override
     public String toString() {
         return "SearchGroupBean{" +
                 "name='" + name + '\'' +
                 ", id='" + id + '\'' +
+                ", position='" + position + '\'' +
+                ", logo='" + logo + '\'' +
+                ", account='" + account + '\'' +
                 '}';
     }
 }

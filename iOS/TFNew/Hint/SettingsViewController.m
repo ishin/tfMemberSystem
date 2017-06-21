@@ -378,7 +378,7 @@
 - (void)clearCacheFiles {
     
     NSArray *arr =  [[RCIMClient sharedRCIMClient] getConversationList:@[@(ConversationType_PRIVATE),
-                                                                         @(ConversationType_DISCUSSION),
+                                                                         @(ConversationType_PUSHSERVICE),
                                                                          @(ConversationType_APPSERVICE),
                                                                          @(ConversationType_PUBLICSERVICE),
                                                                          @(ConversationType_GROUP),

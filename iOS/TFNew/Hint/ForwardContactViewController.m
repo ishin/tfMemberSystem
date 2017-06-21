@@ -24,7 +24,7 @@
 #import "SearchContactResultView.h"
 
 
-@interface ForwardContactViewController ()<UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, MyRecContactsViewControllerDelegate>
+@interface ForwardContactViewController ()<UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, MyRecContactsViewControllerDelegate, SearchContactDelegate>
 {
     BOOL _isLoading;
     
@@ -49,6 +49,7 @@
 
 @property (nonatomic, strong) NSMutableArray *conversationListDataSource;
 @property (nonatomic, strong) RCConversationModel *_curSelectMode;
+@property (nonatomic, strong) WSUser *_selectedUserForward;
 
 @end
 
@@ -61,6 +62,11 @@
 @synthesize conversationListDataSource;
 @synthesize _selectedImages;
 @synthesize _curSelectMode;
+
+@synthesize _selectedUserForward;
+
+@synthesize _isAutoDismiss;
+@synthesize _isPush;
 
 
 - (void) viewWillAppear:(BOOL)animated{
@@ -77,7 +83,12 @@
 
 - (void) backAction:(id)sender{
     
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if(_isPush)
+    {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else
+        [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -134,8 +145,8 @@
     
     
     _resultView = [[SearchContactResultView alloc] initWithFrame:CGRectMake(0, 44, SCREEN_WIDTH, SCREEN_HEIGHT-64-44-216)];
-    
-    
+    _resultView.delegate = self;
+    _resultView._isForwardSearch = YES;
 
     self._datas = [NSMutableArray array];
     
@@ -163,7 +174,7 @@
         self.conversationListDataSource  = [NSMutableArray array];
     
     NSArray *arr =  [[RCIMClient sharedRCIMClient] getConversationList:@[@(ConversationType_PRIVATE),
-                                                                         @(ConversationType_DISCUSSION),
+                                                                         @(ConversationType_PUSHSERVICE),
                                                                          @(ConversationType_APPSERVICE),
                                                                          @(ConversationType_PUBLICSERVICE),
                                                                          @(ConversationType_GROUP)//@(ConversationType_SYSTEM)
@@ -364,10 +375,37 @@
       
 }
 
+- (void) didCancelSearch
+{
+    [self cancelSearch];
+}
+
+- (void) didContactSelected:(id)user{
+    
+    self._selectedUserForward = user;
+    
+    if([_selectedImages count])
+    {
+        if([_searchBar isFirstResponder])
+            [_searchBar resignFirstResponder];
+     
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"发送给"
+                                                        message:[NSString stringWithFormat:@"%@",
+                                                                 _selectedUserForward.fullname]
+                                                       delegate:self
+                                              cancelButtonTitle:@"取消"
+                                              otherButtonTitles:@"发送", nil];
+        alert.tag = 201702;
+        [alert show];
+    }
+}
+
 - (void) rowClicked:(UIButton*)sender{
     
     if(sender.tag < [self.conversationListDataSource count])
     {
+        
         RCConversationModel *model = self.conversationListDataSource[sender.tag];
         
         self._curSelectMode = model;
@@ -375,6 +413,9 @@
 
         if([_selectedImages count])
         {
+            if([_searchBar isFirstResponder])
+                [_searchBar resignFirstResponder];
+            
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"发送到"
                                                             message:[NSString stringWithFormat:@"%@", model.conversationTitle]
                                                            delegate:self
@@ -387,46 +428,205 @@
     }
 }
 
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     
     if(alertView.tag == 201701 && buttonIndex != alertView.cancelButtonIndex)
     {
+        
         for(RCMessage *msg in _selectedImages)
         {
             
-            RCImageMessage *imgMsg = (RCImageMessage*)msg.content;
+            id content = msg.content;
             
-            NSString *_imageUrl = imgMsg.imageUrl;
-            
-            NSRange range = [_imageUrl rangeOfString:@"http"];
-            if(range.location == NSNotFound)
+            if([content isKindOfClass:[RCImageMessage class]])
             {
-                imgMsg = [RCImageMessage messageWithImage:[UIImage imageWithContentsOfFile:_imageUrl]];
+                RCImageMessage *imgMsg = (RCImageMessage*)msg.content;
+                
+                NSString *_imageUrl = imgMsg.imageUrl;
+                
+                NSRange range = [_imageUrl rangeOfString:@"http"];
+                if(range.location == NSNotFound)
+                {
+                    imgMsg = [RCImageMessage messageWithImage:[UIImage imageWithContentsOfFile:_imageUrl]];
+                }
+                
+                [[RCIMClient sharedRCIMClient] sendMediaMessage:_curSelectMode.conversationType
+                                                       targetId:_curSelectMode.targetId
+                                                        content:imgMsg
+                                                    pushContent:nil
+                                                       pushData:nil
+                                                       progress:^(int progress, long messageId) {
+                                                           
+                                                       } success:^(long messageId) {
+                                                           
+                                                           NSLog(@"200 OK");
+                                                           
+                                                       } error:^(RCErrorCode errorCode, long messageId) {
+                                                           
+                                                           NSLog(@"111");
+                                                           
+                                                       } cancel:^(long messageId) {
+                                                           
+                                                           NSLog(@"000");
+                                                       }];
+            }
+            else if([content isKindOfClass:[RCFileMessage class]])
+            {
+
+                RCFileMessage *imgMsg = (RCFileMessage*)msg.content;
+                
+                NSString *_imageUrl = imgMsg.fileUrl;
+                
+                NSRange range = [_imageUrl rangeOfString:@"http"];
+                if(range.location == NSNotFound)
+                {
+                    imgMsg = [RCFileMessage messageWithFile:_imageUrl];
+                }
+                
+                [[RCIMClient sharedRCIMClient] sendMediaMessage:_curSelectMode.conversationType
+                                                       targetId:_curSelectMode.targetId
+                                                        content:imgMsg
+                                                    pushContent:nil
+                                                       pushData:nil
+                                                       progress:^(int progress, long messageId) {
+                                                           
+                                                       } success:^(long messageId) {
+                                                           
+                                                           NSLog(@"200 OK");
+                                                           
+                                                       } error:^(RCErrorCode errorCode, long messageId) {
+                                                           
+                                                           NSLog(@"111");
+                                                           
+                                                       } cancel:^(long messageId) {
+                                                           
+                                                           NSLog(@"000");
+                                                       }];
+            
             }
             
-            [[RCIMClient sharedRCIMClient] sendMediaMessage:_curSelectMode.conversationType
-                                                   targetId:_curSelectMode.targetId
-                                                    content:imgMsg
-                                                pushContent:nil
-                                                   pushData:nil
-                                                   progress:^(int progress, long messageId) {
-                                                       
-                                                   } success:^(long messageId) {
-                                                       
-                                                       NSLog(@"200 OK");
-                                                       
-                                                   } error:^(RCErrorCode errorCode, long messageId) {
-                                                       
-                                                       NSLog(@"111");
-                                                       
-                                                   } cancel:^(long messageId) {
-                                                       
-                                                       NSLog(@"000");
-                                                   }];
-            
+        }
+        
+        [[WaitDialog sharedAlertDialog] setTitle:@"发送成功"];
+        [[WaitDialog sharedAlertDialog] animateShow];
+        
+        
+        _searchBar.text = nil;
+        if([_searchBar isFirstResponder])
+            [_searchBar resignFirstResponder];
+        if([_resultView superview])
+            [_resultView removeFromSuperview];
+        
+        if(_isAutoDismiss)
+        {
+            [self backAction:nil];
         }
     }
-    
+    else if(alertView.tag == 201702 && buttonIndex != alertView.cancelButtonIndex)
+    {
+        
+        
+        
+        NSString *targetid = [NSString stringWithFormat:@"%d", _selectedUserForward.userId];
+        for(RCMessage *msg in _selectedImages)
+        {
+            
+            id content = msg.content;
+            
+            if([content isKindOfClass:[RCImageMessage class]])
+            {
+                RCImageMessage *imgMsg = (RCImageMessage*)msg.content;
+                
+                NSString *_imageUrl = imgMsg.imageUrl;
+                
+                NSRange range = [_imageUrl rangeOfString:@"http"];
+                if(range.location == NSNotFound)
+                {
+                    imgMsg = [RCImageMessage messageWithImage:[UIImage imageWithContentsOfFile:_imageUrl]];
+                }
+                
+                [[RCIMClient sharedRCIMClient] sendMediaMessage:ConversationType_PRIVATE
+                                                       targetId:targetid
+                                                        content:imgMsg
+                                                    pushContent:nil
+                                                       pushData:nil
+                                                       progress:^(int progress, long messageId) {
+                                                           
+                                                       } success:^(long messageId) {
+                                                           
+                                                           NSLog(@"200 OK");
+                                                           
+                                                       } error:^(RCErrorCode errorCode, long messageId) {
+                                                           
+                                                           NSLog(@"111");
+                                                           
+                                                       } cancel:^(long messageId) {
+                                                           
+                                                           NSLog(@"000");
+                                                       }];
+            }
+            else if([content isKindOfClass:[RCFileMessage class]])
+            {
+                
+                RCFileMessage *imgMsg = (RCFileMessage*)msg.content;
+                
+                NSString *_imageUrl = imgMsg.fileUrl;
+                
+                NSRange range = [_imageUrl rangeOfString:@"http"];
+                if(range.location == NSNotFound)
+                {
+                    imgMsg = [RCFileMessage messageWithFile:_imageUrl];
+                }
+                
+                [[RCIMClient sharedRCIMClient] sendMediaMessage:ConversationType_PRIVATE
+                                                       targetId:targetid
+                                                        content:imgMsg
+                                                    pushContent:nil
+                                                       pushData:nil
+                                                       progress:^(int progress, long messageId) {
+                                                           
+                                                       } success:^(long messageId) {
+                                                           
+                                                           NSLog(@"200 OK");
+                                                           
+                                                       } error:^(RCErrorCode errorCode, long messageId) {
+                                                           
+                                                           NSLog(@"111");
+                                                           
+                                                       } cancel:^(long messageId) {
+                                                           
+                                                           NSLog(@"000");
+                                                       }];
+                
+            }
+            
+        }
+        
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+//                                                        message:@"发送成功"
+//                                                       delegate:nil
+//                                              cancelButtonTitle:@"OK"
+//                                              otherButtonTitles:nil, nil];
+//        [alert show];
+        
+        [[WaitDialog sharedAlertDialog] setTitle:@"发送成功"];
+        [[WaitDialog sharedAlertDialog] animateShow];
+        
+        _searchBar.text = nil;
+        if([_searchBar isFirstResponder])
+            [_searchBar resignFirstResponder];
+        if([_resultView superview])
+            [_resultView removeFromSuperview];
+        
+        
+        if(_isAutoDismiss)
+        {
+            [self backAction:nil];
+        }
+        
+    }
+
 }
 
 - (void) loginAction:(id)sender{
@@ -542,6 +742,11 @@
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
+    
+    [self cancelSearch];
+}
+
+- (void) cancelSearch{
     
     _searchBar.text=  @"";
     [_searchBar setShowsCancelButton:NO animated:YES];

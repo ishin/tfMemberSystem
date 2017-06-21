@@ -1,6 +1,7 @@
 package com.sealtalk.service.member.impl;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -17,8 +18,7 @@ import com.sealtalk.utils.StringUtils;
 import com.sealtalk.utils.TimeGenerator;
 
 public class MemberServiceImpl implements MemberService {
-	private static final Logger logger = Logger
-			.getLogger(MemberServiceImpl.class);
+	private static final Logger logger = LogManager.getLogger(MemberServiceImpl.class);
 
 	@Override
 	public TMember searchSigleUser(String name, String password, int organId) {
@@ -98,7 +98,6 @@ public class MemberServiceImpl implements MemberService {
 	public String getOneOfMember(String userId) {
 		String result = null;
 		JSONObject jo = new JSONObject();
-
 		try {
 			if (StringUtils.getInstance().isBlank(userId)) {
 				jo.put("code", 0);
@@ -206,6 +205,7 @@ public class MemberServiceImpl implements MemberService {
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
 
+		logger.info(result);
 		return result;
 	}
 
@@ -374,7 +374,6 @@ public class MemberServiceImpl implements MemberService {
 			e.printStackTrace();
 			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		}
-
 		return result;
 	}
 
@@ -398,5 +397,18 @@ public class MemberServiceImpl implements MemberService {
 		}
 
 		return count;
+	}
+
+	@Override
+	public boolean memberIsDel(int id) {
+		JSONObject p = new JSONObject();
+		p.put("userId", id);
+		String result = HttpRequest.getInstance().sendPost(
+				SysInterface.MEMBERFORID.getName(), p);
+		JSONObject memJson = JSONUtils.getInstance().stringToObj(result);
+		if (memJson != null && memJson.getInt("code") == 1) {
+			return true;
+		}
+		return false;
 	}
 }

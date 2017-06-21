@@ -20,5 +20,8 @@
         <property name="subDate" type="java.lang.Long">
             <column name="subdate" not-null="true" />
         </property>
+        <property name="isDel" type="java.lang.String">
+            <column name="isdel" length="1" />
+        </property>
     </class>
 </hibernate-mapping>

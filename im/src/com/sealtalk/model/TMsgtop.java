@@ -8,6 +8,7 @@ public class TMsgtop implements java.io.Serializable {
 	private Integer topId;
 	private String msgType;
 	private Integer listorder;
+	private String isDel;
 
 	public TMsgtop() {
 	}
@@ -52,4 +53,12 @@ public class TMsgtop implements java.io.Serializable {
 		this.listorder = listorder;
 	}
 
+	public String getIsDel() {
+		return isDel;
+	}
+
+	public void setIsDel(String isDel) {
+		this.isDel = isDel;
+	}
+	
 }

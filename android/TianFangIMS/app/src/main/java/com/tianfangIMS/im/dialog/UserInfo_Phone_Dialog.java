@@ -69,7 +69,7 @@ public class UserInfo_Phone_Dialog extends Dialog implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_dialog_phone:
-                Intent intentPhone = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mphoneNumber));
+                Intent intentPhone = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mphoneNumber));
                 intentPhone.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intentPhone);
                 this.dismiss();

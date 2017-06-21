@@ -1,6 +1,7 @@
 package com.tianfangIMS.im.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,8 +98,13 @@ public class GroupAdapter extends BaseAdapter {
 //                Picasso.with(mContext)
 //                        .load(ConstantValue.ImageFile + getItem(position).getLogo())
 //                        .into(mDetailHolder.groupHeader);
-                mDetailHolder.groupName.setText(getItem(position).getName());
-                mDetailHolder.groupIndex.setText(getItem(position).getName().substring(1, 2));
+                if (TextUtils.isEmpty(getItem(position).getName())) {
+                    mDetailHolder.groupName.setText("");
+                    mDetailHolder.groupIndex.setText("");
+                } else {
+                    mDetailHolder.groupName.setText(getItem(position).getName());
+                    mDetailHolder.groupIndex.setText(getItem(position).getName().substring(1, 2));
+                }
                 break;
         }
         return convertView;

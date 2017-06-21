@@ -11,24 +11,26 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.request.BaseRequest;
+import com.tianfangIMS.im.ConstantValue;
 import com.tianfangIMS.im.R;
 import com.tianfangIMS.im.bean.SubmitCodeBean;
 import com.tianfangIMS.im.bean.VerificationCodeBean;
 import com.tianfangIMS.im.dialog.LoadDialog;
 import com.tianfangIMS.im.utils.CountDownTimerUtils;
+import com.tianfangIMS.im.utils.MD5;
 import com.tianfangIMS.im.utils.NToast;
 
 import okhttp3.Call;
 import okhttp3.Response;
 
 import static com.tianfangIMS.im.ConstantValue.NEWPASSWORD;
-import static com.tianfangIMS.im.ConstantValue.REQUESTTEXT;
 
 /**
  * Created by LianMengYu on 2017/1/13.
@@ -47,18 +49,18 @@ public class GetVerificationCode_Activity extends Activity implements View.OnCli
     String renewpwd;
     String textcode;
     String sessionId;
+    private LinearLayout ll_forgetpassword_ware;
+    private TextView textView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.getcode_activity);
         mContext = this;
-        sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
+        sessionId = getSharedPreferences("CompanyCode", MODE_PRIVATE).getString("CompanyCode", "");
         init();
         Intent intent = getIntent();
         PhoneNuber = intent.getStringExtra("PhoneNumber");
-        newpwd = et_getcode_newpwd.getText().toString().trim();
-        renewpwd = et_getcode_renewpwd.getText().toString().trim();
-        textcode = et_getcode_input.getText().toString().trim();
     }
 
     private void init() {
@@ -70,6 +72,8 @@ public class GetVerificationCode_Activity extends Activity implements View.OnCli
         et_getcode_input = (EditText) this.findViewById(R.id.et_getcode_input);
         tv_getcode_txt = (TextView) this.findViewById(R.id.tv_getcode_txt);
         imgbtn_back = (ImageView) this.findViewById(R.id.imgbtn_back);
+        ll_forgetpassword_ware = (LinearLayout) this.findViewById(R.id.ll_forgetpassword_ware);
+        textView = (TextView) this.findViewById(R.id.tv_forgetpassword_ware);
 
 
         countDownTimerUtils = new CountDownTimerUtils(tv_getcode_txt, 60000, 1000);
@@ -134,16 +138,48 @@ public class GetVerificationCode_Activity extends Activity implements View.OnCli
         });
     }
 
+    private void PasswordIsNull() {
+        newpwd = et_getcode_newpwd.getText().toString().trim();
+        renewpwd = et_getcode_renewpwd.getText().toString().trim();
+        textcode = et_getcode_input.getText().toString().trim();
+        if (!TextUtils.isEmpty(renewpwd) && !TextUtils.isEmpty(newpwd) && !TextUtils.isEmpty(textcode)) {
+            if (!newpwd.equals(renewpwd)) {
+                ll_forgetpassword_ware.setVisibility(View.VISIBLE);
+                textView.setText("两次密码不一致");
+                return;
+            } else if (newpwd.length() < 6 || newpwd.length() > 32) {
+                ll_forgetpassword_ware.setVisibility(View.VISIBLE);
+                textView.setText("密码不能小于6位或者大于32位");
+                return;
+            } else {
+                GetVerification();
+            }
+        }
+        if (TextUtils.isEmpty(textcode)) {
+            ll_forgetpassword_ware.setVisibility(View.VISIBLE);
+            textView.setText("验证码不能为空");
+            return;
+        }
+        if (TextUtils.isEmpty(renewpwd) || TextUtils.isEmpty(newpwd)) {
+            ll_forgetpassword_ware.setVisibility(View.VISIBLE);
+            textView.setText("密码不能为空");
+            return;
+        }
+    }
+
     private void GetVerification() {
+        newpwd = et_getcode_newpwd.getText().toString().trim();
+        renewpwd = et_getcode_renewpwd.getText().toString().trim();
+        textcode = et_getcode_input.getText().toString().trim();
         OkGo.post(NEWPASSWORD)
                 .tag(this)
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .params("account", PhoneNuber)
-                .params("newpwd", newpwd)
-                .params("comparepwd", renewpwd)
+                .params("newpwd", MD5.encrypt(newpwd))
+                .params("comparepwd", MD5.encrypt(renewpwd))
                 .params("textcode", textcode)
                 .execute(new StringCallback() {
                     @Override
@@ -155,13 +191,27 @@ public class GetVerificationCode_Activity extends Activity implements View.OnCli
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         LoadDialog.dismiss(mContext);
-                        if (!TextUtils.isEmpty(s)) {
-                            Gson gson = new Gson();
-                            VerificationCodeBean Verification = gson.fromJson(s, VerificationCodeBean.class);
-                            if (Verification.getCode() == 1) {
-                                NToast.shortToast(mContext, "密码修改成功");
+                        if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                            if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                NToast.shortToast(mContext, "Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                finish();
+                            } else {
+                                Gson gson = new Gson();
+                                VerificationCodeBean Verification = gson.fromJson(s, VerificationCodeBean.class);
+                                if (Verification.getCode() == 1) {
+                                    NToast.shortToast(mContext, "密码修改成功");
+                                    startActivity(new Intent(mContext, LoginActivity.class));
+                                    finish();
+                                }
+                                if (Verification.getCode() == -1) {
+                                    NToast.shortToast(mContext, Verification.getContext());
+                                }
+                                if (Verification.getCode() == 0) {
+                                    ll_forgetpassword_ware.setVisibility(View.VISIBLE);
+                                    textView.setText("短信验证码不正确");
+                                }
                             }
-                            startActivity(new Intent(mContext, LoginActivity.class));
                         }
                     }
 
@@ -185,7 +235,8 @@ public class GetVerificationCode_Activity extends Activity implements View.OnCli
                 et_getcode_renewpwd.getText().clear();
                 break;
             case R.id.btn_getcode_sumbit:
-                GetVerification();
+//                GetVerification();
+                PasswordIsNull();
                 break;
             case R.id.tv_getcode_txt:
                 SubmitCode();
@@ -199,14 +250,13 @@ public class GetVerificationCode_Activity extends Activity implements View.OnCli
     }
 
     private void SubmitCode() {
-
-        OkGo.post(REQUESTTEXT)
+        OkGo.post(ConstantValue.REQUESTTEXT)
                 .tag(this)
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
-                .params("phone",PhoneNuber)
+                .headers("cookie", sessionId)
+                .params("phone", PhoneNuber)
                 .execute(new StringCallback() {
                     @Override
                     public void onBefore(BaseRequest request) {
@@ -217,7 +267,12 @@ public class GetVerificationCode_Activity extends Activity implements View.OnCli
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         LoadDialog.dismiss(mContext);
-                        if (!TextUtils.isEmpty(s)) {
+                        if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                            if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                NToast.shortToast(mContext, "Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                finish();
+                            }
                             Gson gson = new Gson();
                             SubmitCodeBean submitCodeBean = gson.fromJson(s, SubmitCodeBean.class);
                             if (submitCodeBean.getCode() == 1) {

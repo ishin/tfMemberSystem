@@ -103,8 +103,8 @@ public class PTTClient {
                     RLog.i(TAG, "receive " + messageContent.getClass().getSimpleName());
                     if (shouldHandlePttMessage(msg)) {
                         pttSession = new PTTSession(msg.getConversationType(), msg.getTargetId());
+                        pttSession.setInitiator(((PTTStartMessage)messageContent).getInitiator());
                         pttSessions.put(pttSession.key(), pttSession);
-
                         pttSessionStart(pttSession);
                     }
                 } else if (messageContent instanceof PTTEndMessage) {

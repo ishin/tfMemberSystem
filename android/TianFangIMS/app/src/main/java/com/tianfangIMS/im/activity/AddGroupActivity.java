@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -21,6 +20,7 @@ import com.tianfangIMS.im.adapter.InfoAdapter;
 import com.tianfangIMS.im.bean.TreeInfo;
 import com.tianfangIMS.im.bean.ViewMode;
 import com.tianfangIMS.im.dialog.LoadDialog;
+import com.tianfangIMS.im.utils.NToast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.rong.imkit.RongIM;
+import io.rong.imlib.model.Message;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -44,7 +46,7 @@ public class AddGroupActivity extends BaseActivity implements View.OnClickListen
     private RelativeLayout rl_allContacts;
     Gson mGson;
     ArrayList<Integer> childCount;
-    ArrayList<TreeInfo> mTreeInfos, clickHistory;
+    ArrayList<TreeInfo> mTreeInfos, clickHistory, mTreeInfosnull;
 
     HashMap<Integer, TreeInfo> map;
     HashMap<Integer, HashMap<Integer, TreeInfo>> maps;
@@ -58,21 +60,29 @@ public class AddGroupActivity extends BaseActivity implements View.OnClickListen
 
     HashMap<Integer, Boolean> prepare;
     private String GroupID;
+    private String GroupName;
     private String PrivateId;
     private EditText et_search;
     private ArrayList<String> ImageMessageList;//接收转发的图片消息
+    private ArrayList<Message> AllMessage;
+    private ArrayList<Message> allFile;
     private String SimpleName;
+    private String isGroupUUID;//判断是否为群组“+”号传值
+    private String isfinish;//是否注销
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addgroup_layout);
         mContext = this;
         GroupID = getIntent().getStringExtra("GroupId");
+        GroupName = getIntent().getStringExtra("GroupName");
         PrivateId = getIntent().getStringExtra("PrivateChat");
-        ImageMessageList = getIntent().getStringArrayListExtra("ListUri");
+        AllMessage = getIntent().getParcelableArrayListExtra("allMessage");
+        allFile = getIntent().getParcelableArrayListExtra("allFile");
         SimpleName = getIntent().getStringExtra("SimpleName");
-        Log.e("打印图片消息：", "---:" + SimpleName);
-        setTitle("选择联系人");
+        isGroupUUID = getIntent().getStringExtra("IsGroup");
+        isfinish = getIntent().getStringExtra("isfinish");
+        setTitle("选择群组联系人");
         init();
         GetData();
     }
@@ -89,14 +99,14 @@ public class AddGroupActivity extends BaseActivity implements View.OnClickListen
     }
 
 
-    private void GetData() {
-        String sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
+    private void GetData() throws NullPointerException {
+        String sessionId = getSharedPreferences("CompanyCode", MODE_PRIVATE).getString("CompanyCode", "");
         OkGo.post(ConstantValue.DEPARTMENTPERSON)
                 .tag(this)
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .execute(new StringCallback() {
                     @Override
                     public void onBefore(BaseRequest request) {
@@ -107,61 +117,81 @@ public class AddGroupActivity extends BaseActivity implements View.OnClickListen
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         LoadDialog.dismiss(mContext);
-                        mGson = new Gson();
-                        mTreeInfos = mGson.fromJson(s, new TypeToken<List<TreeInfo>>() {
-                        }.getType());
-                        //根据PID进行平行节点排序 如果PID相同 则根据自身ID进行前后排序
-                        Collections.sort(mTreeInfos, new Comparator<TreeInfo>() {
-                            public int compare(TreeInfo o1, TreeInfo o2) {
-                                if (o1.getPid() < o2.getPid()) {
-                                    return -1;
-                                } else if (o1.getPid() > o2.getPid()) {
-                                    return 1;
+                        if ((s.trim()).startsWith("<!DOCTYPE")) {
+                            NToast.shortToast(mContext, "Session过期，请重新登陆");
+                            startActivity(new Intent(mContext, LoginActivity.class));
+                            RongIM.getInstance().logout();
+                            finish();
+                        } else {
+                            mGson = new Gson();
+                            mTreeInfos = mGson.fromJson(s, new TypeToken<List<TreeInfo>>() {
+                            }.getType());
+                            mTreeInfosnull = new ArrayList<TreeInfo>();
+                            for (int i = 0; i < mTreeInfos.size(); i++) {
+                                if (mTreeInfos.get(i).getId() != null) {
+                                    mTreeInfosnull.add(mTreeInfos.get(i));
                                 }
-                                return o1.getId() < o2.getId() ? -1 : 1;
                             }
-                        });
-                        currentLevel = mTreeInfos.get(0).getPid();
-                        maps = new HashMap<Integer, HashMap<Integer, TreeInfo>>();
-                        //规定最小PID为0 保证与最小PID不相同
-                        int pid = -1;
-                        for (TreeInfo treeInfo : mTreeInfos) {
-                            //如果当前pid等于之前的pid 说明该平行节点组已被创建 直接将其放入当前平行节点组内即可
-                            if (pid == treeInfo.getPid()) {
-                                map.put(treeInfo.getId(), treeInfo);
-                            } else {
-                                if (map != null) {
-                                    //当前平行节点已结束 填入父Map 自身置空
-                                    maps.put(pid, map);
-                                    map = null;
+
+                            try {
+                                //根据PID进行平行节点排序 如果PID相同 则根据自身ID进行前后排序
+                                Collections.sort(mTreeInfosnull, new Comparator<TreeInfo>() {
+                                    public int compare(TreeInfo o1, TreeInfo o2) {
+                                        if (o1.getPid() != null && o2.getPid() != null) {
+                                            if (o1.getPid() < o2.getPid()) {
+                                                return -1;
+                                            } else if (o1.getPid() > o2.getPid()) {
+                                                return 1;
+                                            }
+                                        }
+                                        return o1.getId() < o2.getId() ? -1 : 1;
+                                    }
+                                });
+                                currentLevel = mTreeInfosnull.get(0).getPid();
+                                maps = new HashMap<Integer, HashMap<Integer, TreeInfo>>();
+                                //规定最小PID为0 保证与最小PID不相同
+                                int pid = -1;
+                                for (TreeInfo treeInfo : mTreeInfosnull) {
+                                    //如果当前pid等于之前的pid 说明该平行节点组已被创建 直接将其放入当前平行节点组内即可
+                                    if (pid == treeInfo.getPid()) {
+                                        map.put(treeInfo.getId(), treeInfo);
+                                    } else {
+                                        if (map != null) {
+                                            //当前平行节点已结束 填入父Map 自身置空
+                                            maps.put(pid, map);
+                                            map = null;
+                                        }
+                                        //如果不同 则说明进入了新的平行节点组
+                                        pid = treeInfo.getPid();
+                                        if (map == null) {
+                                            map = new HashMap<Integer, TreeInfo>();
+                                            map.put(treeInfo.getId(), treeInfo);
+                                        }
+                                    }
                                 }
-                                //如果不同 则说明进入了新的平行节点组
-                                pid = treeInfo.getPid();
-                                if (map == null) {
-                                    map = new HashMap<Integer, TreeInfo>();
-                                    map.put(treeInfo.getId(), treeInfo);
-                                }
+                                //最后的一组平行节点组进行嵌入
+                                maps.put(pid, map);
+                                runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        clickHistory = new ArrayList<TreeInfo>();
+                                        mTreeInfosnull = new ArrayList<TreeInfo>();
+                                        childCount = new ArrayList<Integer>();
+                                        mAdapter = new InfoAdapter(mContext, mTreeInfosnull, childCount, ViewMode.NORMAL, prepare);
+                                        lv_addGroup_company.setAdapter(mAdapter);
+                                        transfer();
+                                    }
+                                });
+                            } catch (NullPointerException e) {
+                                e.printStackTrace();
                             }
                         }
-                        //最后的一组平行节点组进行嵌入
-                        maps.put(pid, map);
-                        runOnUiThread(new Runnable() {
-                            public void run() {
-                                clickHistory = new ArrayList<TreeInfo>();
-                                mTreeInfos = new ArrayList<TreeInfo>();
-                                childCount = new ArrayList<Integer>();
-                                mAdapter = new InfoAdapter(mContext, mTreeInfos, childCount, ViewMode.NORMAL, prepare);
-                                lv_addGroup_company.setAdapter(mAdapter);
-                                transfer();
-                            }
-                        });
                     }
                 });
     }
 
     private void transfer() {
         //清除适配数据集合
-        mTreeInfos.clear();
+        mTreeInfosnull.clear();
         childCount.clear();
         //得到下一级部门的数据集合
         map = maps.get(currentLevel);
@@ -171,16 +201,16 @@ public class AddGroupActivity extends BaseActivity implements View.OnClickListen
         }
         //将Map数据集合转换为List
         for (TreeInfo treeInfo : map.values()) {
-            mTreeInfos.add(treeInfo);
+            mTreeInfosnull.add(treeInfo);
         }
         //根据部门编号 进行排序
-        Collections.sort(mTreeInfos, new Comparator<TreeInfo>() {
+        Collections.sort(mTreeInfosnull, new Comparator<TreeInfo>() {
             public int compare(TreeInfo o1, TreeInfo o2) {
                 return o1.getId() < o2.getId() ? -1 : 1;
             }
         });
         //显示Item后的子部门人数
-        for (TreeInfo treeInfo : mTreeInfos) {
+        for (TreeInfo treeInfo : mTreeInfosnull) {
             workerCount = 0;
             //员工类型
             if (treeInfo.getFlag() == 1) {
@@ -221,34 +251,87 @@ public class AddGroupActivity extends BaseActivity implements View.OnClickListen
                 Bundle bundle = new Bundle();
                 bundle.putString("MainPlusDialog", TAG);
                 intent.putExtras(bundle);
-                startActivity(intent);
-                finish();
-                break;
-            case R.id.rl_allContacts:
-//                Toast.makeText(getActivity(), mTreeInfos.get(position).getId() + " / " + mTreeInfos.get(position).getName(), Toast.LENGTH_SHORT).show();
-                mIntent = new Intent(mContext, InfoActivity.class);
+                if (AllMessage != null && AllMessage.size() > 0) {
+                    intent.putParcelableArrayListExtra("allMessage", AllMessage);
+                }
+                if (allFile != null && allFile.size() > 0) {
+                    intent.putParcelableArrayListExtra("allFile", allFile);
+                }
                 if (!TextUtils.isEmpty(GroupID)) {
-                    mIntent.putExtra("Groupid", GroupID);
+                    intent.putExtra("Groupid", GroupID);
+                }
+                if (!TextUtils.isEmpty(GroupName)) {
+                    intent.putExtra("GroupName", GroupName);
                 }
                 if (!TextUtils.isEmpty(PrivateId)) {
-                    mIntent.putExtra("PrivateChat", PrivateId);
+                    intent.putExtra("PrivateChat", PrivateId);
                 }
-                if (ImageMessageList != null && ImageMessageList.size() > 0) {
-                    mIntent.putStringArrayListExtra("ImageUri", ImageMessageList);
+                if (!TextUtils.isEmpty(SimpleName)) {
+                    intent.putExtra("SimpleName", SimpleName);
                 }
-                if(!TextUtils.isEmpty(SimpleName)){
-                    mIntent.putExtra("SimpleName",SimpleName);
+                if (!TextUtils.isEmpty(isGroupUUID)) {
+                    intent.putExtra("AddUserforGroup", "AddUserforGroup");
                 }
-                mIntent.putExtra("maps", maps);
-                mIntent.putExtra("IsBoolean", flag);
-                mIntent.putExtra("viewMode", ViewMode.CHECK);
-                mIntent.putExtra("currentLevel", mTreeInfos.get(0).getId());
-                mIntent.putExtra("parentLevel", mTreeInfos.get(0).getPid());
-                startActivity(mIntent);
-                finish();
+                startActivity(intent);
+                if (!TextUtils.isEmpty(isfinish)) {
+                    finish();
+                }
+                break;
+            case R.id.rl_allContacts:
+                if (mTreeInfosnull != null && mTreeInfosnull.size() > 0) {
+                    mIntent = new Intent(mContext, InfoActivity.class);
+                    if (!TextUtils.isEmpty(GroupID)) {
+                        mIntent.putExtra("Groupid", GroupID);
+                    }
+                    if (!TextUtils.isEmpty(GroupName)) {
+                        mIntent.putExtra("GroupName", GroupName);
+                    }
+                    if (!TextUtils.isEmpty(PrivateId)) {
+                        mIntent.putExtra("PrivateChat", PrivateId);
+                    }
+                    if (AllMessage != null && AllMessage.size() > 0) {
+                        mIntent.putParcelableArrayListExtra("allMessage", AllMessage);
+                    }
+                    if (allFile != null && allFile.size() > 0) {
+                        mIntent.putParcelableArrayListExtra("allFile", allFile);
+                    }
+                    if (!TextUtils.isEmpty(SimpleName)) {
+                        mIntent.putExtra("SimpleName", SimpleName);
+                    }
+                    if (!TextUtils.isEmpty(isGroupUUID)) {
+                        mIntent.putExtra("AddUserforGroup", "AddUserforGroup");
+                    }
+                    mIntent.putExtra("maps", maps);
+                    mIntent.putExtra("IsBoolean", flag);
+                    mIntent.putExtra("viewMode", ViewMode.CHECK);
+                    mIntent.putExtra("currentLevel", mTreeInfosnull.get(0).getId());
+                    mIntent.putExtra("parentLevel", mTreeInfosnull.get(0).getPid());
+                    startActivity(mIntent);
+                    if (!TextUtils.isEmpty(isfinish)) {
+                        finish();
+                    }
+                } else {
+                    return;
+                }
                 break;
             case R.id.et_search:
-                startActivity(new Intent(mContext, SearchActivity.class));
+                if (TextUtils.isEmpty(SimpleName)) {
+                    Intent intentsearch = new Intent(mContext, SearchAllContactsActivity.class);
+                    startActivity(intentsearch);
+                    finish();
+                } else {
+                    Intent intentSimpleName = new Intent(mContext, AddTopContacts_Activity.class);
+                    if (TextUtils.isEmpty(isGroupUUID)) {
+                        intentSimpleName.putExtra("AddGroupforTopContacts", "AddGroupforTopContacts");
+                    } else {
+                        intentSimpleName.putExtra("AddUserforGroup", "AddUserforGroup");
+                        intentSimpleName.putExtra("GroupID", GroupID);
+                    }
+                    startActivity(intentSimpleName);
+                }
+                if (!TextUtils.isEmpty(isfinish)) {
+                    finish();
+                }
                 break;
         }
     }

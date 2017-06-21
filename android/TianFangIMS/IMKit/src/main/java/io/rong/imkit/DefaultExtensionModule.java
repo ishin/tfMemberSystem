@@ -15,6 +15,8 @@ import io.rong.imkit.emoticon.EmojiTab;
 import io.rong.imkit.emoticon.IEmojiItemClickListener;
 import io.rong.imkit.emoticon.IEmoticonTab;
 import io.rong.imkit.manager.InternalModuleManager;
+import io.rong.imkit.plugin.CombineLocationPlugin;
+import io.rong.imkit.plugin.DefaultLocationPlugin;
 import io.rong.imkit.plugin.IPluginModule;
 import io.rong.imkit.plugin.ImagePlugin;
 import io.rong.imkit.widget.provider.FilePlugin;
@@ -48,7 +50,6 @@ public class DefaultExtensionModule implements IExtensionModule {
         RLog.i(TAG, "attach " + stack.size());
         stack.push(mEditText);
         Resources resources = context.getResources();
-
         try {
             types = resources.getStringArray(resources.getIdentifier("rc_realtime_support_conversation_types", "array", context.getPackageName()));
         }catch(Resources.NotFoundException e){
@@ -82,9 +83,8 @@ public class DefaultExtensionModule implements IExtensionModule {
             String clsName = "com.amap.api.netlocation.AMapNetworkLocationClient";
             Class<?> locationCls = Class.forName(clsName);
             if (locationCls != null) {
-//                IPluginModule combineLocation = new CombineLocationPlugin();
-//                IPluginModule locationPlugin = new DefaultLocationPlugin();
-
+                IPluginModule combineLocation = new CombineLocationPlugin();
+                IPluginModule locationPlugin = new DefaultLocationPlugin();
                 boolean typesDefined = false;
                 if(types != null && types.length > 0){
                     for(String type: types){
@@ -95,15 +95,15 @@ public class DefaultExtensionModule implements IExtensionModule {
                     }
                 }
 
-//                if(typesDefined){
-//                    pluginModuleList.add(combineLocation);
-//                }else {
-//                    if (types == null && conversationType.equals(Conversation.ConversationType.PRIVATE)) {//配置文件中没有类型定义且会话类型为私聊
-//                        pluginModuleList.add(combineLocation);
-//                    } else {
-//                        pluginModuleList.add(locationPlugin);
-//                    }
-//                }
+                if(typesDefined){
+                    pluginModuleList.add(combineLocation);
+                }else {
+                    if (types == null && conversationType.equals(Conversation.ConversationType.PRIVATE)) {//配置文件中没有类型定义且会话类型为私聊
+                        pluginModuleList.add(combineLocation);
+                    } else {
+                        pluginModuleList.add(locationPlugin);
+                    }
+                }
 
             }
         } catch (Exception e) {

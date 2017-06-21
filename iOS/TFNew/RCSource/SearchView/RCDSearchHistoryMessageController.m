@@ -132,6 +132,7 @@
   _conversationVC.unReadMessage = unreadCount;
   _conversationVC.enableNewComingMessageIcon = YES; //开启消息提醒
   _conversationVC.enableUnreadMessageIcon = YES;
+    _conversationVC.hidesBottomBarWhenPushed = YES;
   //如果是单聊，不显示发送方昵称
   if (model.conversationType == ConversationType_PRIVATE) {
     _conversationVC.displayUserNameInCell = NO;

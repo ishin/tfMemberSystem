@@ -1,5 +1,6 @@
 package com.tianfangIMS.im.dialog;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -25,7 +26,6 @@ import com.tianfangIMS.im.utils.NToast;
 import java.util.ArrayList;
 import java.util.Map;
 
-import io.rong.imkit.RongIM;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -43,6 +43,7 @@ public class MoveGroupUserDialog extends Dialog implements View.OnClickListener 
     private ImageView iv_movegroupuser_photo;
     private TextView tv_movegroupuser_departmentName;
     private TextView tv_person_departmentTxt;
+
     public MoveGroupUserDialog(Context context, String groupID, ArrayList<GroupBean> list, int position) {
         super(context);
         this.mContext = context;
@@ -64,7 +65,7 @@ public class MoveGroupUserDialog extends Dialog implements View.OnClickListener 
         btn_submit_move = (Button) view.findViewById(R.id.btn_submit_move);
         iv_movegroupuser_photo = (ImageView) view.findViewById(R.id.iv_movegroupuser_photo);
         tv_movegroupuser_departmentName = (TextView) view.findViewById(R.id.tv_movegroupuser_departmentName);
-        tv_person_departmentTxt = (TextView)view.findViewById(R.id.tv_person_departmentTxt);
+        tv_person_departmentTxt = (TextView) view.findViewById(R.id.tv_person_departmentTxt);
 
 
         btn_quxiao_move.setOnClickListener(this);
@@ -100,17 +101,18 @@ public class MoveGroupUserDialog extends Dialog implements View.OnClickListener 
                             Map<String, Object> map = gson.fromJson(s, new TypeToken<Map<String, Object>>() {
                             }.getType());
                             if ((Double) map.get("code") == 1.0) {
-                                NToast.shortToast(mContext,"转让成功");
+                                NToast.shortToast(mContext, "转让成功");
                                 new Handler().postDelayed(new Runnable() {
 
                                     @Override
                                     public void run() {
-                                        RongIM.getInstance().startGroupChat(mContext, GroupID, list.get(position).getName());
+//                                        RongIM.getInstance().startGroupChat(mContext, GroupID, list.get(position).getName());
+                                        ((Activity) mContext).finish();
                                     }
                                 }, 1000);//延时1s
 
-                            }else{
-                                NToast.shortToast(mContext,"转让失败");
+                            } else {
+                                NToast.shortToast(mContext, "转让失败");
                             }
                         }
                     }

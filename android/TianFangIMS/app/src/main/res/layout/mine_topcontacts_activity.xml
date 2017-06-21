@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <include layout="@layout/search_layout" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <include layout="@layout/search_layout" />
+        android:layout_height="match_parent">
 
         <ListView
             android:id="@+id/lv_group_addtopcontacts"
@@ -20,41 +20,38 @@
             android:descendantFocusability="blocksDescendants"
             android:divider="@color/fengexian"
             android:dividerHeight="1dp" />
-    </LinearLayout>
-    <RelativeLayout
-        android:id="@+id/rl_selectAddGroupContacts_background"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_alignParentBottom="true"
-        android:background="@mipmap/addgroup_background"
-        android:visibility="visible">
 
-        <TextView
-            android:id="@+id/tv_addgroupfriend_submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="15dp"
-            android:text="添加" />
-
-        <HorizontalScrollView
-            android:id="@+id/hs_view"
+        <LinearLayout
+            android:id="@+id/ll_minecontacts_search"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="#8000272C"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-            <LinearLayout
+            <ListView
+                android:id="@+id/lv_minecontacts_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:background="@android:color/white" />
 
-                <GridView
-                    android:id="@+id/gv_addgroupContacts"
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/no_result_contacts"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/White"
+                android:gravity="center_vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+                    android:layout_marginLeft="35dp"
+                    android:text="暂时没有更多信息"
+                    android:textColor="#b2b2b2"
+                    android:textSize="14dp" />
             </LinearLayout>
-        </HorizontalScrollView>
+        </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

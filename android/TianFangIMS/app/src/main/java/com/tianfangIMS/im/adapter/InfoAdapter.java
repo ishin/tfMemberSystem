@@ -17,6 +17,7 @@ import com.tianfangIMS.im.bean.ViewMode;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Titan on 2017/2/7.
@@ -31,6 +32,8 @@ public class InfoAdapter extends BaseAdapter {
     HashMap<Integer, Boolean> prepare;
     OnDepartmentCheckedChangeListener mListener;
     ViewMode mMode;
+    //存储CheckBox状态的集合
+    private static Map<Integer, Boolean> checkedMap;
 
     /**
      * @param context
@@ -46,6 +49,7 @@ public class InfoAdapter extends BaseAdapter {
         this.childCount = childCount;
         this.mMode = mode;
         this.prepare = prepare;
+        checkedMap = new HashMap<>();
     }
 
     @Override
@@ -98,10 +102,12 @@ public class InfoAdapter extends BaseAdapter {
                     mBranchHolder.adapter_info_item_branch_iv.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-//                            mTreeInfo = getItem(position);
+                            //1
+                            mTreeInfo = getItem(position);
                             mTreeInfo.setChecked(mTreeInfo.isChecked() ? false : true);
+                            checkedMap.put(mTreeInfo.getId(), mTreeInfo.isChecked());
                             ((ImageView) v).setImageResource(mTreeInfo.isChecked() ? R.drawable.checkbox_selected : R.drawable.checkbox_normal);
-                            mListener.onCheckedChange(mTreeInfo.getPid(), mTreeInfo.getId(), mTreeInfo);
+                            mListener.onCheckedChange(mTreeInfo.getPid(), mTreeInfo.getId(), mTreeInfo, position);
                         }
                     });
                 } else {
@@ -133,16 +139,17 @@ public class InfoAdapter extends BaseAdapter {
                     mWorkerHolder.adapter_info_item_worker_iv.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            //1
                             mTreeInfo = getItem(position);
                             mTreeInfo.setChecked(mTreeInfo.isChecked() ? false : true);
+                            checkedMap.put(mTreeInfo.getId(), mTreeInfo.isChecked());
                             ((ImageView) v).setImageResource(mTreeInfo.isChecked() ? R.drawable.checkbox_selected : R.drawable.checkbox_normal);
-                            mListener.onCheckedChange(mTreeInfo.getPid(), mTreeInfo.getId(), mTreeInfo);
+                            mListener.onCheckedChange(mTreeInfo.getPid(), mTreeInfo.getId(), mTreeInfo, position);
                         }
                     });
                 } else {
                     mWorkerHolder.adapter_info_item_worker_iv.setVisibility(View.GONE);
                 }
-//                Glide.with(mContext).load("http://35.164.107.27:8080/im/upload/images/" + mInfos.get(position).getLogo()).bitmapTransform(new CropCircleTransformation(mContext)).into(mWorkerHolder.adapter_info_item_worker_header);
                 Picasso.with(mContext)
                         .load(ConstantValue.ImageFile + mInfos.get(position).getLogo())
                         .resize(80, 80)
@@ -181,7 +188,16 @@ public class InfoAdapter extends BaseAdapter {
 //         */
 //        void onCancel(int pid, int id, int position, boolean isDepartment);
 
-        void onCheckedChange(int pid, int id, TreeInfo mInfo);
+        void onCheckedChange(int pid, int id, TreeInfo mInfo, int position);
+    }
+
+    /**
+     * 得到勾选状态的集合
+     *
+     * @return
+     */
+    public Map<Integer, Boolean> getCheckedMap() {
+        return checkedMap;
     }
 
     private class BranchHolder {

@@ -12,9 +12,12 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 
@@ -34,7 +37,7 @@ def OUTPUT_PATH = "build/libs/"
 //执行脚本前，lib 如果有修改，要重新先编译 lib，否则，发布的版本 lib 非最新的。
 task makeJar(type: Jar) {
 
-    from zipTree(file('build/intermediates/bundles/release/classes.jar'))
+    from zipTree(file('build/intermediates/bundles/default/classes.jar'))
     //lib.jar
 //    from zipTree(file('../lib/build/intermediates/bundles/release/classes.jar'))
 //    //push.jar

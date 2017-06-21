@@ -38,6 +38,7 @@ import io.rong.imlib.model.Group;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.PublicServiceProfile;
 import io.rong.imlib.model.UserInfo;
+import io.rong.message.InformationNotificationMessage;
 import io.rong.message.ReadReceiptMessage;
 import io.rong.push.RongPushClient;
 
@@ -120,6 +121,7 @@ public class ConversationListFragment extends UriFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.rc_fr_conversationlist, container, false);
         mNotificationBar = findViewById(view, R.id.rc_status_bar);
         mNotificationBar.setVisibility(View.GONE);
@@ -433,6 +435,28 @@ public class ConversationListFragment extends UriFragment implements
             }
             if (event.getLeft() == 0) {
                 syncUnreadCount();
+            }
+            if (message.getContent() instanceof InformationNotificationMessage) {
+                InformationNotificationMessage notificationMessage = (InformationNotificationMessage) message.getContent();
+                String str = notificationMessage.getMessage();
+                if ((str.trim()).startsWith("群组已解散")) {
+                    RongIM.getInstance().removeConversation(conversationType, targetId, new RongIMClient.ResultCallback<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean aBoolean) {
+
+                        }
+
+                        @Override
+                        public void onError(RongIMClient.ErrorCode e) {
+
+                        }
+                    });
+                }
+//                else if((str.trim()).indexOf("离开群组") != -1){
+//                    RongIM.getInstance().refreshUserInfoCache(new UserInfo(message.getTargetId(),
+//                            notificationMessage.getExtra()
+//                            , null));
+//                }
             }
             RLog.d(TAG, "OnReceiveMessageEvent: " + message.getObjectName() + " " + event.getLeft() + " " + conversationType + " " + targetId);
         }
@@ -961,9 +985,18 @@ public class ConversationListFragment extends UriFragment implements
     }
 
     public void onEventMainThread(Event.ConversationNotificationEvent notificationEvent) {
+//        int originalIndex = mAdapter.findPosition(notificationEvent.getConversationType(), notificationEvent.getTargetId());
+//        if (originalIndex >= 0) {
+//            mAdapter.getView(originalIndex, mList.getChildAt(originalIndex - mList.getFirstVisiblePosition()), mList);
+//        }
         int originalIndex = mAdapter.findPosition(notificationEvent.getConversationType(), notificationEvent.getTargetId());
         if (originalIndex >= 0) {
-            mAdapter.getView(originalIndex, mList.getChildAt(originalIndex - mList.getFirstVisiblePosition()), mList);
+            UIConversation uiConversation = mAdapter.getItem(originalIndex);
+            boolean notificationStatus = notificationEvent.getStatus().equals(Conversation.ConversationNotificationStatus.NOTIFY);
+            if (uiConversation.getNotificationBlockStatus() != notificationStatus) {
+                uiConversation.setNotificationBlockStatus(!uiConversation.getNotificationBlockStatus());
+                mAdapter.getView(originalIndex, mList.getChildAt(originalIndex - mList.getFirstVisiblePosition()), mList);
+            }
         }
     }
 

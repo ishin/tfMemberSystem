@@ -2,8 +2,8 @@ package com.sealtalk.dao.group.impl;
 
 import java.util.List;
 
-import javax.ws.rs.DELETE;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
@@ -11,6 +11,7 @@ import org.hibernate.criterion.Restrictions;
 import com.sealtalk.common.BaseDao;
 import com.sealtalk.dao.group.GroupDao;
 import com.sealtalk.model.TGroup;
+import com.sealtalk.utils.LogUtils;
 import com.sealtalk.utils.PropertiesUtils;
 import com.sealtalk.utils.StringUtils;
 import com.sealtalk.utils.TimeGenerator;
@@ -22,6 +23,7 @@ import com.sealtalk.utils.TimeGenerator;
  * @since jdk1.7
  */
 public class GroupDaoImpl extends BaseDao<TGroup, Long> implements GroupDao {
+	private static final Logger logger = LogManager.getLogger(GroupDaoImpl.class);
 
 	@Override
 	public int createGroup(int userId, String code, String groupname, int memberNum) {
@@ -56,6 +58,7 @@ public class GroupDaoImpl extends BaseDao<TGroup, Long> implements GroupDao {
 			id = tg.getId();
 			
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		} 
 		
@@ -70,6 +73,7 @@ public class GroupDaoImpl extends BaseDao<TGroup, Long> implements GroupDao {
 		try {
 			count = count(" from TGroup");
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
@@ -92,6 +96,7 @@ public class GroupDaoImpl extends BaseDao<TGroup, Long> implements GroupDao {
 			}
 			
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
@@ -103,6 +108,7 @@ public class GroupDaoImpl extends BaseDao<TGroup, Long> implements GroupDao {
 		try {
 			delete(tg);
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 	}
@@ -122,6 +128,7 @@ public class GroupDaoImpl extends BaseDao<TGroup, Long> implements GroupDao {
 			}
 			
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
@@ -143,40 +150,24 @@ public class GroupDaoImpl extends BaseDao<TGroup, Long> implements GroupDao {
 			}
 			
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
 		return null;
 	}
-	@Override
-	@Deprecated
-	public List<Object[]> getGroupListWithCreaterInfo(String groupIds) {
-        try
-        {
-            String hql = (new StringBuilder("select M.id MID,M.account,M.fullname,M.logo,M.telephone,M.email,M.address,M.token,M.sex,M.birthday,M.workno,M.mobile,M.groupmax,M.groupuse,M.intro,G.id GID,G.code,G.name,G.createdate,G.volume,G.volumeuse,G.space,G.spaceuse,G.annexlong,G.notice from t_member M right join t_group G on G.creator_id=M.id where G.id in (")).append(groupIds).append(")").toString();
-       
-            System.out.println("getGroupListWithCreaterInfo() sql: " + hql);
-            SQLQuery query = getSession().createSQLQuery(hql);
-            List list = query.list();
-            
-            return list;
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
 	@Override
 	public int removeGroupForGroupId(String groupId) {
 		try {
 			String hql = "delete TGroup where id=" + groupId;
-			
+
+			logger.info("removeGroupForGroupId sql: " + hql);
 			int result = delete(hql);
 			
 			return result;
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return 0;
@@ -186,11 +177,11 @@ public class GroupDaoImpl extends BaseDao<TGroup, Long> implements GroupDao {
 	public int transferGroup(int userIdInt, int groupIdInt) {
 		try {
 			String hql = "update TGroup t set t.creatorId=" + userIdInt + " where t.id=" + groupIdInt;
-			
+			logger.info("transferGroup sql: " + hql);
 			int result = update(hql);
-			
 			return result;
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return 0;
@@ -200,11 +191,11 @@ public class GroupDaoImpl extends BaseDao<TGroup, Long> implements GroupDao {
 	public int changeGroupName(int groupIdInt, String groupName) {
 		try {
 			String hql = "update TGroup t set t.name='" + groupName + "' where t.id=" + groupIdInt;
-			
+			logger.info("changeGroupName sql: " + hql);
 			int result = update(hql);
-			
 			return result;
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return 0;
@@ -214,34 +205,27 @@ public class GroupDaoImpl extends BaseDao<TGroup, Long> implements GroupDao {
 	public int updateGroupMemberNum(int groupId, int i) {
 		try {
 			String hql = "update TGroup t set t.volumeuse=volumeuse+" + i + " where t.id=" + groupId;
-			
+			logger.info("updateGroupMemberNum sql: " + hql);
 			int result = update(hql);
-			
 			return result;
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return 0;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	@Deprecated
-	public Object[] groupInfo(int id) {
-		try
-        {
-            String hql = (new StringBuilder("select M.id MID,M.account,M.fullname,M.logo,M.telephone,M.email,M.address,M.token,M.sex,M.birthday,M.workno,M.mobile,M.groupmax,M.groupuse,M.intro,G.id GID,G.code,G.name,G.createdate,G.volume,G.volumeuse,G.space,G.spaceuse,G.annexlong,G.notice from t_member M right join t_group G on G.creator_id=M.id where G.id=")).append(id).toString();
-            SQLQuery query = getSession().createSQLQuery(hql);
-            List list = query.list();
-            if(list.size() > 0)
-                return (Object[])list.get(0);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-		
+	public int updateCreateIdAndVolume(int groupId, Integer memberId) {
+		try {
+			String hql = "update TGroup t set t.creatorId=" + memberId + ",t.volumeuse=t.volumeuse-1 where t.id=" + groupId;
+			int result = update(hql);
+			return result;
+		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+			e.printStackTrace();
+		}
+		return 0;
 	}
 
 }

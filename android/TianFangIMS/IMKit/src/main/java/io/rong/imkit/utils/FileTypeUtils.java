@@ -2,6 +2,8 @@ package io.rong.imkit.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -92,13 +94,19 @@ public class FileTypeUtils {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             type = "application/vnd.ms-excel";
         }
-        if (type != null) {
-            Uri uri = FileProvider.getUriForFile(RongContext.getInstance(), RongContext.getInstance().getApplicationContext().getPackageName() + ".FileProvider", new File(fileSavePath));
-            intent.setDataAndType(uri, type);
+        Uri uri = FileProvider.getUriForFile(RongContext.getInstance(), RongContext.getInstance().getApplicationContext().getPackageName() + ".FileProvider", new File(fileSavePath));
+        intent.setDataAndType(uri, type);
+        if (type != null && isIntentHandlerAvailable(RongContext.getInstance(), intent)) {
             return intent;
         } else {
             return null;
         }
+    }
+
+    private static boolean isIntentHandlerAvailable(Context context, Intent intent) {
+        PackageManager packageManager = context.getPackageManager();
+        List<ResolveInfo> infoList = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return infoList.size() > 0;
     }
 
     /**

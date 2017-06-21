@@ -9,9 +9,9 @@ import javax.servlet.ServletException;
 
 import net.sf.json.JSONObject;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.googlecode.sslplugin.annotation.Secured;
 import com.sealtalk.common.BaseAction;
 import com.sealtalk.common.Constants;
 import com.sealtalk.common.Tips;
@@ -20,14 +20,17 @@ import com.sealtalk.model.SessionUser;
 import com.sealtalk.model.TMember;
 import com.sealtalk.service.adm.BranchService;
 import com.sealtalk.service.adm.PrivService;
+import com.sealtalk.service.auth.AppSecretService;
 import com.sealtalk.service.member.MemberService;
 import com.sealtalk.utils.JSONUtils;
+import com.sealtalk.utils.LogUtils;
 import com.sealtalk.utils.MathUtils;
 import com.sealtalk.utils.PropertiesUtils;
 import com.sealtalk.utils.RongCloudUtils;
 import com.sealtalk.utils.StringUtils;
 import com.sealtalk.utils.TextHttpSender;
 import com.sealtalk.utils.TimeGenerator;
+import com.sealtalk.utils.XMLUtils;
 
 /**
  * 登陆相关
@@ -36,12 +39,11 @@ import com.sealtalk.utils.TimeGenerator;
  * @author hao_dy
  * 
  */
-@Secured
+
 public class SystemAction extends BaseAction {
 
 	private static final long serialVersionUID = -3901445181785461508L;
-	private static final String LOGIN_ERROR_MESSAGE = "loginErrorMsg";
-	private static final Logger logger = Logger.getLogger(SystemAction.class);
+	private static final Logger logger = LogManager.getLogger(SystemAction.class);
 
 	/**
 	 * 跳转登陆页面(仅web使用)
@@ -59,113 +61,6 @@ public class SystemAction extends BaseAction {
 	}
 
 	/**
-	 * web端登陆验证
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	public String loginForWeb() throws IOException, ServletException {
-
-		if (StringUtils.getInstance().isBlank(account)) {
-			request.setAttribute(LOGIN_ERROR_MESSAGE, Tips.NULLUSER.getName());
-			return "loginPage";
-		}
-
-		String organCode = this.request.getParameter("organCode");
-
-		if (StringUtils.getInstance().isBlank(organCode)) {
-			request.setAttribute(LOGIN_ERROR_MESSAGE, Tips.NULLCODE.getName());
-			return "loginPage";
-		}
-		organCode = organCode.toUpperCase();
-		
-		int organId = branchService.getOrganIdByOrganCode(organCode);
-
-		if (organId == -1) {
-			request.setAttribute(LOGIN_ERROR_MESSAGE, Tips.NULLCODE.getName());
-			return "loginPage";
-		}
-
-		TMember member = memberService.searchSigleUser(account, userpwd,
-				organId);
-
-		if (member == null) {
-			request.setAttribute(LOGIN_ERROR_MESSAGE, Tips.ERRORUSERORPWD
-					.getName());
-			return "loginPage";
-		}
-
-		logger.debug("The logining account is " + account);
-
-		String userId = "" + member.getId();
-		String name = member.getFullname();
-		String token = null;
-		String tokenMaxAge = PropertiesUtils.getStringByKey("db.tokenMaxAge");
-
-		long tokenMaxAgeLong = 0;
-		long firstTokenDate = 0;
-		if (member.getCreatetokendate() != null) {
-			firstTokenDate = member.getCreatetokendate();
-		}
-		long now = TimeGenerator.getInstance().getUnixTime();
-
-		if (tokenMaxAge != null && !"".equals(tokenMaxAge)) {
-			tokenMaxAgeLong = Long.valueOf(tokenMaxAge);
-		}
-
-		if ((now - firstTokenDate) > tokenMaxAgeLong) {
-			try {
-				String domain = PropertiesUtils.getDomain();
-				String uploadDir = PropertiesUtils.getUploadDir();
-				String logo = member.getLogo();
-				String url = domain + uploadDir + logo;
-
-				token = RongCloudUtils.getInstance()
-						.getToken(userId, name, url);
-				memberService.updateUserTokenForId(userId, token);
-			} catch (Exception e) {
-				logger.error(e);
-				e.printStackTrace();
-			}
-		} else {
-			token = member.getToken();
-		}
-
-		logger.info(token);
-
-		// 设置用户session
-		SessionUser su = new SessionUser();
-
-		su.setId(member.getId());
-		su.setAccount(member.getAccount());
-		su.setFullname(member.getFullname());
-		su.setToken(token);
-		su.setOrganId(organId);
-		setSessionUser(su);
-
-		// 2.设置权限session
-		List privList = privService.getRoleIdForId(member.getId());
-		SessionPrivilege sp = new SessionPrivilege();
-
-		if (privList != null) {
-			Iterator it = privList.iterator();
-			ArrayList<JSONObject> ja = new ArrayList<JSONObject>();
-			while (it.hasNext()) {
-				Object[] o = (Object[]) it.next();
-				JSONObject js = new JSONObject();
-				js.put("privid", o[0]);
-				js.put("priurl", o[1]);
-				ja.add(js);
-			}
-
-			sp.setPrivilige(ja);
-		}
-		setSessionAttribute(Constants.ATTRIBUTE_NAME_OF_SESSIONPRIVILEGE, sp);
-
-		return "loginSuccess";
-	}
-
-	/**
 	 * app端登陆验证
 	 * 
 	 * @return
@@ -178,6 +73,7 @@ public class SystemAction extends BaseAction {
 		if (StringUtils.getInstance().isBlank(account)) {
 			result.put("code", 0);
 			result.put("text", Tips.NULLUSER.getText());
+			logger.info(result);
 			returnToClient(result.toString());
 			return "text";
 		}
@@ -187,6 +83,7 @@ public class SystemAction extends BaseAction {
 		if (StringUtils.getInstance().isBlank(organCode)) {
 			result.put("code", 0);
 			result.put("text", Tips.NULLCODE.getText());
+			logger.info(result);
 			returnToClient(result.toString());
 			return "text";
 		}
@@ -198,21 +95,34 @@ public class SystemAction extends BaseAction {
 		if (organId == -1) {
 			result.put("code", 0);
 			result.put("text", Tips.NULLCODE.getText());
+			logger.info(result);
 			returnToClient(result.toString());
 			return "text";
 		}
-
-		TMember member = memberService.searchSigleUser(account, userpwd,
-				organId);
+		
+		String appId = getAppId();
+		//暂时屏蔽
+		boolean appIdExist = appSecretService.checkAppIdOfOrgan(appId, organId);
+		
+		if (!appIdExist) {
+			result.put("code", 0);
+			result.put("text", Tips.UNIILLORGAN.getText());
+			logger.info(result);
+			returnToClient(result.toString());
+			return "text";
+		}
+		
+		TMember member = memberService.searchSigleUser(clearChar(account), clearChar(userpwd), organId);
 
 		if (member == null) {
 			result.put("code", 0);
 			result.put("text", Tips.ERRORUSERORPWD.getText());
+			logger.info(result);
 			returnToClient(result.toString());
 			return "text";
 		}
 
-		logger.debug("The logining account is " + account);
+		logger.info("The logining account is " + account);
 
 		String userId = "" + member.getId();
 		String name = member.getFullname();
@@ -246,12 +156,13 @@ public class SystemAction extends BaseAction {
 						.getToken(userId, name, url);
 				memberService.updateUserTokenForId(userId, token);
 			} catch (Exception e) {
-				logger.error(e);
+				logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 				e.printStackTrace();
 			}
 		} else {
 			token = member.getToken();
 		}
+		
 		logger.info(token);
 
 		// 设置用户session
@@ -263,7 +174,6 @@ public class SystemAction extends BaseAction {
 		su.setOrganId(organId);
 		su.setToken(token);
 		setSessionUser(su);
-		System.out.println(request.getSession().getId());
 
 		// 2.设置权限
 		SessionPrivilege sp = new SessionPrivilege();
@@ -297,8 +207,8 @@ public class SystemAction extends BaseAction {
 		result.put("code", 1);
 		result.put("text", text.toString());
 
+		logger.info(result.toString());
 		returnToClient(result.toString());
-
 		return "text";
 	}
 
@@ -339,7 +249,9 @@ public class SystemAction extends BaseAction {
 	public String requestText() throws IOException, ServletException {
 
 		JSONObject text = new JSONObject();
-
+		
+		phone = clearChar(phone);
+		
 		if (!StringUtils.getInstance().isBlank(phone)) {
 			String dbCode = memberService.getTextCode(phone);
 			String endText = PropertiesUtils.getStringByKey("code.endtext");
@@ -351,30 +263,32 @@ public class SystemAction extends BaseAction {
 						PropertiesUtils.getStringByKey("code.bit"));
 				code = String.valueOf(MathUtils.getInstance().getRandomSpecBit(
 						codeBit));
-				context = code + endText;
+				context = endText + code;;
 				memberService.saveTextCode(phone, code);
 			} else {
-				context = dbCode + endText;
+				context = endText + dbCode; 
 			}
-
+			
+			logger.info("短信验证内容： " + context);
 			// 发送短信代码
-			String sendText = TextHttpSender.getInstance().sendText(phone,
-					context);
+			String sendText = TextHttpSender.getInstance().sendText(phone,context);
 
 			if ("0".equals(sendText)) {
 				text.put("code", 1);
 				text.put("text", Tips.SENDTEXTS.getText());
 			} else {
 				text.put("code", 0);
-				text.put("text", Tips.SENDERR.getText());
+				//text.put("text", Tips.SENDERR.getText());
+				text.put("text", TextHttpSender.getInstance().code.get(sendText));
+				text.put("textcode", sendText);
 			}
 		} else {
 			text.put("code", 0);
 			text.put("text", Tips.NULLPHONE.getText());
 		}
 
+		logger.info(text.toString());
 		returnToClient(text.toString());
-
 		return "text";
 	}
 
@@ -384,9 +298,8 @@ public class SystemAction extends BaseAction {
 	 * @return
 	 */
 	public String testText() throws ServletException {
-
 		JSONObject text = new JSONObject();
-
+		
 		if (StringUtils.getInstance().isBlank(phone)) {
 			text.put("code", -1);
 			text.put("text", Tips.NULLPHONE.getText());
@@ -394,10 +307,13 @@ public class SystemAction extends BaseAction {
 			text.put("code", -1);
 			text.put("text", Tips.NULLTEXTS.getText());
 		} else {
+			phone = clearChar(phone);
+			textcode = clearChar(textcode);
+			
 			String dbCode = memberService.getTextCode(phone);
 
-			if (dbCode != null && !dbCode.equals("-1")
-					&& dbCode.equals(textcode)) {
+			if (dbCode != null && !dbCode.equals("-1") && dbCode.equals(textcode)) {
+			//if(textcode.equals("111111")) {
 				text.put("code", 1);
 				text.put("text", Tips.TRUETEXTS.getText());
 			} else {
@@ -405,9 +321,8 @@ public class SystemAction extends BaseAction {
 				text.put("text", Tips.FAIL.getText());
 			}
 		}
-
+		logger.info(text.toString());
 		returnToClient(text.toString());
-
 		return "text";
 	}
 
@@ -422,8 +337,8 @@ public class SystemAction extends BaseAction {
 
 		if (!StringUtils.getInstance().isBlank(oldpwd)) { // 登陆后修改密码
 			int organId = getSessionUserOrganId();
-			boolean validOldPwd = memberService.valideOldPwd(account, oldpwd,
-					organId);
+			boolean validOldPwd = memberService.valideOldPwd(clearChar(account), clearChar(oldpwd), organId);
+			
 			if (!validOldPwd) {
 				text.put("code", 0);
 				text.put("text", Tips.WRONGOLDPWD.getText());
@@ -435,9 +350,9 @@ public class SystemAction extends BaseAction {
 			text.put("code", 0);
 			text.put("text", Tips.WRONGOLDPWD.getText());
 		}
-
+		
+		logger.info(text.toString());
 		returnToClient(text.toString());
-
 		return "text";
 	}
 
@@ -449,75 +364,81 @@ public class SystemAction extends BaseAction {
 	public String newPassword() throws ServletException {
 		JSONObject text = new JSONObject();
 
-		if (StringUtils.getInstance().isBlank(account)) {
-			text.put("code", "0");
-			text.put("text", Tips.NULLUSER.getText());
-			returnToClient(text.toString());
-			return "text";
-		}
-
 		boolean status = true;
 		int flag = 0;
 		int organId = 0;
-
+		
+		account = clearChar(account);
+		newpwd = clearChar(newpwd);
+		
 		if (!StringUtils.getInstance().isBlank(oldpwd)) { // 登陆后修改密码
+			System.out.println("oldpwd");
+			if (StringUtils.getInstance().isBlank(account)) {
+				text.put("code", "0");
+				text.put("text", Tips.NULLUSER.getText());
+				logger.info(text.toString());
+				returnToClient(text.toString());
+				return "text";
+			}
+			
 			organId = getSessionUserOrganId();
-			boolean validOldPwd = memberService.valideOldPwd(account, oldpwd,
-					organId);
 			flag = 1; // 后台修改
+			
+			boolean validOldPwd = memberService.valideOldPwd(account, clearChar(oldpwd), organId);
+	
 			if (!validOldPwd) {
 				text.put("code", -1);
 				text.put("text", Tips.WRONGOLDPWD.getText());
 				status = false;
 			}
-		} else { // 忘记密码修改密码 app端(web端这里不传textcode,)
-			if (!StringUtils.getInstance().isBlank(textcode)) {
-				if (textcode == null || "".equals(textcode)) {
-					text.put("code", -1);
-					text.put("text", Tips.NULLTEXTS.getText());
-					status = false;
-				} else {
-					String dbCode = memberService.getTextCode(phone);
-
-					if (dbCode != null && !dbCode.equals("-1")
-							&& dbCode.equals(textcode)) {
+		} else {
+			String type = this.request.getParameter("type");
+			if (type == null || !type.equalsIgnoreCase("web")) {
+				if (!StringUtils.getInstance().isBlank(textcode)) {
+					String dbCode = memberService.getTextCode(account);
+					if (dbCode != null && !dbCode.equals("-1") && dbCode.equals(textcode)) {
 						text.put("code", 1);
 						text.put("text", Tips.TRUETEXTS.getText());
 					} else {
+						status = false;
 						text.put("code", 0);
-						text.put("text", Tips.FAIL.getText());
+						text.put("text", Tips.ERRORTEXTS.getText());
 					}
+				} else {
+					status = false;
+					text.put("code", -1);
+					text.put("text", Tips.NULLTEXTS.getText());
 				}
 			}
 		}
 
 		if (status) {
 			if (!newpwd.equals(comparepwd)) {
-				request.setAttribute(LOGIN_ERROR_MESSAGE, Tips.FALSECOMPAREPWD
-						.getText());
-				return "fogetpwd";
-			}
-
-			boolean updateState = false;
-
-			if (flag == 1) {
-				updateState = memberService.updateUserPwdForAccount(account,
-						newpwd, organId);
-			} else {
-				updateState = memberService
-						.updateUserPwdForPhone(phone, newpwd);
-			}
-
-			if (updateState == true) {
-				text.put("code", "1");
-				text.put("text", Tips.CHANGEPWDSUC.getText());
-			} else {
 				text.put("code", "0");
-				text.put("text", Tips.CHANGEPWDFAIL.getText());
+				text.put("text", Tips.FALSECOMPAREPWD.getText());
+				//request.setAttribute(LOGIN_ERROR_MESSAGE, Tips.FALSECOMPAREPWD.getText());
+				//return "fogetpwd";
+			} else {
+				boolean updateState = false; 
+	
+				if (flag == 1) {
+					updateState = memberService.updateUserPwdForAccount(account,newpwd, organId);
+				} else {
+					updateState = memberService.updateUserPwdForPhone(account, newpwd);
+				}
+	
+				if (updateState == true) {
+					text.put("code", "1");
+					text.put("text", Tips.CHANGEPWDSUC.getText());
+				} else {
+					text.put("code", "0");
+					text.put("text", Tips.CHANGEPWDFAIL.getText());
+				}
 			}
 		}
+		
+		logger.info(text.toString());
 		returnToClient(text.toString());
-
 		return "text";
 	}
 
@@ -530,14 +451,29 @@ public class SystemAction extends BaseAction {
 	public String attemptSession() throws ServletException {
 		SessionUser su = this.getSessionUser();
 		JSONObject jo = new JSONObject();
-		jo.put("status", !(su == null));
+		boolean b = false;
+		
+		if (su != null) {
+			int id = su.getId();
+			b = memberService.memberIsDel(id);
+		}
+		jo.put("status", b);
 		returnToClient(jo.toString());
 		return "text";
 	}
-
+	
+	private String getAppId() {
+		return XMLUtils.getInstance().getDynamicData("appid");
+	}
+	
 	private MemberService memberService;
 	private PrivService privService;
 	private BranchService branchService;
+	private AppSecretService appSecretService;
+	
+	public void setAppSecretService(AppSecretService appSecretService) {
+		this.appSecretService = appSecretService;
+	}
 
 	public void setBranchService(BranchService branchService) {
 		this.branchService = branchService;
@@ -550,20 +486,14 @@ public class SystemAction extends BaseAction {
 	public void setPrivService(PrivService privService) {
 		this.privService = privService;
 	}
-
+	
 	private String account;
 	private String userpwd;
 	private String oldpwd;
 	private String newpwd;
 	private String textcode;
 	private String comparepwd;
-	private String dataSource;
 	private String phone;
-	private String token;
-
-	public void setToken(String token) {
-		this.token = token;
-	}
 
 	public void setAccount(String account) {
 		this.account = account;
@@ -587,10 +517,6 @@ public class SystemAction extends BaseAction {
 
 	public void setComparepwd(String comparepwd) {
 		this.comparepwd = comparepwd;
-	}
-
-	public void setDataSource(String dataSource) {
-		this.dataSource = dataSource;
 	}
 
 	public void setPhone(String phone) {

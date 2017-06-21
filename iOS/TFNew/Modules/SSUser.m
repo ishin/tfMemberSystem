@@ -13,10 +13,13 @@
 @synthesize userId;
 @synthesize account;
 @synthesize fullname;
+@synthesize pinyinname;
+
 @synthesize cellphone;
 @synthesize email;
 @synthesize avatarurl;
 @synthesize address;
+@synthesize orgname;
 
 @synthesize companyname;
 @synthesize ranktitle;
@@ -28,6 +31,8 @@
 @synthesize ctime;
 
 @synthesize familiy;
+
+@synthesize gender;
 
 - (void) updateWithDictionary:(NSDictionary*)data{
     

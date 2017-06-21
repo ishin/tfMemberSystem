@@ -11,6 +11,7 @@ public enum  AuthTips {
 	INVALUSER("账号或密码无效", "00006"),
 	WORNGSECRET("Secret无效", "00007"),
 	NOTLOGIN("用户未登陆", "00008"),
+	INVALCOMPANYID("无效的公司id", "00009"),
 	
 	OK("OK", "10000"),
 	ERROR("error", "3000"),

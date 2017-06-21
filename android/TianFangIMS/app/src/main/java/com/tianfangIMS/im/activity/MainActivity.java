@@ -3,12 +3,12 @@ package com.tianfangIMS.im.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Process;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -25,12 +25,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.request.BaseRequest;
@@ -44,6 +42,7 @@ import com.tianfangIMS.im.bean.SetSyncUserBean;
 import com.tianfangIMS.im.bean.TopContactsBean;
 import com.tianfangIMS.im.bean.TopContactsListBean;
 import com.tianfangIMS.im.dialog.ConversationListLongDialog;
+import com.tianfangIMS.im.dialog.LoadDialog;
 import com.tianfangIMS.im.dialog.MainPlusDialog;
 import com.tianfangIMS.im.fragment.Contacts_Fragment;
 import com.tianfangIMS.im.fragment.ConversationListDynamicActivtiy;
@@ -53,9 +52,15 @@ import com.tianfangIMS.im.fragment.Mine_Fragment;
 import com.tianfangIMS.im.service.FloatService;
 import com.tianfangIMS.im.utils.CommonUtil;
 import com.tianfangIMS.im.utils.NToast;
+import com.tianfangIMS.im.utils.StringUtils;
+
+import net.sf.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -66,14 +71,11 @@ import io.rong.imkit.manager.IUnReadMessageObserver;
 import io.rong.imkit.manager.UnReadMessageManager;
 import io.rong.imkit.model.GroupUserInfo;
 import io.rong.imkit.model.UIConversation;
+import io.rong.imkit.userInfoCache.RongUserInfoManager;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Group;
-import io.rong.imlib.model.Message;
 import io.rong.imlib.model.UserInfo;
-import io.rong.ptt.PTTClient;
-import io.rong.ptt.PTTSession;
-import io.rong.ptt.PTTStateListener;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -122,21 +124,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private GroupUserInfo groupUserinfo;
     Intent mIntent;
     String sessionId;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences sp;
+    String TimeMillis;
+    long TimeMillislong;
+    private String UsreUID, UserName, Userlogo;//用于扫码刷新用户信息
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SetSyncUserGroup();
         Gson gson = new Gson();
         LoginBean loginBean = gson.fromJson(CommonUtil.getUserInfo(mContext), LoginBean.class);
         String token = loginBean.getText().getToken();
         if (!TextUtils.isEmpty(token)) {
-
             RongIM.connect(token, new RongIMClient.ConnectCallback() {
                 @Override
                 public void onTokenIncorrect() {
@@ -152,19 +152,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             });
         }
         setContentView(R.layout.mian_activity);
-        sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
+//        setSwipeBackEnable(false); //禁止滑动删除
+        sessionId = getSharedPreferences("CompanyCode", MODE_PRIVATE).getString("CompanyCode", "");
+        GetCallPhonePriv();
+        SetSyncUserGroup();//同步群组
         GetFriendInfo();//持久化所有好友信息
         GetGroupInfo();//持久化所有群组信息
-        setHeadVisibility(View.GONE);
-        SystemBarTranslucentType(this);//改变状态栏的沉浸样式
         init();//初始化控件
         initFM();//初始化fragment
-        mLoginBeanList = new ArrayList<LoginBean>();
-        mLoginBeanList.add(GetUesrBean());
         RongIM.setUserInfoProvider(this, true);
         RongIM.setGroupInfoProvider(this, true);
+        setHeadVisibility(View.GONE);
+        Log.e("asdasd", "---:" + System.currentTimeMillis());
+        SystemBarTranslucentType(this);//改变状态栏的沉浸样式
+        mLoginBeanList = new ArrayList<LoginBean>();
+        mLoginBeanList.add(GetUesrBean());
         RongIM.getInstance().setMessageAttachedUserInfo(true);
-        RongIM.setConversationBehaviorListener(new MyConversationBehaviorListener());
         RongIM.setConversationListBehaviorListener(new MyConversationListBehaviorListener());
         UnReadMessageManager.getInstance().addObserver(
                 new Conversation.ConversationType[]{
@@ -172,38 +175,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         Conversation.ConversationType.CUSTOMER_SERVICE},
                 this);
         RemoveSignOutGroupConversation();
-        PTTClient pttClient = PTTClient.getInstance();
-        pttClient.init(this);
-        pttClient.setPttStateListener(new PTTStateListener() {
-            @Override
-            public void onSessionStart(PTTSession pttSession) {
-                Log.e("PTT", "onSessionStart------:" + pttSession);
-            }
-
-            @Override
-            public void onSessionTerminated(PTTSession pttSession) {
-                Log.e("PTT", "onSessionTerminated------:" + pttSession);
-            }
-
-            @Override
-            public void onParticipantChanged(PTTSession pttSession, List<String> userIds) {
-                Log.e("PTT", "onParticipantChanged------:" + pttSession);
-            }
-
-            @Override
-            public void onMicHolderChanged(PTTSession pttSession, String holderUserId) {
-                Log.e("PTT", "onMicHolderChanged------:" + pttSession);
-            }
-
-            @Override
-            public void onNetworkError(String msg) {
-                Log.e("PTT", "onNetworkError------:" + msg);
-            }
-        });
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        sp = getSharedPreferences("config", MODE_PRIVATE);
+        editor = sp.edit();
+        userInfo = RongUserInfoManager.getInstance().getUserInfo(RongIM.getInstance().getCurrentUserId());
+        if (userInfo != null) {
+//            RongIM.getInstance().refreshUserInfoCache(userInfo);
+        }
     }
 
     /**
@@ -223,10 +200,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         return main_tree;
     }
 
-//    @Override
+    //    @Override
 //    public void initView() {
 //
 //    }
+    public static String getOkHttpUtils() {
+        Date d = new Date();
+        System.out.println(d);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        String dateNowStr = sdf.format(d);
+        return dateNowStr;
+    }
 
     private void init() {
         ly_set_firstFragment = (LinearLayout) this.findViewById(R.id.main_ly_tab_menu_msg_new);
@@ -272,39 +256,45 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         } else {
             return;
         }
-
     }
 
     //同步群组好友
     private void SetSyncUserGroup() {
         Gson gson = new Gson();
         LoginBean loginBean = gson.fromJson(CommonUtil.getUserInfo(mContext), LoginBean.class);
-        String id = loginBean.getText().getId();
+        String UserIds = loginBean.getText().getId();
         OkGo.post(ConstantValue.SYNCUSERGROUP)
                 .tag(this)
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
-                .params("userid", id)
+                .headers("cookie", sessionId)
+                .params("userid", UserIds)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        Log.e("空之浮","---:"+s);
                         if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
-
+                            if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                NToast.shortToast(mContext, "Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                RongIM.getInstance().logout();
+                                finish();
+                            }
                             Gson gson = new Gson();
                             SetSyncUserBean syncUserBean = gson.fromJson(s, SetSyncUserBean.class);
                             if (syncUserBean.getCode().equals("200")) {
                             } else {
-                                NToast.shortToast(mContext, "同步群组失败");
+//                                NToast.shortToast(mContext, "同步群组失败");
+                                Log.e("MainActivity", "SyncUserGroup ");
                             }
                         } else {
                             return;
                         }
                     }
+
                 });
     }
+
 
     //获取所有好友信息
     private void GetFriendInfo() {
@@ -317,8 +307,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
-                .cacheKey("getfriendinfo")
+                .headers("cookie", sessionId)
                 .execute(new StringCallback() {
                     @Override
                     public void onBefore(BaseRequest request) {
@@ -327,21 +316,41 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        if (!TextUtils.isEmpty(s)) {
-                            Log.e(TAG, "获取所有好友的信息:" + s);
-                            CommonUtil.saveFrientUserInfo(mContext, s);
-                        } else {
-                            return;
-                        }
+                        getFriend(s);
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
+                        LoadDialog.dismiss(mContext);
                         NToast.shortToast(mContext, "信息提供者好友请求失败");
                         return;
                     }
+
                 });
+    }
+
+    private TopContactsListBean bean;
+
+    private void getFriend(String s) {
+
+        if ((s.trim()).startsWith("<!DOCTYPE")) {
+            NToast.shortToast(mContext, "Session过期，请重新登陆");
+            startActivity(new Intent(mContext, LoginActivity.class));
+            finish();
+        } else {
+            if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+//                Gson gson = new Gson();
+//                bean = gson.fromJson(s, TopContactsListBean.class);
+//                for (int i = 0; i < bean.getText().size(); i++) {
+//                    RongIM.getInstance().refreshUserInfoCache(new UserInfo(bean.getText().get(i).getId(), bean.getText().get(i).getFullname(),
+//                            Uri.parse(ConstantValue.ImageFile + bean.getText().get(i).getLogo())));
+//                }
+                CommonUtil.saveFrientUserInfo(mContext, s);
+            } else {
+                return;
+            }
+        }
     }
 
     //获取所有群组信息
@@ -354,7 +363,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .params("userid", UID)
                 .execute(new StringCallback() {
                     @Override
@@ -364,11 +373,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        if (!TextUtils.isEmpty(s)) {
-                            CommonUtil.saveGroupUserInfo(mContext, s);
-                        } else {
-                            return;
-                        }
+                        getgroupinfo(s);
                     }
 
                     @Override
@@ -377,7 +382,33 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         NToast.shortToast(mContext, "好友请求失败");
                         return;
                     }
+
                 });
+    }
+
+    GroupListBean mGroupBeen;
+
+    //缓存群组并刷新群组
+    private void getgroupinfo(String s) {
+        if ((s.trim()).startsWith("<!DOCTYPE")) {
+            NToast.shortToast(mContext, "Session过期，请重新登陆");
+            startActivity(new Intent(mContext, LoginActivity.class));
+            RongIM.getInstance().logout();
+            finish();
+        } else {
+            if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                Gson gson1 = new Gson();
+                Map<String, Object> map = gson1.fromJson(s, new TypeToken<Map<String, Object>>() {
+                }.getType());
+                if ((map.get("code").toString()).equals("1.0")) {
+                    CommonUtil.saveGroupUserInfo(mContext, s);
+                } else {
+                    return;
+                }
+            } else {
+                return;
+            }
+        }
     }
 
     //重置所有文本的选中状态
@@ -386,7 +417,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         tv_tab_menu_job.setSelected(false);
         tv_tab_menu_contacts.setSelected(false);
         tv_tab_menu_me.setSelected(false);
-
 
         tv_tab_menu_msg.setTextColor(this.getResources().getColor(R.color.colorNavigation));
         tv_tab_menu_job.setTextColor(this.getResources().getColor(R.color.colorNavigation));
@@ -401,94 +431,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         return bean;
     }
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Main Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
     @Override
     public void onStart() {
         super.onStart();
-        GetGroupInfo();//持久化所有群组信息
-        Log.e("生命周期", "onStart");
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("生命周期", "onResume");
+        LoadDialog.dismiss(mContext);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.e("生命周期", "onPause");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
-    }
-
-    private class MyConversationBehaviorListener implements RongIM.ConversationBehaviorListener {
-        @Override
-        public boolean onMessageClick(Context context, View view, Message message) {
-            return false;
-        }
-
-        @Override
-        public boolean onUserPortraitClick(Context context, Conversation.ConversationType mConversationType, UserInfo userInfo) {
-//            NToast.longToast(context, "点击了头像" + userInfo.getUserId() + "会话类型" + mConversationType.getValue());
-            String userID = userInfo.getUserId().toString();
-//            if (mConversationType.equals(Conversation.ConversationType.GROUP)) {
-//                Intent intentGroup = new Intent(mContext, FriendPersonInfoActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putString("userId", userID);
-//                startActivity(intentGroup);
-//            }
-//            if (mConversationType.equals(Conversation.ConversationType.PRIVATE)) {
-            Intent intent = new Intent(mContext, FriendPersonInfoActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("userId", userID);
-            intent.putExtras(bundle);
-            intent.putExtra("conversationType", Conversation.ConversationType.PRIVATE);
-            startActivity(intent);
-
-//            }
-            return true;
-        }
-
-        @Override
-        public boolean onUserPortraitLongClick(Context context, Conversation.ConversationType conversationType, UserInfo userInfo) {
-            return false;
-        }
-
-        @Override
-        public boolean onMessageLinkClick(Context context, String s) {
-            return false;
-        }
-
-        @Override
-        public boolean onMessageLongClick(Context context, View view, Message message) {
-            return false;
-        }
     }
 
     private class MyConversationListBehaviorListener implements RongIM.ConversationListBehaviorListener {
@@ -512,14 +473,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
          * @return 如果用户自己处理了点击后的逻辑处理，则返回 true，否则返回 false，false 走融云默认处理方式。
          */
         @Override
-        public boolean onConversationPortraitLongClick(Context context, Conversation.ConversationType conversationType, String targetId) {
+        public boolean onConversationPortraitLongClick(Context context, final Conversation.ConversationType conversationType, final String targetId) {
+            RongIM.getInstance().getConversationNotificationStatus(conversationType, targetId, new RongIMClient.ResultCallback<Conversation.ConversationNotificationStatus>() {
+                @Override
+                public void onSuccess(Conversation.ConversationNotificationStatus conversationNotificationStatus) {
+                    ConversationListLongDialog dialog = new ConversationListLongDialog(mContext, conversationType, targetId, conversationNotificationStatus.getValue());
+                    dialog.show();
+                }
 
-            return false;
+                @Override
+                public void onError(RongIMClient.ErrorCode errorCode) {
+
+                }
+            });
+            return true;
         }
 
         @Override
         public boolean onConversationLongClick(Context context, View view, final UIConversation conversation) {
-            RongIMClient.getInstance().getConversationNotificationStatus(conversation.getConversationType(), conversation.getConversationTargetId(), new RongIMClient.ResultCallback<Conversation.ConversationNotificationStatus>() {
+            RongIM.getInstance().getConversationNotificationStatus(conversation.getConversationType(), conversation.getConversationTargetId(), new RongIMClient.ResultCallback<Conversation.ConversationNotificationStatus>() {
                 @Override
                 public void onSuccess(Conversation.ConversationNotificationStatus conversationNotificationStatus) {
                     ConversationListLongDialog dialog = new ConversationListLongDialog(mContext, conversation.getConversationType(), conversation.getConversationTargetId(), conversationNotificationStatus.getValue());
@@ -540,10 +512,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         switch (v.getId()) {
             case R.id.main_ly_tab_menu_msg_new:
                 setSelected();
+                main_plus.setVisibility(View.VISIBLE);
                 tv_tab_menu_msg.setSelected(true);
                 tv_tab_menu_msg_num.setVisibility(View.INVISIBLE);
                 main_tree.setVisibility(View.GONE);
-                main_plus.setVisibility(View.VISIBLE);
                 tv_tab_menu_msg.setTextColor(this.getResources().getColor(R.color.colorNaviationClick));
                 SelectFragment(1);
                 break;
@@ -551,6 +523,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 setSelected();
                 tv_tab_menu_job.setSelected(true);
                 tv_tab_menu_job_num.setVisibility(View.INVISIBLE);
+                main_tree.setVisibility(View.GONE);
+                main_plus.setVisibility(View.GONE);
                 tv_tab_menu_job.setTextColor(this.getResources().getColor(R.color.colorNaviationClick));
                 SelectFragment(2);
                 break;
@@ -559,16 +533,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 tv_tab_menu_contacts.setSelected(true);
                 tv_tab_menu_contacts_num.setVisibility(View.INVISIBLE);
                 main_tree.setVisibility(View.VISIBLE);
-                main_plus.setVisibility(View.INVISIBLE);
+                main_plus.setVisibility(View.GONE);
                 tv_tab_menu_contacts.setTextColor(this.getResources().getColor(R.color.colorNaviationClick));
                 SelectFragment(3);
                 break;
             case R.id.ly_tab_menu_me:
                 setSelected();
                 tv_tab_menu_me.setSelected(true);
+                main_tree.setVisibility(View.GONE);
+                main_plus.setVisibility(View.GONE);
                 tv_tab_menu_me.setTextColor(this.getResources().getColor(R.color.colorNaviationClick));
-                main_tree.setVisibility(View.INVISIBLE);
-                main_plus.setVisibility(View.INVISIBLE);
                 SelectFragment(4);
                 break;
             case R.id.main_plus:
@@ -600,7 +574,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     transaction.show(mConversationList);
                     search_layout.setVisibility(View.VISIBLE);
                 }
-                Log.i("TAG", "进入message");
                 break;
             case 2:
                 if (Jobs_Fragment == null) {
@@ -613,7 +586,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     search_layout.setVisibility(View.GONE);
                 }
 
-                Log.i("TAG", "进入jobs");
                 break;
             case 3:
                 if (Contacts_Fragment == null) {
@@ -625,7 +597,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     search_layout.setVisibility(View.VISIBLE);
                 }
 
-                Log.i("TAG", "进入jobs");
                 break;
             case 4:
                 if (Me_Fragment == null) {
@@ -637,7 +608,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     transaction.show(Me_Fragment);
                 }
 
-                Log.i("TAG", "进入jobs");
                 break;
         }
         transaction.commit();
@@ -669,16 +639,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void initFM() {
         fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
-//        mConversationList = initConversationList();
-
         if (mConversationList == null) {
             mConversationList = initConversationList();
-//            conversationListDynamicActivtiy = new ConversationListDynamicActivtiy();
-//            mConversationList = new Message_Fragment();
             transaction.add(R.id.fragment_container, mConversationList);
             main_tree.setVisibility(View.GONE);
             main_plus.setVisibility(View.VISIBLE);
-            Log.i("TAG", "主Fragment");
             SetIconIsTrue();
         } else {
             transaction.show(mConversationList);
@@ -709,7 +674,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             ConversationListFragment listFragment = new ConversationListFragment();
             listFragment.setAdapter(new ConversationAdapter(RongContext.getInstance()));
             Uri uri;
-//            if (isDebug) {
             uri = Uri.parse("rong://" + getApplicationInfo().packageName).buildUpon()
                     .appendPath("conversationlist")
                     .appendQueryParameter(Conversation.ConversationType.PRIVATE.getName(), "false") //设置私聊会话是否聚合显示
@@ -719,31 +683,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     .appendQueryParameter(Conversation.ConversationType.SYSTEM.getName(), "false")//系统
                     .appendQueryParameter(Conversation.ConversationType.DISCUSSION.getName(), "true")
                     .build();
-//                mConversationsTypes = new Conversation.ConversationType[]{Conversation.ConversationType.PRIVATE,
-//                        Conversation.ConversationType.GROUP,
-//                        Conversation.ConversationType.PUBLIC_SERVICE,
-//                        Conversation.ConversationType.APP_PUBLIC_SERVICE,
-//                        Conversation.ConversationType.SYSTEM,
-//                        Conversation.ConversationType.DISCUSSION
-//                };
-//            } else {
-//                uri = Uri.parse("rong://" + getApplicationInfo().packageName).buildUpon()
-//                        .appendPath("conversationlist")
-//                        .appendQueryParameter(Conversation.ConversationType.PRIVATE.getName(), "false") //设置私聊会话是否聚合显示
-//                        .appendQueryParameter(Conversation.ConversationType.GROUP.getName(), "false")//群组
-//                        .appendQueryParameter(Conversation.ConversationType.PUBLIC_SERVICE.getName(), "false")//公共服务号
-//                        .appendQueryParameter(Conversation.ConversationType.APP_PUBLIC_SERVICE.getName(), "false")//订阅号
-//                        .appendQueryParameter(Conversation.ConversationType.SYSTEM.getName(), "true")//系统
-//                        .build();
-//                mConversationsTypes = new Conversation.ConversationType[]{Conversation.ConversationType.PRIVATE,
-//                        Conversation.ConversationType.GROUP,
-//                        Conversation.ConversationType.PUBLIC_SERVICE,
-//                        Conversation.ConversationType.APP_PUBLIC_SERVICE,
-//                        Conversation.ConversationType.SYSTEM
-//                };
-//            }
             listFragment.setUri(uri);
-//            mConversationListFragment = listFragment;
             return listFragment;
         } else {
             return mConversationListFragment;
@@ -756,20 +696,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             Gson gson1 = new Gson();
             String jsondata = CommonUtil.getFrientUserInfo(mContext);
             if (!TextUtils.isEmpty(jsondata)) {
-                Type listTypeJson = new TypeToken<Map<String, Object>>() {
-                }.getType();
-                Map<String, Object> map = gson1.fromJson(jsondata, listTypeJson);
-                if (0.0 == (double) map.get("code")) {
-                    return null;
+                if ((jsondata.trim()).startsWith("<!DOCTYPE")) {
+                    NToast.shortToast(mContext, "Session过期，请重新登陆");
+                    startActivity(new Intent(mContext, LoginActivity.class));
+                    finish();
                 } else {
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<TopContactsListBean>() {
+                    Type listTypeJson = new TypeToken<Map<String, Object>>() {
                     }.getType();
-                    TopContactsListBean bean = gson.fromJson(CommonUtil.getFrientUserInfo(mContext), listType);
-                    if (bean != null && bean.getText().size() > 0) {
-                        for (int i = 0; i < bean.getText().size(); i++) {
-                            if (bean.getText().get(i).getId().equals(s)) {
-                                return new UserInfo(bean.getText().get(i).getId(), bean.getText().get(i).getFullname(), Uri.parse(ConstantValue.ImageFile + bean.getText().get(i).getLogo()));
+                    Map<String, Object> map = gson1.fromJson(jsondata, listTypeJson);
+                    if (0.0 == (double) map.get("code")) {
+                        return null;
+                    } else {
+                        Gson gson = new Gson();
+                        Type listType = new TypeToken<TopContactsListBean>() {
+                        }.getType();
+                        TopContactsListBean bean = gson.fromJson(CommonUtil.getFrientUserInfo(mContext), listType);
+                        if (bean != null && bean.getText().size() > 0) {
+                            for (int i = 0; i < bean.getText().size(); i++) {
+                                if (bean.getText().get(i).getId().equals(s)) {
+                                    return new UserInfo(bean.getText().get(i).getId(), bean.getText().get(i).getFullname(), Uri.parse(ConstantValue.ImageFile + bean.getText().get(i).getLogo()));
+                                }
                             }
                         }
                     }
@@ -783,23 +729,36 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public Group getGroupInfo(String groupId) {
         String str = CommonUtil.getGroupUserInfo(mContext);
         if (!TextUtils.isEmpty(str)) {
-            Type listType = new TypeToken<Map<String, Object>>() {
-            }.getType();
-            Gson gson = new Gson();
-            Map<String, Object> jsonData = gson.fromJson(str, listType);
-            if ((double) jsonData.get("code") == 0.0) {
-                Map<String, String> textData = (Map<String, String>) jsonData.get("text");
+            if ((str.trim()).startsWith("<!DOCTYPE")) {
+                NToast.shortToast(mContext, "Session过期，请重新登陆");
+                startActivity(new Intent(mContext, LoginActivity.class));
+                finish();
             } else {
-                Type listType1 = new TypeToken<GroupListBean>() {
+                Type listType = new TypeToken<Map<String, Object>>() {
                 }.getType();
-                Gson gson1 = new Gson();
-                GroupListBean GroupAllBean = gson1.fromJson(CommonUtil.getGroupUserInfo(mContext), listType1);
-                ArrayList<GroupBean> GroupBeanList = GroupAllBean.getText();
-                Log.e("aaaaaaaa","-----:"+GroupAllBean.getText());
-                if (GroupBeanList != null && GroupBeanList.size() > 0) {
-                    for (GroupBean i : GroupBeanList) {
-                        if (i.getGID().equals(groupId)) {
-                            return new Group(i.getGID(), i.getName(), Uri.parse(ConstantValue.ImageFile + i.getLogo()));
+                Gson gson = new Gson();
+                Map<String, Object> jsonData = gson.fromJson(str, listType);
+                if ((double) jsonData.get("code") == 0.0) {
+                    Map<String, String> textData = (Map<String, String>) jsonData.get("text");
+                } else {
+                    Type listType1 = new TypeToken<GroupListBean>() {
+                    }.getType();
+                    Gson gson1 = new Gson();
+                    GroupListBean GroupAllBean = gson1.fromJson(CommonUtil.getGroupUserInfo(mContext), listType1);
+                    ArrayList<GroupBean> GroupBeanList = GroupAllBean.getText();
+                    if (GroupBeanList != null && GroupBeanList.size() > 0) {
+                        for (GroupBean i : GroupBeanList) {
+                            if (i.getGID() != null) {
+                                if (i.getGID().equals(groupId)) {
+                                    if (i.getName() != null && !TextUtils.isEmpty(i.getName())) {
+                                        return new Group(i.getGID(), i.getName(), Uri.parse(ConstantValue.ImageFile + i.getLogo()));
+                                    } else {
+                                        return new Group(i.getGID(), " ", Uri.parse(ConstantValue.ImageFile + i.getLogo()));
+                                    }
+//                                RongIM.getInstance().refreshGroupInfoCache(new Group(i.getGID(), i.getName(), Uri.parse(ConstantValue.ImageFile + i.getLogo())));
+                                }
+                            }
+
                         }
                     }
                 }
@@ -822,20 +781,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     public void exit() {
         if ((System.currentTimeMillis() - mExitTime) > 2000) {
-            Toast.makeText(MainActivity.this, "再按一次退出应用", Toast.LENGTH_SHORT).show();
+            NToast.shortToast(mContext, "再按一次退出应用");
             mExitTime = System.currentTimeMillis();
         } else {
 //            MyConfig.clearSharePre(this, "users");
             if (RongIM.getInstance() != null)
-                RongIM.getInstance().disconnect(true);
-
-            Process.killProcess(Process.myPid());
-//            finish();
-//            System.exit(0);
-//            RongIM.getInstance().disconnect();
+                RongIM.getInstance().disconnect();
+            editor.putBoolean("isOpen", false);
+            editor.apply();
             moveTaskToBack(false);
-            mIntent = new Intent(this, FloatService.class);
-            stopService(mIntent);
             finish();
         }
     }
@@ -858,6 +812,138 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             tv_tab_menu_msg_num.setVisibility(View.VISIBLE);
             tv_tab_menu_msg_num.setText("···");
         }
+    }
+
+    //回调获取扫描得到的条码值
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        String Account = "";
+        TimeMillis = (System.currentTimeMillis() / 1000) + "";
+        TimeMillislong = (System.currentTimeMillis() / 1000);
+        Gson gson = new Gson();
+        LoginBean loginBean = gson.fromJson(CommonUtil.getUserInfo(mContext), LoginBean.class);
+        UsreUID = loginBean.getText().getId();
+        UserName = loginBean.getText().getFullname();
+        Userlogo = loginBean.getText().getLogo();
+        if (result != null) {
+            if (result.getContents() == null) {
+                Toast.makeText(this, "扫码取消！", Toast.LENGTH_LONG).show();
+            } else {
+                if (result.getContents().indexOf("&") == -1) {
+                    Account = result.getContents();
+                } else {
+                    Account = result.getContents().substring(0, result.getContents().indexOf("&"));
+                }
+                JSONObject jo = new JSONObject();
+                jo.put("friend", Account);
+                String sign = makeSign(jo, "@q3$fd12%", TimeMillislong);
+                OkGo.post(ConstantValue.SCANADDCONTACTS)
+                        .tag(this)
+                        .headers("cookie", sessionId)
+                        .params("friend", Account)
+                        .params("timestamp", TimeMillis)
+                        .params("sign", sign)
+                        .params("imkey", "@q3$fd12%")
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onBefore(BaseRequest request) {
+                                super.onBefore(request);
+                                LoadDialog.show(mContext);
+                            }
+
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                LoadDialog.dismiss(mContext);
+                                if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                                    if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                        NToast.shortToast(mContext, "Session过期，请重新登陆");
+                                        startActivity(new Intent(mContext, LoginActivity.class));
+                                        finish();
+                                    }
+                                    Gson gson = new Gson();
+                                    Map<String, Object> map = gson.fromJson(s, new TypeToken<Map<String, Object>>() {
+                                    }.getType());
+                                    String str = map.get("code").toString();
+                                    if (str.equals("1.0")) {
+                                        Toast.makeText(mContext, "添加好友成功", Toast.LENGTH_LONG).show();
+                                        if (!TextUtils.isEmpty(UsreUID) && !TextUtils.isEmpty(UserName)) {
+                                            RongIM.getInstance().refreshUserInfoCache(new UserInfo(UsreUID, UserName, Uri.parse(ConstantValue.ImageFile + Userlogo)));
+                                        }
+                                        startActivity(new Intent(mContext, MineTopContactsActivity.class));
+
+                                    } else {
+                                        Toast.makeText(mContext, "添加好友失败", Toast.LENGTH_LONG).show();
+                                    }
+                                } else {
+                                    Toast.makeText(mContext, "数据异常，请检查网络", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onError(Call call, Response response, Exception e) {
+                                super.onError(call, response, e);
+                                LoadDialog.dismiss(mContext);
+                                Log.e("onError", "Account:" + response);
+                            }
+                        });
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    public String makeSign(JSONObject param, String key, long timeStamp) {
+        StringBuilder sbp = new StringBuilder();
+        Iterator<String> it = param.keys();
+        while (it.hasNext()) {
+            String jsonKey = it.next();
+            String jsonValue = param.getString(jsonKey);
+            sbp.append(jsonKey).append("=").append(jsonValue);
+        }
+        String pStr = sbp.toString();
+        pStr = StringUtils.getInstance().sortByChars(pStr);
+        pStr = key + pStr + timeStamp;
+        String caclSign = StringUtils.getInstance().getMD5Str(pStr.toString());
+        return caclSign;
+    }
+
+    //获取紧急呼叫的权限
+    private void GetCallPhonePriv() {
+        OkGo.post(ConstantValue.CALLPHONE)
+                .tag(this)
+                .connTimeOut(10000)
+                .readTimeOut(10000)
+                .writeTimeOut(10000)
+                .headers("cookie", sessionId)
+                .params("priv", "djjjjhj")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                            if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                NToast.shortToast(mContext, "Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                RongIM.getInstance().logout();
+                                finish();
+                            } else {
+                                Gson gson = new Gson();
+                                Map<String, Object> map = gson.fromJson(s, new TypeToken<Map<String, Object>>() {
+                                }.getType());
+                                editor.putString("callphonepriv", map.get("text").toString());
+                                editor.apply();
+                            }
+                        } else {
+                            NToast.shortToast(mContext, "获取紧急呼叫权限失败");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        NToast.shortToast(mContext, "获取紧急呼叫权限失败");
+                    }
+                });
     }
 
 }

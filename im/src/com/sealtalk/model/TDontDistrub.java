@@ -10,6 +10,7 @@ public class TDontDistrub {
 	private int groupId;		//组id
 	private int memberId;		//成员id
 	private String isOpen;		//开关
+	private String isDel;
 	private int listOrder;
 	
 	public TDontDistrub() {}
@@ -53,6 +54,14 @@ public class TDontDistrub {
 	}
 	public void setListOrder(int listOrder) {
 		this.listOrder = listOrder;
+	}
+
+	public String getIsDel() {
+		return isDel;
+	}
+
+	public void setIsDel(String isDel) {
+		this.isDel = isDel;
 	}
 	
 }

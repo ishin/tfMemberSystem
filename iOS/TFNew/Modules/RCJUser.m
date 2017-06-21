@@ -15,6 +15,8 @@
 @interface RCJUser ()
 {
     WebClient *_http;
+    
+    BOOL _isLoading;
 }
 
 @end
@@ -27,6 +29,10 @@
 @synthesize _goupId;
 
 - (void) loadUserInfo:(NSString *)userId completion:(void (^)(RCUserInfo *userInfo))completion{
+    
+    if(_isLoading)
+        return;
+    _isLoading = YES;
     
     self._userId = userId;
     
@@ -51,6 +57,7 @@
         NSString *response = lParam;
         // NSLog(@"%@", response);
         
+        _isLoading = NO;
         
         SBJson4ValueBlock block = ^(id v, BOOL *stop) {
             
@@ -61,8 +68,6 @@
                 
                 if(code)
                 {
-                    //NSMutableDictionary *value = [v objectForKey:@"text"];
-                    
                     block_self._userInfo = v;
                     
                     RCUserInfo *user = [[RCUserInfo alloc] init];
@@ -72,11 +77,16 @@
                                         WEB_API_URL,
                                         [v objectForKey:@"logo"]];
                     
-                    [[GoGoDB sharedDBInstance] saveUserInfo:user];
+                    [block_self saveUserToLocal:user];
+
+                    if (completion) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            completion(user);
+                        });
+                    }
                     
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"Refresh_Chat_List" object:nil];
                     
-                    return completion(user);
+                    ///return completion(user);
                 }
                 
                 return;
@@ -104,8 +114,17 @@
         NSString *response = lParam;
         NSLog(@"%@", response);
         
+        _isLoading = NO;
         
     }];
+}
+
+- (void) saveUserToLocal:(RCUserInfo*)user{
+    
+    [[GoGoDB sharedDBInstance] saveUserInfo:user];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Refresh_Chat_List" object:nil];
+    
 }
 
 - (void) loadGroupInfo:(NSString *)groupId completion:(void (^)(RCUserInfo *userInfo))completion{
@@ -145,18 +164,21 @@
                 {
                     
                     NSMutableDictionary *ginfo = [v objectForKey:@"text"];
-                    block_self._userInfo = ginfo;
+                    
+                    [block_self saveGroupToLocal:ginfo];
                     
                     RCUserInfo *user = [[RCUserInfo alloc] init];
                     user.userId = _goupId;
-                    user.name = [v objectForKey:@"name"];
-                    user.portraitUri = [NSString stringWithFormat:@"%@/upload/images/%@", WEB_API_URL, [v objectForKey:@"logo"]];
-                    
-                    [[GoGoDB sharedDBInstance] saveGroupInfo:ginfo];
-                    
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"Refresh_Chat_List" object:nil];
-                    
-                    return completion(user);
+                    user.name = [ginfo objectForKey:@"name"];
+                    user.portraitUri = [NSString stringWithFormat:@"%@/upload/images/%@",
+                                        WEB_API_URL, [ginfo objectForKey:@"logo"]];
+
+                    if (completion) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            completion(user);
+                        });
+                    }
+                    //return completion(user);
                 }
                 
                 return;
@@ -186,6 +208,16 @@
         
         
     }];
+}
+
+
+- (void) saveGroupToLocal:(NSMutableDictionary*)ginfo
+{
+    self._userInfo = ginfo;
+    [[GoGoDB sharedDBInstance] saveGroupInfo:ginfo];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Refresh_Chat_List" object:nil];
+
 }
 
 @end

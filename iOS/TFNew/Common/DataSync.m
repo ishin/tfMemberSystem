@@ -169,6 +169,12 @@ static DataSync* dSyncInstance = nil;
                     NSArray *groups = [v objectForKey:@"text"];
                     [block_self saveGroups:groups];
                 }
+                /*
+                else
+                {
+                    [block_self saveGroups:nil];
+                }
+                 */
                 
                 return;
             }
@@ -202,6 +208,7 @@ static DataSync* dSyncInstance = nil;
 
 - (void) saveGroups:(NSArray*)list{
  
+    [[GoGoDB sharedDBInstance] deleteAllGroupsCached];
     for(NSDictionary *dic in list)
     {
         [[GoGoDB sharedDBInstance] saveGroupInfo:dic];

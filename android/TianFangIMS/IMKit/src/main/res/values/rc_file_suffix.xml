@@ -40,6 +40,9 @@
         <item>.htc</item>
         <item>.etx</item>
         <item>.vcf</item>
+        <item>.pdf</item>
+        <item>.ppt</item>
+        <item>.pptx</item>
     </array>
     <array name="rc_video_file_suffix">
         <item>.rmvb</item>

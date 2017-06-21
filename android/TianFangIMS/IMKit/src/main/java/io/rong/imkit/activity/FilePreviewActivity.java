@@ -72,7 +72,6 @@ public class FilePreviewActivity extends RongBaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rc_ac_file_download);
-
         mFileMessage = getIntent().getParcelableExtra("FileMessage");
         mMessage = getIntent().getParcelableExtra("Message");
         mProgress = getIntent().getIntExtra("Progress", 0);

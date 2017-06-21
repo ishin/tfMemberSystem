@@ -18,6 +18,7 @@ import com.tianfangIMS.im.adapter.InfoAdapter;
 import com.tianfangIMS.im.bean.TreeInfo;
 import com.tianfangIMS.im.bean.ViewMode;
 import com.tianfangIMS.im.dialog.LoadDialog;
+import com.tianfangIMS.im.utils.NToast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.rong.imlib.model.Message;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -37,7 +39,7 @@ public class SendMessageActivity extends BaseActivity implements View.OnClickLis
     Gson mGson;
 
     ArrayList<Integer> childCount;
-    ArrayList<TreeInfo> mTreeInfos, clickHistory;
+    ArrayList<TreeInfo> mTreeInfos, clickHistory,mTreeInfosnull;
 
     HashMap<Integer, TreeInfo> map;
     HashMap<Integer, HashMap<Integer, TreeInfo>> maps;
@@ -54,11 +56,16 @@ public class SendMessageActivity extends BaseActivity implements View.OnClickLis
     private RelativeLayout rl_sendmessage_contacts, rl_sendmessage_topcontacts, rl_sendmessage_allContacts;
     private ArrayList<String> listUri;
     private EditText et_search;
+    private ArrayList<Message> AllMessage;
+    private ArrayList<Message> allFile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sendmessage_layout);
         mContext = this;
+        AllMessage = getIntent().getParcelableArrayListExtra("allMessage");
+        allFile = getIntent().getParcelableArrayListExtra("allFile");
         init();
         GetData();
         listUri = getIntent().getStringArrayListExtra("ListUri");
@@ -78,13 +85,13 @@ public class SendMessageActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void GetData() {
-        String sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
+        String sessionId = getSharedPreferences("CompanyCode", MODE_PRIVATE).getString("CompanyCode", "");
         OkGo.post(ConstantValue.DEPARTMENTPERSON)
                 .tag(this)
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .execute(new StringCallback() {
                     @Override
                     public void onBefore(BaseRequest request) {
@@ -95,11 +102,22 @@ public class SendMessageActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         LoadDialog.dismiss(mContext);
+                        if ((s.trim()).startsWith("<!DOCTYPE")) {
+                            NToast.shortToast(mContext, "Session过期，请重新登陆");
+                            startActivity(new Intent(mContext, LoginActivity.class));
+                            finish();
+                        }
                         mGson = new Gson();
                         mTreeInfos = mGson.fromJson(s, new TypeToken<List<TreeInfo>>() {
                         }.getType());
                         //根据PID进行平行节点排序 如果PID相同 则根据自身ID进行前后排序
-                        Collections.sort(mTreeInfos, new Comparator<TreeInfo>() {
+                        mTreeInfosnull = new ArrayList<TreeInfo>();
+                        for (int i = 0; i < mTreeInfos.size(); i++) {
+                            if (mTreeInfos.get(i).getId() != null) {
+                                mTreeInfosnull.add(mTreeInfos.get(i));
+                            }
+                        }
+                        Collections.sort(mTreeInfosnull, new Comparator<TreeInfo>() {
                             @Override
                             public int compare(TreeInfo o1, TreeInfo o2) {
                                 if (o1.getPid() < o2.getPid()) {
@@ -110,11 +128,11 @@ public class SendMessageActivity extends BaseActivity implements View.OnClickLis
                                 return o1.getId() < o2.getId() ? -1 : 1;
                             }
                         });
-                        currentLevel = mTreeInfos.get(0).getPid();
+                        currentLevel = mTreeInfosnull.get(0).getPid();
                         maps = new HashMap<Integer, HashMap<Integer, TreeInfo>>();
                         //规定最小PID为0 保证与最小PID不相同
                         int pid = -1;
-                        for (TreeInfo treeInfo : mTreeInfos) {
+                        for (TreeInfo treeInfo : mTreeInfosnull) {
                             //如果当前pid等于之前的pid 说明该平行节点组已被创建 直接将其放入当前平行节点组内即可
                             if (pid == treeInfo.getPid()) {
                                 map.put(treeInfo.getId(), treeInfo);
@@ -138,7 +156,7 @@ public class SendMessageActivity extends BaseActivity implements View.OnClickLis
                             @Override
                             public void run() {
                                 clickHistory = new ArrayList<TreeInfo>();
-                                mTreeInfos = new ArrayList<>();
+                                mTreeInfosnull = new ArrayList<>();
                                 childCount = new ArrayList<Integer>();
                                 transfer();
                             }
@@ -149,7 +167,7 @@ public class SendMessageActivity extends BaseActivity implements View.OnClickLis
 
     private void transfer() {
         //清除适配数据集合
-        mTreeInfos.clear();
+        mTreeInfosnull.clear();
         childCount.clear();
         //得到下一级部门的数据集合
         map = maps.get(currentLevel);
@@ -159,17 +177,17 @@ public class SendMessageActivity extends BaseActivity implements View.OnClickLis
         }
         //将Map数据集合转换为List
         for (TreeInfo treeInfo : map.values()) {
-            mTreeInfos.add(treeInfo);
+            mTreeInfosnull.add(treeInfo);
         }
         //根据部门编号 进行排序
-        Collections.sort(mTreeInfos, new Comparator<TreeInfo>() {
+        Collections.sort(mTreeInfosnull, new Comparator<TreeInfo>() {
             @Override
             public int compare(TreeInfo o1, TreeInfo o2) {
                 return o1.getId() < o2.getId() ? -1 : 1;
             }
         });
         //显示Item后的子部门人数
-        for (TreeInfo treeInfo : mTreeInfos) {
+        for (TreeInfo treeInfo : mTreeInfosnull) {
             workerCount = 0;
             //员工类型
             if (treeInfo.getFlag() == 1) {
@@ -207,37 +225,52 @@ public class SendMessageActivity extends BaseActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.rl_sendmessage_contacts:
                 Intent inentGroup = new Intent(mContext, MineGroupActivity.class);
-                if (listUri != null && listUri.size() > 0) {
-                    inentGroup.putStringArrayListExtra("ListUri", listUri);
+                if (AllMessage != null && AllMessage.size() > 0) {
+                    inentGroup.putParcelableArrayListExtra("allMessage", AllMessage);
+                }
+                if (allFile != null && allFile.size() > 0) {
+                    inentGroup.putParcelableArrayListExtra("allFile", allFile);
                 }
                 startActivity(inentGroup);
+                finish();
                 break;
             case R.id.rl_sendmessage_topcontacts:
                 Intent inentopcontacts = new Intent(mContext, MineTopContactsActivity.class);
-                if (listUri != null && listUri.size() > 0) {
-                    inentopcontacts.putStringArrayListExtra("ListUri", listUri);
+                if (AllMessage != null && AllMessage.size() > 0) {
+                    inentopcontacts.putParcelableArrayListExtra("allMessage", AllMessage);
+                }
+                if (allFile != null && allFile.size() > 0) {
+                    inentopcontacts.putParcelableArrayListExtra("allFile", allFile);
                 }
                 startActivity(inentopcontacts);
+                finish();
                 break;
             case R.id.rl_sendmessage_allContacts:
                 mIntent = new Intent(mContext, InfoActivity.class);
                 mIntent.putExtra("maps", maps);
-                if (listUri != null && listUri.size() > 0) {
-                    mIntent.putStringArrayListExtra("ListUri", listUri);
+                if (AllMessage != null && AllMessage.size() > 0) {
+                    mIntent.putParcelableArrayListExtra("allMessage", AllMessage);
+                }
+                if (allFile != null && allFile.size() > 0) {
+                    mIntent.putParcelableArrayListExtra("allFile", allFile);
                 }
                 mIntent.putExtra("IsBoolean", flag);
                 mIntent.putExtra("viewMode", ViewMode.NORMAL);
-                mIntent.putExtra("currentLevel", mTreeInfos.get(0).getId());
-                mIntent.putExtra("parentLevel", mTreeInfos.get(0).getPid());
+                mIntent.putExtra("currentLevel", mTreeInfosnull.get(0).getId());
+                mIntent.putExtra("parentLevel", mTreeInfosnull.get(0).getPid());
                 startActivity(mIntent);
                 finish();
                 break;
             case R.id.et_search:
                 Intent searchIntent = new Intent(mContext, SearchAllContactsActivity.class);
-                if (listUri != null && listUri.size() > 0) {
-                    searchIntent.putStringArrayListExtra("ListUri", listUri);
+                if (AllMessage != null && AllMessage.size() > 0) {
+                    searchIntent.putParcelableArrayListExtra("allMessage", AllMessage);
+                }
+                if (allFile != null && allFile.size() > 0) {
+                    searchIntent.putParcelableArrayListExtra("allFile", allFile);
                 }
                 startActivity(searchIntent);
+                finish();
                 break;
         }
     }

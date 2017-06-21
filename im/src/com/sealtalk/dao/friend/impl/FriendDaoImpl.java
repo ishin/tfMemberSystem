@@ -2,15 +2,16 @@ package com.sealtalk.dao.friend.impl;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 import com.sealtalk.common.BaseDao;
 import com.sealtalk.dao.friend.FriendDao;
 import com.sealtalk.model.TFriend;
+import com.sealtalk.utils.LogUtils;
 import com.sealtalk.utils.TimeGenerator;
 
 /**
@@ -20,6 +21,7 @@ import com.sealtalk.utils.TimeGenerator;
  * @since jdk1.7
  */
 public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
+	private static final Logger logger = LogManager.getLogger(FriendDaoImpl.class);
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -27,7 +29,8 @@ public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
 		try {
 			
 			Criteria ctr = getCriteria();
-			ctr.add(Restrictions.or(Restrictions.and(Restrictions.eq("memberId", accountId), Restrictions.eq("friendId", friendId)), Restrictions.and(Restrictions.eq("friendId", accountId), Restrictions.eq("memberId", friendId))));
+			ctr.add(Restrictions.or(Restrictions.and(Restrictions.eq("memberId", accountId), Restrictions.eq("friendId", friendId)), 
+					Restrictions.and(Restrictions.eq("friendId", accountId), Restrictions.eq("memberId", friendId))));
 			
 			List<TFriend> list = ctr.list();
 			
@@ -36,6 +39,7 @@ public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
 			}
 			
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
@@ -45,13 +49,14 @@ public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
 	@Override
 	public void addFriend(int accountId, int friendId) {
 		try {
-			int countFriend = count("from TFriend");
+			int countFriend = count("from TFriend where isDel='1'");
 			
 			TFriend friend = new TFriend();
 			friend.setFriendId(friendId);
 			friend.setMemberId(accountId);
 			friend.setCreatedate(TimeGenerator.getInstance().formatNow("yyyyMMdd"));
 			friend.setListorder(countFriend);
+			friend.setIsDel("1");
 			save(friend);
 			
 			TFriend friend1 = new TFriend();
@@ -59,9 +64,11 @@ public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
 			friend1.setMemberId(friendId);
 			friend1.setCreatedate(TimeGenerator.getInstance().formatNow("yyyyMMdd"));
 			friend1.setListorder(countFriend + 1);
+			friend1.setIsDel("1");
 			
 			save(friend1);
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 	}
@@ -69,10 +76,11 @@ public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
 	@Override
 	public void delFriend(int accountId, int friendId) {
 		try {
-			String hql = "delete from TFriend where memberId=" + accountId + " and friendId=" + friendId + "" +
-					" or memberId=" + friendId + " and friendId=" + accountId;
+			String hql = "delete from TFriend where memberId=" + accountId + " and friendId=" + friendId + " or memberId=" + friendId + " and friendId=" + accountId;
+			logger.info("delFriend sql: " + hql);
 			delete(hql);
 		} catch(Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 	}
@@ -82,7 +90,8 @@ public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
 	public List<TFriend> getFriendRelationForId(Integer id) {
 		try {
 			Criteria ctr = getCriteria();
-			ctr.add(Restrictions.eq("memberId", id));
+			ctr.add(Restrictions.or(Restrictions.eq("memberId", id), Restrictions.eq("friendId", id)));
+			ctr.add(Restrictions.eq("isDel", "1"));
 			
 			List<TFriend> list = ctr.list();
 			
@@ -91,6 +100,7 @@ public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
 			}
 			
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
@@ -113,6 +123,7 @@ public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
 			}
 			
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
@@ -122,7 +133,7 @@ public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<TFriend> getFriendRelationForIdWithLimit(int userId, int limit) {
-		String sql = (new StringBuilder("from TFriend where member_id=").append(userId)).toString();
+		String sql = (new StringBuilder("from TFriend where member_id=").append(userId).append(" and isDel='1'")).toString();
 		
 		try {
 			Query query = getSession().createQuery(sql);
@@ -136,10 +147,28 @@ public class FriendDaoImpl extends BaseDao<TFriend, Long> implements FriendDao {
 			}
 			
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
 		return null;
+	}
+
+	@Override
+	public int deleteRelationByIds(String ids, String isLogic) {
+		try {
+			if (isLogic.equals("1")) {
+				String hql = (new StringBuilder("update TFriend set isDel='0' where memberId in (").append(ids).append(") or friendId in (").append(ids).append(")")).toString();
+				return update(hql);
+			} else {
+				String hql = (new StringBuilder("delete from TFriend where memberId in (").append(ids).append(") or friendId in (").append(ids).append(")")).toString();
+				return delete(hql);
+			}
+		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+			e.printStackTrace();
+		}
+		return 0;
 	}
 
 }

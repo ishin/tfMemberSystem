@@ -21,9 +21,11 @@ import com.tianfangIMS.im.ConstantValue;
 import com.tianfangIMS.im.R;
 import com.tianfangIMS.im.bean.OneGroupBean;
 import com.tianfangIMS.im.dialog.LoadDialog;
+import com.tianfangIMS.im.utils.NToast;
 
 import java.util.Map;
 
+import io.rong.imkit.RongIM;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -48,8 +50,9 @@ public class ChangeGroupNameActivity extends BaseActivity implements View.OnClic
         mContext = this;
         init();
         Object object = getIntent().getSerializableExtra("GroupBean");
+        GroupName = getIntent().getStringExtra("GroupName");
         oneGroupBean = (OneGroupBean) object;
-        et_changeName.setText(oneGroupBean.getText().getName());
+        et_changeName.setText(GroupName);
     }
 
     private void init() {
@@ -102,7 +105,14 @@ public class ChangeGroupNameActivity extends BaseActivity implements View.OnClic
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         LoadDialog.dismiss(mContext);
-                        if (!TextUtils.isEmpty(s)) {
+                        Log.e("打印数据","s："+s);
+                        if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                            if((s.trim()).startsWith("<!DOCTYPE")){
+                                NToast.shortToast(mContext,"Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                RongIM.getInstance().logout();
+                                finish();
+                            }
                             Gson gson = new Gson();
                             Map<String, Object> map = gson.fromJson(s, new TypeToken<Map<String, Object>>() {
                             }.getType());
@@ -115,6 +125,8 @@ public class ChangeGroupNameActivity extends BaseActivity implements View.OnClic
                                 setResult(resultCode, mIntent);
                                 finish();
                             }
+                        }else{
+                            NToast.shortToast(ChangeGroupNameActivity.this,"修改群名称失败");
                         }
                     }
                 });

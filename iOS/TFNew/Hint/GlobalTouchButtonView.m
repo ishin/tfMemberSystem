@@ -9,6 +9,9 @@
 #import "GlobalTouchButtonView.h"
 #import "UIButton+Color.h"
 #import "UIButton+WebCache.h"
+#import "UserDefaultsKV.h"
+#import "GoGoDB.h"
+#import "WaitDialog.h"
 
 @interface GlobalTouchButtonView ()
 {
@@ -29,9 +32,15 @@
     UIButton *_btn3;
     UIButton *_btn4;
     
+    BOOL _isAnimating;
+    
+    CGPoint _touchBeginPt;
+    
 }
 @property (nonatomic, strong) NSMutableArray *_arrBtns;
 @property (nonatomic, strong) NSMutableArray *_arrMasks;
+
+@property (nonatomic, strong) NSMutableArray *_msgs;
 
 @end
 
@@ -39,6 +48,7 @@
 @implementation GlobalTouchButtonView
 @synthesize _arrBtns;
 @synthesize _arrMasks;
+@synthesize _msgs;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -55,6 +65,7 @@
         
         self._arrBtns = [NSMutableArray array];
         self._arrMasks = [NSMutableArray array];
+        self._msgs = [NSMutableArray array];
         
         _globalCallView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
         _globalCallView.backgroundColor = RGBA(0x00, 0x27, 0x2C, 0.4);
@@ -201,6 +212,36 @@
         [_btn3 addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
         [_btn4 addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
         
+        UILongPressGestureRecognizer *longPress =
+        [[UILongPressGestureRecognizer alloc]
+         initWithTarget:self
+         action:@selector(longPressed0:)];
+        [_btn0 addGestureRecognizer:longPress];
+        
+        longPress =
+        [[UILongPressGestureRecognizer alloc]
+         initWithTarget:self
+         action:@selector(longPressed1:)];
+        [_btn1 addGestureRecognizer:longPress];
+        
+        longPress =
+        [[UILongPressGestureRecognizer alloc]
+         initWithTarget:self
+         action:@selector(longPressed2:)];
+        [_btn2 addGestureRecognizer:longPress];
+        
+        longPress =
+        [[UILongPressGestureRecognizer alloc]
+         initWithTarget:self
+         action:@selector(longPressed3:)];
+        [_btn3 addGestureRecognizer:longPress];
+        
+        longPress =
+        [[UILongPressGestureRecognizer alloc]
+         initWithTarget:self
+         action:@selector(longPressed4:)];
+        [_btn4 addGestureRecognizer:longPress];
+ 
         
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                        initWithTarget:self
@@ -212,15 +253,138 @@
     
 }
 
+- (void) longPressed0:(id)sender{
+    
+    UILongPressGestureRecognizer *press = (UILongPressGestureRecognizer *)sender;
+    if (press.state == UIGestureRecognizerStateEnded) {
+        
+        
+        return;
+    } else if (press.state == UIGestureRecognizerStateBegan) {
+       
+        [self switchToCall:0];
+        return;
+    }
+    
+    
+}
+- (void) longPressed1:(id)sender{
+    
+    UILongPressGestureRecognizer *press = (UILongPressGestureRecognizer *)sender;
+    if (press.state == UIGestureRecognizerStateEnded) {
+        
+        
+        return;
+    } else if (press.state == UIGestureRecognizerStateBegan) {
+        
+        [self switchToCall:1];
+        return;
+    }
+
+}
+
+- (void) longPressed2:(id)sender{
+    
+    UILongPressGestureRecognizer *press = (UILongPressGestureRecognizer *)sender;
+    if (press.state == UIGestureRecognizerStateEnded) {
+        
+        
+        return;
+    } else if (press.state == UIGestureRecognizerStateBegan) {
+        
+        [self switchToCall:2];
+        return;
+    }
+
+}
+
+- (void) longPressed3:(id)sender{
+    
+    UILongPressGestureRecognizer *press = (UILongPressGestureRecognizer *)sender;
+    if (press.state == UIGestureRecognizerStateEnded) {
+        
+        
+        return;
+    } else if (press.state == UIGestureRecognizerStateBegan) {
+        
+        [self switchToCall:3];
+        return;
+    }
+
+}
+
+- (void) longPressed4:(id)sender{
+    
+    UILongPressGestureRecognizer *press = (UILongPressGestureRecognizer *)sender;
+    if (press.state == UIGestureRecognizerStateEnded) {
+        
+        
+        return;
+    } else if (press.state == UIGestureRecognizerStateBegan) {
+        
+        [self switchToCall:4];
+        return;
+    }
+
+}
+
+- (void)switchToCall:(int)idx{
+    
+    /*
+    User *u = [UserDefaultsKV getUser];
+    NSString *key = [NSString stringWithFormat:@"last5_chat_sync_%@", u._userId];
+    
+    NSArray *last5_chat = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+    if(idx < [last5_chat count])
+    {
+        NSDictionary *dic = [last5_chat objectAtIndex:idx];
+        
+        int conversationType = [[dic objectForKey:@"type"] intValue];
+        
+        NSString *targetId = [dic objectForKey:@"id"];
+        
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        [app pushToChat:targetId type:conversationType enterCall:YES];
+        
+    }
+    */
+
+    
+    NSArray *last5_chat = _msgs;//[[NSUserDefaults standardUserDefaults] objectForKey:key];
+    if(idx < [last5_chat count])
+    {
+        RCConversationModel *model = [last5_chat objectAtIndex:idx];
+        
+        int conversationType = model.conversationType;//[[dic objectForKey:@"type"] intValue];
+        
+        NSString *targetId = model.targetId;//[dic objectForKey:@"id"];
+        
+        AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        [app pushToChat:targetId type:conversationType enterCall:YES];
+        
+    }
+
+    
+    
+    [self onTapSelected:nil];
+}
+
 - (void) onTapSelected:(id)sender{
     
+    if(_isAnimating)
+        return;
+    
     [UIView animateWithDuration:0.25 animations:^{
+        
         _globalCallView.alpha = 0.0;
         _maskImg.transform = CGAffineTransformMakeScale(0, 0);
+        
     } completion:^(BOOL finished) {
         
         [_globalCallView removeFromSuperview];
         _globalCallView.alpha = 1.0;
+        
+        _isAnimating = NO;
     }];
 }
 
@@ -228,11 +392,14 @@
     
     _isMoved = NO;
     
+    UITouch* touch = [touches anyObject];
+    _touchBeginPt = [touch previousLocationInView:self.superview];
+    
+    
 }
 
 -(void) touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
     
-    _isMoved = YES;
     
     if([_globalCallView superview])
         return;
@@ -243,6 +410,8 @@
     {
         case 1:
         {
+            _isMoved = YES;
+            
             UITouch* touch = [touches anyObject];
             CGPoint previous = [touch previousLocationInView:self.superview];
             CGPoint current = [touch locationInView:self.superview];
@@ -251,10 +420,7 @@
             CGAffineTransform translate = CGAffineTransformMakeTranslation(offset.x,offset.y);
             self.transform = CGAffineTransformConcat(originalTransform, translate);
             originalTransform = self.transform;
-            
-            
-            
-            
+
         }
             break;
         default:
@@ -267,6 +433,19 @@
     
     if(_isMoved)
     {
+        UITouch* touch = [touches anyObject];
+        CGPoint current = [touch locationInView:self.superview];
+        CGPoint offset = CGPointMake(current.x - _touchBeginPt.x, current.y - _touchBeginPt.y);
+        
+        if(fabs(offset.x) < 8 && fabs(offset.y) < 8)
+        {
+            _isMoved = NO;
+        }
+    }
+    
+    if(_isMoved)
+    {
+    
         if([_globalCallView superview])
             return;
         
@@ -304,11 +483,25 @@
     else
     {
         //touched
+    
+        if(_isAnimating)
+            return;
+        
+
+        if([_globalCallView superview]){
+            
+            [self onTapSelected:nil];
+            
+            return;
+        }
+    
         
         originalTransform = CGAffineTransformIdentity;
         highSolutionTransform = CGAffineTransformIdentity;
 
         [[self superview] insertSubview:_globalCallView belowSubview:self];
+        
+        _isAnimating = YES;
         
         [UIView animateWithDuration:0.25
                          animations:^{
@@ -320,7 +513,7 @@
                              
                          } completion:^(BOOL finished) {
                             
-                             
+                             _isAnimating = NO;
                          }];
         
         
@@ -355,50 +548,97 @@
 
 - (void) showContacts{
     
-    NSArray *last5_chat = [[NSUserDefaults standardUserDefaults] objectForKey:@"last5_chat_sync"];
-    for(int i = 0; i < [last5_chat count]; i++)
-    {
-        NSDictionary *dic = [last5_chat objectAtIndex:i];
+    NSArray *arr =  [[RCIMClient sharedRCIMClient] getConversationList:@[@(ConversationType_PRIVATE),
+                                                                         @(ConversationType_GROUP)]];
     
+    [self._msgs removeAllObjects];
+    
+    for(RCConversation *rc in arr)
+    {
+        if([rc.objectName isEqualToString:@"RC:ContactNtf"] || [rc.objectName isEqualToString:@"RC:CmdMsg"])
+        {
+            continue;
+        }
+        
+        if([rc.lastestMessage isKindOfClass:[RCInformationNotificationMessage class]])
+        {
+            RCInformationNotificationMessage *msg = (RCInformationNotificationMessage*)rc.lastestMessage;
+            //应对SB需求
+            if([msg.message isEqualToString:@"群组已解散"] ||[msg.message isEqualToString:@"您当前不在此群组"])
+            {
+                continue;
+                
+            }
+        }
+        
+        [_msgs addObject:rc];
+        
+        if([_msgs count] >= 5)
+            break;
+    }
+    
+    for(int i = 0; i < [_msgs count]; i++)
+    {
+        RCConversationModel *model = [_msgs objectAtIndex:i];
+        
         if(i < 5)
         {
             UIButton *btn = [_arrBtns objectAtIndex:i];
             UILabel  *maskL = [_arrMasks objectAtIndex:i];
             
             btn.hidden = NO;
-            int conversationType = [[dic objectForKey:@"type"] intValue];
-            NSString *avatarurl = [dic objectForKey:@"avatarurl"];
+            int conversationType = model.conversationType;
             
-            if(conversationType == 1)
+            NSString *avatarurl = nil;//[dic objectForKey:@"avatarurl"];
+            
+            if(conversationType == ConversationType_GROUP)
             {
-                maskL.hidden = NO;
-                NSString *fullname = [dic objectForKey:@"name"];
-                NSString *targetId = [dic objectForKey:@"id"];
+                NSString * tgid = model.targetId;
+                NSDictionary *groupInfo = [[GoGoDB sharedDBInstance] queryGroup:model.targetId];
                 
-                [btn setImageWithURL:[NSURL URLWithString:avatarurl]
-                            forState:UIControlStateNormal
-                    placeholderImage:[UIImage imageNamed:@"default_avatar.png"]];
+                if(groupInfo)
+                {
+                    NSString *fullname = [groupInfo objectForKey:@"name"];
+                   
+                    
+                    NSString *logo = [groupInfo objectForKey:@"logo"];
+                    avatarurl = [NSString stringWithFormat:@"%@/upload/images/%@", WEB_API_URL, logo];
+                    
+                    maskL.hidden = NO;
+                    
+                    [btn setImageWithURL:[NSURL URLWithString:avatarurl]
+                                forState:UIControlStateNormal
+                        placeholderImage:[UIImage imageNamed:@"u_touxiang.png"]];
+                    
+                    maskL.backgroundColor = [Utls groupMaskColorWithId:[tgid intValue]];
+                    
+                    NSString *gName = fullname;
+                    NSString *showName = @"";
+                    
+                    if([gName length] > 1)
+                        showName = [gName substringWithRange:NSMakeRange(1, 1)];
+                    else if([gName length] == 1)
+                        showName = gName;
+                    
+                    maskL.text = showName;
+                }
                 
-                maskL.backgroundColor = [Utls groupMaskColorWithId:[targetId intValue]];
-                
-                NSString *gName = fullname;
-                NSString *showName = @"";
-                
-                if([gName length] > 1)
-                    showName = [gName substringWithRange:NSMakeRange(1, 1)];
-                else if([gName length] == 1)
-                    showName = gName;
-                
-                maskL.text = showName;
             }
             else
             {
+                RCUserInfo* cachedUser = [[GoGoDB sharedDBInstance] queryUser:model.targetId];
+                avatarurl = cachedUser.portraitUri;
+                
                 maskL.hidden = YES;
-                [btn setImageWithURL:[NSURL URLWithString:avatarurl] forState:UIControlStateNormal];
+                [btn setImageWithURL:[NSURL URLWithString:avatarurl]
+                            forState:UIControlStateNormal
+                    placeholderImage:[UIImage imageNamed:@"u_touxiang.png"]];
             }
         }
-
+        
     }
+
+    _isAnimating = NO;
 }
 
 
@@ -406,17 +646,20 @@
     
     int idx = (int)btn.tag;
     
-    NSArray *last5_chat = [[NSUserDefaults standardUserDefaults] objectForKey:@"last5_chat_sync"];
+    //User *u = [UserDefaultsKV getUser];
+    //NSString *key = [NSString stringWithFormat:@"last5_chat_sync_%@", u._userId];
+    
+    NSArray *last5_chat = _msgs;//[[NSUserDefaults standardUserDefaults] objectForKey:key];
     if(idx < [last5_chat count])
     {
-        NSDictionary *dic = [last5_chat objectAtIndex:idx];
+        RCConversationModel *model = [last5_chat objectAtIndex:idx];
         
-        int conversationType = [[dic objectForKey:@"type"] intValue];
+        int conversationType = model.conversationType;//[[dic objectForKey:@"type"] intValue];
      
-        NSString *targetId = [dic objectForKey:@"id"];
+        NSString *targetId = model.targetId;//[dic objectForKey:@"id"];
         
         AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-        [app pushToChat:targetId type:conversationType];
+        [app pushToChat:targetId type:conversationType enterCall:NO];
         
     }
     

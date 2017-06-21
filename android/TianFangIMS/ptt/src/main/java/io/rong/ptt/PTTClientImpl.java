@@ -8,6 +8,7 @@ import android.media.AudioTrack;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
@@ -35,7 +36,7 @@ import io.rong.ptt.message.PTTMessage;
  * Created by jiangecho on 2016/12/26.
  */
 
-class PTTClientImpl {
+public class PTTClientImpl {
     private static final String TAG = PTTClientImpl.class.getName();
 
     //8 k * 16bit * 1 = 8k shorts
@@ -169,6 +170,7 @@ class PTTClientImpl {
         public void speakOver() {
             this.speakOver = true;
             interrupt();
+            speakThread = null;
         }
 
         private void sendPttMessage(byte[] amrData, int len) {
@@ -285,7 +287,7 @@ class PTTClientImpl {
             audioRecord.stop();
             audioRecord.release();
             state = PTTClientImpl.State.LISTEN;
-            speakThread = null;
+//            speakThread = null;
         }
     }
 
@@ -304,6 +306,7 @@ class PTTClientImpl {
 
         void stopPlay() {
             interrupt();
+            audioPlayThread = null;
         }
 
         @Override
@@ -332,11 +335,12 @@ class PTTClientImpl {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            Log.e("jyj", "AudioPlayThread end");
             AmrDecoder.exit(state);
-            audioTrack.stop();
+//            audioTrack.stop();
             audioTrack.release();
 
-            audioPlayThread = null;
+//            audioPlayThread = null;
         }
     }
 
@@ -345,4 +349,6 @@ class PTTClientImpl {
         SPEAK,
         LISTEN
     }
+
+
 }

@@ -13,5 +13,6 @@
     
 }
 @property (nonatomic, strong) NSArray *_selectedImages;
-
+@property (nonatomic, assign) BOOL _isAutoDismiss;
+@property (nonatomic, assign) BOOL _isPush;
 @end

@@ -24,10 +24,10 @@ import com.lzy.okgo.request.BaseRequest;
 import com.tianfangIMS.im.ConstantValue;
 import com.tianfangIMS.im.R;
 import com.tianfangIMS.im.activity.InfoActivity;
+import com.tianfangIMS.im.activity.LoginActivity;
 import com.tianfangIMS.im.activity.MainActivity;
 import com.tianfangIMS.im.activity.MineGroupActivity;
 import com.tianfangIMS.im.activity.MineTopContactsActivity;
-import com.tianfangIMS.im.activity.SearchAllContactsActivity;
 import com.tianfangIMS.im.activity.TreeActivity;
 import com.tianfangIMS.im.adapter.InfoAdapter;
 import com.tianfangIMS.im.adapter.SearchAdapter;
@@ -37,6 +37,7 @@ import com.tianfangIMS.im.bean.TreeInfo;
 import com.tianfangIMS.im.bean.ViewMode;
 import com.tianfangIMS.im.dialog.LoadDialog;
 import com.tianfangIMS.im.utils.JSONUtils;
+import com.tianfangIMS.im.utils.NToast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,7 +70,7 @@ public class Contacts_Fragment extends BaseFragment implements View.OnClickListe
 
     ArrayList<Integer> childCount;
     ArrayList<TreeInfo> mTreeInfos, clickHistory;
-
+    ArrayList<TreeInfo> mTreeInfosnull;
     HashMap<Integer, TreeInfo> map;
     HashMap<Integer, HashMap<Integer, TreeInfo>> maps;
     private ImageView MainTree;
@@ -88,6 +89,7 @@ public class Contacts_Fragment extends BaseFragment implements View.OnClickListe
     private List<SearchUserBean> searchData = new ArrayList<>();//得到搜索后的集合
     private TopContactsListBean listbean;
     SearchAdapter searchAdapter;
+    private LinearLayout ll_mineall_search;
 
     @Nullable
     @Override
@@ -119,95 +121,112 @@ public class Contacts_Fragment extends BaseFragment implements View.OnClickListe
         rl_mine_topcontacts = (RelativeLayout) view.findViewById(R.id.rl_mine_topcontacts);
         et_search = (EditText) view.findViewById(R.id.et_search);
         fragment_contacts_lv_departments = (ListView) view.findViewById(R.id.fragment_contacts_lv_departments);
-        search_layout = (LinearLayout)view.findViewById(R.id.search_layout);
+        search_layout = (LinearLayout) view.findViewById(R.id.search_layout);
+
         fragment_contacts_lv_departments.setOnItemClickListener(this);
-        et_search.setFocusable(false);
         et_search.setOnClickListener(this);
         rl_mine_topcontacts.setOnClickListener(this);
         rl_mine_contacts.setOnClickListener(this);
 
     }
 
+
     private void GetData() {
-        String sessionId = getActivity().getSharedPreferences("CompanyCode",Activity.MODE_PRIVATE).getString("CompanyCode", "");
+        String sessionId = getActivity().getSharedPreferences("CompanyCode", Activity.MODE_PRIVATE).getString("CompanyCode", "");
         OkGo.post(ConstantValue.DEPARTMENTPERSON)
                 .tag(this)
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .execute(new StringCallback() {
-                    @Override
-                    public void onBefore(BaseRequest request) {
-                        super.onBefore(request);
-                        LoadDialog.show(getActivity());
-                    }
+                             @Override
+                             public void onBefore(BaseRequest request) {
+                                 super.onBefore(request);
+                                 LoadDialog.show(getActivity());
+                             }
 
-                    @Override
-                    public void onSuccess(String s, Call call, Response response) {
-                        LoadDialog.dismiss(getActivity());
-                        mGson = new Gson();
-                        mTreeInfos = mGson.fromJson(s, new TypeToken<List<TreeInfo>>() {
-                        }.getType());
-                        //根据PID进行平行节点排序 如果PID相同 则根据自身ID进行前后排序
-                        Collections.sort(mTreeInfos, new Comparator<TreeInfo>() {
-                            @Override
-                            public int compare(TreeInfo o1, TreeInfo o2) {
-                                if (o1.getPid() < o2.getPid()) {
-                                    return -1;
-                                } else if (o1.getPid() > o2.getPid()) {
-                                    return 1;
-                                }
-                                return o1.getId() < o2.getId() ? -1 : 1;
-                            }
-                        });
-                        currentLevel = mTreeInfos.get(0).getPid();
-                        maps = new HashMap<Integer, HashMap<Integer, TreeInfo>>();
-                        //规定最小PID为0 保证与最小PID不相同
-                        int pid = -1;
-                        for (TreeInfo treeInfo : mTreeInfos) {
-                            //如果当前pid等于之前的pid 说明该平行节点组已被创建 直接将其放入当前平行节点组内即可
-                            if (pid == treeInfo.getPid()) {
-                                map.put(treeInfo.getId(), treeInfo);
-                            } else {
-                                if (map != null) {
-                                    //当前平行节点已结束 填入父Map 自身置空
-                                    maps.put(pid, map);
-                                    map = null;
-                                }
-                                //如果不同 则说明进入了新的平行节点组
-                                pid = treeInfo.getPid();
-                                if (map == null) {
-                                    map = new HashMap<Integer, TreeInfo>();
-                                    map.put(treeInfo.getId(), treeInfo);
-                                }
-                            }
-                        }
-                        //最后的一组平行节点组进行嵌入
-                        maps.put(pid, map);
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    clickHistory = new ArrayList<TreeInfo>();
-                                    mTreeInfos = new ArrayList<TreeInfo>();
-                                    childCount = new ArrayList<Integer>();
-                                    prepare = new HashMap<Integer, Boolean>();
-                                    mAdapter = new InfoAdapter(getActivity(), mTreeInfos, childCount, ViewMode.NORMAL, null);
-                                    fragment_contacts_lv_departments.setAdapter(mAdapter);
-                                    transfer();
-                                }catch (NullPointerException e){
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
-                });
+                             @Override
+                             public void onSuccess(String s, Call call, Response response) {
+                                 LoadDialog.dismiss(getActivity());
+                                 if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                     NToast.shortToast(getActivity(), "Session过期，请重新登陆");
+                                     startActivity(new Intent(getActivity(), LoginActivity.class));
+                                     getActivity().finish();
+                                 } else {
+                                     mGson = new Gson();
+                                     mTreeInfos = mGson.fromJson(s, new TypeToken<List<TreeInfo>>() {
+                                     }.getType());
+                                     mTreeInfosnull = new ArrayList<TreeInfo>();
+                                     for (int i = 0; i < mTreeInfos.size(); i++) {
+                                         if (mTreeInfos.get(i).getId() != null) {
+                                             mTreeInfosnull.add(mTreeInfos.get(i));
+                                         }
+                                     }
+                                     //根据PID进行平行节点排序 如果PID相同 则根据自身ID进行前后排序
+                                     Collections.sort(mTreeInfosnull, new Comparator<TreeInfo>() {
+                                         @Override
+                                         public int compare(TreeInfo o1, TreeInfo o2) {
+                                             if ((o1.getPid() != null && o2.getPid() != null)) {
+                                                 if (o1.getPid() < o2.getPid()) {
+                                                     return -1;
+                                                 } else if (o1.getPid() > o2.getPid()) {
+                                                     return 1;
+                                                 }
+                                             }
+                                             return o1.getId() < o2.getId() ? -1 : 1;
+//                                             return o1.getPid() == o2.getPid() ? 0 : (o1.getPid() < o2.getPid() ? -1 : 1);
+                                         }
+                                     });
+                                     currentLevel = mTreeInfosnull.get(0).getPid();
+                                     maps = new HashMap<Integer, HashMap<Integer, TreeInfo>>();
+                                     //规定最小PID为0 保证与最小PID不相同
+                                     int pid = -1;
+                                     for (TreeInfo treeInfo : mTreeInfosnull) {
+
+                                         //如果当前pid等于之前的pid 说明该平行节点组已被创建 直接将其放入当前平行节点组内即可
+                                         if (treeInfo.getPid() != null) {
+                                             if (pid == treeInfo.getPid()) {
+                                                 map.put(treeInfo.getId(), treeInfo);
+                                             } else {
+                                                 if (map != null) {
+                                                     //当前平行节点已结束 填入父Map 自身置空d
+                                                     maps.put(pid, map);
+                                                     map = null;
+                                                 }
+                                                 //如果不同 则说明进入了新的平行节点组
+                                                 pid = treeInfo.getPid();
+                                                 if (map == null) {
+                                                     map = new HashMap<Integer, TreeInfo>();
+                                                     map.put(treeInfo.getId(), treeInfo);
+                                                 }
+                                             }
+                                         }
+                                     }
+                                     //最后的一组平行节点组进行嵌入
+                                     maps.put(pid, map);
+                                     getActivity().runOnUiThread(new Runnable() {
+                                         @Override
+                                         public void run() {
+                                             clickHistory = new ArrayList<TreeInfo>();
+                                             mTreeInfosnull = new ArrayList<TreeInfo>();
+                                             childCount = new ArrayList<Integer>();
+                                             prepare = new HashMap<Integer, Boolean>();
+                                             mAdapter = new InfoAdapter(getActivity(), mTreeInfosnull, childCount, ViewMode.NORMAL, null);
+                                             fragment_contacts_lv_departments.setAdapter(mAdapter);
+                                             transfer();
+                                         }
+                                     });
+                                 }
+                             }
+                         }
+
+                );
     }
 
     private void transfer() {
         //清除适配数据集合
-        mTreeInfos.clear();
+        mTreeInfosnull.clear();
         childCount.clear();
         //得到下一级部门的数据集合
         map = maps.get(currentLevel);
@@ -217,17 +236,18 @@ public class Contacts_Fragment extends BaseFragment implements View.OnClickListe
         }
         //将Map数据集合转换为List
         for (TreeInfo treeInfo : map.values()) {
-            mTreeInfos.add(treeInfo);
+            mTreeInfosnull.add(treeInfo);
         }
         //根据部门编号 进行排序
-        Collections.sort(mTreeInfos, new Comparator<TreeInfo>() {
+        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+        Collections.sort(mTreeInfosnull, new Comparator<TreeInfo>() {
             @Override
             public int compare(TreeInfo o1, TreeInfo o2) {
                 return o1.getId() < o2.getId() ? -1 : 1;
             }
         });
         //显示Item后的子部门人数
-        for (TreeInfo treeInfo : mTreeInfos) {
+        for (TreeInfo treeInfo : mTreeInfosnull) {
             workerCount = 0;
             //员工类型
             if (treeInfo.getFlag() == 1) {
@@ -285,9 +305,6 @@ public class Contacts_Fragment extends BaseFragment implements View.OnClickListe
             case R.id.rl_mine_topcontacts:
                 startActivity(new Intent(getActivity(), MineTopContactsActivity.class));
                 break;
-            case R.id.et_search:
-                startActivity(new Intent(getActivity(), SearchAllContactsActivity.class));
-                break;
         }
     }
 
@@ -297,9 +314,9 @@ public class Contacts_Fragment extends BaseFragment implements View.OnClickListe
         mIntent = new Intent(getActivity(), InfoActivity.class);
         mIntent.putExtra("maps", maps);
         mIntent.putExtra("viewMode", ViewMode.NORMAL);
-        mIntent.putExtra("currentLevel", mTreeInfos.get(position).getId());
-        mIntent.putExtra("parentLevel", mTreeInfos.get(position).getPid());
-        Log.e("打印传递的数据:", "getContacts：" + mTreeInfos.get(position).getId() + "--Pid:" + mTreeInfos.get(position).getPid() + "---pos:" + position);
+        mIntent.putExtra("currentLevel", mTreeInfosnull.get(position).getId());
+        mIntent.putExtra("parentLevel", mTreeInfosnull.get(position).getPid());
+        Log.e("打印传递的数据:", "getContacts：" + mTreeInfosnull.get(position).getId() + "--Pid:" + mTreeInfosnull.get(position).getPid() + "---pos:" + position);
         startActivity(mIntent);
     }
 }

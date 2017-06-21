@@ -97,15 +97,16 @@ static WaitDialog *_sharedAlertWaitDialog;
         [self addSubview:_grayBk];
         _grayBk.layer.cornerRadius = 5;
         _grayBk.clipsToBounds = YES;
-        _grayBk.backgroundColor = RGBA(0, 0, 0, 0.3);
-        _grayBk.frame = CGRectMake(0, 0, SCREEN_WIDTH*0.7, 30);
+        _grayBk.backgroundColor = RGBA(0x99, 0x99, 0x99, 0.9);
+        _grayBk.frame = CGRectMake(0, 0, SCREEN_WIDTH*0.7, 40);
         _grayBk.center = self.center;
+       // _grayBk.image = [UIImage imageNamed:@"navi_image.png"];
         
         
         _label = [[UILabel alloc] initWithFrame:CGRectMake(10, 8, CGRectGetWidth(_grayBk.frame)-20, 20)];
         _label.backgroundColor = [UIColor clearColor];
         _label.textColor = [UIColor redColor];
-        _label.font = [UIFont systemFontOfSize:13];
+        _label.font = [UIFont systemFontOfSize:15];
         _label.textAlignment = NSTextAlignmentCenter;
         _label.tag = LABEL_TAG;
         _label.text = @"Loading";
@@ -170,12 +171,14 @@ static WaitDialog *_sharedAlertWaitDialog;
 
 - (void) animateShow{
     
-    _label.frame = CGRectMake(10, 8, CGRectGetWidth(_grayBk.frame)-20, 20);
+    _label.frame = CGRectMake(10, 15, CGRectGetWidth(_grayBk.frame)-20, 20);
     [_label contentSize];
     
-    int h = CGRectGetHeight(_label.frame)+16;
+    int h = CGRectGetHeight(_label.frame)+30;
     _grayBk.frame = CGRectMake(0, 0, SCREEN_WIDTH*0.7, h);
     _grayBk.center = self.center;
+    //UIImage *image = [UIImage imageNamed:@"alert_pannel.png"];
+    //_grayBk.image = [image stretchableImageWithLeftCapWidth:80 topCapHeight:60];
     
     AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [app.window addSubview:self];

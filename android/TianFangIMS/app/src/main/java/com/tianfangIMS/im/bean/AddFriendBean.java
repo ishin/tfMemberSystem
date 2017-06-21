@@ -25,8 +25,11 @@ public class AddFriendBean implements Serializable {
     private String organname;
     private String sex;
     private boolean isChecked;
-    public AddFriendBean(){}
-    public AddFriendBean(String account, String address, String birthday, String branchname, String email, String groupmax, String groupuse, String id, String intro, String logo, String mobile, String name, String organname, String positionname, String sex, String telephone, String workno,boolean isChecked) {
+
+    public AddFriendBean() {
+    }
+
+    public AddFriendBean(String account, String address, String birthday, String branchname, String email, String groupmax, String groupuse, String id, String intro, String logo, String mobile, String name, String organname, String positionname, String sex, String telephone, String workno, boolean isChecked) {
         this.account = account;
         this.address = address;
         this.birthday = birthday;
@@ -213,4 +216,16 @@ public class AddFriendBean implements Serializable {
                 ", sex='" + sex + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object arg0) {
+        AddFriendBean p = (AddFriendBean) arg0;
+        return id.equals(p.getId());
+    }
+    @Override
+    public int hashCode() {
+        String str = id;
+        return str.hashCode();
+    }
+
 }

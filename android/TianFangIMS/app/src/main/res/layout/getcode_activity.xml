@@ -64,6 +64,8 @@
                         android:layout_marginLeft="30dp"
                         android:background="@null"
                         android:hint="@string/et_input_yanzhengma"
+                        android:inputType="number"
+                        android:singleLine="true"
                         android:textColor="#373E61"
                         android:textColorHint="#BFC9D9"
                         android:textSize="10sp" />
@@ -170,6 +172,7 @@
             android:visibility="invisible">
 
             <TextView
+                android:id="@+id/tv_forgetpassword_ware"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@mipmap/forgetpassword_ware"

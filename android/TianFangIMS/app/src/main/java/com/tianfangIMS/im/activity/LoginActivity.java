@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.request.BaseRequest;
@@ -39,6 +40,7 @@ import com.tianfangIMS.im.utils.MD5;
 import com.tianfangIMS.im.utils.NToast;
 
 import java.util.List;
+import java.util.Map;
 
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
@@ -76,6 +78,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
     private SharedPreferences daima_sp;
     private SharedPreferences.Editor daima_editor;
     private String sessionId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,10 +86,16 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
         mContext = this;
         SystemBarTranslucentType();//将Android状态栏改变为沉浸样式
         sp = getSharedPreferences("config", MODE_PRIVATE);
-        daima_sp= getSharedPreferences("CompanyCode",MODE_PRIVATE);
+        daima_sp = getSharedPreferences("CompanyCode", MODE_PRIVATE);
         editor = sp.edit();
         daima_editor = daima_sp.edit();
+        SharedPreferences sharedPreferences = getSharedPreferences("config",
+                Activity.MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", "");
+        String CompanyCode = getSharedPreferences("CompanyCode", Activity.MODE_PRIVATE).getString("CompanyCode1", "");
         init();//初始化控件
+        et_login_user.setText(username);
+        et_login_daima.setText(CompanyCode);
     }
 
     private void SetSyncUserGroup(LoginBean bean) {
@@ -96,12 +105,17 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .params("userid", id)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                            if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                NToast.shortToast(mContext, "Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                finish();
+                            }
                             Gson gson = new Gson();
                             SetSyncUserBean syncUserBean = gson.fromJson(s, SetSyncUserBean.class);
                             if (syncUserBean.getCode().equals("200")) {
@@ -124,7 +138,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
         et_login_password = (EditText) this.findViewById(R.id.et_login_password);
         btn_login = (Button) this.findViewById(R.id.btn_login);
         img_login_clean_daima_et = (ImageView) this.findViewById(R.id.img_login_clean_daima_et);
-        et_login_daima = (EditText)this.findViewById(R.id.et_login_daima);
+        et_login_daima = (EditText) this.findViewById(R.id.et_login_daima);
 
         et_login_daima.addTextChangedListener(new TextWatcher() {
             @Override
@@ -228,6 +242,10 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
 //            NToast.shortToast(getApplicationContext(), "企业码不能为空");
 //            return;
 //        }
+        if (TextUtils.isEmpty(CompanyCode)) {
+            NToast.shortToast(getApplicationContext(), "企业码不能为空");
+            return;
+        }
         if (TextUtils.isEmpty(phoneString)) {
             NToast.shortToast(getApplicationContext(), R.string.phone_number_is_null);
             return;
@@ -245,10 +263,10 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .params("account", et_login_user.getText().toString().trim())
                 .params("userpwd", MD5.encrypt(et_login_password.getText().toString().trim()))
-                .params("organCode",CompanyCode)
+                .params("organCode", CompanyCode)
                 .execute(new StringCallback() {
                     @Override
                     public void onBefore(BaseRequest request) {
@@ -263,7 +281,12 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
 
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        if (!TextUtils.isEmpty(s)) {
+                        if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                            if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                NToast.shortToast(mContext, "Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                finish();
+                            }
                             Gson gson = new Gson();
                             user = gson.fromJson(s, LoginBean.class);
                             CommonUtil.saveUserInfo(mContext, gson.toJson(user));
@@ -275,32 +298,37 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
                                         public void onTokenIncorrect() {
                                             Log.e("RongIM", "onTokenIncorrect");
                                         }
+
                                         @Override
                                         public void onSuccess(String s) {
-                                            Log.e("RongIM", "onSuccess");
                                             LoadDialog.dismiss(mContext);
                                             SetSyncUserGroup(user);
+                                            if (user != null){
+                                                RongIM.getInstance().refreshUserInfoCache(new UserInfo(user.getText().getId(), user.getText().getFullname(),
+                                                        Uri.parse(ConstantValue.ImageFile + user.getText().getLogo())));
+                                            }
                                             connectResultId = s;
-//                                            editor.putString("CompanyCode",CompanyCode);
                                             editor.putString("username", phoneString);
                                             editor.putString("userpass", passwordString);
+                                            editor.putString("token", loginToken);
                                             editor.apply();
-                                            Toast.makeText(getApplicationContext(), "登陆成功", Toast.LENGTH_SHORT).show();
-                                            Intent intent_login = new Intent();
-                                            intent_login.setClass(LoginActivity.this, MainActivity.class);
-                                            startActivity(intent_login);
-                                            String str = OkGo.getInstance().getCookieJar().getCookieStore().getAllCookie().subList(0,1).toString();
+                                            String str = OkGo.getInstance().getCookieJar().getCookieStore().getAllCookie().subList(0, 1).toString();
                                             String aa = str.substring(2, str.indexOf(";"));
-                                            sessionId = aa.substring(aa.indexOf("=")+1,aa.length());
-                                            daima_editor.putString("CompanyCode",sessionId);
+                                            sessionId = aa.substring(aa.indexOf("=") + 1, aa.length());
+                                            Log.e("sessionid", "----:" + sessionId);
+                                            daima_editor.putString("CompanyCode1", CompanyCode);
+                                            daima_editor.putString("username", phoneString);
+                                            daima_editor.putString("CompanyCode", sessionId);
                                             daima_editor.apply();
+                                            Toast.makeText(getApplicationContext(), "登陆成功", Toast.LENGTH_SHORT).show();
+                                            Intent intent_login = new Intent(LoginActivity.this, MainActivity.class);
+                                            startActivity(intent_login);
                                             finish();
                                         }
+
                                         @Override
                                         public void onError(RongIMClient.ErrorCode errorCode) {
                                             Log.e("RongIM", "onError");
-//                                            NToast.shortToast(mContext, "获取token失败" + errorCode);
-                                            Log.e("sasdfsaasfd", "获取token失败" + errorCode);
                                             return;
                                         }
                                     });
@@ -312,10 +340,19 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
                             }
                             if (user.getCode() == 0) {
                                 LoadDialog.dismiss(mContext);
-                                Toast.makeText(getApplicationContext(), "账号密码错误，请重新输入", Toast.LENGTH_SHORT).show();
+                                Gson gson1 = new Gson();
+                                Map<String, Object> map = gson1.fromJson(s, new TypeToken<Map<String, Object>>() {
+                                }.getType());
+                                Map<String, Object> map1 = gson1.fromJson(map.get("text").toString(), new TypeToken<Map<String, Object>>() {
+                                }.getType());
+                                String str = map1.get("code").toString();
+                                if (str.equals("00036")) {
+                                    Toast.makeText(getApplicationContext(), "企业码填写错误", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "账号密码错误", Toast.LENGTH_SHORT).show();
+                                }
                                 return;
                             }
-
                         }
                         if (TextUtils.isEmpty(s)) {
                             LoadDialog.dismiss(mContext);
@@ -328,8 +365,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         LoadDialog.dismiss(mContext);
-                        Toast.makeText(getApplicationContext(), "登录失败", Toast.LENGTH_SHORT).show();
-                        Log.e("登陆失败", "-----:" + response);
+                        Toast.makeText(getApplicationContext(), "访问网络失败，请重新登陆", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -359,12 +395,6 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
                 passwordString = et_login_password.getText().toString().trim();
                 CompanyCode = et_login_daima.getText().toString().trim();
                 setLogin();
-                break;
-            case R.id.et_login_user:
-
-                break;
-            case R.id.et_login_password:
-
                 break;
         }
     }
@@ -471,9 +501,10 @@ public class LoginActivity extends Activity implements View.OnClickListener, Ron
         if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
             phoneString = et_login_user.getText().toString().trim();
             passwordString = et_login_password.getText().toString().trim();
-            editor.putString("username", phoneString);
-            editor.putString("userpass", passwordString);
-            editor.apply();
+            CompanyCode = et_login_daima.getText().toString().trim();
+//            editor.putString("username", phoneString);
+//            editor.putString("userpass", passwordString);
+//            editor.apply();
             setLogin();
             return true;
         }

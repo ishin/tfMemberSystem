@@ -4,12 +4,14 @@ import javax.servlet.ServletException;
 
 import net.sf.json.JSONObject;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.googlecode.sslplugin.annotation.Secured;
 import com.sealtalk.common.BaseAction;
 import com.sealtalk.common.Tips;
 import com.sealtalk.service.fun.FunctionService;
+import com.sealtalk.utils.LogUtils;
 
 /**
  * 辅助功能action 
@@ -17,11 +19,11 @@ import com.sealtalk.service.fun.FunctionService;
  * @since jdk1.7
  * @date 2017/01/07
  */
-@Secured
+
 public class FunctionAction extends BaseAction {
 
 	private static final long serialVersionUID = -7261604465748499252L;
-	private static final Logger logger = Logger.getLogger(FunctionAction.class);
+	private final static Logger logger = LogManager.getLogger("FunctionAction.class");
 	
 	/**
 	 * 设置消息免打扰功能
@@ -33,7 +35,7 @@ public class FunctionAction extends BaseAction {
 		
 		try {
 			if (functionService != null) {
-				result = functionService.setNotRecieveMsg(status, groupid, userid);
+				result = functionService.setNotRecieveMsg(clearChar(status), clearChar(groupid), clearChar(userid));
 			} else {
 				JSONObject jo = new JSONObject();
 				jo.put("code", -1);
@@ -41,9 +43,11 @@ public class FunctionAction extends BaseAction {
 				result = jo.toString();
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -54,7 +58,8 @@ public class FunctionAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getNotRecieveMsg() throws ServletException {
-		String result = functionService.getNotRecieveMsg(groupid, userid);
+		String result = functionService.getNotRecieveMsg(clearChar(groupid), clearChar(userid));
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -67,10 +72,9 @@ public class FunctionAction extends BaseAction {
 	public String setSysTipVoice() throws ServletException {
 		String result = null;
 		
-		System.out.println("-----------------systip :" + userid + " : " + status);
 		try {
 			if (functionService != null) {
-				result = functionService.setSysTipVoice(userid, status);
+				result = functionService.setSysTipVoice(clearChar(userid), clearChar(status));
 			} else {
 				JSONObject jo = new JSONObject();
 				jo.put("code", -1);
@@ -78,9 +82,11 @@ public class FunctionAction extends BaseAction {
 				result = jo.toString();
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
+		logger.info(result);
 		returnToClient(result);
 		
 		return "text";
@@ -94,7 +100,7 @@ public class FunctionAction extends BaseAction {
 		
 		try {
 			if (functionService != null) {
-				result = functionService.getSysTipVoice(userid);
+				result = functionService.getSysTipVoice(clearChar(userid));
 			} else {
 				JSONObject jo = new JSONObject();
 				jo.put("code", -1);
@@ -102,8 +108,10 @@ public class FunctionAction extends BaseAction {
 				result = jo.toString();
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -114,7 +122,8 @@ public class FunctionAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String setMsgTop() throws ServletException {
-		String result = functionService.setMsgTop(userid, topid, toptype);
+		String result = functionService.setMsgTop(clearChar(userid), clearChar(topid), clearChar(toptype));
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -125,7 +134,8 @@ public class FunctionAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String getMsgTop() throws ServletException {
-		String result = functionService.getMsgTop(userid);
+		String result = functionService.getMsgTop(clearChar(userid));
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -136,7 +146,8 @@ public class FunctionAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String cancelMsgTop() throws ServletException {
-		String result = functionService.cancelMsgTop(userid, topid, toptype);
+		String result = functionService.cancelMsgTop(clearChar(userid), clearChar(topid), clearChar(toptype));
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}

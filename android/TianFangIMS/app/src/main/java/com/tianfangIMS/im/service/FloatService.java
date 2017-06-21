@@ -30,6 +30,7 @@ import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Message;
 import io.rong.imlib.model.UserInfo;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 /**
  * Created by Titan on 2017/2/19.
@@ -75,7 +76,6 @@ public class FloatService extends Service {
             if (mTreeInfos == null) {
                 try {
                     mTreeInfos = (List<TreeInfo>) intent.getSerializableExtra("data");
-                    Log.e("settingResultData：", "打印接受值的数量----:" + mTreeInfos.size());
                 } catch (NullPointerException e) {
                     Toast.makeText(this, "服务异常,无法启动", Toast.LENGTH_SHORT).show();
                 }
@@ -125,28 +125,19 @@ public class FloatService extends Service {
                     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(50 * density, 50 * density);
                     mImageView.setLayoutParams(lp);
                     mImageView.setId(View.NO_ID);
-                    Log.e("settingResultData", "----:" + mTreeInfos.get(i).getLogo());
-//                    Picasso.with(FloatService.this)
-//                            .load(logo)
-//                            .resize(50, 50)
-//                            .placeholder(R.mipmap.default_portrait)
-//                            .config(Bitmap.Config.ARGB_8888)
-//                            .error(R.mipmap.default_portrait)
-//                            .into(mImageView);
                     Glide.with(FloatService.this)
                             .load(logo)
-                            .placeholder(R.mipmap.default_portrait)
                             .dontAnimate()
-                            .fallback(R.mipmap.default_portrait)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .placeholder(R.mipmap.default_portrait)
                             .error(R.mipmap.default_portrait)
+                            .bitmapTransform(new BlurTransformation(getApplicationContext(), 23, 4))
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(mImageView);
                     mImageView.setTag(mImageView.getId(), mTreeInfos.get(i));
                     mImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             mInfo = (TreeInfo) v.getTag(v.getId());
-                            Log.e("Float：", "------:" + mInfo.getId() + "---IsGroup:" + mInfo.isGroup());
                             if (mInfo.getId() != 0) {
                                 if (mInfo.isGroup()) {
                                     RongIM.getInstance().startGroupChat(FloatService.this, mInfo.getId() + "", mInfo.getName());
@@ -163,6 +154,17 @@ public class FloatService extends Service {
                         //TODO
                         @Override
                         public boolean onLongClick(View v) {
+                            mInfo = (TreeInfo) v.getTag(v.getId());
+                            if (mInfo.getId() != 0) {
+                                if (mInfo.isGroup()) {
+                                    RongIM.getInstance().startGroupChat(FloatService.this, mInfo.getId() + "", mInfo.getName(), 1);
+                                } else {
+                                    RongIM.getInstance().startPrivateChat(FloatService.this, mInfo.getId() + "", mInfo.getName(), 1);
+                                }
+
+                            } else {
+                                NToast.shortToast(FloatService.this, "没有找到用户");
+                            }
                             return false;
                         }
                     });

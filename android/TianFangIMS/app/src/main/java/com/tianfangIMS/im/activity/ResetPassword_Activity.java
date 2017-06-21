@@ -1,10 +1,8 @@
 package com.tianfangIMS.im.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -18,12 +16,14 @@ import com.tianfangIMS.im.ConstantValue;
 import com.tianfangIMS.im.R;
 import com.tianfangIMS.im.bean.LoginBean;
 import com.tianfangIMS.im.dialog.LoadDialog;
+import com.tianfangIMS.im.service.FloatService;
 import com.tianfangIMS.im.utils.CommonUtil;
 import com.tianfangIMS.im.utils.MD5;
 import com.tianfangIMS.im.utils.NToast;
 
 import java.util.Map;
 
+import io.rong.imkit.RongIM;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -56,7 +56,7 @@ public class ResetPassword_Activity extends BaseActivity implements View.OnClick
     }
 
     private void resetPassWord(String old, String newpwd, String comparepwd) {
-        String sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
+        String sessionId = getSharedPreferences("CompanyCode", MODE_PRIVATE).getString("CompanyCode", "");
         Gson gson = new Gson();
         LoginBean loginBean = gson.fromJson(CommonUtil.getUserInfo(mContext), LoginBean.class);
         String account = loginBean.getText().getAccount();
@@ -65,7 +65,7 @@ public class ResetPassword_Activity extends BaseActivity implements View.OnClick
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .params("account", account)
                 .params("oldpwd", MD5.encrypt(old))
                 .params("newpwd", MD5.encrypt(newpwd))
@@ -76,24 +76,34 @@ public class ResetPassword_Activity extends BaseActivity implements View.OnClick
                         super.onBefore(request);
                         LoadDialog.show(mContext);
                     }
-
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         LoadDialog.dismiss(mContext);
-                        if (!TextUtils.isEmpty(s)) {
-
-                            Gson gson = new Gson();
-                            Map<String, Object> map = gson.fromJson(s, new TypeToken<Map<String, Object>>() {
-                            }.getType());
-                            if ((map.get("code")).equals("-1.0")) {
-                                NToast.shortToast(mContext, "旧密码错误");
-                            }
-                            if ((map.get("code")).equals("1")) {
-                                NToast.shortToast(mContext, "密码修改成功，请重新登录");
+                        if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                            if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                NToast.shortToast(mContext, "Session过期，请重新登陆");
                                 startActivity(new Intent(mContext, LoginActivity.class));
                                 finish();
+                            } else {
+                                Gson gson = new Gson();
+                                Map<String, Object> map = gson.fromJson(s, new TypeToken<Map<String, Object>>() {
+                                }.getType());
+                                if (((map.get("code")).toString()).equals("-1.0")) {
+                                    NToast.shortToast(mContext, "旧密码错误");
+                                }
+                                if ((map.get("code")).equals("1")) {
+                                    NToast.shortToast(mContext, "密码修改成功，请重新登录");
+                                    Intent mIntent = new Intent(mContext, FloatService.class);
+                                    mContext.stopService(mIntent);
+                                    startActivity(new Intent(mContext, LoginActivity.class));
+                                    RongIM.getInstance().logout();
+//                                    SharedPreferences sp = getSharedPreferences("config", MODE_PRIVATE);
+//                                    SharedPreferences.Editor editor = sp.edit();
+//                                    editor.clear();
+//                                    editor.commit();
+                                    finish();
+                                }
                             }
-                            Log.e("aaaaaaaaa", "wwwwwwwwwww::" + map.get("code"));
                         }
                     }
                 });
@@ -104,9 +114,20 @@ public class ResetPassword_Activity extends BaseActivity implements View.OnClick
         newpwd = ed_newpassword.getText().toString();
         comparepwd = ed_comparepwd.getText().toString();
         if (!TextUtils.isEmpty(old) && !TextUtils.isEmpty(newpwd) && !TextUtils.isEmpty(comparepwd)) {
-            resetPassWord(old, newpwd, comparepwd);
-        }else {
-            NToast.shortToast(mContext,"密码不能为空");
+            if (newpwd.equals(comparepwd)) {
+                if (newpwd.length() < 6 || newpwd.length() > 32) {
+                    NToast.shortToast(mContext, "密码不能小于6位或者大于32位");
+                    return;
+                }else{
+                    resetPassWord(old, newpwd, comparepwd);
+                }
+            } else {
+                NToast.shortToast(mContext, "两次密码输入不一致");
+                return;
+            }
+        } else {
+            NToast.shortToast(mContext, "密码不能为空");
+            return;
         }
     }
 
@@ -114,10 +135,6 @@ public class ResetPassword_Activity extends BaseActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_submit:
-                SharedPreferences sp = getSharedPreferences("config", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-                editor.clear();
-                editor.commit();
                 PasswordIsNull();
                 break;
         }

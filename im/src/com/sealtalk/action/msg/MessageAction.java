@@ -4,7 +4,9 @@ import javax.servlet.ServletException;
 
 import net.sf.json.JSONObject;
 
-import com.googlecode.sslplugin.annotation.Secured;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.sealtalk.common.AuthTips;
 import com.sealtalk.common.BaseAction;
 import com.sealtalk.model.AppSecret;
@@ -17,10 +19,11 @@ import com.sealtalk.service.msg.MessageService;
  * @since jdk1.7
  * @date 2017/01/12
  */
-@Secured
+
 public class MessageAction extends BaseAction {
 
 	private static final long serialVersionUID = -1948853366651740073L;
+	private static final Logger logger = LogManager.getLogger(MessageAction.class);
 
 	/**
 	 * 发送系统消息
@@ -31,18 +34,18 @@ public class MessageAction extends BaseAction {
 	public String sendSysMsg() throws ServletException {
 		String result = null;
 
-		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
+		AppSecret as = msgService.validAppIdAndSecret(clearChar(appId), clearChar(secret));
 		if (as != null) {
 			int organId = as.getOrganId();
-			result = msgService.sendSysMsg(fromId, targetIds, targetNames, msg,
-					extraMsg, pushContent, pushData, isPersisted, isCounted, organId);
+			result = msgService.sendSysMsg(clearChar(fromId), clearChar(targetIds), clearChar(targetNames), clearChar(msg),
+					clearChar(extraMsg), clearChar(pushContent), clearChar(pushData), clearChar(isPersisted), clearChar(isCounted), organId);
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", 0);
 			jo.put("text", AuthTips.WORNGAPPID.getText());
 			result = jo.toString();
 		}
-
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}
@@ -55,18 +58,19 @@ public class MessageAction extends BaseAction {
 	 */
 	public String sendPrivateMsg() throws ServletException {
 		String result = null;
-		AppSecret as = msgService.validAppIdAndSecret(appId, secret);
+		AppSecret as = msgService.validAppIdAndSecret(clearChar(appId), clearChar(secret));
 		if (as != null) {
 			int organId = as.getOrganId();
-			result = msgService.sendPrivateMsg(fromId, targetIds, targetNames,
-					msg, extraMsg, pushContent, count, verifyBlacklist,
-					isPersisted, isCounted, organId);
+			result = msgService.sendPrivateMsg(clearChar(fromId), clearChar(targetIds), clearChar(targetNames),
+					clearChar(msg), clearChar(extraMsg), clearChar(pushContent), clearChar(count), clearChar(verifyBlacklist),
+					clearChar(isPersisted), clearChar(isCounted), organId);
 		} else {
 			JSONObject jo = new JSONObject();
 			jo.put("code", 0);
 			jo.put("text", AuthTips.WORNGAPPID.getText());
 			result = jo.toString();
 		}
+		logger.info(result);
 		returnToClient(result);
 		return "text";
 	}

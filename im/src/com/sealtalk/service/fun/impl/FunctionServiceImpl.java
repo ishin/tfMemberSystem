@@ -2,10 +2,11 @@ package com.sealtalk.service.fun.impl;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
-import org.apache.log4j.Logger;
 
 import com.sealtalk.common.FunctionName;
 import com.sealtalk.common.Tips;
@@ -17,11 +18,12 @@ import com.sealtalk.model.TFunction;
 import com.sealtalk.model.TMsgtop;
 import com.sealtalk.service.fun.FunctionService;
 import com.sealtalk.utils.JSONUtils;
+import com.sealtalk.utils.LogUtils;
 import com.sealtalk.utils.StringUtils;
 
 public class FunctionServiceImpl implements FunctionService {
 
-	private static final Logger logger = Logger.getLogger(FunctionServiceImpl.class);
+	private static final Logger logger = LogManager.getLogger(FunctionServiceImpl.class);
 	
 	@Override
 	public String setNotRecieveMsg(String status, String groupId, String userId) {
@@ -43,6 +45,7 @@ public class FunctionServiceImpl implements FunctionService {
 				tf.setGroupId(groupIdInt);
 				tf.setMemberId(userIdInt);
 				tf.setIsOpen(status);
+				tf.setIsDel("1");
 				tf.setListOrder(0);
 				
 				dontDistrubDao.setDontDistrub(tf);
@@ -54,9 +57,11 @@ public class FunctionServiceImpl implements FunctionService {
 				jo.put("text", Tips.NOTSETFUN.getText());
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 	
@@ -83,9 +88,11 @@ public class FunctionServiceImpl implements FunctionService {
 				jo.put("text", Tips.NOTSETFUN.getText());
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 	
@@ -99,18 +106,19 @@ public class FunctionServiceImpl implements FunctionService {
 			
 			jo.put("code", 1);
 			
-			if (tf != null) {
+			if (tf != null && tf.getIsOpen().equals("1")) {
 				jo.put("text", 1);
 			} else {
 				jo.put("text", 0);
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
 		String result = jo.toString();
 		
-		System.out.println(result);
+		logger.info(result);
 		return result;
 	}
 
@@ -128,6 +136,7 @@ public class FunctionServiceImpl implements FunctionService {
 					
 					tf.setIsOpen(status);
 					tf.setName(name);
+					tf.setIsDel("1");
 					tf.setListorder(0);
 					
 					functionDao.setFunctionStatus(tf);
@@ -141,9 +150,11 @@ public class FunctionServiceImpl implements FunctionService {
 				jo.put("text", Tips.NOTSETFUN.getText());
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 	
@@ -165,6 +176,7 @@ public class FunctionServiceImpl implements FunctionService {
 				tm.setMsgType(topType);
 				tm.setUserId(userIdInt);
 				tm.setTopId(topIdInt);
+				tm.setIsDel("1");
 				tm.setListorder(count);
 				
 				msgTopDao.setMsgTop(tm);
@@ -176,9 +188,11 @@ public class FunctionServiceImpl implements FunctionService {
 				jo.put("text", Tips.WRONGPARAMS.getText());
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 	
@@ -216,9 +230,11 @@ public class FunctionServiceImpl implements FunctionService {
 				jo.put("text", Tips.WRONGPARAMS.getText());
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 	
@@ -242,9 +258,11 @@ public class FunctionServiceImpl implements FunctionService {
 				jo.put("text", Tips.WRONGPARAMS.getText());
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 	

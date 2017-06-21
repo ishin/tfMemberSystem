@@ -20,8 +20,8 @@ import java.util.List;
  */
 
 public class AddTopContacts_GridView_Adapter extends BaseAdapter {
-    private Context mContext;
-    private List<AddFriendBean> mList;
+    private Context mContext;//传入listView所在的上下文
+    private List<AddFriendBean> mList;//数据源
 
     public AddTopContacts_GridView_Adapter(Context mContext, List<AddFriendBean> mList) {
         this.mContext = mContext;
@@ -45,10 +45,8 @@ public class AddTopContacts_GridView_Adapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-//        LayoutInflater mInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ViewHolder viewHolder;
         if (convertView == null) {
-//            convertView = mInflater.inflate(R.layout.addcontacts_gridview, null);
             convertView = View.inflate(mContext, R.layout.addcontacts_gridview, null);
             viewHolder = new ViewHolder();
             viewHolder.img = (ImageView) convertView.findViewById(R.id.iv_addfriend_photo);
@@ -57,7 +55,6 @@ public class AddTopContacts_GridView_Adapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-//        CommonUtil.GetImages(mContext, mList.get(position).getLogo(), viewHolder.img);
         Picasso.with(mContext)
                 .load(ConstantValue.ImageFile + mList.get(position).getLogo())
                 .resize(80, 80)

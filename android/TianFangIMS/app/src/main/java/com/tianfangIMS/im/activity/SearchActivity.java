@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.google.gson.Gson;
@@ -41,13 +41,15 @@ public class SearchActivity extends BaseActivity implements AdapterView.OnItemCl
     private Context mContext;
     private ListView fragment_contacts_search;
     private LinearLayout no_result;
+    private TextView tv_search_cencal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.searcg_activity);
+        setTitle("常用联系人搜索");
         mContext = this;
         init();
-        setTitle("搜索");
         SearchUserInfo();
     }
 
@@ -59,17 +61,26 @@ public class SearchActivity extends BaseActivity implements AdapterView.OnItemCl
         TopContactsListBean bean = gson.fromJson(CommonUtil.getFrientUserInfo(mContext), listType);
         for (int i = 0; i < bean.getText().size(); i++) {
             searchList.add(new SearchUserBean(bean.getText().get(i).getId(), bean.getText().get(i).getFullname(),
-                    bean.getText().get(i).getMobile(), bean.getText().get(i).getLogo(), bean.getText().get(i).getPosition()));
+                    bean.getText().get(i).getMobile(), bean.getText().get(i).getLogo(), bean.getText().get(i).getPosition(), bean.getText().get(i).getAccount()));
         }
     }
 
     private void init() {
         et_search = (EditText) this.findViewById(R.id.et_search);
         fragment_contacts_search = (ListView) this.findViewById(R.id.lv_contacts_search);
-        no_result = (LinearLayout)this.findViewById(R.id.no_result_contacts);
-
+        no_result = (LinearLayout) this.findViewById(R.id.no_result_contacts);
         fragment_contacts_search.setOnItemClickListener(this);
-
+        tv_search_cencal = (TextView) this.findViewById(R.id.tv_search_cencal);
+        tv_search_cencal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(et_search.getText().toString())) {
+                    finish();
+                } else {
+                    et_search.getText().clear();
+                }
+            }
+        });
         et_search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -86,9 +97,9 @@ public class SearchActivity extends BaseActivity implements AdapterView.OnItemCl
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(searchData.size() == 0){
+                if (searchData.size() == 0) {
                     no_result.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     no_result.setVisibility(View.GONE);
                 }
                 String file = s.toString();
@@ -102,47 +113,45 @@ public class SearchActivity extends BaseActivity implements AdapterView.OnItemCl
     private void GetSearch(CharSequence s) {
         searchData.clear();
         String input = s.toString();
-            for (int i = 0; i < searchList.size(); i++) {
-                int count = 0;
-                //全部转为小写
-                input = input.toLowerCase();
-                for (int j = 0; j < input.length(); j++) {
-                    char a = input.charAt(j);
-                    //如果是中文 则只跟Name属性进行比对 (因为其他属性不会存在中文字符)
-                    if (Pinyin.isChinese(a)) {
-                        if (searchList.get(i).getName().indexOf(a) >= 0) {
-                            count++;
-                        }
+        for (int i = 0; i < searchList.size(); i++) {
+            int count = 0;
+            //全部转为小写
+            input = input.toLowerCase();
+            for (int j = 0; j < input.length(); j++) {
+                char a = input.charAt(j);
+                //如果是中文 则只跟Name属性进行比对 (因为其他属性不会存在中文字符)
+                if (Pinyin.isChinese(a)) {
+                    if (searchList.get(i).getName().indexOf(a) >= 0) {
+                        count++;
+                    }
+                } else {
+                    //非中文 对所有属性进行比对
+                    if (searchList.get(i).getName().indexOf(a) >= 0 || searchList.get(i).getAccount().indexOf(a) >= 0 || searchList.get(i).getPhoneNumber().indexOf(input) >= 0) {
+                        count++;
                     } else {
-                        //非中文 对所有属性进行比对
-                        if (searchList.get(i).getName().indexOf(a) >= 0 || searchList.get(i).getId().indexOf(a) >= 0 || searchList.get(i).getPhoneNumber().indexOf(input) >= 0) {
-                            Log.e("打印数字：","---"+input);
-                            Log.e("打印数字：","搜索结果"+searchList.get(i).getPhoneNumber().indexOf(a));
-                            count++;
-                        } else {
-                            //对Name属性值进行拼音转换
-                            String[] arr = Pinyin.toPinyin(searchList.get(i).getName(), ",").split(",");
-                            //循环每个字符
-                            for (String s1 : arr) {
-                                //对每个字符的拼音数组进行比对
-                                for (int i1 = 0; i1 < s1.length(); i1++) {
-                                    if (a == s1.charAt(i1)) {
-                                        count++;
-                                    }
+                        //对Name属性值进行拼音转换
+                        String[] arr = Pinyin.toPinyin(searchList.get(i).getName(), ",").split(",");
+                        //循环每个字符
+                        for (String s1 : arr) {
+                            //对每个字符的拼音数组进行比对
+                            String s2 = s1.toLowerCase();
+                            for (int i1 = 0; i1 < s2.length(); i1++) {
+                                if (a == s2.charAt(i1)) {
+                                    count++;
                                 }
                             }
                         }
                     }
                 }
-                if (count == input.length()) {
-                    searchData.add(searchList.get(i));
-                }
+            }
+            if (count == input.length()) {
+                searchData.add(searchList.get(i));
+            }
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        RongIM.getInstance().startPrivateChat(mContext, searchData.get(position).getId(), searchData.get(position).getName());
         Intent intent = new Intent(mContext, FriendPersonInfoActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("userId", searchData.get(position).getId());

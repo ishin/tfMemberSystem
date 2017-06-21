@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.amap.api.maps2d.model.Marker;
+import com.amap.api.maps.model.Marker;
 import com.tianfangIMS.im.R;
 import com.tianfangIMS.im.adapter.AllUserPhotoForShareLocation_GridView_Adapter;
 import com.tianfangIMS.im.bean.LocationBean;
@@ -25,7 +25,7 @@ public class ShareLoactionDialog extends Dialog{
     private List<LocationBean> mlist;
     private Marker marker;
     private DialogItemClickListener DialogItemClickListener;
-    public ShareLoactionDialog(Context context, List<LocationBean> mlist, int theme, Marker marker,DialogItemClickListener listener) {
+    public ShareLoactionDialog(Context context, List<LocationBean> mlist, int theme, Marker marker, DialogItemClickListener listener) {
         super(context);
         this.mContext = context;
         this.mlist = mlist;

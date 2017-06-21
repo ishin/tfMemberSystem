@@ -12,13 +12,16 @@ public class SearchUserBean implements Serializable {
     private String phoneNumber;
     private String logo;
     private String pos;//职位
+    private String account;
 
-    public SearchUserBean(String id, String name, String phoneNumber, String logo, String pos) {
+
+    public SearchUserBean(String id, String name, String phoneNumber, String logo, String pos,String account) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.logo = logo;
         this.pos = pos;
+        this.account = account;
     }
 
     public String getId() {
@@ -61,14 +64,23 @@ public class SearchUserBean implements Serializable {
         this.pos = pos;
     }
 
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
     @Override
     public String toString() {
         return "SearchUserBean{" +
-                "id='" + id + '\'' +
-                ", logo='" + logo + '\'' +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
+                ", id='" + id + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", logo='" + logo + '\'' +
                 ", pos='" + pos + '\'' +
+                ", account='" + account + '\'' +
                 '}';
     }
 }

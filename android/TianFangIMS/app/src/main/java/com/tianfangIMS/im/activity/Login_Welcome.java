@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -23,6 +22,7 @@ import com.lzy.okgo.request.BaseRequest;
 import com.tianfangIMS.im.ConstantValue;
 import com.tianfangIMS.im.R;
 import com.tianfangIMS.im.dialog.LoadDialog;
+import com.tianfangIMS.im.utils.NToast;
 
 import java.util.Map;
 
@@ -37,7 +37,7 @@ import okhttp3.Response;
 
 public class Login_Welcome extends Activity {
     private Context mContext;
-    private String isSession;
+    private String isSession = "false";
     private String sessionId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +59,7 @@ public class Login_Welcome extends Activity {
 
     if (Build.VERSION.SDK_INT >= 23) {
         if(!Settings.canDrawOverlays(Login_Welcome.this)){
+            NToast.shortToast(getApplicationContext(), "请添加权限，否则无法使用悬浮窗体");
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName()));
             startActivityForResult(intent, 10);
@@ -83,11 +84,23 @@ public class Login_Welcome extends Activity {
                     public void onSuccess(String s, Call call, Response response) {
                         LoadDialog.dismiss(mContext);
                         if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                            if((s.trim()).startsWith("<!DOCTYPE")){
+                                NToast.shortToast(mContext,"Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                finish();
+                            }
                             Gson gson = new Gson();
                             Map<String, Object> map = gson.fromJson(s, new TypeToken<Map<String, Object>>() {
                             }.getType());
                             isSession = map.get("status").toString();
                         }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        NToast.shortToast(Login_Welcome.this,"访问失败，请重试");
+                        return;
                     }
                 });
     }
@@ -99,7 +112,7 @@ public class Login_Welcome extends Activity {
             String username = sharedPreferences.getString("username", "");
             String userPwd = sharedPreferences.getString("userpass", "");
 //            String token = sharedPreferences.getString("token", "");
-            if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(userPwd)) {
+            if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(userPwd) && isSession.equals("true")) {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 finish();
             } else {

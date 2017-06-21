@@ -51,4 +51,28 @@
             android:layout_toRightOf="@id/iv_mainplus_topcontacts"
             android:text="添加常用" />
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_mainplus_qr"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:id="@+id/iv_mainplus_qr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/scan_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/iv_mainplus_qr"
+            android:text="扫一扫" />
+    </RelativeLayout>
 </LinearLayout>

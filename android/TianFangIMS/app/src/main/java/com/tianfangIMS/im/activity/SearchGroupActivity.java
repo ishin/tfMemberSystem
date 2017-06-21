@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.google.gson.Gson;
@@ -42,11 +42,13 @@ public class SearchGroupActivity extends BaseActivity implements AdapterView.OnI
     private Context mContext;
     private ListView fragment_contacts_search;
     private LinearLayout no_result_group;
+    private TextView tv_search_cencal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.searcg_activity);
-        setTitle("搜索");
+        setTitle("群组搜索");
         mContext = this;
         init();
         SearchGroupInfo();
@@ -54,20 +56,21 @@ public class SearchGroupActivity extends BaseActivity implements AdapterView.OnI
 
     private void SearchGroupInfo() {
         String str = CommonUtil.getGroupUserInfo(mContext);
-        Log.e("adassdasdsad", "-----:" + str);
         if (!TextUtils.isEmpty(str) && !str.equals("{}")) {
             searchList = new ArrayList<SearchGroupBean>();
             Gson gson = new Gson();
             Type listType = new TypeToken<GroupListBean>() {
             }.getType();
             Gson gson1 = new Gson();
-            Map<String, Object> map = gson1.fromJson(str,new TypeToken<Map<String,Object>>(){}.getType());
-            if((Double)map.get("code") == 1.0){
+            Map<String, Object> map = gson1.fromJson(str, new TypeToken<Map<String, Object>>() {
+            }.getType());
+            if ((Double) map.get("code") == 1.0) {
                 GroupListBean bean = gson.fromJson(str, listType);
                 for (int i = 0; i < bean.getText().size(); i++) {
-                    searchList.add(new SearchGroupBean(bean.getText().get(i).getName(), bean.getText().get(i).getGID(), null, bean.getText().get(i).getLogo()));
+                    searchList.add(new SearchGroupBean(bean.getText().get(i).getName(), bean.getText().get(i).getGID(), null, bean.getText().get(i).getLogo(),
+                            bean.getText().get(i).getAccount()));
                 }
-            }else if((Double)map.get("code") == 0.0){
+            } else if ((Double) map.get("code") == 0.0) {
                 NToast.shortToast(mContext, "该用户没有加入群组");
             }
         } else {
@@ -79,8 +82,18 @@ public class SearchGroupActivity extends BaseActivity implements AdapterView.OnI
         et_search = (EditText) this.findViewById(R.id.et_search);
         fragment_contacts_search = (ListView) this.findViewById(R.id.lv_contacts_search);
         fragment_contacts_search.setOnItemClickListener(this);
-        no_result_group = (LinearLayout)this.findViewById(R.id.no_result_group);
-
+        no_result_group = (LinearLayout) this.findViewById(R.id.no_result_group);
+        tv_search_cencal = (TextView) this.findViewById(R.id.tv_search_cencal);
+        tv_search_cencal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(et_search.getText().toString())) {
+                    finish();
+                } else {
+                    et_search.getText().clear();
+                }
+            }
+        });
         et_search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -89,20 +102,6 @@ public class SearchGroupActivity extends BaseActivity implements AdapterView.OnI
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                Log.e("dayindadadasdsa","11111----:"+searchData);
-                if(searchData.size() == 0){
-                    no_result_group.setVisibility(View.VISIBLE);
-                }else {
-                    no_result_group.setVisibility(View.GONE);
-                }
-                if(TextUtils.isEmpty(s.toString())){
-                    searchData.clear();
-                }
                 if (searchList != null) {
                     GetSearch(s);
                     searchAdapter = new SearchGroupAdapter(searchData, mContext);
@@ -110,10 +109,22 @@ public class SearchGroupActivity extends BaseActivity implements AdapterView.OnI
                     searchAdapter.notifyDataSetChanged();
                 }
             }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (searchData.size() == 0) {
+                    no_result_group.setVisibility(View.VISIBLE);
+                } else {
+                    no_result_group.setVisibility(View.GONE);
+                }
+                if (TextUtils.isEmpty(s.toString())) {
+                    searchData.clear();
+                }
+            }
         });
     }
 
-    private void GetSearch(Editable s) {
+    private void GetSearch(CharSequence s) {
         searchData.clear();
         String input = s.toString();
         for (int i = 0; i < searchList.size(); i++) {
@@ -129,16 +140,17 @@ public class SearchGroupActivity extends BaseActivity implements AdapterView.OnI
                     }
                 } else {
                     //非中文 对所有属性进行比对
-                    if (searchList.get(i).getName().indexOf(a) >= 0 || searchList.get(i).getId().indexOf(a) >= 0) {
+                    if (searchList.get(i).getName().indexOf(a) >= 0) {
                         count++;
                     } else {
                         //对Name属性值进行拼音转换
                         String[] arr = Pinyin.toPinyin(searchList.get(i).getName(), ",").split(",");
                         //循环每个字符
                         for (String s1 : arr) {
+                            String s2 = s1.toLowerCase();
                             //对每个字符的拼音数组进行比对
-                            for (int i1 = 0; i1 < s1.length(); i1++) {
-                                if (a == s1.charAt(i1)) {
+                            for (int i1 = 0; i1 < s2.length(); i1++) {
+                                if (a == s2.charAt(i1)) {
                                     count++;
                                 }
                             }
@@ -154,7 +166,12 @@ public class SearchGroupActivity extends BaseActivity implements AdapterView.OnI
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        RongIM.getInstance().startGroupChat(mContext, searchList.get(position).getId(), searchList.get(position).getName());
-        finish();
+        if (TextUtils.isEmpty(searchList.get(position).getName())) {
+            RongIM.getInstance().startGroupChat(mContext, searchList.get(position).getId(), " ");
+            finish();
+        } else {
+            RongIM.getInstance().startGroupChat(mContext, searchList.get(position).getId(), searchList.get(position).getName());
+            finish();
+        }
     }
 }

@@ -87,6 +87,23 @@
     return self;
     
 }
+- (void) searchFriendOnlyKeywords:(NSString*) searchText{
+    
+    self._searchTxt = searchText;
+    
+    [self.resultDictionary removeAllObjects];
+    [self.groupTypeArray removeAllObjects];
+    
+    [[RCDSearchDataManager shareInstance] searchDataWithSearchText:searchText
+                                                      bySearchType:RCDSearchFriendOnly
+                                                          complete:^(NSDictionary *dic,NSArray *array) {
+                                                              [self.resultDictionary  setDictionary:dic];
+                                                              [self.groupTypeArray setArray:array];
+                                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                                  [self refreshSearchView:searchText];
+                                                              });
+                                                          }];
+}
 
 - (void) searchFrinedWithKeywords:(NSString*) searchText{
     
@@ -278,6 +295,7 @@
     _conversationVC.unReadMessage = unreadCount;
     _conversationVC.enableNewComingMessageIcon = YES; //开启消息提醒
     _conversationVC.enableUnreadMessageIcon = YES;
+    //_conversationVC.hidesBottomBarWhenPushed = YES;
     //如果是单聊，不显示发送方昵称
     if (model.conversationType == ConversationType_PRIVATE) {
         _conversationVC.displayUserNameInCell = NO;

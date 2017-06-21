@@ -16,8 +16,17 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:button="@drawable/chenkbox_selector"
-            android:clickable="true"
-            android:focusable="false" />
+            android:checked="false"
+            android:focusable="false"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/iv_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/checkbox_selectring" />
 
         <com.tianfangIMS.im.view.CircleImageViews
             android:id="@+id/iv_addfriend_photo"
@@ -29,7 +38,7 @@
             android:background="@android:color/transparent"
             android:scaleType="centerCrop"
             app:RCCornerRadius="3dp"
-            app:RCDefDrawable="@mipmap/me_icon_photo"
+            app:RCDefDrawable="@mipmap/default_portrait"
             app:RCShape="circle" />
 
         <LinearLayout

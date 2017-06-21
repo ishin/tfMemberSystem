@@ -7,10 +7,12 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.google.gson.Gson;
@@ -21,7 +23,8 @@ import com.tianfangIMS.im.adapter.SearchAllContactsAdapter;
 import com.tianfangIMS.im.bean.GroupListBean;
 import com.tianfangIMS.im.bean.SearchAllBean;
 import com.tianfangIMS.im.bean.TopContactsListBean;
-import com.tianfangIMS.im.dialog.SendImageMessageDialog;
+import com.tianfangIMS.im.dialog.SendFlieMessageDialog;
+import com.tianfangIMS.im.dialog.SendImageMessageSpDialog;
 import com.tianfangIMS.im.utils.CommonUtil;
 import com.tianfangIMS.im.utils.NToast;
 
@@ -32,6 +35,7 @@ import java.util.Map;
 
 import io.rong.imkit.RongIM;
 import io.rong.imlib.model.Conversation;
+import io.rong.imlib.model.Message;
 
 /**
  * Created by LianMengYu on 2017/3/11.
@@ -41,7 +45,6 @@ public class SearchAllContactsActivity extends BaseActivity implements AdapterVi
     private Context mContext;
     private ListView lv_searchAll_data;
     private EditText et_search;
-
     //初始化数据
     private List<SearchAllBean> PrivateChatList;
     private List<SearchAllBean> GroupChatList;
@@ -52,17 +55,25 @@ public class SearchAllContactsActivity extends BaseActivity implements AdapterVi
     List<SearchAllBean> AdapterData;
     private SearchAllContactsAdapter adapter;
     private ArrayList<String> uriList;
-
     private LinearLayout no_result_all;
+    private ArrayList<Message> AllMessage;
+    private ArrayList<Message> allFile;
+    private String GroupID;
+    private String GroupName;
+    private TextView tv_search_cencal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_allcontacts_layout);
         mContext = this;
-        initview();
+        AllMessage = getIntent().getParcelableArrayListExtra("allMessage");
+        allFile = getIntent().getParcelableArrayListExtra("allFile");
         InitPrivateChatData();
         InitGroupChatData();
+        initview();
+        GroupID = getIntent().getStringExtra("Groupid");
+        GroupName = getIntent().getStringExtra("GroupName");
         uriList = getIntent().getStringArrayListExtra("ListUri");
     }
 
@@ -71,6 +82,19 @@ public class SearchAllContactsActivity extends BaseActivity implements AdapterVi
         et_search = (EditText) this.findViewById(R.id.et_search);
         lv_searchAll_data.setOnItemClickListener(this);
         no_result_all = (LinearLayout) this.findViewById(R.id.no_result_all);
+
+        tv_search_cencal = (TextView) this.findViewById(R.id.tv_search_cencal);
+        tv_search_cencal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(et_search.getText().toString())) {
+                    finish();
+                } else {
+                    et_search.getText().clear();
+                }
+            }
+        });
+
         et_search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -112,7 +136,7 @@ public class SearchAllContactsActivity extends BaseActivity implements AdapterVi
             for (int i = 0; i < bean.getText().size(); i++) {
                 PrivateChatList.add(new SearchAllBean(bean.getText().get(i).getId(), bean.getText().get(i).getFullname(),
                         bean.getText().get(i).getPosition()
-                        , bean.getText().get(i).getLogo(), true, bean.getText().get(i).getMobile()));
+                        , bean.getText().get(i).getLogo(), true, bean.getText().get(i).getMobile(), bean.getText().get(i).getAccount()));
             }
         }
     }
@@ -130,7 +154,7 @@ public class SearchAllContactsActivity extends BaseActivity implements AdapterVi
                 }.getType();
                 GroupListBean bean = gson.fromJson(str, listType);
                 for (int i = 0; i < bean.getText().size(); i++) {
-                    GroupChatList.add(new SearchAllBean(bean.getText().get(i).getGID(), bean.getText().get(i).getName(), null, bean.getText().get(i).getLogo(), false, null));
+                    GroupChatList.add(new SearchAllBean(bean.getText().get(i).getGID(), bean.getText().get(i).getName(), null, bean.getText().get(i).getLogo(), false, null, bean.getText().get(i).getAccount()));
                 }
             } else if ((Double) map.get("code") == 0.0) {
                 NToast.shortToast(mContext, "该用户没有加入群组");
@@ -141,38 +165,41 @@ public class SearchAllContactsActivity extends BaseActivity implements AdapterVi
     private void GetPrivateChatSearch(CharSequence s) {
         PrivateChatListData.clear();
         String input = s.toString();
-        for (int i = 0; i < PrivateChatList.size(); i++) {
-            int count = 0;
-            //全部转为小写
-            input = input.toLowerCase();
-            for (int j = 0; j < input.length(); j++) {
-                char a = input.charAt(j);
-                //如果是中文 则只跟Name属性进行比对 (因为其他属性不会存在中文字符)
-                if (Pinyin.isChinese(a)) {
-                    if (PrivateChatList.get(i).getName().indexOf(a) >= 0) {
-                        count++;
-                    }
-                } else {
-                    //非中文 对所有属性进行比对
-                    if (PrivateChatList.get(i).getName().indexOf(a) >= 0 || PrivateChatList.get(i).getId().indexOf(a) >= 0 || PrivateChatList.get(i).getMphone().indexOf(input) >=0) {
-                        count++;
+        if (PrivateChatList != null && PrivateChatList.size() > 0) {
+            for (int i = 0; i < PrivateChatList.size(); i++) {
+                int count = 0;
+                //全部转为小写
+                input = input.toLowerCase();
+                for (int j = 0; j < input.length(); j++) {
+                    char a = input.charAt(j);
+                    //如果是中文 则只跟Name属性进行比对 (因为其他属性不会存在中文字符)
+                    if (Pinyin.isChinese(a)) {
+                        if (PrivateChatList.get(i).getName().indexOf(a) >= 0) {
+                            count++;
+                        }
                     } else {
-                        //对Name属性值进行拼音转换
-                        String[] arr = Pinyin.toPinyin(PrivateChatList.get(i).getName(), ",").split(",");
-                        //循环每个字符
-                        for (String s1 : arr) {
-                            //对每个字符的拼音数组进行比对
-                            for (int i1 = 0; i1 < s1.length(); i1++) {
-                                if (a == s1.charAt(i1)) {
-                                    count++;
+                        //非中文 对所有属性进行比对
+                        if (PrivateChatList.get(i).getName().indexOf(a) >= 0 || PrivateChatList.get(i).getAccount().indexOf(a) >= 0 || PrivateChatList.get(i).getMphone().indexOf(input) >= 0) {
+                            count++;
+                        } else {
+                            //对Name属性值进行拼音转换
+                            String[] arr = Pinyin.toPinyin(PrivateChatList.get(i).getName(), ",").split(",");
+                            //循环每个字符
+                            for (String s1 : arr) {
+                                //对每个字符的拼音数组进行比对
+                                String s2 = s1.toLowerCase();
+                                for (int i1 = 0; i1 < s2.length(); i1++) {
+                                    if (a == s2.charAt(i1)) {
+                                        count++;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-            if (count == input.length()) {
-                PrivateChatListData.add(PrivateChatList.get(i));
+                if (count == input.length()) {
+                    PrivateChatListData.add(PrivateChatList.get(i));
+                }
             }
         }
     }
@@ -180,38 +207,41 @@ public class SearchAllContactsActivity extends BaseActivity implements AdapterVi
     private void GetGroupChatSearch(CharSequence s) {
         GroupChatListData.clear();
         String input = s.toString();
-        for (int i = 0; i < GroupChatList.size(); i++) {
-            int count = 0;
-            //全部转为小写
-            input = input.toLowerCase();
-            for (int j = 0; j < input.length(); j++) {
-                char a = input.charAt(j);
-                //如果是中文 则只跟Name属性进行比对 (因为其他属性不会存在中文字符)
-                if (Pinyin.isChinese(a)) {
-                    if (GroupChatList.get(i).getName().indexOf(a) >= 0) {
-                        count++;
-                    }
-                } else {
-                    //非中文 对所有属性进行比对
-                    if (GroupChatList.get(i).getName().indexOf(a) >= 0 || GroupChatList.get(i).getId().indexOf(a) >= 0) {
-                        count++;
+        if (GroupChatList != null && GroupChatList.size() > 0) {
+            for (int i = 0; i < GroupChatList.size(); i++) {
+                int count = 0;
+                //全部转为小写
+                input = input.toLowerCase();
+                for (int j = 0; j < input.length(); j++) {
+                    char a = input.charAt(j);
+                    //如果是中文 则只跟Name属性进行比对 (因为其他属性不会存在中文字符)
+                    if (Pinyin.isChinese(a)) {
+                        if (GroupChatList.get(i).getName().indexOf(a) >= 0) {
+                            count++;
+                        }
                     } else {
-                        //对Name属性值进行拼音转换
-                        String[] arr = Pinyin.toPinyin(GroupChatList.get(i).getName(), ",").split(",");
-                        //循环每个字符
-                        for (String s1 : arr) {
-                            //对每个字符的拼音数组进行比对
-                            for (int i1 = 0; i1 < s1.length(); i1++) {
-                                if (a == s1.charAt(i1)) {
-                                    count++;
+                        //非中文 对所有属性进行比对
+                        if (GroupChatList.get(i).getName().indexOf(a) >= 0) {
+                            count++;
+                        } else {
+                            //对Name属性值进行拼音转换
+                            String[] arr = Pinyin.toPinyin(GroupChatList.get(i).getName(), ",").split(",");
+                            //循环每个字符
+                            for (String s1 : arr) {
+                                String s2 = s1.toLowerCase();
+                                //对每个字符的拼音数组进行比对
+                                for (int i1 = 0; i1 < s2.length(); i1++) {
+                                    if (a == s2.charAt(i1)) {
+                                        count++;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-            if (count == input.length()) {
-                GroupChatListData.add(GroupChatList.get(i));
+                if (count == input.length()) {
+                    GroupChatListData.add(GroupChatList.get(i));
+                }
             }
         }
     }
@@ -240,11 +270,19 @@ public class SearchAllContactsActivity extends BaseActivity implements AdapterVi
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (AdapterData.get(position).isFlag()) {
-            if (uriList != null && uriList.size() > 0) {
-                SendImageMessageDialog sendImageMessageDialog = new SendImageMessageDialog(mContext, AdapterData.get(position).getId(),
-                        position, AdapterData.get(position).getName(), uriList, Conversation.ConversationType.PRIVATE,
+            if (AllMessage != null && AllMessage.size() > 0) {
+                SendImageMessageSpDialog sendImageMessageSpDialog = new SendImageMessageSpDialog(mContext, AdapterData.get(position).getId(), AdapterData.get(position).getName(), AllMessage, Conversation.ConversationType.PRIVATE,
                         ConstantValue.ImageFile + AdapterData.get(position).getLogo(), AdapterData.get(position).getPosition());
-                sendImageMessageDialog.show();
+                if (!isFinishing()) {
+                    sendImageMessageSpDialog.show();
+                }
+            } else if (allFile != null && allFile.size() > 0) {
+                SendFlieMessageDialog sendFlieMessageDialog = new SendFlieMessageDialog(mContext, AdapterData.get(position).getId(), AdapterData.get(position).getName(),
+                        allFile, Conversation.ConversationType.PRIVATE,
+                        ConstantValue.ImageFile + AdapterData.get(position).getLogo(), AdapterData.get(position).getPosition());
+                if (!isFinishing()) {
+                    sendFlieMessageDialog.show();
+                }
             } else {
                 Intent intent = new Intent(mContext, FriendPersonInfoActivity.class);
                 Bundle bundle = new Bundle();
@@ -255,13 +293,29 @@ public class SearchAllContactsActivity extends BaseActivity implements AdapterVi
                 finish();
             }
         } else {
-            if (uriList != null && uriList.size() > 0) {
-                SendImageMessageDialog sendImageMessageDialog = new SendImageMessageDialog(mContext, AdapterData.get(position).getId(),
-                        position, AdapterData.get(position).getName(), uriList, Conversation.ConversationType.GROUP, ConstantValue.ImageFile + AdapterData.get(position).getLogo(),
-                        null);
-                sendImageMessageDialog.show();
+            if (AllMessage != null && AllMessage.size() > 0) {
+                SendImageMessageSpDialog sendImageMessageSpDialog = new SendImageMessageSpDialog(mContext, AdapterData.get(position).getId(), AdapterData.get(position).getName(), AllMessage, Conversation.ConversationType.GROUP,
+                        ConstantValue.ImageFile + AdapterData.get(position).getLogo(), null);
+                if (!isFinishing()) {
+                    Window window = sendImageMessageSpDialog.getWindow();
+                    window.setBackgroundDrawableResource(android.R.color.transparent);
+                    sendImageMessageSpDialog.show();
+                }
+            } else if (allFile != null && allFile.size() > 0) {
+                SendFlieMessageDialog sendFlieMessageDialog = new SendFlieMessageDialog(mContext, AdapterData.get(position).getId(), AdapterData.get(position).getName(),
+                        allFile, Conversation.ConversationType.GROUP,
+                        ConstantValue.ImageFile + AdapterData.get(position).getLogo(), null);
+                if (!isFinishing()) {
+                    Window window = sendFlieMessageDialog.getWindow();
+                    window.setBackgroundDrawableResource(android.R.color.transparent);
+                    sendFlieMessageDialog.show();
+                }
             } else {
-                RongIM.getInstance().startGroupChat(mContext, AdapterData.get(position).getId(), AdapterData.get(position).getName());
+                if (TextUtils.isEmpty(AdapterData.get(position).getName())) {
+                    RongIM.getInstance().startGroupChat(mContext, AdapterData.get(position).getId(), " ");
+                } else {
+                    RongIM.getInstance().startGroupChat(mContext, AdapterData.get(position).getId(), AdapterData.get(position).getName());
+                }
             }
         }
     }

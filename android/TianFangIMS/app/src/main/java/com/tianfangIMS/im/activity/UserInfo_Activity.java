@@ -1,10 +1,9 @@
 package com.tianfangIMS.im.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,6 +36,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 
+import io.rong.imkit.RongIM;
+import io.rong.imkit.userInfoCache.RongUserInfoManager;
+import io.rong.imlib.model.UserInfo;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -51,16 +53,19 @@ public class UserInfo_Activity extends BaseActivity implements View.OnClickListe
             friendinfo_company, friendinfo_address, friendinfo_chanpin, friendinfo_jingli;
     private ImageView iv_userinfo_photo;
     String sessionId;
+    private UserInfo userInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.userinfo_fragment);
         mContext = this;
         setTitle("个人信息");
-        sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
+        sessionId = getSharedPreferences("CompanyCode", MODE_PRIVATE).getString("CompanyCode", "");
         init();
         GetUserInfo();
         settingImagePicker();
+        userInfo = RongUserInfoManager.getInstance().getUserInfo(RongIM.getInstance().getCurrentUserId());
     }
 
     private void settingImagePicker() {
@@ -72,8 +77,8 @@ public class UserInfo_Activity extends BaseActivity implements View.OnClickListe
         imagePicker.setSaveRectangle(true); //是否按矩形区域保存
         imagePicker.setSelectLimit(9);    //选中数量限制
         imagePicker.setStyle(CropImageView.Style.RECTANGLE);  //裁剪框的形状
-        imagePicker.setFocusWidth(1500);   //裁剪框的宽度。单位像素（圆形自动取宽高最小值）
-        imagePicker.setFocusHeight(1500);  //裁剪框的高度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setFocusWidth(1000);   //裁剪框的宽度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setFocusHeight(1000);  //裁剪框的高度。单位像素（圆形自动取宽高最小值）
         imagePicker.setOutPutX(1000);//保存文件的宽度。单位像素
         imagePicker.setOutPutY(1000);//保存文件的高度。单位像素
     }
@@ -114,7 +119,7 @@ public class UserInfo_Activity extends BaseActivity implements View.OnClickListe
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .params("userid", ids)
                 .execute(new StringCallback() {
                     @Override
@@ -137,6 +142,12 @@ public class UserInfo_Activity extends BaseActivity implements View.OnClickListe
                                     .resize(50, 50)
                                     .error(R.mipmap.default_portrait)
                                     .into(iv_userinfo_photo);
+                            if (map != null) {
+                                RongIM.getInstance().refreshUserInfoCache(new UserInfo(map.get("id").toString(), map.get("name").toString()
+                                        , Uri.parse(ConstantValue.ImageFile + map.get("logo").toString())));
+                            } else {
+                                return;
+                            }
                         }
                     }
                 });
@@ -168,7 +179,7 @@ public class UserInfo_Activity extends BaseActivity implements View.OnClickListe
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .params("userid", uid)
                 .params("file", imageItem)
                 .execute(new StringCallback() {
@@ -181,24 +192,23 @@ public class UserInfo_Activity extends BaseActivity implements View.OnClickListe
 
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        if (!TextUtils.isEmpty(s)) {
+                        if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                            if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                NToast.shortToast(mContext, "Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                finish();
+                            }
                             Gson gson1 = new Gson();
                             Map<String, Object> map = gson1.fromJson(s, new TypeToken<Map<String, Object>>() {
                             }.getType());
                             if ((Double) map.get("code") == 1.0) {
-                                String logo = map.get("text").toString();
-                                SharedPreferences mySharedPreferences = getSharedPreferences("user_login",
-                                        Activity.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = mySharedPreferences.edit();
-                                editor.putString("logo", logo);
-                                String name =mySharedPreferences.getString("logo", "");
-                                Log.e("PhotoName", "---:" + name);
-                                editor.commit();
+                                NToast.longToast(mContext, "设置头像成功");
+                                RongIM.getInstance().refreshUserInfoCache(new UserInfo(loginBean.getText().getId(), loginBean.getText().getFullname()
+                                        , Uri.parse(ConstantValue.ImageFile + map.get("text").toString())));
                             }
                         } else {
                             NToast.longToast(mContext, "上传失败" + s);
                         }
-
                     }
 
                     @Override
@@ -224,12 +234,11 @@ public class UserInfo_Activity extends BaseActivity implements View.OnClickListe
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             if (data != null && requestCode == 0) {
                 ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                Log.e("aaaaaaa", "打印出什么东西：" + images.get(0).path);
                 UpdateUserPhoto(new File(images.get(0).path));
 //                ImagePicker.getInstance().getImageLoader().displayImage(UserInfo_Activity.this, images.get(0).path, iv_userinfo_photo, 800, 800);
                 Picasso.with(mContext)
                         .load(new File(images.get(0).path))
-                        .resize(500, 500)
+                        .resize(80, 80)
                         .placeholder(R.mipmap.default_photo)
                         .error(R.mipmap.default_photo)
                         .into(iv_userinfo_photo);

@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -675,7 +676,39 @@ public class RongIM {
                 .appendPath("conversation").appendPath(Conversation.ConversationType.PRIVATE.getName().toLowerCase())
                 .appendQueryParameter("targetId", targetUserId).appendQueryParameter("title", title).build();
 
-        context.startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        context.startActivity(new Intent(Intent.ACTION_VIEW, uri).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+    }
+
+    public void startPrivateChat(Context context, String targetUserId, String title, long messageId, int fen) {
+
+        if (context == null || TextUtils.isEmpty(targetUserId))
+            throw new IllegalArgumentException();
+
+        if (RongContext.getInstance() == null)
+            throw new ExceptionInInitializerError("RongCloud SDK not init");
+
+        Uri uri = Uri.parse("rong://" + context.getApplicationInfo().packageName).buildUpon()
+                .appendPath("conversation").appendPath(Conversation.ConversationType.PRIVATE.getName().toLowerCase())
+                .appendQueryParameter("targetId", targetUserId).appendQueryParameter("title", title).build();
+        Bundle pivateBundle = new Bundle();
+        pivateBundle.putLong("messageid", messageId);
+        context.startActivity(new Intent(Intent.ACTION_VIEW, uri).putExtras(pivateBundle));
+    }
+
+    public void startPrivateChat(Context context, String targetUserId, String title, int page) {
+
+        if (context == null || TextUtils.isEmpty(targetUserId))
+            throw new IllegalArgumentException();
+
+        if (RongContext.getInstance() == null)
+            throw new ExceptionInInitializerError("RongCloud SDK not init");
+
+        Uri uri = Uri.parse("rong://" + context.getApplicationInfo().packageName).buildUpon()
+                .appendPath("conversation").appendPath(Conversation.ConversationType.PRIVATE.getName().toLowerCase())
+                .appendQueryParameter("targetId", targetUserId).appendQueryParameter("title", title).build();
+        Bundle pivateBundlepage = new Bundle();
+        pivateBundlepage.putInt("intercom", page);
+        context.startActivity(new Intent(Intent.ACTION_VIEW, uri).putExtras(pivateBundlepage).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
     /**
@@ -814,7 +847,46 @@ public class RongIM {
         Uri uri = Uri.parse("rong://" + context.getApplicationInfo().packageName).buildUpon()
                 .appendPath("conversation").appendPath(Conversation.ConversationType.GROUP.getName().toLowerCase())
                 .appendQueryParameter("targetId", targetGroupId).appendQueryParameter("title", title).build();
-        context.startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        context.startActivity(new Intent(Intent.ACTION_VIEW, uri).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+    }
+
+    /**
+     * 启动群组聊天界面。
+     *
+     * @param context       应用上下文。
+     * @param targetGroupId 要聊天的群组 Id。
+     * @param title         聊天的标题。开发者需要在聊天界面通过intent.getData().getQueryParameter("title")获取该值, 再手动设置为聊天界面的标题。
+     */
+    public void startGroupChat(Context context, String targetGroupId, String title, int page) {
+
+        if (context == null || TextUtils.isEmpty(targetGroupId))
+            throw new IllegalArgumentException();
+
+        if (RongContext.getInstance() == null)
+            throw new ExceptionInInitializerError("RongCloud SDK not init");
+
+        Uri uri = Uri.parse("rong://" + context.getApplicationInfo().packageName).buildUpon()
+                .appendPath("conversation").appendPath(Conversation.ConversationType.GROUP.getName().toLowerCase())
+                .appendQueryParameter("targetId", targetGroupId).appendQueryParameter("title", title).build();
+        Bundle bundleGroup = new Bundle();
+        bundleGroup.putInt("intercom", page);
+        context.startActivity(new Intent(Intent.ACTION_VIEW, uri).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtras(bundleGroup));
+    }
+
+    public void startGroupChat(Context context, String targetGroupId, String title, long messageId, int fen) {
+
+        if (context == null || TextUtils.isEmpty(targetGroupId))
+            throw new IllegalArgumentException();
+
+        if (RongContext.getInstance() == null)
+            throw new ExceptionInInitializerError("RongCloud SDK not init");
+
+        Uri uri = Uri.parse("rong://" + context.getApplicationInfo().packageName).buildUpon()
+                .appendPath("conversation").appendPath(Conversation.ConversationType.GROUP.getName().toLowerCase())
+                .appendQueryParameter("targetId", targetGroupId).appendQueryParameter("title", title).build();
+        Bundle bundle = new Bundle();
+        bundle.putLong("messageid", messageId);
+        context.startActivity(new Intent(Intent.ACTION_VIEW, uri).putExtras(bundle));
     }
 
     /**
@@ -1536,11 +1608,9 @@ public class RongIM {
     @Deprecated
     public boolean removeConversation(Conversation.ConversationType type, String targetId) {
         boolean result = RongIMClient.getInstance().removeConversation(type, targetId);
-
         if (result) {
             RongContext.getInstance().getEventBus().post(new Event.ConversationRemoveEvent(type, targetId));
         }
-
         return result;
     }
 
@@ -3133,9 +3203,9 @@ public class RongIM {
             }
 
             @Override
-            public void onSuccess(Conversation.ConversationNotificationStatus status) {
-                RongContext.getInstance().getEventBus().post(new Event.ConversationNotificationEvent(targetId, conversationType, notificationStatus));
+             public void onSuccess(Conversation.ConversationNotificationStatus status) {
                 RongContext.getInstance().setConversationNotifyStatusToCache(ConversationKey.obtain(targetId, conversationType), status);
+                RongContext.getInstance().getEventBus().post(new Event.ConversationNotificationEvent(targetId, conversationType, notificationStatus));
 
                 if (callback != null)
                     callback.onSuccess(status);

@@ -56,13 +56,6 @@ public interface GroupDao {
 	 */
 	public List<TGroup> getGroupList(Integer[] groups);
 	
-	/**
-	 * 获取群组信息附带创建成员信息,返回属性
-	 * @param s
-	 * @return
-	 */
-	@Deprecated
-	public List<Object[]> getGroupListWithCreaterInfo(String s);
 
 	/**
 	 * 按id删除群组
@@ -94,12 +87,6 @@ public interface GroupDao {
 	 */
 	public int updateGroupMemberNum(int groupId, int memberVolume);
 
-	/**
-	 * 群信息
-	 * @param id
-	 * @return
-	 */
-	@Deprecated
-	public Object[] groupInfo(int id);
+	public int updateCreateIdAndVolume(int groupId, Integer memberId);
 
 }

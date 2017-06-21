@@ -9,7 +9,8 @@ import javax.ws.rs.DELETE;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.util.ArrayUtil;
 
 import com.sealtalk.common.SysInterface;
@@ -20,6 +21,7 @@ import com.sealtalk.model.TMember;
 import com.sealtalk.service.friend.FriendService;
 import com.sealtalk.utils.HttpRequest;
 import com.sealtalk.utils.JSONUtils;
+import com.sealtalk.utils.LogUtils;
 import com.sealtalk.utils.RongCloudUtils;
 import com.sealtalk.utils.StringUtils;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
@@ -32,8 +34,7 @@ import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
  */
 public class FriendServiceImpl implements FriendService {
 
-	private static final Logger logger = Logger
-			.getLogger(FriendServiceImpl.class);
+	private static final Logger logger = LogManager.getLogger(FriendServiceImpl.class);
 
 	@Override
 	public String addFriend(String account, String friend, int organId) {
@@ -47,6 +48,7 @@ public class FriendServiceImpl implements FriendService {
 						.replaceChar(friend, "\"", "");
 				friend = StringUtils.getInstance().replaceChar(friend, "[", "");
 				friend = StringUtils.getInstance().replaceChar(friend, "]", "");
+				friend = StringUtils.getInstance().replaceChar(friend, " ", "");
 
 				String[] friendIds = null;
 
@@ -77,50 +79,66 @@ public class FriendServiceImpl implements FriendService {
 					jo.put("text", Tips.FAILADDFRIEND.getText());
 				} else {
 					// 判断是否已存在好友关系
-					String idStr = memJson.getString("text");
-					idStr = StringUtils.getInstance().replaceChar(idStr, "[",
-							"");
-					idStr = StringUtils.getInstance().replaceChar(idStr, "]",
-							"");
-					String[] ids = idStr.split(",");
-					int idsLen = ids.length;
-					int id = Integer.parseInt(ids[idsLen - 1]);
-					Integer[] fIds = new Integer[idsLen - 1];
-
-					for (int i = 0; i < idsLen - 1; i++) {
-						fIds[i] = Integer.parseInt(ids[i]);
-					}
-
-					List<TFriend> friendRelation = friendDao
-							.getFriendRelationForFriendIds(id, fIds);
-					String[] targetIds = new String[fIds.length];
-
-					for (int i = 0; i < fIds.length; i++) {
-						if (friendRelation == null
-								|| (friendRelation != null && friendRelation
-										.get(i) == null)) {
-							friendDao.addFriend(id, fIds[0]);
+					String jaRet = memJson.getString("text");
+					JSONArray ja = JSONUtils.getInstance().stringToArrObj(jaRet);
+					if (ja != null && ja.size() > 0) {
+						int len = ja.size();
+						ArrayList<Integer> ids = new ArrayList<Integer>();
+						//StringBuilder sb = new StringBuilder();
+						String addName = "";
+						int id = 0;
+						
+						for(int i = 0; i < len; i++) {
+							JSONObject t = ja.getJSONObject(i);
+							//sb.append(t.getString("name"));
+							if (t.getString("account").equals(account)) {
+								id = t.getInt("id");
+								addName = t.getString("name");
+							} else {
+								ids.add(t.getInt("id"));
+							}
+							/*if (i < len - 1) {
+								sb.append(",");
+							}*/
 						}
-						targetIds[i] = fIds[i] + "";
+						if (ids.size() > 0) {
+							Integer[] fIds = new Integer[ids.size()];
+							ids.toArray(fIds);
+							List<TFriend> friendRelation = friendDao.getFriendRelationForFriendIds(id, fIds);
+							String[] targetIds = new String[fIds.length];
+		
+							for (int i = 0; i < fIds.length; i++) {
+								if (friendRelation == null || (friendRelation != null && friendRelation.get(i) == null)) {
+									friendDao.addFriend(id, fIds[i]);
+								}
+								targetIds[i] = fIds[i] + "";
+							}
+							jo.put("code", 1);
+							jo.put("text", Tips.SUCADDFRIEND.getText());
+							String msg = "建立好友关系，现在可以开始聊天";
+							String extrMsg = addName;
+							RongCloudUtils.getInstance().sendPrivateMsg(id + "",
+									targetIds, msg, extrMsg, "", "4", "0", "0", "0",
+									"2");
+						} else {
+							jo.put("code", -1);
+							jo.put("text", Tips.NOTFRIENDID.getText());
+						}
+					} else {
+						jo.put("code", -1);
+						jo.put("text", Tips.FAILADDFRIEND.getText());
 					}
-					jo.put("code", 1);
-					jo.put("text", Tips.SUCADDFRIEND.getText());
-					String msg = "建立好友关系，现在可以开始聊天";
-					String extrMsg = "";
-					RongCloudUtils.getInstance().sendPrivateMsg(id + "",
-							targetIds, msg, extrMsg, "", "4", "0", "0", "0",
-							"2");
 				}
 			} else {
 				jo.put("code", 0);
 				jo.put("text", Tips.NOTFRIENDID.getText());
 			}
 		} catch (Exception e) {
-			jo.put("code", -1);
-			jo.put("text", Tips.FAILADDFRIEND.getText());
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 
@@ -143,32 +161,47 @@ public class FriendServiceImpl implements FriendService {
 			jo.put("text", Tips.FAILADDFRIEND.getText());
 		} else {
 			// 判断是否已存在好友关系
-			String idStr = memJson.getString("text");
-			idStr = StringUtils.getInstance().replaceChar(idStr, "[", "");
-			idStr = StringUtils.getInstance().replaceChar(idStr, "]", "");
-			String[] ids = idStr.split(",");
-			int accountId = Integer.parseInt(ids[0]);
-			int friendId = Integer.parseInt(ids[1]);
-
-			// 判断是否已存在好友关系
-			TFriend friendRelation = friendDao.getFriendRelation(accountId,
-					friendId);
-
-			if (friendRelation != null) {
-				// 删除好友关系
-				friendDao.delFriend(accountId, friendId);
-				String[] targetIds = { friend };
-				String msg = "解除好友关系";
-				RongCloudUtils.getInstance().sendPrivateMsg(accountId + "",
-						targetIds, msg, "", "", "4", "0", "0", "0", "2");
-				jo.put("code", 1);
-				jo.put("text", Tips.SUCDELFRIEND.getText());
+			String jaRet = memJson.getString("text");
+			JSONArray ja = JSONUtils.getInstance().stringToArrObj(jaRet);
+			if (ja != null && ja.size() > 0) {
+				ArrayList<Integer> alId = new ArrayList<Integer>();
+				int len = ja.size();
+				int accountId = 0;
+				int friendId = 0;
+				
+				for(int i = 0; i < len; i++) {
+					JSONObject t = ja.getJSONObject(i);
+					int id = t.getInt("id");
+					if (t.getString("account").equals(account)) {
+						accountId = id;
+					} else {
+						friendId = id;
+					}
+				}
+	
+				// 判断是否已存在好友关系
+				TFriend friendRelation = friendDao.getFriendRelation(accountId,
+						friendId);
+	
+				if (friendRelation != null) {
+					// 删除好友关系
+					friendDao.delFriend(accountId, friendId);
+					//String[] targetIds = { friend };
+					//String msg = "解除好友关系";
+					//String fromId = "FromId";
+					//RongCloudUtils.getInstance().sendPrivateMsg(fromId, targetIds, msg, "", "", "4", "0", "0", "0", "2");
+					jo.put("code", 1);
+					jo.put("text", Tips.SUCDELFRIEND.getText());
+				} else {
+					jo.put("code", 0);
+					jo.put("text", Tips.NOHAVEFRIENDRELATION.getText());
+				}
 			} else {
 				jo.put("code", 0);
 				jo.put("text", Tips.NOHAVEFRIENDRELATION.getText());
 			}
 		}
-
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 
@@ -199,12 +232,20 @@ public class FriendServiceImpl implements FriendService {
 				if (friendList == null) {
 					status = false;
 				} else {
+					ArrayList<Integer> af = new ArrayList<Integer>();
 					int len = friendList.size();
-					Integer[] accounts = new Integer[len];
-
 					for (int i = 0; i < len; i++) {
-						accounts[i] = friendList.get(i).getFriendId();
+						TFriend f = friendList.get(i);
+						int idV = id.intValue();
+						if (f.getMemberId().intValue() == idV && !af.contains(f.getFriendId())) {
+							af.add(f.getFriendId());
+						} 
+						if (f.getFriendId().intValue() == idV && !af.contains(f.getMemberId())) {
+							af.add(f.getMemberId());
+						}
 					}
+					Integer[] accounts = new Integer[af.size()];
+					af.toArray(accounts);
 
 					// 获取多个用户
 					JSONObject p = new JSONObject();
@@ -343,9 +384,11 @@ public class FriendServiceImpl implements FriendService {
 			}
 
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 
@@ -372,6 +415,7 @@ public class FriendServiceImpl implements FriendService {
 			j.put("text", Tips.WRONGPARAMS.getText());
 		}
 
+		logger.info(j.toString());
 		return j.toString();
 	}
 

@@ -16,6 +16,9 @@
         <property name="isOpen" type="java.lang.String">
             <column name="is_open" length="1" not-null="true" />
         </property>
+        <property name="isDel" type="java.lang.String">
+            <column name="isdel" length="1" />
+        </property>
         <property name="listorder" type="java.lang.Integer">
             <column name="listorder" not-null="true" />
         </property>

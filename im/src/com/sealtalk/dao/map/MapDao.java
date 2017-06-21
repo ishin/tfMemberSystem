@@ -10,22 +10,6 @@ import com.sealtalk.model.TMap;
 public interface MapDao extends IBaseDao<TMap, Long> {
 
 	/**
-	 * 获取单人坐标
-	 * @param targetId
-	 * @return
-	 */
-	@Deprecated
-	public Object[] getLocation(int targetId);
-
-	/**
-	 * 获取群成员坐标
-	 * @param targetIdInt
-	 * @return
-	 */
-	@Deprecated
-	public List<Object[]> getLocationForMultId(String targetIdInt);
-
-	/**
 	 * 提交个人位置
 	 * @param tm
 	 */
@@ -53,5 +37,7 @@ public interface MapDao extends IBaseDao<TMap, Long> {
 	 * @return
 	 */
 	public List<TMap> getMapByIds(Integer[] ids);
+
+	public int deleteRelationByIds(String ids, String isLogic);
 
 }

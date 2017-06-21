@@ -2,7 +2,6 @@ package com.tianfangIMS.im.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -35,7 +34,8 @@ import com.tianfangIMS.im.bean.TopContactsRequestBean;
 import com.tianfangIMS.im.bean.TreeInfo;
 import com.tianfangIMS.im.bean.ViewMode;
 import com.tianfangIMS.im.dialog.LoadDialog;
-import com.tianfangIMS.im.dialog.SendImageMessageDialog;
+import com.tianfangIMS.im.dialog.SendFlieMessageDialog;
+import com.tianfangIMS.im.dialog.SendImageMessageSpDialog;
 import com.tianfangIMS.im.utils.CommonUtil;
 import com.tianfangIMS.im.utils.NToast;
 
@@ -48,9 +48,8 @@ import java.util.List;
 import java.util.Map;
 
 import io.rong.imkit.RongIM;
-import io.rong.imlib.RongIMClient;
+import io.rong.imkit.model.GroupUserInfo;
 import io.rong.imlib.model.Conversation;
-import io.rong.message.ImageMessage;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -110,6 +109,7 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
 
     ViewMode mMode;
     String Groupid;//从群组详情页面传递过来的群组ID
+    String GroupName;//从群组详情页面传递过来的群组ID
     String PrivateID;//从好友详情页面传递过来的好友IDS
     String SimpleName;//常规创建群组的方法
     int parentLevel;
@@ -118,18 +118,26 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
     private Context mContext;
     private ArrayList<String> ListUri;
     private GridView gv_create;
+    private ArrayList<io.rong.imlib.model.Message> allMessage;
+    private ArrayList<io.rong.imlib.model.Message> allfile;
+    CreateGroup_GridView_Adapter gridview_adapter;
+    boolean tmpBool;
+    private String AddUserforGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
         setTitle("选择所有联系人");
-        sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
+        sessionId = getSharedPreferences("CompanyCode", MODE_PRIVATE).getString("CompanyCode", "");
         Groupid = getIntent().getStringExtra("Groupid");
+        GroupName = getIntent().getStringExtra("GroupName");
         PrivateID = getIntent().getStringExtra("PrivateChat");
-        ImageMessageList = getIntent().getStringArrayListExtra("ImageUri");
+        allMessage = getIntent().getParcelableArrayListExtra("allMessage");
+        allfile = getIntent().getParcelableArrayListExtra("allFile");
         SimpleName = getIntent().getStringExtra("SimpleName");
         ListUri = getIntent().getStringArrayListExtra("ListUri");
+        AddUserforGroup = getIntent().getStringExtra("AddUserforGroup");
         mContext = this;
         maps = (HashMap<Integer, HashMap<Integer, TreeInfo>>) getIntent().getSerializableExtra("maps");
         currentLevel = getIntent().getIntExtra("currentLevel", -1);
@@ -142,12 +150,11 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
 //                Intent mIntent = new Intent(InfoActivity.this, TreeActivity.class);
 //                mIntent.putExtra("map", maps);
 //                startActivityForResult(mIntent, 100);
-                GetInfo();
+//                GetInfo();
             }
         });
         tv_search_icon = (EditText) this.findViewById(R.id.et_search);
         gv_create = (GridView) this.findViewById(R.id.gv_create);
-        gv_create.setOnItemClickListener(this);
         activity_info_lv_part = (ListView) findViewById(R.id.activity_info_lv_part);
         activity_info_ll_indicator = (LinearLayout) findViewById(R.id.activity_info_ll_indicator);
         activity_info_ll_header = (LinearLayout) findViewById(R.id.activity_info_ll_header);
@@ -157,7 +164,7 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
         search_infoactivity.setOnClickListener(this);
         tv_search_icon.setFocusable(false);
         tv_search_icon.setOnClickListener(this);
-        rl_selectAddContacts_background = (RelativeLayout) this.findViewById(R.id.rl_selectAddContacts_background);
+        rl_selectAddContacts_background = (RelativeLayout) this.findViewById(R.id.rl_selectinfo_background);
         tv_creategroup_submit.setOnClickListener(this);
         activity_info_lv_part.setOnItemClickListener(this);
 
@@ -177,7 +184,8 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
             }
         }
         transfer();
-
+        View settingfootview = View.inflate(mContext, R.layout.info_footview, null);
+        activity_info_lv_part.addFooterView(settingfootview);
     }
 
     private void transfer() {
@@ -214,9 +222,7 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
                 @Override
                 public void onClick(View v) {
                     mTreeInfo = (TreeInfo) v.getTag();
-                    Log.e("clickHistory","-----:"+mTreeInfo);
                     int index = clickHistory.indexOf(mTreeInfo);
-
                     if (index == -1) {
                         clickHistory.clear();
                         currentLevel = 0;
@@ -243,9 +249,9 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
         }
         //将Map数据集合转换为List
         for (TreeInfo treeInfo : map.values()) {
-            if (isChecked) {
-                treeInfo.setChecked(isChecked);
-            }
+//            if (isChecked) {
+//                treeInfo.setChecked(isChecked);
+//            }
             mTreeInfos.add(treeInfo);
         }
         isChecked = false;
@@ -274,18 +280,27 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mTreeInfo = mTreeInfos.get(position);
-        Log.e("onItemClick","----:"+mTreeInfo.getId());
         //点击的选项为员工类型
         if (mTreeInfo.getFlag() == 1) {
-//            Toast.makeText(this, "即将进入通信界面", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "即将进入通信界面", Toast.LENGTH_SHORT).show();
             String ids = String.valueOf(mTreeInfo.getId());
-            if (ListUri != null && ListUri.size() > 0) {
-//                SendImageMessage(ListUri, position);
-                SendImageMessageDialog sendImageMessageDialog = new SendImageMessageDialog(mContext,ids,position,mTreeInfo.getName(),ListUri, Conversation.ConversationType.PRIVATE,
-                        ConstantValue.ImageFile+mTreeInfo.getLogo(),null);
-                sendImageMessageDialog.show();
+            if (allMessage != null && allMessage.size() > 0) {
+                SendImageMessageSpDialog sendImageMessageSpDialog = new SendImageMessageSpDialog(mContext, ids, mTreeInfo.getName(), allMessage, Conversation.ConversationType.PRIVATE,
+                        ConstantValue.ImageFile + mTreeInfo.getLogo(), null);
+                sendImageMessageSpDialog.show();
+            } else if (allfile != null && allfile.size() > 0) {
+                SendFlieMessageDialog sendFlieMessageDialog = new SendFlieMessageDialog(mContext, ids, mTreeInfo.getName(),
+                        allfile, Conversation.ConversationType.PRIVATE,
+                        ConstantValue.ImageFile + mTreeInfo.getLogo(), null);
+                sendFlieMessageDialog.show();
             } else {
-                RongIM.getInstance().startPrivateChat(mContext, ids, mTreeInfo.getName());
+//                RongIM.getInstance().startPrivateChat(mContext, ids, mTreeInfo.getName());
+                Intent intent = new Intent(mContext, FriendPersonInfoActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("userId", ids);
+                intent.putExtras(bundle);
+                intent.putExtra("conversationType", Conversation.ConversationType.PRIVATE);
+                startActivity(intent);
             }
             return;
         }
@@ -377,40 +392,75 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
     }
 
     private List<TreeInfo> results = new ArrayList<>();
+    private Map<Integer, Boolean> checkedMap;
 
     private void GetInfo() {
-        results = new ArrayList<TreeInfo>();
+        results = new ArrayList<>();//这个就是数据被选中的数据源
         for (HashMap<Integer, TreeInfo> hashMap : maps.values()) {
             for (TreeInfo info : hashMap.values()) {
                 if (info.isChecked() && info.getFlag() == 1) {
-                    Log.d("InfoActivity", info.getName());
                     results.add(info);
                 }
             }
         }
-        CreateGroup_GridView_Adapter adapter = new CreateGroup_GridView_Adapter(InfoActivity.this, results);
+        if (results.size() <= 0) {
+            rl_selectAddContacts_background.setVisibility(View.GONE);
+        } else {
+            rl_selectAddContacts_background.setVisibility(View.VISIBLE);
+        }
+        gridview_adapter = new CreateGroup_GridView_Adapter(InfoActivity.this, results);
         SettingGridView(results);
-        gv_create.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        gv_create.setAdapter(gridview_adapter);
+        gridview_adapter.notifyDataSetChanged();
         tv_creategroup_submit.setText("添加（" + results.size() + "）");
+
+        //底部GridView弹出框item事件
+        gv_create.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //TODO
+                TreeInfo mInfo = results.get(position);
+                maps.get(mInfo.getPid()).get(mInfo.getId()).setChecked(false);
+                results.remove(position);
+                if (maps.get(mInfo.getPid()).get(mInfo.getId()).isChecked() == false) {
+
+                }
+//                results.remove(position).getId();
+                tv_creategroup_submit.setText("添加（" + results.size() + "）");
+                gridview_adapter.notifyDataSetChanged();
+                if (results.size() <= 0) {
+                    rl_selectAddContacts_background.setVisibility(View.GONE);
+                }
+                transfer();
+            }
+        });
     }
 
     @Override
-    public void onCheckedChange(int pid, int id, TreeInfo info) {
+    public void onCheckedChange(int pid, int id, TreeInfo info, int position) {
+        checkedMap = mAdapter.getCheckedMap();
+//        TreeInfo info = mTreeInfos.get(position);
+//        int pid = info.getPid();
+//        int id = info.getId();
+//        Toast.makeText(this, position + "," + info.getName(), Toast.LENGTH_SHORT).show();
         maps.get(pid).put(id, info);
-        boolean tmpBool = info.isChecked();
+        tmpBool = info.isChecked();
         //部门类型
-        if (info.getFlag() == 0) {
-            //只要为True 就表明有子部门
-            if (maps.containsKey(info.getId())) {
-                for (TreeInfo treeInfo : maps.get(info.getId()).values()) {
-                    treeInfo.setChecked(tmpBool);
-                    onCheckedChange(treeInfo.getPid(), treeInfo.getId(), treeInfo);
-                    GetInfo();
-                    rl_selectAddContacts_background.setVisibility(View.VISIBLE);
-                }
+//        if (info.getFlag() != 1) {
+        //只要为True 就表明有子部门
+        if (maps.containsKey(info.getId())) {
+            int index = 0;
+            GetInfo();
+            for (TreeInfo treeInfo : maps.get(info.getId()).values()) {
+                treeInfo.setChecked(tmpBool);
+                onCheckedChange(treeInfo.getPid(), treeInfo.getId(), treeInfo, index);
+                index++;
+                GetInfo();
             }
+        } else {
+            GetInfo();
         }
+//        }
     }
 
     /**
@@ -418,7 +468,6 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
      */
     private void CreatePrivateChatforGroup() {
         List<String> list = new ArrayList<String>();
-
         for (int i = 0; i < results.size(); i++) {
             String id = results.get(i).getId() + "";
             list.add(id);
@@ -434,7 +483,7 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .params("userid", UID)
                 .params("groupids", aa)
                 .execute(new StringCallback() {
@@ -447,11 +496,17 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         LoadDialog.dismiss(mContext);
-                        if (!TextUtils.isEmpty(s)) {
+                        if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                            if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                NToast.shortToast(mContext, "Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                finish();
+                            }
                             Gson gson = new Gson();
                             TopContactsRequestBean bean = gson.fromJson(s, TopContactsRequestBean.class);
                             if (bean.getCode().equals("200")) {
                                 NToast.shortToast(mContext, "创建成功");
+                                RongIM.getInstance().refreshGroupUserInfoCache(new GroupUserInfo(bean.getText().getId(), bean.getText().getName(), null));
                                 RongIM.getInstance().startGroupChat(mContext, bean.getText().getId(), bean.getText().getName());
                             } else {
                                 NToast.shortToast(mContext, "创建失败");
@@ -481,7 +536,7 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .params("userid", UID)
                 .params("groupids", aa)
                 .execute(new StringCallback() {
@@ -495,11 +550,16 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
                     public void onSuccess(String s, Call call, Response response) {
                         LoadDialog.dismiss(mContext);
                         if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                            if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                NToast.shortToast(mContext, "Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                finish();
+                            }
                             Gson gson = new Gson();
                             TopContactsRequestBean bean = gson.fromJson(s, TopContactsRequestBean.class);
-                            Log.e("dayinbean","---"+s);
                             if (bean.getCode().equals("200")) {
                                 NToast.shortToast(mContext, "创建成功");
+                                RongIM.getInstance().refreshGroupUserInfoCache(new GroupUserInfo(bean.getText().getId(), bean.getText().getName(), null));
                                 RongIM.getInstance().startGroupChat(mContext, bean.getText().getId(), bean.getText().getName());
 
                             } else {
@@ -525,7 +585,7 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .params("groupids", ids)
                 .params("groupid", Groupid)
                 .execute(new StringCallback() {
@@ -538,19 +598,22 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         LoadDialog.dismiss(mContext);
-                        Log.e("Info", "meiyou" + s);
                         if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
-                            Gson gson = new Gson();
-                            Map<String, Object> map = gson.fromJson(s, new TypeToken<Map<String, Object>>() {
-                            }.getType());
-                            if ((Double) map.get("code") == 1.0) {
-                                Log.e("哈哈", "添加成员是否承诺" + map.get("code"));
-//                                startActivity(new Intent(mContext, AMapShareLocationActivity.class));
-                                RongIM.getInstance().startGroupChat(mContext, Groupid, "");
-                                Log.e("哈哈", "添加成员是跳转是否执行" + map.get("code"));
+                            if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                NToast.shortToast(mContext, "Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                finish();
+                            } else {
+                                Gson gson = new Gson();
+                                Map<String, Object> map = gson.fromJson(s, new TypeToken<Map<String, Object>>() {
+                                }.getType());
+                                if ((Double) map.get("code") == 1.0) {
+                                    finish();
+                                }
                             }
                         } else {
-                            Log.e("Info", "没有数据");
+                            NToast.shortToast(mContext, "群组成员已经存在");
+                            return;
                         }
                     }
                 });
@@ -569,48 +632,35 @@ public class InfoActivity extends BaseActivity implements AdapterView.OnItemClic
             case R.id.tv_creategroup_submit:
                 if (!TextUtils.isEmpty(Groupid)) {
                     AddGroupUser();
-                }
-                if (!TextUtils.isEmpty(PrivateID)) {
+                    finish();
+                } else if (!TextUtils.isEmpty(PrivateID)) {
                     CreatePrivateChatforGroup();
-                }
-                if (!TextUtils.isEmpty(SimpleName)) {
+                    finish();
+                } else if (!TextUtils.isEmpty(SimpleName)) {
                     CreateGroup();
+                    finish();
                 }
                 break;
             case R.id.et_search:
-                startActivity(new Intent(mContext, SearchActivity.class));
+                if (!TextUtils.isEmpty(SimpleName)) {
+                    if (!TextUtils.isEmpty(AddUserforGroup)) {
+                        Intent intentSimpleName = new Intent(mContext, AddTopContacts_Activity.class);
+                        intentSimpleName.putExtra("AddUserforGroup", "AddUserforGroup");
+                        intentSimpleName.putExtra("GroupID", Groupid);
+                        startActivity(intentSimpleName);
+                        finish();
+                    } else {
+                        Intent intentSimpleName = new Intent(mContext, AddTopContacts_Activity.class);
+                        intentSimpleName.putExtra("AddUserforGroup", "AddUserforGroup");
+                        intentSimpleName.putExtra("GroupID", Groupid);
+                        startActivity(intentSimpleName);
+                        finish();
+                    }
+                } else {
+                    Log.e("asdasdsa123d123", "执行3");
+                    startActivity(new Intent(mContext, SearchActivity.class));
+                }
                 break;
-        }
-    }
-
-    private void SendImageMessage(List<String> ImageMessageList, final int position) {
-        final String sendImageIds = String.valueOf(mTreeInfo.getId());
-        for (int i = 0; i < ImageMessageList.size(); i++) {
-            ImageMessage imageMessage = ImageMessage.obtain(null, Uri.parse(ImageMessageList.get(i)), true);
-            RongIM.getInstance().sendImageMessage(Conversation.ConversationType.PRIVATE, sendImageIds, imageMessage, null, null,
-                    new RongIMClient.SendImageMessageCallback() {
-                        @Override
-                        public void onAttached(io.rong.imlib.model.Message message) {
-
-                        }
-
-                        @Override
-                        public void onError(io.rong.imlib.model.Message message, RongIMClient.ErrorCode errorCode) {
-                            LoadDialog.dismiss(mContext);
-                            NToast.shortToast(mContext, "发送失败" + errorCode.getValue());
-                        }
-
-                        @Override
-                        public void onSuccess(io.rong.imlib.model.Message message) {
-                            LoadDialog.dismiss(mContext);
-                            NToast.shortToast(mContext, "发送成功");
-                            RongIM.getInstance().startPrivateChat(mContext, sendImageIds, mTreeInfo.getName());
-                        }
-
-                        @Override
-                        public void onProgress(io.rong.imlib.model.Message message, int i) {
-                        }
-                    });
         }
     }
 }

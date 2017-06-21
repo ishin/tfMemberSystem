@@ -31,6 +31,7 @@
             android:hint="@string/search"
             android:maxLines="1"
             android:paddingLeft="9dp"
+            android:singleLine="true"
             android:textSize="14sp" />
 
         <TextView

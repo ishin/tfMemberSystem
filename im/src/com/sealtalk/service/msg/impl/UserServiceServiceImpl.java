@@ -2,16 +2,21 @@ package com.sealtalk.service.msg.impl;
 
 import net.sf.json.JSONObject;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.sealtalk.common.Tips;
 import com.sealtalk.model.TMember;
 import com.sealtalk.service.msg.UserServiceService;
+import com.sealtalk.utils.LogUtils;
 import com.sealtalk.utils.PropertiesUtils;
 import com.sealtalk.utils.RongCloudUtils;
 import com.sealtalk.utils.StringUtils;
 import com.sealtalk.utils.TimeGenerator;
 
 public class UserServiceServiceImpl implements UserServiceService {
-
+	private static final Logger logger = LogManager.getLogger(UserServiceServiceImpl.class);
+	
 	@Override
 	public String getToken(String id) {
 		JSONObject jo = new JSONObject();
@@ -53,9 +58,11 @@ public class UserServiceServiceImpl implements UserServiceService {
 				jo.put("text", token);
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 	
@@ -84,9 +91,11 @@ public class UserServiceServiceImpl implements UserServiceService {
 			jo.put("text", "ok");
 			
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 	
@@ -101,6 +110,7 @@ public class UserServiceServiceImpl implements UserServiceService {
 			jo.put("code", 1);
 			jo.put("text", status);
 		}
+		logger.info(jo.toString());
 		return jo.toString();
 	}
 

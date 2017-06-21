@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="10dp"
     android:background="#f0f0f0"
     android:orientation="vertical">
 
@@ -31,8 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/iv_setting_photo"
-            android:text="连梦雨" />
+            android:layout_toRightOf="@+id/iv_setting_photo" />
 
         <ImageView
             android:id="@+id/iv_sex"
@@ -52,8 +52,10 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/ll_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="20dp"
         android:background="#FFFFFF"
         android:orientation="vertical">
@@ -85,33 +87,4 @@
             android:background="@android:color/white"
             android:divider="@color/fengexian" />
     </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/rl_mine_settings"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="20dp"
-        android:background="#FFFFFF">
-
-        <ImageView
-            style="@style/me_imageview"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/me_icon_settings" />
-
-        <TextView
-            style="@style/me_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="设置" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/icon_right_jiao" />
-    </RelativeLayout>
 </LinearLayout>

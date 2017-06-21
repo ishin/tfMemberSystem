@@ -15,17 +15,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="-8dp"
             android:background="@null"
             android:onClick="onHeadLeftButtonClick"
             android:scaleType="centerCrop"
-            android:src="@mipmap/icon_back" />
+            android:src="@mipmap/btn_left" />
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/btn_left"
             android:maxLength="8"
             android:maxLines="1"
@@ -100,7 +101,16 @@
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:visibility="gone" />
-
-
+        <ImageView
+            android:id="@+id/basemain_plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="20dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/icon_title_plus"
+            android:visibility="gone" />
     </RelativeLayout>
 </LinearLayout>

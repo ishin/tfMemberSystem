@@ -2,9 +2,10 @@ package com.sealtalk.action.msg;
 
 import javax.servlet.ServletException;
 
-import net.sf.json.JSONObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import org.apache.log4j.Logger;
+import net.sf.json.JSONObject;
 
 import com.googlecode.sslplugin.annotation.Secured;
 import com.sealtalk.common.BaseAction;
@@ -19,11 +20,11 @@ import com.sealtalk.utils.StringUtils;
  * @date 2017/01/11
  *
  */
-@Secured
+
 public class UserServiceAction extends BaseAction {
 
 	private static final long serialVersionUID = 7812442221327984861L;
-	private static final Logger logger = Logger.getLogger(UserServiceAction.class);
+	private static final Logger logger = LogManager.getLogger(UserServiceAction.class);
 	
 	/**
 	 * 获取token
@@ -39,10 +40,11 @@ public class UserServiceAction extends BaseAction {
 			jo.put("text", Tips.NULLID.getName());
 			result = jo.toString();
 		} else {
-			result = userService.getToken(userid);
+			result = userService.getToken(clearChar(userid));
 		}
-		
-		return result;
+		logger.info(result);
+		returnToClient(result);
+		return "text";
 	}
 	
 	/**
@@ -59,10 +61,12 @@ public class UserServiceAction extends BaseAction {
 			jo.put("text", Tips.NULLID.getName());
 			result = jo.toString();
 		} else {
-			result = userService.refreshUser(userid);
+			result = userService.refreshUser(clearChar(userid));
 		}
 		
-		return result;
+		logger.info(result);
+		returnToClient(result);
+		return "text";
 	}
 	
 	/**
@@ -71,7 +75,9 @@ public class UserServiceAction extends BaseAction {
 	 * @throws ServletException
 	 */
 	public String checkOnline() throws ServletException {
-		return userService.checkOnline(userid);
+		String result = userService.checkOnline(clearChar(userid));
+		logger.info(result);
+		return "text";
 	}
 	
 	private UserServiceService userService;

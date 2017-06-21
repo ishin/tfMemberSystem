@@ -12,6 +12,7 @@
         android:layout_marginTop="52dp"
         android:background="@color/White"
         android:gravity="center_horizontal">
+
         <com.tianfangIMS.im.view.CircleImageViews
             android:id="@+id/iv_movegroupuser_photo"
             android:layout_width="48dp"

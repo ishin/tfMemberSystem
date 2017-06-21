@@ -3,17 +3,23 @@ package com.sealtalk.service.msg.impl;
 
 import net.sf.json.JSONObject;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.sealtalk.common.SysInterface;
 import com.sealtalk.common.Tips;
 import com.sealtalk.model.AppSecret;
 import com.sealtalk.service.msg.MessageService;
 import com.sealtalk.utils.HttpRequest;
 import com.sealtalk.utils.JSONUtils;
+import com.sealtalk.utils.LogUtils;
 import com.sealtalk.utils.RongCloudUtils;
 import com.sealtalk.utils.StringUtils;
 
 public class MessageServiceImpl implements MessageService {
 
+	private static final Logger logger = LogManager.getLogger(MessageServiceImpl.class);
+	
 	@Override
 	public String sendSysMsg(String fromId, String targetIds,
 			String targetNames, String msg, String extraMsg,
@@ -86,6 +92,7 @@ public class MessageServiceImpl implements MessageService {
 
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
@@ -164,6 +171,7 @@ public class MessageServiceImpl implements MessageService {
 
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 
@@ -188,6 +196,7 @@ public class MessageServiceImpl implements MessageService {
 				return as;
 			}
 		} catch (Exception e) {
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return null;

@@ -1,5 +1,6 @@
 package com.tianfangIMS.im.dialog;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.tianfangIMS.im.R;
 import com.tianfangIMS.im.activity.AddGroupActivity;
-import com.tianfangIMS.im.activity.AddTopContacts_Activity;
+import com.tianfangIMS.im.activity.QRCodeActivity;
+import com.tianfangIMS.im.activity.ScanActivity;
 
 /**
  * Created by LianMengYu on 2017/1/19.
@@ -20,7 +23,7 @@ import com.tianfangIMS.im.activity.AddTopContacts_Activity;
 public class MainPlusDialog extends PopupWindow implements View.OnClickListener {
     private static final String TAG = "MainPlusDialog";
     private Context mContext;
-    private RelativeLayout rl_mainplus_chatroom, rl_mainplus_topcontacts;
+    private RelativeLayout rl_mainplus_chatroom, rl_mainplus_topcontacts,rl_mainplus_qr;
 
     public MainPlusDialog(Context context) {
         super(context);
@@ -34,7 +37,7 @@ public class MainPlusDialog extends PopupWindow implements View.OnClickListener 
     }
 
     private void jumpContacts(){
-        Intent intent = new Intent(mContext,AddTopContacts_Activity.class);
+        Intent intent = new Intent(mContext,QRCodeActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("SimpleName",TAG);
         intent.putExtras(bundle);
@@ -49,14 +52,28 @@ public class MainPlusDialog extends PopupWindow implements View.OnClickListener 
         intent.putExtras(bundle);
         mContext.startActivity(intent);
         this.dismiss();
-
+    }
+    private void jumpQR(){
+//        Intent intent = new Intent(mContext,QRCodeActivity.class);
+//        mContext.startActivity(intent);
+//        this.dismiss();
+        IntentIntegrator integrator = new IntentIntegrator((Activity) mContext);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
+        integrator.setCaptureActivity(ScanActivity.class);
+        integrator.setPrompt("将二维码放置框内，即开始扫描"); //底部的提示文字，设为""可以置空
+        integrator.setCameraId(0); //前置或者后置摄像头
+        integrator.setBeepEnabled(true); //扫描成功的「哔哔」声，默认开启
+        integrator.setBarcodeImageEnabled(true);
+        integrator.initiateScan();
     }
     private void init(View view) {
         rl_mainplus_chatroom = (RelativeLayout) view.findViewById(R.id.rl_mainplus_chatroom);
         rl_mainplus_topcontacts = (RelativeLayout) view.findViewById(R.id.rl_mainplus_topcontacts);
+        rl_mainplus_qr = (RelativeLayout)view.findViewById(R.id.rl_mainplus_qr);
 
         rl_mainplus_topcontacts.setOnClickListener(this);
         rl_mainplus_chatroom.setOnClickListener(this);
+        rl_mainplus_qr.setOnClickListener(this);
     }
 
 
@@ -68,6 +85,10 @@ public class MainPlusDialog extends PopupWindow implements View.OnClickListener 
                 break;
             case R.id.rl_mainplus_topcontacts:
                 jumpContacts();
+                break;
+            case R.id.rl_mainplus_qr:
+                jumpQR();
+                this.dismiss();
                 break;
         }
     }

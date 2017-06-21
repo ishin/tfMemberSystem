@@ -21,6 +21,7 @@
 #import "TeamMembersViewController.h"
 #import "TeamOrg.h"
 #import "WSUser.h"
+#import "PhotoMessageViewController.h"
 
 
 @interface MeViewController () <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
@@ -43,9 +44,12 @@
     UIImageView *iconwhite;
     
     TeamOrg *_tfOrg;
+    
+    BOOL _isLoading;
 }
 @property (nonatomic, strong) User *_user;
 @property (nonatomic, strong) NSDictionary *_personInfo;
+@property (nonatomic, strong) NSMutableDictionary *_myUnitIds;
 
 @end
 
@@ -53,22 +57,11 @@
 
 @synthesize _user;
 @synthesize _personInfo;
-
+@synthesize _myUnitIds;
 
 - (void) viewWillAppear:(BOOL)animated
 {
-    User *u = [UserDefaultsKV getUser];
-    if(u)
-    {
-        self._user = u;
-        [self reloadData];
-        
-        [self reloadPersonInfo];
-    
-    }
-    
-    if(_tableView)
-        [_tableView reloadData];
+    [super viewWillAppear:animated];
     
     if ([[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending)
     {
@@ -76,6 +69,16 @@
             self.navigationController.interactivePopGestureRecognizer.delegate = nil;
         }
     }
+    
+    User *u = [UserDefaultsKV getUser];
+    if(u)
+    {
+        self._user = u;
+        [self reloadPersonInfo];
+    
+    }
+  
+    
 }
 
 - (void)viewDidLoad {
@@ -118,7 +121,7 @@
     
     u_gener = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"gender_male.png"]];
     
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-50)
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-114)
                                               style:UITableViewStylePlain];
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -132,12 +135,47 @@
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:imsBtn];
 
     
-    
+    [self reloadData:nil];
     
 }
 
+- (void) queryUnitById:(int)pid
+{
+    NSDictionary *unit = [[GoGoDB sharedDBInstance] queryUnitById:pid];
+
+    int flag = [[unit objectForKey:@"flag"] intValue];
+    if(flag == 0)
+    {
+        int pid = [[unit objectForKey:@"pid"] intValue];
+        if(pid > 0)
+        {
+            [_myUnitIds setObject:@"1" forKey:[NSNumber numberWithInt:pid]];
+            [self queryUnitById:pid];
+        }
+    }
+    
+}
 
 - (void) loadOrgData{
+    
+    
+    User *my =  [UserDefaultsKV getUser];
+    
+    self._myUnitIds = [NSMutableDictionary dictionary];
+    
+    NSDictionary *myUnit = [[GoGoDB sharedDBInstance] queryUnitById:[my._userId intValue]];
+    
+    if(myUnit)
+    {
+        int pid = [[myUnit objectForKey:@"pid"] intValue];
+        if(pid > 0)
+        {
+            [_myUnitIds setObject:@"1" forKey:[NSNumber numberWithInt:pid]];
+            [self queryUnitById:pid];
+        }
+    
+    }
+    
     
     NSArray *tm1 = [[GoGoDB sharedDBInstance] queryOrgUnitsByPid:0];
     if([tm1 count])
@@ -161,14 +199,19 @@
             int flag = [[dic objectForKey:@"flag"] intValue];
             if(flag == 0)
             {
-                TeamOrg *orgSub = [[TeamOrg alloc] init];
-                orgSub._teamName = [dic objectForKey:@"name"];
-                orgSub._teamPId = [[dic objectForKey:@"pid"] intValue];
-                orgSub._teamId = [[dic objectForKey:@"id"] intValue];
-                orgSub._levelIndex = _tfOrg._levelIndex + 1;
-                [membs addObject:orgSub];
-                
-                [self queryTeamMembers:orgSub];
+                int tid = [[dic objectForKey:@"id"] intValue];
+                if([[_myUnitIds allKeys] containsObject:[NSNumber numberWithInt:tid]])
+                {
+                    TeamOrg *orgSub = [[TeamOrg alloc] init];
+                    orgSub._teamName = [dic objectForKey:@"name"];
+                    orgSub._teamPId = [[dic objectForKey:@"pid"] intValue];
+                    orgSub._teamId = tid;
+                    orgSub._levelIndex = _tfOrg._levelIndex + 1;
+                    [membs addObject:orgSub];
+                    
+                    [self queryTeamMembers:orgSub];
+                }
+
             }
             else
             {
@@ -177,6 +220,8 @@
             }
         }
     }
+     
+    
     
     [_tableView reloadData];
 }
@@ -193,14 +238,19 @@
         int flag = [[dic objectForKey:@"flag"] intValue];
         if(flag == 0)
         {
-            TeamOrg *org = [[TeamOrg alloc] init];
-            org._teamName = [dic objectForKey:@"name"];
-            org._teamPId = [[dic objectForKey:@"pid"] intValue];
-            org._teamId = [[dic objectForKey:@"id"] intValue];
-            org._levelIndex = team._levelIndex + 1;
-            [membs addObject:org];
             
-            [self queryTeamMembers:org];
+            int tid = [[dic objectForKey:@"id"] intValue];
+            if([[_myUnitIds allKeys] containsObject:[NSNumber numberWithInt:tid]])
+            {
+                TeamOrg *org = [[TeamOrg alloc] init];
+                org._teamName = [dic objectForKey:@"name"];
+                org._teamPId = [[dic objectForKey:@"pid"] intValue];
+                org._teamId = [[dic objectForKey:@"id"] intValue];
+                org._levelIndex = team._levelIndex + 1;
+                [membs addObject:org];
+                
+                [self queryTeamMembers:org];
+            }
         }
         else
         {
@@ -261,6 +311,10 @@
 
 - (void) reloadPersonInfo{
     
+    if(_isLoading)
+        return;
+    _isLoading = YES;
+    
     User *u = [UserDefaultsKV getUser];
     if(!u)
         return;
@@ -272,9 +326,6 @@
     
     _http._method = API_USER_PROFILE;
     _http._httpMethod = @"GET";
-    
-    
-    self._user = u;
     
     _http._requestParam = [NSDictionary dictionaryWithObjectsAndKeys:
                            u._userId,@"userid",
@@ -288,6 +339,7 @@
         NSString *response = lParam;
         // NSLog(@"%@", response);
         
+        _isLoading = NO;
         
         SBJson4ValueBlock block = ^(id res, BOOL *stop) {
             
@@ -299,15 +351,13 @@
                 
                 if(code)
                 {
-                    [_user updateUserInfo:res];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        [block_self reloadData:res];
+                    });
                     
-                    [block_self reloadData];
                     
-                    RCUserInfo *user = [[RCUserInfo alloc] init];
-                    user.userId = u._userId;
-                    user.name = u._userName;
-                    user.portraitUri = u._avatar;
-                    [[GoGoDB sharedDBInstance] saveUserInfo:user];
+                    
                 }
                 
                 return;
@@ -335,14 +385,28 @@
         NSString *response = lParam;
         NSLog(@"%@", response);
         
-        
+        _isLoading = NO;
     }];
 }
 
-- (void) reloadData{
+- (void) reloadData:(NSDictionary*)res{
     
-    [UserDefaultsKV saveUser:_user];
+    if(res && [res count])
+    {
+        [_user updateUserInfo:res];
+        [UserDefaultsKV saveUser:_user];
+    }
     
+    if(_user)
+    {
+        RCUserInfo *user = [[RCUserInfo alloc] init];
+        user.userId = _user._userId;
+        user.name = _user._userName;
+        user.portraitUri = _user._avatar;
+        [[GoGoDB sharedDBInstance] saveUserInfo:user];
+        
+        [[RCIM sharedRCIM] refreshUserInfoCache:user withUserId:user.userId];
+    }
     
     [self refreshTable];
     
@@ -373,6 +437,12 @@
             [cell.contentView addSubview:u_actorLogo];
             [cell.contentView addSubview:u_nameL];
             [cell.contentView addSubview:u_gener];
+            
+            UIButton *btnView = [UIButton buttonWithType:UIButtonTypeCustom];
+            btnView.frame = u_actorLogo.frame;
+            [cell.contentView addSubview:btnView];
+            [btnView addTarget:self action:@selector(viewUserAvatar:)
+              forControlEvents:UIControlEventTouchUpInside];
         }
        
     }
@@ -398,7 +468,11 @@
             nameL.font = [UIFont systemFontOfSize:16];
             nameL.textAlignment = NSTextAlignmentLeft;
             nameL.textColor  = COLOR_TEXT_A;
-            nameL.text = _tfOrg._teamName;
+            
+            if([_tfOrg._teamName isKindOfClass:[NSString class]])
+            {
+                nameL.text = _tfOrg._teamName;
+            }
             
             UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 59.5, SCREEN_WIDTH, 0.5)];
             line.backgroundColor = LINE_COLOR;
@@ -580,6 +654,21 @@
         [self.navigationController pushViewController:setting animated:YES];
     }
        
+}
+
+- (void) viewUserAvatar:(id)sender{
+    
+    if([_user._avatar length] > 5)
+    {
+        PhotoMessageViewController *photo = [[PhotoMessageViewController alloc] init];
+        photo._imageUrl = _user._avatar;
+        photo._showTitle = @"我的头像";
+        photo._vHeight = SCREEN_HEIGHT - 64;
+        photo.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:photo animated:YES];
+        
+    }
+
 }
 
 - (void) moreAction:(id)sender{

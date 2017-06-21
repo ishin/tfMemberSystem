@@ -14,11 +14,14 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 
 public class FileUtil {
 	private static final int BUFFER_SIZE = 16 * 1024; 
+	private static final Logger logger = LogManager.getLogger(FileUtil.class);
 	public static String readFile(String path) {
        try{
 	        File f = new File(path);
@@ -36,9 +39,10 @@ public class FileUtil {
 		        return txt.toString();
 	        }
 	   } catch (IOException e){
+		   logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 		   e.printStackTrace();
-		   return null;
        }
+	   return null;
 	}
 	
 	public static void writeFile(File src, File dst) {  
@@ -63,10 +67,11 @@ public class FileUtil {
                 }  
             }  
         } catch (Exception e) {  
+        	 logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
             e.printStackTrace();  
         }  
           
-        System.out.println("写入成功！");  
+        logger.info("写入成功！");  
 	}  
 	public static void writeFile(String path, String txt) {
        try{
@@ -101,7 +106,7 @@ public class FileUtil {
 				if(overwrite){ 
 					newFile.renameTo(
 							new File(newFile.getParentFile().getAbsoluteFile()+File.separator+newFile.getName()
-							+"."+UimpUtil.DateToString(new Date(), "yyyyMMddHHmmss"))
+							+"."+PinyinGenerator.DateToString(new Date(), "yyyyMMddHHmmss"))
 					);
 				}
 				else{
@@ -120,7 +125,8 @@ public class FileUtil {
 				inStream.close();
 			}
 		} catch (Exception e) {
-			System.out.println("复制单个文件操作出错");
+			 logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+			 logger.error("复制单个文件操作出错");
 			e.printStackTrace();
 		}
 
@@ -171,7 +177,8 @@ public class FileUtil {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("复制整个文件夹内容操作出错");
+			 logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
+			logger.error("复制整个文件夹内容操作出错");
 			e.printStackTrace();
 
 		}
@@ -202,6 +209,7 @@ public class FileUtil {
 			zout.close();
 			flag = true;
 		} catch (Exception e) {
+			 logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
 		return flag;
@@ -243,6 +251,7 @@ public class FileUtil {
 				}
 			}
 		} catch (Exception e) {
+			 logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 			result = false;
 		}
@@ -290,7 +299,7 @@ public class FileUtil {
             }  
   
         } catch (Exception e) {  
-  
+        	 logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
             e.printStackTrace();  
   
         }  

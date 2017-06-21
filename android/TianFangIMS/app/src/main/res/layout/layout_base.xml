@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/zuohuatuichu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/navigation_top_bar"
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:windowIsTranslucent="true">
 
     <include layout="@layout/layout_base_top" />
-
 
     <FrameLayout
         android:id="@+id/layout_container"

@@ -3,10 +3,7 @@ package com.sealtalk.utils;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.json.JSONObject;
-
 import com.bcloud.msg.http.HttpSender;
-import com.sealtalk.common.Tips;
 
 /**
  * 短信验证码发送
@@ -17,7 +14,7 @@ public class TextHttpSender {
 	
 	public static Map<String, String> code = new HashMap<String, String>();
 	
-	/*private TextHttpSender() {
+	private TextHttpSender() {
 		code.put("0", "提交成功");
 		code.put("101", "无此用户");
 		code.put("102", "密码错");
@@ -37,7 +34,7 @@ public class TextHttpSender {
 		code.put("117", "IP地址认证错,请求调用的IP地址不是系统登记的IP地址");
 		code.put("118", "用户没有相应的发送权限");
 		code.put("119", "用户已过期");
-	};*/
+	};
 	
 	private static class Inner {
 		private static final TextHttpSender THS = new TextHttpSender();
@@ -60,7 +57,7 @@ public class TextHttpSender {
 	 * @return
 	 */
 	public String sendText(String mobiles, String content) {
-		String resultCode = null;
+		String resultCode = "-1";
 		
 		try {
 			String uri = PropertiesUtils.getStringByKey("code.uri");
@@ -70,25 +67,20 @@ public class TextHttpSender {
 			String extno = PropertiesUtils.getStringByKey("code.extno");
 			
 			boolean needstatus = PropertiesUtils.getStringByKey("code.needstatus").equals("1") ? true : false;
-			boolean status = false;
 			
 			String returnString = HttpSender.batchSend(uri, account, pswd, mobiles, content, needstatus, product, extno);
 			
 			if (returnString != null) {
 				String[] result = returnString.split("\\n");
-				
-				if (result.length > 0 && !StringUtils.getInstance().isBlank(result[0])) {
+				int len = result == null ? 0 : result.length;
+				if (len > 0 && !StringUtils.getInstance().isBlank(result[0])) {
 					String[] codeR =result[0].split(",");
 					
-					if (codeR.length > 1 && !StringUtils.getInstance().isBlank(result[1])) {
+					//if (codeR.length > 1 && len > 1 && !StringUtils.getInstance().isBlank(result[1])) {
+					if (codeR.length > 1) {
 						resultCode = codeR[1];
-						status = true;
 					}
 				}
-			}
-			
-			if (!status) {
-				resultCode = "-1";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

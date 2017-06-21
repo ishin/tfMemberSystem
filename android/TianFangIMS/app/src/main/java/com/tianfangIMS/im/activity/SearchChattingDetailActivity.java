@@ -1,14 +1,15 @@
 package com.tianfangIMS.im.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,6 +25,7 @@ import com.tianfangIMS.im.view.FrameView;
 import java.util.List;
 
 import io.rong.imkit.RongIM;
+import io.rong.imkit.widget.adapter.BaseAdapter;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Message;
@@ -46,12 +48,13 @@ public class SearchChattingDetailActivity extends BaseActivity implements Adapte
     private ChattingRecordsAdapter mAdapter;
     private int type;//0为群组，1为单聊
     private LinearLayout no_result_chatting;
-
+    private TextView tv_search_cencal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.searchchattingdetail_layout);
+        setTitle("搜索聊天记录");
         Intent intent = getIntent();
         mFilterString = intent.getStringExtra("filterString");
         mResult = intent.getParcelableExtra("searchConversationResult");
@@ -66,6 +69,19 @@ public class SearchChattingDetailActivity extends BaseActivity implements Adapte
         mSearchNoResultsTextView = (TextView) this.findViewById(R.id.ac_tv_search_no_results);
         no_result_chatting = (LinearLayout)this.findViewById(R.id.no_result_chatting);
         lv_privatechat_search.setOnItemClickListener(this);
+
+        tv_search_cencal = (TextView) this.findViewById(R.id.tv_search_cencal);
+        tv_search_cencal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(et_search.getText().toString())) {
+                    finish();
+                } else {
+                    et_search.getText().clear();
+                }
+            }
+        });
+
     }
 
     private void initData() {
@@ -86,54 +102,24 @@ public class SearchChattingDetailActivity extends BaseActivity implements Adapte
                             public void onSuccess(List<SearchConversationResult> SearchConversationResult) {
                                 for (SearchConversationResult mResult : SearchConversationResult) {
                                     mMatchCount = mResult.getMatchCount();
-                                    if (mResult.getMatchCount() == 0) {
-                                        lv_privatechat_search.setVisibility(View.GONE);
-                                        mSearchNoResultsTextView.setVisibility(View.VISIBLE);
-//                                        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-//                                        spannableStringBuilder.append("没有搜到");
-//                                        SpannableStringBuilder colorFilterStr = new SpannableStringBuilder(mFilterString);
-//                                        colorFilterStr.setSpan(new ForegroundColorSpan(Color.parseColor("#0099ff")), 0, mFilterString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-//                                        spannableStringBuilder.append(colorFilterStr);
-//                                        spannableStringBuilder.append("相关信息");
-//                                        mSearchNoResultsTextView.setText(spannableStringBuilder);
-                                        no_result_chatting.setVisibility(View.VISIBLE);
-                                    } else {
-//                                        mSearchNoResultsTextView.setVisibility(View.GONE);
-//                                        lv_privatechat_search.setVisibility(View.VISIBLE);
-//                                        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-//                                        spannableStringBuilder.append(getString(R.string.ac_search_chat_detail, mResult.getMatchCount()));
-//                                        SpannableStringBuilder colorFilterStr = new SpannableStringBuilder(mFilterString);
-//                                        colorFilterStr.setSpan(new ForegroundColorSpan(Color.parseColor("#0099ff")), 0, mFilterString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-//                                        spannableStringBuilder.append(colorFilterStr);
-//                                        spannableStringBuilder.append("相关的聊天记录");
-//                                        mSearchNoResultsTextView.setText(spannableStringBuilder);
-                                        no_result_chatting.setVisibility(View.GONE);
-                                    }
                                 }
                             }
 
                             @Override
                             public void onError(RongIMClient.ErrorCode errorCode) {
-                                Log.e("看看打印结果:", "打印失败------:" + errorCode);
+
                             }
                         });
 
                 RongIMClient.getInstance().searchMessages(conversation.getConversationType(),
-                        conversation.getTargetId(), mFilterString, 50, 0, new RongIMClient.ResultCallback<List<Message>>() {
+                        conversation.getTargetId(), mFilterString, 30, 0, new RongIMClient.ResultCallback<List<Message>>() {
                             @Override
                             public void onSuccess(List<Message> messages) {
                                 mMessageShowCount = messages.size();
                                 mMessages = messages;
                                 if (mMessages.size() == 0) {
                                     lv_privatechat_search.setVisibility(View.GONE);
-                                    mSearchNoResultsTextView.setVisibility(View.VISIBLE);
-//                                    SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-//                                    spannableStringBuilder.append("没有搜到");
-//                                    SpannableStringBuilder colorFilterStr = new SpannableStringBuilder(mFilterString);
-//                                    colorFilterStr.setSpan(new ForegroundColorSpan(Color.parseColor("#0099ff")), 0, mFilterString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-//                                    spannableStringBuilder.append(colorFilterStr);
-//                                    spannableStringBuilder.append("相关信息");
-//                                    mSearchNoResultsTextView.setText(spannableStringBuilder);
+                                    mSearchNoResultsTextView.setVisibility(View.GONE);
                                     no_result_chatting.setVisibility(View.VISIBLE);
                                 } else {
                                     mSearchNoResultsTextView.setVisibility(View.GONE);
@@ -225,6 +211,14 @@ public class SearchChattingDetailActivity extends BaseActivity implements Adapte
             return convertView;
         }
 
+        @Override
+        protected View newView(Context context, int position, ViewGroup group) {
+            return null;
+        }
+
+        @Override
+        protected void bindView(View v, int position, Object data) {
+        }
         class Viewholder {
             ImageView img;
             TextView name;
@@ -236,9 +230,11 @@ public class SearchChattingDetailActivity extends BaseActivity implements Adapte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (type == 0) {
-            RongIM.getInstance().startGroupChat(mContext, mResult.getId(), mResult.getTitle());
+            RongIM.getInstance().startGroupChat(mContext, mResult.getId(), mResult.getTitle(),mMessages.get(position).getMessageId(),0);
+
         } else if (type == 1) {
-            RongIM.getInstance().startPrivateChat(mContext, mResult.getId(), mResult.getTitle());
+            RongIM.getInstance().startPrivateChat(mContext, mResult.getId(), mResult.getTitle(),mMessages.get(position).getMessageId(),0);
+            Log.e("asdljasld","duibuxiaox:"+mMessages.get(position).getMessageId());
         }
     }
 }

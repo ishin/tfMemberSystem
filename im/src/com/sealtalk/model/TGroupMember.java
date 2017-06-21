@@ -17,6 +17,7 @@ public class TGroupMember implements java.io.Serializable {
 	private Integer memberId;
 	private String isCreator;
 	private Integer listorder;
+	private String isDel;
 
 	// Constructors
 
@@ -32,11 +33,12 @@ public class TGroupMember implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public TGroupMember(Integer groupId, Integer memberId, String isCreator,
+	public TGroupMember(Integer groupId, Integer memberId, String isCreator, String isDel,
 			Integer listorder) {
 		this.groupId = groupId;
 		this.memberId = memberId;
 		this.isCreator = isCreator;
+		this.isDel = isDel;
 		this.listorder = listorder;
 	}
 
@@ -80,6 +82,14 @@ public class TGroupMember implements java.io.Serializable {
 
 	public void setListorder(Integer listorder) {
 		this.listorder = listorder;
+	}
+
+	public String getIsDel() {
+		return isDel;
+	}
+
+	public void setIsDel(String isDel) {
+		this.isDel = isDel;
 	}
 
 }

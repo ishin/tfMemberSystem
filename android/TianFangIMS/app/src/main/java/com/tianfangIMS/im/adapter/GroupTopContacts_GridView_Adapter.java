@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tianfangIMS.im.ConstantValue;
 import com.tianfangIMS.im.R;
-import com.tianfangIMS.im.bean.TopContactsListBean;
+import com.tianfangIMS.im.bean.AddFriendTwoBean;
 
 import java.util.List;
 
@@ -20,9 +20,9 @@ import java.util.List;
 
 public class GroupTopContacts_GridView_Adapter extends BaseAdapter {
     private Context mContext;
-    private List<TopContactsListBean> mList;
+    private List<AddFriendTwoBean> mList;
 
-    public GroupTopContacts_GridView_Adapter(Context mContext, List<TopContactsListBean> mList) {
+    public GroupTopContacts_GridView_Adapter(Context mContext, List<AddFriendTwoBean> mList) {
         this.mContext = mContext;
         this.mList = mList;
     }
@@ -58,12 +58,12 @@ public class GroupTopContacts_GridView_Adapter extends BaseAdapter {
         }
 //        CommonUtil.GetImages(mContext, mList.get(position).getText().get(position).getLogo(), viewHolder.img);
         Picasso.with(mContext)
-                .load(ConstantValue.ImageFile+mList.get(position).getText().get(position).getLogo())
-                .resize(500, 500)
-                .placeholder(R.mipmap.default_photo)
-                .error(R.mipmap.default_photo)
+                .load(ConstantValue.ImageFile + mList.get(position).getLogo())
+                .resize(50, 50)
+                .placeholder(R.mipmap.default_portrait)
+                .error(R.mipmap.default_portrait)
                 .into(viewHolder.img);
-        viewHolder.text.setText(mList.get(position).getText().get(position).getFullname());
+        viewHolder.text.setText(mList.get(position).getFullname());
         return convertView;
     }
 

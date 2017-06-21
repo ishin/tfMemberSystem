@@ -3,19 +3,16 @@ package com.tianfangIMS.im.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -64,10 +61,11 @@ import okhttp3.Response;
 public class GroupDetailActivity extends BaseActivity implements View.OnClickListener, GroupDetailInfo_GridView_Adapter.AddClickListener, GroupDetailInfo_GridView_Adapter.DelClickListener,
         AdapterView.OnItemClickListener {
     private static final String TAG = "GroupDetailActivity";
+    private static final String isGroupUUID = "isGroupUUID";
     private static final int SEARCH_TYPE_FLAG = 0;
     private String fromConversationId;
     private Conversation.ConversationType mConversationType;
-    private UserInfo userInfo;
+    private Group userInfo;
     private RelativeLayout rl_signout;
     private TextView tv_group_groupname;
     private RelativeLayout rl_changeGroupName;
@@ -87,47 +85,38 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
     private ArrayList<GroupBean> GroupBeanList;
     private boolean flag;
     String sessionId;
+    String change01;//修改名字后的返回值
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.groupdetail_layout);
-        sessionId = getSharedPreferences("CompanyCode",MODE_PRIVATE).getString("CompanyCode", "");
+        sessionId = getSharedPreferences("CompanyCode", MODE_PRIVATE).getString("CompanyCode", "");
         mContext = this;
         init();
         //群组会话界面点进群组详情
         fromConversationId = getIntent().getStringExtra("TargetId");
         mConversationType = (Conversation.ConversationType) getIntent().getSerializableExtra("conversationType");
         if (!TextUtils.isEmpty(fromConversationId)) {
-
-            userInfo = RongUserInfoManager.getInstance().getUserInfo(fromConversationId);
-            Log.e(TAG, "看看UserInfo有什么：" + fromConversationId);
+            userInfo = RongUserInfoManager.getInstance().getGroupInfo(fromConversationId);
         }
         GroupInfo();
         GetGroupUserInfo();
-        sp = getSharedPreferences("config", MODE_PRIVATE);
-        editor = sp.edit();
-        boolean flag = sp.getBoolean("GroupchatisOpen", true);
-        sw_conversationdetail_notfaction.setChecked(flag);
-    }
+        RongIM.getInstance().getConversationNotificationStatus(mConversationType, fromConversationId, new RongIMClient.ResultCallback<Conversation.ConversationNotificationStatus>() {
+            @Override
+            public void onSuccess(Conversation.ConversationNotificationStatus conversationNotificationStatus) {
+                if (conversationNotificationStatus.getValue() == 1) {
+                    sw_conversationdetail_notfaction.setChecked(false);
+                } else {
+                    sw_conversationdetail_notfaction.setChecked(true);
+                }
+            }
 
-    //对GridView 显示的宽高经行设置
-    private void SettingGridView(ArrayList<GroupBean> list) {
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        float density = dm.density;
-        int size = list.size() + 1;//要显示数据的个数
-        //gridview的layout_widht,要比每个item的宽度多出2个像素，解决不能完全显示item的问题
-        int allWidth = (int) (82 * size * density);
-        //int allWidth = (int) ((width / 3 ) * size + (size-1)*3);//也可以这样使用，item的总的width加上horizontalspacing
-        int itemWidth = (int) (65 * density);//每个item宽度
-        LinearLayout.LayoutParams params = new
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        gv_userinfo.setLayoutParams(params);
-        gv_userinfo.setColumnWidth(itemWidth);
-        gv_userinfo.setHorizontalSpacing(3);
-        gv_userinfo.setStretchMode(GridView.NO_STRETCH);
-        gv_userinfo.setNumColumns(size);
-        gv_userinfo.setSelector(new ColorDrawable(Color.TRANSPARENT));
+            @Override
+            public void onError(RongIMClient.ErrorCode errorCode) {
+
+            }
+        });
     }
 
     private void GetGroupUserInfo() {
@@ -136,7 +125,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .params("groupid", fromConversationId)
                 .execute(new StringCallback() {
                     @Override
@@ -149,19 +138,31 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                     public void onSuccess(String s, Call call, Response response) {
                         LoadDialog.dismiss(mContext);
                         if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
-                            Type listType1 = new TypeToken<GroupListBean>() {
-                            }.getType();
-                            Gson gson1 = new Gson();
-                            GroupListBean GroupAllBean = gson1.fromJson(s, listType1);
-                            GroupBeanList = GroupAllBean.getText();
-                            Log.e("GroupBeanList", "---:" + GroupBeanList);
-                            setTitle("群信息" + "(" + GroupBeanList.size() + "人)");
-                            adapter = new GroupDetailInfo_GridView_Adapter(mContext, GroupBeanList, GroupDetailActivity.this, GroupDetailActivity.this, flag);
+                            if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                NToast.shortToast(mContext, "Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                finish();
+                            } else {
+                                Type listType1 = new TypeToken<GroupListBean>() {
+                                }.getType();
+                                Gson gson1 = new Gson();
+                                GroupListBean GroupAllBean = gson1.fromJson(s, listType1);
+                                GroupBeanList = GroupAllBean.getText();
+                                setTitle("群信息" + "(" + GroupBeanList.size() + "人)");
+                                adapter = new GroupDetailInfo_GridView_Adapter(mContext, GroupBeanList, GroupDetailActivity.this, GroupDetailActivity.this, flag);
 //                            SettingGridView(GroupBeanList);
-                            gv_userinfo.setAdapter(adapter);
-                            setListViewHeightBasedOnChildren(gv_userinfo);
-                            gv_userinfo.deferNotifyDataSetChanged();
+                                gv_userinfo.setAdapter(adapter);
+                                setListViewHeightBasedOnChildren(gv_userinfo);
+                                gv_userinfo.deferNotifyDataSetChanged();
+                            }
                         }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        LoadDialog.dismiss(mContext);
+                        NToast.shortToast(mContext, "请重新获取群组信息");
                     }
                 });
     }
@@ -211,9 +212,12 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
             Uri aa = msg.get(j).getRemoteUri();
             urilist.add(aa);
         }
-        if (urilist != null && urilist.size() > 0) {
+        if (list != null && list.size() > 0) {
             Intent intent = new Intent(mContext, SelectPhoteActivity.class);
             intent.putExtra("photouri", (Serializable) urilist);
+            intent.putExtra("messageList", (Serializable) list);
+            intent.putExtra("mConversationType", (Serializable) mConversationType);
+            intent.putExtra("fromConversationId", fromConversationId);
             startActivity(intent);
         } else {
             NToast.shortToast(mContext, "没有数据");
@@ -245,7 +249,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isChecked()) {
-                    RongIMClient.getInstance().setConversationNotificationStatus(mConversationType, fromConversationId,
+                    RongIM.getInstance().setConversationNotificationStatus(mConversationType, fromConversationId,
                             Conversation.ConversationNotificationStatus.DO_NOT_DISTURB, new RongIMClient.ResultCallback<Conversation.ConversationNotificationStatus>() {
                                 @Override
                                 public void onSuccess(Conversation.ConversationNotificationStatus conversationNotificationStatus) {
@@ -258,10 +262,8 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                                     NToast.shortToast(mContext, "开启免打扰失败");
                                 }
                             });
-                    editor.putBoolean("GroupchatisOpen", true);
-                    editor.apply();
                 } else {
-                    RongIMClient.getInstance().setConversationNotificationStatus(mConversationType, fromConversationId,
+                    RongIM.getInstance().setConversationNotificationStatus(mConversationType, fromConversationId,
                             Conversation.ConversationNotificationStatus.NOTIFY, new RongIMClient.ResultCallback<Conversation.ConversationNotificationStatus>() {
                                 @Override
                                 public void onSuccess(Conversation.ConversationNotificationStatus conversationNotificationStatus) {
@@ -274,8 +276,6 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                                     NToast.shortToast(mContext, "关闭免打扰失败");
                                 }
                             });
-                    editor.putBoolean("GroupchatisOpen", false);
-                    editor.apply();
                 }
             }
         });
@@ -287,26 +287,46 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .params("groupid", fromConversationId)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
-                            Gson gson = new Gson();
-                            oneGroupBean = gson.fromJson(s, OneGroupBean.class);
-                            IsLongGroupName(oneGroupBean.getText().getName());
-                            LoginBean loginBean = gson.fromJson(CommonUtil.getUserInfo(mContext), LoginBean.class);
-                            if (oneGroupBean.getText().getId().equals(loginBean.getText().getId())) {
-                                rl_movegroup.setVisibility(View.VISIBLE);
-
-                                rl_breakGroup.setVisibility(View.VISIBLE);
-                                flag = true;
+                        if (!TextUtils.isEmpty(s) && !s.equals("[]") && !s.equals("{}")) {
+                            if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                NToast.shortToast(mContext, "Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                finish();
                             } else {
-                                rl_signout.setVisibility(View.VISIBLE);
-                                flag = false;
+                                Gson gson = new Gson();
+                                oneGroupBean = gson.fromJson(s, OneGroupBean.class);
+                                if (oneGroupBean.getCode().equals("-1")) {
+                                    NToast.shortToast(mContext, "群组不存在");
+                                    return;
+                                } else {
+                                    change01 = oneGroupBean.getText().getName();
+                                    IsLongGroupName(oneGroupBean.getText().getName());
+                                    LoginBean loginBean = gson.fromJson(CommonUtil.getUserInfo(mContext), LoginBean.class);
+                                    if (oneGroupBean.getText().getId().equals(loginBean.getText().getId())) {
+                                        rl_movegroup.setVisibility(View.VISIBLE);
+                                        rl_breakGroup.setVisibility(View.VISIBLE);
+                                        flag = true;
+                                    } else {
+                                        rl_signout.setVisibility(View.VISIBLE);
+                                        flag = false;
+                                    }
+                                }
                             }
+                        } else {
+                            NToast.shortToast(mContext, "请求数据出错");
                         }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        NToast.shortToast(mContext, "请求数据出错");
+                        return;
                     }
                 });
     }
@@ -323,7 +343,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 //要退出群的ＩＤ
                 .params("groupids", userid)
                 //群组的ID
@@ -339,21 +359,28 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                     public void onSuccess(String s, Call call, Response response) {
                         LoadDialog.dismiss(mContext);
                         if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
-                            Gson gson1 = new Gson();
-                            Map<String, Object> map = gson1.fromJson(s, new TypeToken<Map<String, Object>>() {
-                            }.getType());
-                            if ((map.get("code").toString()).equals("1.0")) {
-                                NToast.shortToast(mContext, "您已经退出群组");
-                                RongIM.getInstance().clearMessages(mConversationType, fromConversationId);
-                                Intent intent = new Intent(mContext, MainActivity.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putString("TargetID", fromConversationId);
-                                bundle.putSerializable("conversationType", mConversationType);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
+                            if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                NToast.shortToast(mContext, "Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
                                 finish();
                             } else {
-                                NToast.shortToast(mContext, "退出群组失败");
+                                Gson gson1 = new Gson();
+                                Map<String, Object> map = gson1.fromJson(s, new TypeToken<Map<String, Object>>() {
+                                }.getType());
+                                if ((map.get("code").toString()).equals("1.0")) {
+                                    NToast.shortToast(mContext, "您已经退出群组");
+                                    RongIM.getInstance().clearMessages(mConversationType, fromConversationId);
+                                    RongIM.getInstance().removeConversation(mConversationType, fromConversationId);
+                                    Intent intent = new Intent(mContext, MainActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("TargetID", fromConversationId);
+                                    bundle.putSerializable("conversationType", mConversationType);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    NToast.shortToast(mContext, "退出群组失败");
+                                }
                             }
                         }
                     }
@@ -362,11 +389,15 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 
     //当群名称大于规定数量时，显示未命名
     private void IsLongGroupName(String name) {
-        int longName = name.length();
-        if (longName > 100) {
-            tv_group_groupname.setText("未命名");
+        if (TextUtils.isEmpty(name)) {
+            tv_group_groupname.setText("");
         } else {
-            tv_group_groupname.setText(name);
+            int longName = name.length();
+            if (longName > 100) {
+                tv_group_groupname.setText("未命名");
+            } else {
+                tv_group_groupname.setText(name);
+            }
         }
     }
 
@@ -379,7 +410,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                 .connTimeOut(10000)
                 .readTimeOut(10000)
                 .writeTimeOut(10000)
-                .headers("cookie",sessionId)
+                .headers("cookie", sessionId)
                 .params("userid", userid)
                 .params("groupid", fromConversationId)
                 .execute(new StringCallback() {
@@ -393,15 +424,27 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                     public void onSuccess(String s, Call call, Response response) {
                         LoadDialog.dismiss(mContext);
                         if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
-                            Gson gson1 = new Gson();
-                            Map<String, Object> map = gson1.fromJson(s, new TypeToken<Map<String, Object>>() {
-                            }.getType());
-                            if ((map.get("code").toString()).equals("1.0")) {
-                                Intent intent = new Intent(mContext, MainActivity.class);
-                                startActivity(intent);
+                            if ((s.trim()).startsWith("<!DOCTYPE")) {
+                                NToast.shortToast(mContext, "Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
                                 finish();
                             } else {
-                                NToast.shortToast(mContext, "解散群组失败");
+                                Gson gson1 = new Gson();
+                                Map<String, Object> map = gson1.fromJson(s, new TypeToken<Map<String, Object>>() {
+                                }.getType());
+                                if ((map.get("code").toString()).equals("1.0")) {
+                                    RongIM.getInstance().clearMessages(mConversationType, fromConversationId);
+                                    RongIM.getInstance().removeConversation(mConversationType, fromConversationId);
+                                    Intent intent = new Intent(mContext, MainActivity.class);//TODO
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("TargetID", fromConversationId);
+                                    bundle.putSerializable("conversationType", mConversationType);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    NToast.shortToast(mContext, "解散群组失败");
+                                }
                             }
                         }
                     }
@@ -415,17 +458,38 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                 SingOutGroup();
                 break;
             case R.id.rl_changeGroupName:
-                Intent intent = new Intent(mContext, ChangeGroupNameActivity.class);
-                requestCode = 0;
-                Bundle bundle = new Bundle();
-                GroupName = oneGroupBean.getText().getName();
-                Log.e("打印数据","单个的："+GroupName);
-                bundle.putSerializable("GroupBean", oneGroupBean);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, requestCode);
+                if (oneGroupBean != null) {
+                    Gson gson = new Gson();
+                    LoginBean loginBean = gson.fromJson(CommonUtil.getUserInfo(mContext), LoginBean.class);
+                    if (TextUtils.isEmpty(oneGroupBean.getText().getId())) {
+                        NToast.shortToast(mContext, "群组不存在");
+                        return;
+                    } else {
+                        if (oneGroupBean.getText().getId().equals(loginBean.getText().getId())) {
+                            Intent intent = new Intent(mContext, ChangeGroupNameActivity.class);
+                            requestCode = 0;
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("GroupBean", oneGroupBean);
+                            bundle.putString("GroupName", change01);
+                            intent.putExtras(bundle);
+                            startActivityForResult(intent, requestCode);
+                        } else {
+                            NToast.shortToast(mContext, "请联系群管理员");
+                        }
+                    }
+                } else {
+                    return;
+                }
                 break;
             case R.id.rl_group_file:
-                GetHistoryMessages();
+                if (oneGroupBean != null) {
+                    if (TextUtils.isEmpty(oneGroupBean.getText().getId())) {
+                        NToast.shortToast(mContext, "群组不存在");
+                        return;
+                    } else {
+                        GetHistoryMessages();
+                    }
+                }
                 break;
             case R.id.rl_breakGroup:
                 BreakGroupUser();
@@ -437,42 +501,51 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                 CommonUtil.SetCleanDialogStyle(dialog);
                 break;
             case R.id.rl_group_findFile:
-                Intent searchIntent = new Intent(mContext, SearchChattingDetailActivity.class);
-                ArrayList<Message> arrayList = new ArrayList<>();
-                searchIntent.putParcelableArrayListExtra("filterMessages", arrayList);
-                mResult = new SealSearchConversationResult();
-                Conversation conversation = new Conversation();
-                conversation.setTargetId(fromConversationId);
-                conversation.setConversationType(mConversationType);
-                mResult.setConversation(conversation);
-//                Log.e("打印用户信息", "id：" + oneGroupBean.getText().getGID() + "---:名字：" + oneGroupBean.getText().getGID() + "---头像:" +ConstantValue.ImageFile + oneGroupBean.getText().getLogo().toString());
                 if (oneGroupBean != null) {
-                    String portraitUri = ConstantValue.ImageFile + oneGroupBean.getText().getLogo().toString();
-                    mResult.setId(oneGroupBean.getText().getGID());
-                    if (!TextUtils.isEmpty(portraitUri)) {
-                        mResult.setPortraitUri(portraitUri);
-                    }
-                    if (!TextUtils.isEmpty(oneGroupBean.getText().getName())) {
-                        mResult.setTitle(oneGroupBean.getText().getName());
+                    if (TextUtils.isEmpty(oneGroupBean.getText().getId())) {
+                        NToast.shortToast(mContext, "群组不存在");
+                        return;
+                    } else {
+                        Intent searchIntent = new Intent(mContext, SearchChattingDetailActivity.class);
+                        ArrayList<Message> arrayList = new ArrayList<>();
+                        searchIntent.putParcelableArrayListExtra("filterMessages", arrayList);
+                        mResult = new SealSearchConversationResult();
+                        Conversation conversation = new Conversation();
+                        conversation.setTargetId(fromConversationId);
+                        conversation.setConversationType(mConversationType);
+                        mResult.setConversation(conversation);
+//                Log.e("打印用户信息", "id：" + oneGroupBean.getText().getGID() + "---:名字：" + oneGroupBean.getText().getGID() + "---头像:" +ConstantValue.ImageFile + oneGroupBean.getText().getLogo().toString());
+                        if (oneGroupBean != null && !oneGroupBean.getCode().equals("-1")) {
+                            String portraitUri = ConstantValue.ImageFile + oneGroupBean.getText().getLogo().toString();
+                            mResult.setId(oneGroupBean.getText().getGID());
+                            if (!TextUtils.isEmpty(portraitUri)) {
+                                mResult.setPortraitUri(portraitUri);
+                            }
+                            if (!TextUtils.isEmpty(oneGroupBean.getText().getName())) {
+                                mResult.setTitle(oneGroupBean.getText().getName());
+                            }
+                        } else {
+                            UserInfo userInfo = RongUserInfoManager.getInstance().getUserInfo(conversation.getTargetId());
+                            if (userInfo != null) {
+                                mResult.setId(conversation.getTargetId());
+                                String portraitUri = userInfo.getPortraitUri().toString();
+                                if (!TextUtils.isEmpty(portraitUri)) {
+                                    mResult.setPortraitUri(portraitUri);
+                                }
+                                if (!TextUtils.isEmpty(userInfo.getName())) {
+                                    mResult.setTitle(userInfo.getName());
+                                } else {
+                                    mResult.setTitle(userInfo.getUserId());
+                                }
+                            }
+                        }
+                        searchIntent.putExtra("searchConversationResult", mResult);
+                        searchIntent.putExtra("flag", SEARCH_TYPE_FLAG);
+                        startActivity(searchIntent);
                     }
                 } else {
-                    UserInfo userInfo = RongUserInfoManager.getInstance().getUserInfo(conversation.getTargetId());
-                    if (userInfo != null) {
-                        mResult.setId(conversation.getTargetId());
-                        String portraitUri = userInfo.getPortraitUri().toString();
-                        if (!TextUtils.isEmpty(portraitUri)) {
-                            mResult.setPortraitUri(portraitUri);
-                        }
-                        if (!TextUtils.isEmpty(userInfo.getName())) {
-                            mResult.setTitle(userInfo.getName());
-                        } else {
-                            mResult.setTitle(userInfo.getUserId());
-                        }
-                    }
+                    return;
                 }
-                searchIntent.putExtra("searchConversationResult", mResult);
-                searchIntent.putExtra("flag", SEARCH_TYPE_FLAG);
-                startActivity(searchIntent);
                 break;
             case R.id.rl_movegroup:
                 ArrayList<GroupBean> listdata = new ArrayList<>();
@@ -487,6 +560,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                 movebundle.putString("fromConversationId", fromConversationId);
                 MoveIntent.putExtras(movebundle);
                 startActivity(MoveIntent);
+                finish();
                 break;
         }
     }
@@ -495,11 +569,15 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
-            String change01 = data.getStringExtra("change01");
-            tv_group_groupname.setText(change01);
-            RongIM.getInstance().refreshGroupInfoCache(new Group(oneGroupBean.getText().getGID(),change01,Uri.parse(ConstantValue.ImageFile+oneGroupBean.getText().getLogo())));
-            Log.e("打印数据：","---ID:"+oneGroupBean.getText().getGID()+"--name:"+oneGroupBean.getText().getName()+"头像:"+Uri.parse(ConstantValue.ImageFile+oneGroupBean.getText().getLogo()));
-
+            change01 = data.getStringExtra("change01");
+            if (TextUtils.isEmpty(change01)) {
+                tv_group_groupname.setText("");
+                change01 = " ";
+                RongIM.getInstance().refreshGroupInfoCache(new Group(oneGroupBean.getText().getGID(), " ", Uri.parse(ConstantValue.ImageFile + oneGroupBean.getText().getLogo())));
+            } else {
+                tv_group_groupname.setText(change01);
+                RongIM.getInstance().refreshGroupInfoCache(new Group(oneGroupBean.getText().getGID(), change01, Uri.parse(ConstantValue.ImageFile + oneGroupBean.getText().getLogo())));
+            }
         } else {
             return;
         }
@@ -507,12 +585,20 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void AddclickListener(View v) {
-        Intent intent = new Intent(mContext, AddGroupActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("GroupId", fromConversationId);
-        intent.putExtras(bundle);
-        startActivity(intent);
-        this.finish();
+        if (oneGroupBean != null && TextUtils.isEmpty(oneGroupBean.getText().getId())) {
+            NToast.shortToast(mContext, "群组不存在");
+            return;
+        } else {
+            Intent intent = new Intent(mContext, AddGroupActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("GroupId", fromConversationId);
+            bundle.putString("SimpleName", TAG);
+            bundle.putString("IsGroup", isGroupUUID);
+            bundle.putString("isfinish","finish");
+            intent.putExtras(bundle);
+            startActivity(intent);
+            this.finish();
+        }
     }
 
     @Override

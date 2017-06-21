@@ -150,25 +150,25 @@ public class CommonUtil {
 
     public static String getUserInfo(Context mContext) {
         SharedPreferences pref = mContext.getSharedPreferences(
-                "user_login", 0);
-        return pref.getString("user_login", "");
+                "uesrinfo_login", Activity.MODE_PRIVATE);
+        return pref.getString("uesrinfo_login", "");
     }
 
     public static boolean saveUserInfo(Context mContext, String info) {
         SharedPreferences pref = mContext.getSharedPreferences(
-                "user_login", 0);
-        return pref.edit().putString("user_login", info).commit();
+                "uesrinfo_login", Activity.MODE_PRIVATE);
+        return pref.edit().putString("uesrinfo_login", info).commit();
     }
 
     public static boolean saveFrientUserInfo(Context mContext, String info) {
         SharedPreferences pref = mContext.getSharedPreferences(
-                "friend_info", 0);
+                "friend_info", Activity.MODE_PRIVATE);
         return pref.edit().putString("friend_info", info).commit();
     }
 
     public static String getFrientUserInfo(Context mContext) {
         SharedPreferences pref = mContext.getSharedPreferences(
-                "friend_info", 0);
+                "friend_info", Activity.MODE_PRIVATE);
         return pref.getString("friend_info", "");
     }
 
@@ -327,6 +327,14 @@ public class CommonUtil {
 //                    wlp.y = 0;
             //如果是底部显示，则距离底部的距离是0
             window.setAttributes(wlp);
+    }
+
+    public static boolean isConstant(String str1,String str2){
+        if(str1.indexOf(str2) != -1){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public static boolean isNumeric(String str) {

@@ -1,18 +1,25 @@
 package com.sealtalk.service.adm.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.sealtalk.common.SysInterface;
 import com.sealtalk.service.adm.PrivService;
 import com.sealtalk.utils.HttpRequest;
 import com.sealtalk.utils.JSONUtils;
+import com.sealtalk.utils.LogUtils;
 
 public class PrivServiceImpl implements PrivService {
 
+	private static final Logger logger = LogManager.getLogger(PrivServiceImpl.class);
+	
 	/**
 	 * 根据用户id获取权限
 	 */
@@ -33,28 +40,21 @@ public class PrivServiceImpl implements PrivService {
 				list = JSONUtils.getInstance().JSONArrayToList(ja);
 			}
 		} catch (Exception e) { 
+			logger.error(LogUtils.getInstance().getErrorInfoFromException(e));
 			e.printStackTrace();
 		}
+		logger.info(list);
 		return list;
 		
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	@Deprecated
-	//此方法已无用，返回结果会不符
-	public String getInitLoginPriv() {
-		String result = HttpRequest.getInstance().sendPost(
-				SysInterface.INITLOGINPRIV.getName(), new JSONObject());
-		return result;
-	}
-	
 	@Override
 	public String getPrivStringByMember(Integer id) {
 		JSONObject p = new JSONObject();
 		p.put("id", id);
 		String result = HttpRequest.getInstance().sendPost(
 				SysInterface.PRIVBYMEMBER.getName(), p);
+		logger.info(result);
 		return result;
 	}
 

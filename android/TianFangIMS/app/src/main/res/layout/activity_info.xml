@@ -4,9 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:orientation="vertical">
 
         <include
@@ -22,67 +26,72 @@
             android:text="跳转至树状图"
             android:visibility="gone" />
 
-        <HorizontalScrollView
-            android:id="@+id/hl_listview"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/search_createGroup"
             android:layout_marginTop="10dp"
-            android:background="@android:color/white"
-            android:scrollbars="none">
+            android:background="@color/White"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+            <HorizontalScrollView
+                android:id="@+id/hl_listview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search_createGroup"
+                android:scrollbars="none">
 
                 <LinearLayout
-                    android:id="@+id/activity_info_ll_header"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/activity_info_tv_header"
+                    <LinearLayout
+                        android:id="@+id/activity_info_ll_header"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:gravity="center_vertical"
-                        android:text="联系人首页"
-                        android:textColor="@android:color/holo_orange_dark" />
+                        android:orientation="horizontal">
 
-                    <TextView
+                        <TextView
+                            android:id="@+id/activity_info_tv_header"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="16dp"
+                            android:gravity="center_vertical"
+                            android:text="联系人首页"
+                            android:textColor="@android:color/holo_orange_dark" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text=">" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/activity_info_ll_indicator"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text=">" />
+                        android:orientation="horizontal" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/activity_info_ll_indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal" />
-            </LinearLayout>
+            </HorizontalScrollView>
 
-        </HorizontalScrollView>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@android:color/darker_gray" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@android:color/darker_gray" />
-
-        <ListView
-            android:id="@+id/activity_info_lv_part"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white" />
+            <ListView
+                android:id="@+id/activity_info_lv_part"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white" />
+        </LinearLayout>
     </LinearLayout>
 
-
     <RelativeLayout
-        android:id="@+id/rl_selectAddContacts_background"
+        android:id="@+id/rl_selectinfo_background"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:layout_alignParentBottom="true"
@@ -93,10 +102,10 @@
             android:id="@+id/iv_image_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
             android:layout_alignParentRight="true"
             android:layout_marginRight="80dp"
             android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
             android:src="@mipmap/checkbox_selected_blue" />
 
         <TextView
@@ -127,4 +136,5 @@
             </LinearLayout>
         </HorizontalScrollView>
     </RelativeLayout>
+
 </RelativeLayout>

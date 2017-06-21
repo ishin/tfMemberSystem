@@ -137,7 +137,13 @@
     
     _shipStatus = 405;
     
-    _tableView.tableFooterView = nil;
+    //_tableView.tableFooterView = nil;
+    User *u = [UserDefaultsKV getUser];
+    if([u._userId intValue] != [_userId intValue])
+    {
+        _tableView.tableFooterView = _footer;
+        
+    }
     
     [self reloadData];
 }
@@ -414,8 +420,19 @@
 
 - (void) reloadData{
     
+    if(_user)
+    {
+        RCUserInfo *user = [[RCUserInfo alloc] init];
+        user.userId = [NSString stringWithFormat:@"%d", _user.userId];
+        user.name = _user.fullname;
+        user.portraitUri = _user.avatarurl;
+        
+        [[GoGoDB sharedDBInstance] saveUserInfo:user];
+
+        [[RCIM sharedRCIM] refreshUserInfoCache:user withUserId:user.userId];
+    }
     
-    
+   
     [_tableView reloadData];
     
 }
@@ -459,6 +476,20 @@
             nameL.textAlignment = NSTextAlignmentLeft;
             nameL.textColor  = COLOR_TEXT_A;
             nameL.text = _user.fullname;
+            
+            UIImageView* u_gener = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"gender_male.png"]];
+            CGSize s = [nameL.text sizeWithAttributes:@{NSFontAttributeName:nameL.font}];
+            
+            u_gener.center = CGPointMake(CGRectGetMinX(nameL.frame)+s.width+20, nameL.center.y);
+            [cell.contentView addSubview:u_gener];
+            if([_user.gender intValue] == 1)
+            {
+                u_gener.image = [UIImage imageNamed:@"gender_male.png"];
+            }
+            else
+            {
+                u_gener.image = [UIImage imageNamed:@"gender_female.png"];
+            }
             
             User *u = [UserDefaultsKV getUser];
             if([u._userId intValue] != [_userId intValue])
@@ -647,7 +678,7 @@
             dptL.font = [UIFont systemFontOfSize:14];
             dptL.textAlignment = NSTextAlignmentLeft;
             dptL.textColor  = COLOR_TEXT_A;
-            dptL.text = @"产品部";
+            dptL.text = _user.orgname;
             
             UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 59, SCREEN_WIDTH, 1)];
             [cell.contentView addSubview:line];
@@ -955,6 +986,44 @@
 - (void) didDeleteFriend{
     
     [[GoGoDB sharedDBInstance] deleteFriendByUid:[NSString stringWithFormat:@"%d", _user.userId]];
+    
+    
+    User *u = [UserDefaultsKV getUser];
+    NSString *key = [NSString stringWithFormat:@"last5_chat_sync_%@", u._userId];
+    
+    
+    NSMutableArray * last5_chat = [[NSMutableArray alloc] init];
+    NSMutableArray *last = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+    if(last)
+    {
+        [last5_chat addObjectsFromArray:last];
+        
+        BOOL isFind = NO;
+        for(int i = 0; i < [last5_chat count]; i++)
+        {
+            NSDictionary *od = [last5_chat objectAtIndex:i];
+            int type = [[od objectForKey:@"type"] intValue];
+            NSString *tid = [od objectForKey:@"id"];
+            if(type == 0 && [tid intValue] == _user.userId)
+            {
+                isFind = YES;
+                [last5_chat removeObjectAtIndex:i];
+                break;
+            }
+        }
+        
+        if(isFind)
+        {
+        [[NSUserDefaults standardUserDefaults] setObject:last5_chat forKey:key];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        
+    }
+    
+    
+    
+    
+    
 }
 
 

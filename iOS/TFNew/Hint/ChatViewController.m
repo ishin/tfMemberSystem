@@ -24,6 +24,7 @@
 #import "RealTimeLocationViewController.h"
 
 #import "CMNavigationController.h"
+#import "ForwardContactViewController.h"
 
 @interface ChatViewController ()<UIScrollViewDelegate, RCRealTimeLocationObserver, RealTimeLocationStatusViewDelegate, UIActionSheetDelegate>
 {
@@ -43,6 +44,8 @@
     UIImageView *_naviImgBg;
     
     UIScrollView *_content;
+    
+    WebClient *_checkAuth;
 }
 @property (nonatomic, strong) NSString *_imgeUrl;
 @property (nonatomic, strong) NSMutableArray *_groupMembers;
@@ -51,6 +54,8 @@
 @property(nonatomic, weak) id<RCRealTimeLocationProxy> _realTimeLocation;
 @property(nonatomic, strong)
 RealTimeLocationStatusView *_realTimeLocationStatusView;
+
+@property (nonatomic, strong) RCMessageModel *_longTappedMsg;
 
 
 @end
@@ -68,6 +73,8 @@ RealTimeLocationStatusView *_realTimeLocationStatusView;
 @synthesize _realTimeLocationStatusView;
 
 @synthesize _enterCallUI;
+
+@synthesize _longTappedMsg;
 
 //@synthesize _forwardMsgs;
 
@@ -91,8 +98,13 @@ RealTimeLocationStatusView *_realTimeLocationStatusView;
     self.navigationController.navigationBarHidden = YES;
     
     [super viewWillAppear:animated];
-    
-   // [self.conversationMessageCollectionView reloadData];
+
+}
+
+
+- (void) testRealTalk
+{
+    [_realtimeTalkView endRCPTT];
 }
 
 - (void) viewWillDisappear:(BOOL)animated
@@ -129,7 +141,6 @@ RealTimeLocationStatusView *_realTimeLocationStatusView;
     _content = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-50)];
     [self.view insertSubview:_content atIndex:0];
     _content.bounces = NO;
-    //_content.backgroundColor = [UIColor redColor];
     
     
     UIImage *themeImg = [UIImage imageNamed:@"navi_image.png"];
@@ -172,12 +183,16 @@ RealTimeLocationStatusView *_realTimeLocationStatusView;
     
     
     
-    self.conversationMessageCollectionView.backgroundColor = [UIColor clearColor];
+    self.conversationMessageCollectionView.backgroundColor = RGB(0xf0,0xf0,0xf0);
     //
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(refreshChatList:)
                                                  name:@"Refresh_Chat_List"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(clearChatList:)
+                                                 name:@"Clear_ChatLog_List"
                                                object:nil];
     
     
@@ -271,10 +286,122 @@ RealTimeLocationStatusView *_realTimeLocationStatusView;
     }
     
     
+    [self checkAuth];
 }
 
 
-- (void) forwardMessages{
+- (void) checkAuth{
+    
+    if(_checkAuth == nil)
+    {
+        _checkAuth = [[WebClient alloc] initWithDelegate:self];
+    }
+    
+    _checkAuth._method = API_CHECK_AUTH;
+    _checkAuth._httpMethod = @"GET";
+    
+    _checkAuth._requestParam = [NSDictionary dictionaryWithObjectsAndKeys:@"djjjjhj",@"priv", nil];
+    
+    IMP_BLOCK_SELF(ChatViewController);
+    
+    [_checkAuth requestWithSusessBlock:^(id lParam, id rParam) {
+        
+        NSString *response = lParam;
+        // NSLog(@"%@", response);
+        
+        
+        SBJson4ValueBlock block = ^(id v, BOOL *stop) {
+            
+            
+            if([v isKindOfClass:[NSDictionary class]])
+            {
+                int code = [[v objectForKey:@"code"] intValue];
+                
+                if(code == 1)
+                {
+                    [block_self updateAuth:[[v objectForKey:@"text"] boolValue]];
+                }
+                
+                return;
+            }
+            
+            
+        };
+        
+        SBJson4ErrorBlock eh = ^(NSError* err) {
+            
+            
+            
+            NSLog(@"OOPS: %@", err);
+        };
+        
+        id parser = [SBJson4Parser multiRootParserWithBlock:block
+                                               errorHandler:eh];
+        
+        id data = [response dataUsingEncoding:NSUTF8StringEncoding];
+        [parser parse:data];
+        
+        
+    } FailBlock:^(id lParam, id rParam) {
+        
+        NSString *response = lParam;
+        NSLog(@"%@", response);
+        
+        
+    }];
+    
+}
+
+- (void) updateAuth:(BOOL)isAuth{
+    
+    [_realtimeTalkView updateEmergCallAuth:isAuth];
+}
+
+
+- (void) clearChatList:(id)sender{
+    
+    [self.conversationDataRepository removeAllObjects];
+    
+    [self.conversationMessageCollectionView reloadData];
+}
+
+
+#pragma mark ---TapCell Delegate
+
+- (NSArray<UIMenuItem *> *)getLongTouchMessageCellMenuList:
+(RCMessageModel *)model {
+    
+    self._longTappedMsg = model;
+    
+    NSMutableArray<UIMenuItem *> *menuList =
+    
+    [[super getLongTouchMessageCellMenuList:model] mutableCopy];
+    
+    if([model.content isKindOfClass:[RCFileMessage class]]
+       || [model.content isKindOfClass:[RCImageMessage class]])
+    {
+        UIMenuItem *forwardItem = [[UIMenuItem alloc] initWithTitle:@"转发"
+                                                             action:@selector(onForwardMessage:)];
+        [menuList addObject:forwardItem];
+        
+    }
+    
+    return menuList;
+    
+}
+
+
+- (void) onForwardMessage:(id)sender{
+    
+    if(_longTappedMsg)
+    {
+        ForwardContactViewController *choose = [[ForwardContactViewController alloc] init];
+        choose._selectedImages = @[_longTappedMsg];
+        choose._isAutoDismiss = YES;
+        choose._isPush = YES;
+        //CMNavigationController *navi = [[CMNavigationController alloc] initWithRootViewController:choose];
+        [self.navigationController pushViewController:choose animated:YES];
+    }
     
     /*
     for(RCMessage *msg in _forwardMsgs)
@@ -305,6 +432,8 @@ RealTimeLocationStatusView *_realTimeLocationStatusView;
     switch (tag) {
         case PLUGIN_BOARD_ITEM_LOCATION_TAG: {
             if (1) {
+                
+                /*
                 UIActionSheet *actionSheet = [[UIActionSheet alloc]
                                               initWithTitle:nil
                                               delegate:self
@@ -312,6 +441,10 @@ RealTimeLocationStatusView *_realTimeLocationStatusView;
                                               destructiveButtonTitle:nil
                                               otherButtonTitles:@"发送位置", @"位置实时共享", nil];
                 [actionSheet showInView:self.view];
+                 */
+                
+                [self showRealTimeLocationViewController];
+                
             } else {
                 [super pluginBoardView:pluginBoardView clickedItemWithTag:tag];
             }
@@ -376,6 +509,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
     {
         _naviImgBg.hidden = NO;
         
+        //滑动切换到文字输入，挂断
         [_realtimeTalkView endRCPTT];
         
         _tab0.alpha = 1.0;
@@ -393,9 +527,6 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
     }
     else if(_tabIndex == 1)
     {
-        
-        //[_realtimeTalkView startRCPTT];
-        
         _tab0.alpha = 0.6;
         _tab1.alpha = 1.0;
         _tab2.alpha = 0.6;
@@ -412,6 +543,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
     {
         _naviImgBg.hidden = NO;
         
+        //滑动切换到文字输入，挂断
         [_realtimeTalkView endRCPTT];
         
         _tab0.alpha = 0.6;
@@ -501,8 +633,12 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 
 - (void) updateTargetUser{
     
+    User *u = [UserDefaultsKV getUser];
+    NSString *key = [NSString stringWithFormat:@"last5_chat_sync_%@", u._userId];
+
+    
     NSMutableArray * last5_chat = [[NSMutableArray alloc] init];
-    NSMutableArray *last = [[NSUserDefaults standardUserDefaults] objectForKey:@"last5_chat_sync"];
+    NSMutableArray *last = [[NSUserDefaults standardUserDefaults] objectForKey:key];
     if(last)
     {
         [last5_chat addObjectsFromArray:last];
@@ -583,8 +719,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 
     }
     
-    
-    [[NSUserDefaults standardUserDefaults] setObject:last5_chat forKey:@"last5_chat_sync"];
+    [[NSUserDefaults standardUserDefaults] setObject:last5_chat forKey:key];
     [[NSUserDefaults standardUserDefaults] synchronize];
 
 }

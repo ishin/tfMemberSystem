@@ -2,6 +2,7 @@ package com.tianfangIMS.im.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -65,7 +66,11 @@ public class DeleteGropUserActivity extends BaseActivity implements AdapterView.
 //                DelGroupUser();
 //                DelGroupDialog delGroupDialog = new DelGroupDialog(mContext,GroupID,allChecked,mlist,0);
 //                delGroupDialog.show();
-                dialog();
+                if (allChecked != null && allChecked.size() > 0){
+                    dialog();
+                }else{
+                    NToast.shortToast(mContext,"请选择将要移除的联系人");
+                }
             }
         });
     }
@@ -100,6 +105,7 @@ public class DeleteGropUserActivity extends BaseActivity implements AdapterView.
             public void onClick(DialogInterface dialog, int which) {
                 DelGroupUser();
                 dialog.dismiss();
+                finish();
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -139,8 +145,12 @@ public class DeleteGropUserActivity extends BaseActivity implements AdapterView.
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         LoadDialog.dismiss(mContext);
-                        Log.e("打印数据----：", "--------:" + s);
                         if (!TextUtils.isEmpty(s) && !s.equals("{}")) {
+                            if((s.trim()).startsWith("<!DOCTYPE")){
+                                NToast.shortToast(mContext,"Session过期，请重新登陆");
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                finish();
+                            }
                             Gson gson = new Gson();
                             Map<String, Object> map = gson.fromJson(s, new TypeToken<Map<String, Object>>() {
                             }.getType());

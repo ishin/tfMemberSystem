@@ -85,7 +85,6 @@ public abstract class BaseAdapter<T> extends android.widget.BaseAdapter {
     public int getCount() {
         if (mList == null)
             return 0;
-
         return mList.size();
     }
 
