@@ -458,7 +458,8 @@
                 if(code == 1)
                 {
                     
-                    NSDictionary *value = [v objectForKey:@"text"];
+                    NSMutableDictionary *value = [v objectForKey:@"text"];
+                    [value setObject:WEB_API_URL forKey:@"basePath"];
                     
                     User *u = [[User alloc] initWithDicionary:value];
                     

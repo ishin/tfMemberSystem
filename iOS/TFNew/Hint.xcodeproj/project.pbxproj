@@ -409,10 +409,13 @@
 		341B1BFD1ECBF85400128474 /* talk_emerg_pressing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 341B1BFB1ECBF85400128474 /* talk_emerg_pressing@2x.png */; };
 		341B1BFE1ECBF85400128474 /* talk_emerg_pressing@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 341B1BFC1ECBF85400128474 /* talk_emerg_pressing@3x.png */; };
 		341B1C011ECBF9B700128474 /* EmergCallView.m in Sources */ = {isa = PBXBuildFile; fileRef = 341B1BFF1ECBF9B700128474 /* EmergCallView.m */; };
+		3448A68D1EFA4B93007B6148 /* iHttpAdmin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3448A68A1EFA4B93007B6148 /* iHttpAdmin.m */; };
+		3448A68E1EFA4B93007B6148 /* UserDefaultsKV.m in Sources */ = {isa = PBXBuildFile; fileRef = 3448A68B1EFA4B93007B6148 /* UserDefaultsKV.m */; };
+		3448A68F1EFA4B93007B6148 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 3448A68C1EFA4B93007B6148 /* User.m */; };
+		3448A6911EFA4BA0007B6148 /* UILabel+ContentSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 3448A6901EFA4BA0007B6148 /* UILabel+ContentSize.m */; };
 		344B5DBB1EBD718900D76135 /* block_notification@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 344B5DBA1EBD718900D76135 /* block_notification@2x.png */; };
 		344B5DBE1EBD797600D76135 /* QR-code@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 344B5DBC1EBD797600D76135 /* QR-code@2x.png */; };
 		344B5DBF1EBD797600D76135 /* QR-code@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 344B5DBD1EBD797600D76135 /* QR-code@3x.png */; };
-		347B83371EF6CB940068EC87 /* libLCDefaults.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 347B83361EF6CB940068EC87 /* libLCDefaults.a */; };
 		34AB8CE71EC95A4000B342D4 /* RCPTTBeginMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AB8CD81EC95A4000B342D4 /* RCPTTBeginMessageCell.m */; };
 		34AB8CE81EC95A4000B342D4 /* RCPTTEndMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AB8CDA1EC95A4000B342D4 /* RCPTTEndMessageCell.m */; };
 		34AB8CE91EC95A4000B342D4 /* RCPTTKitExtensionModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AB8CDD1EC95A4000B342D4 /* RCPTTKitExtensionModule.m */; };
@@ -1019,10 +1022,13 @@
 		341B1BFC1ECBF85400128474 /* talk_emerg_pressing@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "talk_emerg_pressing@3x.png"; sourceTree = "<group>"; };
 		341B1BFF1ECBF9B700128474 /* EmergCallView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmergCallView.m; sourceTree = "<group>"; };
 		341B1C001ECBF9B700128474 /* EmergCallView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergCallView.h; sourceTree = "<group>"; };
+		3448A68A1EFA4B93007B6148 /* iHttpAdmin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iHttpAdmin.m; sourceTree = "<group>"; };
+		3448A68B1EFA4B93007B6148 /* UserDefaultsKV.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsKV.m; sourceTree = "<group>"; };
+		3448A68C1EFA4B93007B6148 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		3448A6901EFA4BA0007B6148 /* UILabel+ContentSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+ContentSize.m"; sourceTree = "<group>"; };
 		344B5DBA1EBD718900D76135 /* block_notification@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "block_notification@2x.png"; sourceTree = "<group>"; };
 		344B5DBC1EBD797600D76135 /* QR-code@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "QR-code@2x.png"; sourceTree = "<group>"; };
 		344B5DBD1EBD797600D76135 /* QR-code@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "QR-code@3x.png"; sourceTree = "<group>"; };
-		347B83361EF6CB940068EC87 /* libLCDefaults.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLCDefaults.a; path = ../Common/libLCDefaults.a; sourceTree = "<group>"; };
 		34AB8CD71EC95A4000B342D4 /* RCPTTBeginMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPTTBeginMessageCell.h; sourceTree = "<group>"; };
 		34AB8CD81EC95A4000B342D4 /* RCPTTBeginMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPTTBeginMessageCell.m; sourceTree = "<group>"; };
 		34AB8CD91EC95A4000B342D4 /* RCPTTEndMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPTTEndMessageCell.h; sourceTree = "<group>"; };
@@ -1075,7 +1081,6 @@
 				04D5EEB31B2FDA87004D8CD9 /* SystemConfiguration.framework in Frameworks */,
 				043AD7F71E78FA00004A2529 /* RongPTTLib.framework in Frameworks */,
 				04D5EEB11B2FDA7A004D8CD9 /* CFNetwork.framework in Frameworks */,
-				347B83371EF6CB940068EC87 /* libLCDefaults.a in Frameworks */,
 				341193B01E7F76BE0001332B /* MapKit.framework in Frameworks */,
 				04D5EEAF1B2FDA6B004D8CD9 /* CoreTelephony.framework in Frameworks */,
 			);
@@ -1365,7 +1370,6 @@
 		04B48B831E63F28B006F7C99 /* RCSource */ = {
 			isa = PBXGroup;
 			children = (
-				347B83361EF6CB940068EC87 /* libLCDefaults.a */,
 				04B48B841E63F28B006F7C99 /* DB */,
 				04B48B931E63F28B006F7C99 /* RCDGroupInfo.h */,
 				04B48B941E63F28B006F7C99 /* RCDGroupInfo.m */,
@@ -1866,6 +1870,9 @@
 		04D5E9A51B2FD6B6004D8CD9 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				3448A68A1EFA4B93007B6148 /* iHttpAdmin.m */,
+				3448A68B1EFA4B93007B6148 /* UserDefaultsKV.m */,
+				3448A68C1EFA4B93007B6148 /* User.m */,
 				3419516B1EACEE1C004D6BFF /* TFMsgSound.h */,
 				3419516C1EACEE1C004D6BFF /* TFMsgSound.m */,
 				04D7CDDD1D36723C00AC2099 /* PhotoGetter.h */,
@@ -1904,6 +1911,7 @@
 				04D5E9BD1B2FD6B6004D8CD9 /* UIImage+ImageEffects.h */,
 				04D5E9BE1B2FD6B6004D8CD9 /* UIImage+ImageEffects.m */,
 				04D5E9BF1B2FD6B6004D8CD9 /* UILabel+ContentSize.h */,
+				3448A6901EFA4BA0007B6148 /* UILabel+ContentSize.m */,
 				04D5E9C11B2FD6B6004D8CD9 /* UserDefaultsKV.h */,
 				04D5E9C61B2FD6B6004D8CD9 /* User.h */,
 				04DB97CA1D10F90400DB95D7 /* WaitDialog.h */,
@@ -2458,6 +2466,7 @@
 			files = (
 				04861C251C649C840059135D /* SettingsViewController.m in Sources */,
 				04D41F331D040A99009F66C4 /* M80AttributedLabel.m in Sources */,
+				3448A68F1EFA4B93007B6148 /* User.m in Sources */,
 				34AB8CF11EC95A6300B342D4 /* RCPTTUtilities.m in Sources */,
 				04B48BE71E63F28C006F7C99 /* RCAnnotation.m in Sources */,
 				0443C62F1C58A2EC00EE25A1 /* DataSync.m in Sources */,
@@ -2513,6 +2522,7 @@
 				04413C101C16FC4900D09218 /* ChatViewController.m in Sources */,
 				04B48B7A1E63F23F006F7C99 /* SearchContactViewController.mm in Sources */,
 				04D5EC611B2FD6B8004D8CD9 /* CustomPickerView.m in Sources */,
+				3448A68D1EFA4B93007B6148 /* iHttpAdmin.m in Sources */,
 				04B48BFB1E63F28C006F7C99 /* pinyin.c in Sources */,
 				04D5EC161B2FD6B8004D8CD9 /* Base64.m in Sources */,
 				04D5EC3F1B2FD6B8004D8CD9 /* NSData+GIF.m in Sources */,
@@ -2533,6 +2543,7 @@
 				04D5EC681B2FD6B8004D8CD9 /* UIImage+ImageEffects.m in Sources */,
 				3416BC431ED97685007E6F9C /* RCDSearchView.m in Sources */,
 				04D41F341D040A99009F66C4 /* M80AttributedLabelAttachment.m in Sources */,
+				3448A6911EFA4BA0007B6148 /* UILabel+ContentSize.m in Sources */,
 				04B48BE91E63F28C006F7C99 /* RCLocationConvert.m in Sources */,
 				04D5EC3D1B2FD6B8004D8CD9 /* SBJson4Writer.m in Sources */,
 				04B48B751E63F23F006F7C99 /* PhotoAlbumViewController.m in Sources */,
@@ -2609,6 +2620,7 @@
 				04D5EC621B2FD6B8004D8CD9 /* DashLine.m in Sources */,
 				044F8D3B1D28A9AF00D92773 /* CustomDatePickerView.m in Sources */,
 				04B48BEE1E63F28C006F7C99 /* RealTimeLocationViewController.m in Sources */,
+				3448A68E1EFA4B93007B6148 /* UserDefaultsKV.m in Sources */,
 				04D5EC481B2FD6B8004D8CD9 /* UIImage+GIF.m in Sources */,
 				04D5EC5D1B2FD6B8004D8CD9 /* AudioPlayer.m in Sources */,
 				04B48BF11E63F28C006F7C99 /* RCDSearchBar.m in Sources */,

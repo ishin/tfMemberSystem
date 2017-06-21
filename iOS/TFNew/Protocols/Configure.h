@@ -8,6 +8,7 @@
 
 #define POSTDataSeparator			@"----------sadkfjaskdjfkjsadfjj3234234"
 
+#import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import <CommonCrypto/CommonDigest.h>
 
