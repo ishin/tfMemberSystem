@@ -5,7 +5,7 @@
 #define MyCompanyName "RongCloud"
 #define MyAppVersion "1.0.0"
 #define MyAppPublisher "RongCloud, Inc."
-#define MyAppURL "http://42.62.4.82:8080/im/system!login"
+#define MyAppURL "http://120.26.42.225:8080/im/system!login"
 #define MyAppExeName "120IM.exe"     
 #define UninstallName "Uninstall"
 #define BaseDir "D:\git\ims_new\im\packIM\client\sealtalk-desktop-ent-src"
