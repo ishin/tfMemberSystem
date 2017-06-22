@@ -394,10 +394,13 @@ function cb_210_fresh(data) {
 	});
 }
 
-function loadPage(pageNum,appName){
+function loadPage(pageNum,appName,freshEditPage){
 	callajax('limit!getLimitByRole', {roleid: currole,appname:appName}, function(cbData){
 		//cb_211_fresh
 		cbFreshPage(cbData,pageNum);
+		if(freshEditPage=='freshEditPage'){
+			freshCbEditPage(cbData,pageNum)
+		}
 	})
 }
 function cbFreshPage(cbData,pageNum){
@@ -436,13 +439,13 @@ function cbFreshPage(cbData,pageNum){
 	}
 }
 
-
-function loadEditPage(pageNum,appName){
-	var data = {roleid:currole,appname:appName}
-	callajax('limit!getLimitByRole', data, function(cbData){
-		freshCbEditPage(cbData,pageNum)
-	})
-}
+//
+//function loadEditPage(pageNum,appName){
+//	var data = {roleid:currole,appname:appName}
+//	callajax('limit!getLimitByRole', data, function(cbData){
+//
+//	})
+//}
 function freshCbEditPage(cbData,pageNum){
 	var data = cbData;
 	$('#list'+pageNum+'edit').empty();
@@ -667,8 +670,8 @@ function showpage(cp) {
 	if(cp!='210'){
 		if(typeof (curpage)=='number'){
 			var appName = $('.infotab .infotabi[bindpage='+curpage+']').html();
-			loadPage(cp,appName);
-			loadEditPage(cp,appName)
+			loadPage(cp,appName,'freshEditPage');
+			//loadEditPage(cp,appName)
 		}
 		$('#editmember').hide();
 	}else{
