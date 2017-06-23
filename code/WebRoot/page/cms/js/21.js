@@ -55,13 +55,9 @@ var tabPageEditTemp = '<div class="col2 collHide" id="211edit" style="display:no
 		var appName = $('.infotab').find('.tabactive').html();
 		currole = this.id.substr(1);
 		if(curPage!=210){
-			//showpage(curPage);
-
-			loadPage(curPage,appName);
-			loadEditPage(curPage,appName)
+			loadPage(curPage,appName,'freshEditPage');
 		}else{
 			load210();
-
 		}
 
 	});
