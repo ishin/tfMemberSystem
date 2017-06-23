@@ -10,10 +10,6 @@
 		043AD7EB1E78FA00004A2529 /* RongCallKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043AD7D91E78FA00004A2529 /* RongCallKit.framework */; };
 		043AD7EC1E78FA00004A2529 /* AgoraRtcEngineKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043AD7DB1E78FA00004A2529 /* AgoraRtcEngineKit.framework */; };
 		043AD7ED1E78FA00004A2529 /* RongCallLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043AD7DC1E78FA00004A2529 /* RongCallLib.framework */; };
-		043AD7EE1E78FA00004A2529 /* Emoji.plist in Resources */ = {isa = PBXBuildFile; fileRef = 043AD7DE1E78FA00004A2529 /* Emoji.plist */; };
-		043AD7EF1E78FA00004A2529 /* RongCloudKit.strings in Resources */ = {isa = PBXBuildFile; fileRef = 043AD7DF1E78FA00004A2529 /* RongCloudKit.strings */; };
-		043AD7F01E78FA00004A2529 /* RongCloud.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 043AD7E11E78FA00004A2529 /* RongCloud.bundle */; };
-		043AD7F11E78FA00004A2529 /* RongIMKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043AD7E21E78FA00004A2529 /* RongIMKit.framework */; };
 		043AD7F21E78FA00004A2529 /* libopencore-amrnb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 043AD7E51E78FA00004A2529 /* libopencore-amrnb.a */; };
 		043AD7F31E78FA00004A2529 /* RCConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 043AD7E61E78FA00004A2529 /* RCConfig.plist */; };
 		043AD7F41E78FA00004A2529 /* RongIMLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 043AD7E71E78FA00004A2529 /* RongIMLib.framework */; };
@@ -399,6 +395,118 @@
 		341611511EBF2D83009F5F63 /* retransmission@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3416114D1EBF2D83009F5F63 /* retransmission@2x.png */; };
 		341611521EBF2D83009F5F63 /* retransmission@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3416114E1EBF2D83009F5F63 /* retransmission@3x.png */; };
 		3416BC431ED97685007E6F9C /* RCDSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416BC421ED97685007E6F9C /* RCDSearchView.m */; };
+		3416F5BD1EFCEC880021934F /* libRongExtensionKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3416F4B01EFCEC870021934F /* libRongExtensionKit.a */; };
+		3416F5BE1EFCEC880021934F /* Emoji.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3416F4B21EFCEC870021934F /* Emoji.plist */; };
+		3416F5BF1EFCEC880021934F /* RongExtensionKit.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3416F4B31EFCEC870021934F /* RongExtensionKit.strings */; };
+		3416F5C01EFCEC880021934F /* RongExtensionKit.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3416F4B51EFCEC870021934F /* RongExtensionKit.bundle */; };
+		3416F5C41EFCEC880021934F /* RCBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4C11EFCEC870021934F /* RCBaseViewController.m */; };
+		3416F5C51EFCEC880021934F /* RCConversationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4C31EFCEC870021934F /* RCConversationListViewController.m */; };
+		3416F5C61EFCEC880021934F /* RCConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4C51EFCEC870021934F /* RCConversationViewController.m */; };
+		3416F5C71EFCEC880021934F /* RCCSEvaluateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4C71EFCEC870021934F /* RCCSEvaluateView.m */; };
+		3416F5C81EFCEC880021934F /* RCCSLeaveMessageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4C91EFCEC870021934F /* RCCSLeaveMessageController.m */; };
+		3416F5C91EFCEC880021934F /* RCCSLeaveMessagesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4CB1EFCEC870021934F /* RCCSLeaveMessagesCell.m */; };
+		3416F5CA1EFCEC880021934F /* RCCSSolveView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4CD1EFCEC870021934F /* RCCSSolveView.m */; };
+		3416F5CB1EFCEC880021934F /* RCCSStarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4CF1EFCEC870021934F /* RCCSStarView.m */; };
+		3416F5CC1EFCEC880021934F /* RCCustomerServiceGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4D11EFCEC870021934F /* RCCustomerServiceGroupCell.m */; };
+		3416F5CD1EFCEC880021934F /* RCCustomerServiceGroupListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4D31EFCEC870021934F /* RCCustomerServiceGroupListController.m */; };
+		3416F5CE1EFCEC880021934F /* RCFilePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4D51EFCEC870021934F /* RCFilePreviewViewController.m */; };
+		3416F5CF1EFCEC880021934F /* RCImagePreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4D71EFCEC870021934F /* RCImagePreviewController.m */; };
+		3416F5D01EFCEC880021934F /* RCImageSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4D91EFCEC870021934F /* RCImageSlideController.m */; };
+		3416F5D11EFCEC880021934F /* RCLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4DB1EFCEC870021934F /* RCLocationViewController.m */; };
+		3416F5D21EFCEC880021934F /* RCSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4DD1EFCEC870021934F /* RCSettingViewController.m */; };
+		3416F5D31EFCEC880021934F /* UIView+RCCSStar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4DF1EFCEC870021934F /* UIView+RCCSStar.m */; };
+		3416F5D41EFCEC880021934F /* RCConversationBaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4E21EFCEC870021934F /* RCConversationBaseCell.m */; };
+		3416F5D51EFCEC880021934F /* RCConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4E41EFCEC870021934F /* RCConversationCell.m */; };
+		3416F5D61EFCEC880021934F /* RCConversationDetailContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4E61EFCEC870021934F /* RCConversationDetailContentView.m */; };
+		3416F5D71EFCEC880021934F /* RCConversationHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4E81EFCEC870021934F /* RCConversationHeaderView.m */; };
+		3416F5D81EFCEC880021934F /* RCConversationStatusView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4EA1EFCEC870021934F /* RCConversationStatusView.m */; };
+		3416F5D91EFCEC880021934F /* RCCSPullLeaveMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4EC1EFCEC870021934F /* RCCSPullLeaveMessageCell.m */; };
+		3416F5DA1EFCEC880021934F /* RCFileMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4EE1EFCEC870021934F /* RCFileMessageCell.m */; };
+		3416F5DB1EFCEC880021934F /* RCImageMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4F01EFCEC870021934F /* RCImageMessageCell.m */; };
+		3416F5DC1EFCEC880021934F /* RCLocationMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4F21EFCEC870021934F /* RCLocationMessageCell.m */; };
+		3416F5DD1EFCEC880021934F /* RCMessageBaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4F41EFCEC870021934F /* RCMessageBaseCell.m */; };
+		3416F5DE1EFCEC880021934F /* RCMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4F61EFCEC870021934F /* RCMessageCell.m */; };
+		3416F5E01EFCEC880021934F /* RCOldMessageNotificationMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4FB1EFCEC870021934F /* RCOldMessageNotificationMessage.m */; };
+		3416F5E11EFCEC880021934F /* RCOldMessageNotificationMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4FD1EFCEC870021934F /* RCOldMessageNotificationMessageCell.m */; };
+		3416F5E21EFCEC880021934F /* RCRichContentMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F4FF1EFCEC870021934F /* RCRichContentMessageCell.m */; };
+		3416F5E31EFCEC880021934F /* RCTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5011EFCEC870021934F /* RCTextMessageCell.m */; };
+		3416F5E41EFCEC880021934F /* RCTipMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5031EFCEC870021934F /* RCTipMessageCell.m */; };
+		3416F5E51EFCEC880021934F /* RCUnknownMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5051EFCEC870021934F /* RCUnknownMessageCell.m */; };
+		3416F5E61EFCEC880021934F /* RCVoiceMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5071EFCEC870021934F /* RCVoiceMessageCell.m */; };
+		3416F5E71EFCEC880021934F /* RCLocalNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F50A1EFCEC870021934F /* RCLocalNotification.m */; };
+		3416F5E81EFCEC880021934F /* RCSystemSoundPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F50C1EFCEC870021934F /* RCSystemSoundPlayer.m */; };
+		3416F5E91EFCEC880021934F /* RCVoicePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F50E1EFCEC870021934F /* RCVoicePlayer.m */; };
+		3416F5EA1EFCEC880021934F /* RCCustomIOSAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5131EFCEC870021934F /* RCCustomIOSAlertView.m */; };
+		3416F5EB1EFCEC880021934F /* RCAdminEvaluationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5151EFCEC870021934F /* RCAdminEvaluationView.m */; };
+		3416F5EC1EFCEC880021934F /* RCCSAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5171EFCEC870021934F /* RCCSAlertView.m */; };
+		3416F5ED1EFCEC880021934F /* RCRobotEvaluationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5191EFCEC870021934F /* RCRobotEvaluationView.m */; };
+		3416F5EE1EFCEC880021934F /* RCAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F51C1EFCEC870021934F /* RCAttributedLabel.m */; };
+		3416F5EF1EFCEC880021934F /* RCContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F51E1EFCEC870021934F /* RCContentView.m */; };
+		3416F5F01EFCEC880021934F /* RCConversationCollectionViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5201EFCEC870021934F /* RCConversationCollectionViewHeader.m */; };
+		3416F5F11EFCEC880021934F /* RCConversationSettingClearMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5221EFCEC870021934F /* RCConversationSettingClearMessageCell.m */; };
+		3416F5F21EFCEC880021934F /* RCConversationSettingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5241EFCEC870021934F /* RCConversationSettingTableViewCell.m */; };
+		3416F5F31EFCEC880021934F /* RCConversationSettingTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5261EFCEC870021934F /* RCConversationSettingTableViewController.m */; };
+		3416F5F41EFCEC880021934F /* RCConversationSettingTableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5281EFCEC870021934F /* RCConversationSettingTableViewHeader.m */; };
+		3416F5F51EFCEC880021934F /* RCConversationSettingTableViewHeaderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F52A1EFCEC870021934F /* RCConversationSettingTableViewHeaderItem.m */; };
+		3416F5F61EFCEC880021934F /* RCImageMessageProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F52C1EFCEC870021934F /* RCImageMessageProgressView.m */; };
+		3416F5F71EFCEC880021934F /* RCInputBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F52E1EFCEC870021934F /* RCInputBarView.m */; };
+		3416F5F81EFCEC880021934F /* RCMessageBubbleTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5301EFCEC870021934F /* RCMessageBubbleTipView.m */; };
+		3416F5F91EFCEC880021934F /* RCNetworkIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5321EFCEC870021934F /* RCNetworkIndicatorView.m */; };
+		3416F5FA1EFCEC880021934F /* RCRecallMessageImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5341EFCEC870021934F /* RCRecallMessageImageView.m */; };
+		3416F5FB1EFCEC880021934F /* RCTipLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5361EFCEC870021934F /* RCTipLabel.m */; };
+		3416F5FC1EFCEC880021934F /* RCExtensionMessageCellInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5391EFCEC870021934F /* RCExtensionMessageCellInfo.m */; };
+		3416F5FD1EFCEC880021934F /* RongIMKitExtensionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F53B1EFCEC870021934F /* RongIMKitExtensionManager.m */; };
+		3416F5FF1EFCEC880021934F /* RCCollectionCellAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5401EFCEC870021934F /* RCCollectionCellAttributes.m */; };
+		3416F6001EFCEC880021934F /* RCMessageCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5421EFCEC870021934F /* RCMessageCollectionViewFlowLayout.m */; };
+		3416F6011EFCEC880021934F /* RCMessageCollectionViewLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5441EFCEC870021934F /* RCMessageCollectionViewLayoutAttributes.m */; };
+		3416F6021EFCEC880021934F /* RCConversationCellUpdateInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5471EFCEC870021934F /* RCConversationCellUpdateInfo.m */; };
+		3416F6031EFCEC880021934F /* RCConversationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5491EFCEC870021934F /* RCConversationModel.m */; };
+		3416F6041EFCEC880021934F /* RCCustomerServiceMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F54B1EFCEC870021934F /* RCCustomerServiceMessageModel.m */; };
+		3416F6051EFCEC880021934F /* RCMessageCellNotificationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F54D1EFCEC870021934F /* RCMessageCellNotificationModel.m */; };
+		3416F6061EFCEC880021934F /* RCMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F54F1EFCEC870021934F /* RCMessageModel.m */; };
+		3416F6071EFCEC880021934F /* RCPublicServiceImgTxtMsgCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5541EFCEC870021934F /* RCPublicServiceImgTxtMsgCell.m */; };
+		3416F6081EFCEC880021934F /* RCPublicServiceListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5561EFCEC870021934F /* RCPublicServiceListViewCell.m */; };
+		3416F6091EFCEC880021934F /* RCPublicServiceMultiImgTxtCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5581EFCEC870021934F /* RCPublicServiceMultiImgTxtCell.m */; };
+		3416F60A1EFCEC880021934F /* RCPublicServiceMultiImgTxtCellContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F55A1EFCEC870021934F /* RCPublicServiceMultiImgTxtCellContentCell.m */; };
+		3416F60B1EFCEC880021934F /* RCPublicServiceMultiImgTxtCellHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F55C1EFCEC870021934F /* RCPublicServiceMultiImgTxtCellHeaderCell.m */; };
+		3416F60C1EFCEC880021934F /* RCPublicServiceProfileActionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F55E1EFCEC870021934F /* RCPublicServiceProfileActionCell.m */; };
+		3416F60D1EFCEC880021934F /* RCPublicServiceProfileOwnerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5601EFCEC870021934F /* RCPublicServiceProfileOwnerCell.m */; };
+		3416F60E1EFCEC880021934F /* RCPublicServiceProfilePlainCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5621EFCEC870021934F /* RCPublicServiceProfilePlainCell.m */; };
+		3416F60F1EFCEC880021934F /* RCPublicServiceProfileRcvdMsgCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5641EFCEC870021934F /* RCPublicServiceProfileRcvdMsgCell.m */; };
+		3416F6101EFCEC880021934F /* RCPublicServiceProfileTelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5661EFCEC870021934F /* RCPublicServiceProfileTelCell.m */; };
+		3416F6111EFCEC880021934F /* RCPublicServiceProfileUrlCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5681EFCEC870021934F /* RCPublicServiceProfileUrlCell.m */; };
+		3416F6121EFCEC880021934F /* RCPublicServiceSearchHintCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F56A1EFCEC870021934F /* RCPublicServiceSearchHintCell.m */; };
+		3416F6131EFCEC880021934F /* RCPublicServiceChatListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F56F1EFCEC870021934F /* RCPublicServiceChatListViewController.m */; };
+		3416F6141EFCEC880021934F /* RCPublicServiceChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5711EFCEC870021934F /* RCPublicServiceChatViewController.m */; };
+		3416F6151EFCEC880021934F /* RCPublicServiceListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5731EFCEC870021934F /* RCPublicServiceListViewController.m */; };
+		3416F6161EFCEC880021934F /* RCPublicServiceProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5751EFCEC870021934F /* RCPublicServiceProfileViewController.m */; };
+		3416F6171EFCEC880021934F /* RCPublicServiceSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5771EFCEC870021934F /* RCPublicServiceSearchViewController.m */; };
+		3416F6181EFCEC880021934F /* RCSearchItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F57A1EFCEC870021934F /* RCSearchItemView.m */; };
+		3416F6191EFCEC880021934F /* RCIM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F57C1EFCEC870021934F /* RCIM.m */; };
+		3416F61A1EFCEC880021934F /* RCloudCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5801EFCEC870021934F /* RCloudCache.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		3416F61B1EFCEC880021934F /* RCloudImageLoadConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5831EFCEC870021934F /* RCloudImageLoadConnection.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		3416F61C1EFCEC880021934F /* RCloudImageLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5851EFCEC870021934F /* RCloudImageLoader.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		3416F61D1EFCEC880021934F /* RCloudImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5881EFCEC870021934F /* RCloudImageView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		3416F61E1EFCEC880021934F /* RongCloudKit.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3416F58A1EFCEC870021934F /* RongCloudKit.strings */; };
+		3416F61F1EFCEC880021934F /* RongCloud.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3416F58C1EFCEC870021934F /* RongCloud.bundle */; };
+		3416F6211EFCEC880021934F /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3416F5931EFCEC870021934F /* Info.plist */; };
+		3416F6221EFCEC880021934F /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3416F5941EFCEC870021934F /* LICENSE.txt */; };
+		3416F6231EFCEC880021934F /* RCloudFMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5961EFCEC870021934F /* RCloudFMDatabase.m */; };
+		3416F6241EFCEC880021934F /* RCloudFMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5981EFCEC870021934F /* RCloudFMDatabaseAdditions.m */; };
+		3416F6251EFCEC880021934F /* RCloudFMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F59A1EFCEC870021934F /* RCloudFMDatabasePool.m */; };
+		3416F6261EFCEC880021934F /* RCloudFMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F59C1EFCEC870021934F /* RCloudFMDatabaseQueue.m */; };
+		3416F6271EFCEC880021934F /* RCloudFMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F59F1EFCEC870021934F /* RCloudFMResultSet.m */; };
+		3416F6281EFCEC880021934F /* RCUserInfoUpdateMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5A21EFCEC870021934F /* RCUserInfoUpdateMessage.m */; };
+		3416F6291EFCEC880021934F /* RCConversationInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5A41EFCEC870021934F /* RCConversationInfo.m */; };
+		3416F62A1EFCEC880021934F /* RCConversationInfoCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5A61EFCEC870021934F /* RCConversationInfoCache.m */; };
+		3416F62B1EFCEC880021934F /* RCConversationUserInfoCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5A81EFCEC870021934F /* RCConversationUserInfoCache.m */; };
+		3416F62C1EFCEC880021934F /* RCThreadSafeMutableDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5AA1EFCEC870021934F /* RCThreadSafeMutableDictionary.m */; };
+		3416F62D1EFCEC880021934F /* RCUserInfoCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5AC1EFCEC870021934F /* RCUserInfoCache.m */; };
+		3416F62E1EFCEC880021934F /* RCUserInfoCacheDBHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5AE1EFCEC870021934F /* RCUserInfoCacheDBHelper.m */; };
+		3416F62F1EFCEC880021934F /* RCUserInfoCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5B01EFCEC870021934F /* RCUserInfoCacheManager.m */; };
+		3416F6301EFCEC880021934F /* RCHandShakeMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5B31EFCEC870021934F /* RCHandShakeMessage.m */; };
+		3416F6311EFCEC880021934F /* RCKitUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5B51EFCEC870021934F /* RCKitUtility.m */; };
+		3416F6321EFCEC880021934F /* RCSuspendMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3416F5B71EFCEC870021934F /* RCSuspendMessage.m */; };
 		3416FD771EBC64F300049514 /* scan_sb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3416FD751EBC64F300049514 /* scan_sb@2x.png */; };
 		3416FD781EBC64F300049514 /* scan_sb@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3416FD761EBC64F300049514 /* scan_sb@3x.png */; };
 		3416FD7A1EBC786E00049514 /* ripple.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3416FD791EBC786E00049514 /* ripple.mp3 */; };
@@ -430,11 +538,6 @@
 		043AD7D91E78FA00004A2529 /* RongCallKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RongCallKit.framework; sourceTree = "<group>"; };
 		043AD7DB1E78FA00004A2529 /* AgoraRtcEngineKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraRtcEngineKit.framework; sourceTree = "<group>"; };
 		043AD7DC1E78FA00004A2529 /* RongCallLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RongCallLib.framework; sourceTree = "<group>"; };
-		043AD7DE1E78FA00004A2529 /* Emoji.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Emoji.plist; sourceTree = "<group>"; };
-		043AD7E01E78FA00004A2529 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/RongCloudKit.strings; sourceTree = "<group>"; };
-		043AD7E11E78FA00004A2529 /* RongCloud.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = RongCloud.bundle; sourceTree = "<group>"; };
-		043AD7E21E78FA00004A2529 /* RongIMKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RongIMKit.framework; sourceTree = "<group>"; };
-		043AD7E31E78FA00004A2529 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/RongCloudKit.strings"; sourceTree = "<group>"; };
 		043AD7E51E78FA00004A2529 /* libopencore-amrnb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libopencore-amrnb.a"; sourceTree = "<group>"; };
 		043AD7E61E78FA00004A2529 /* RCConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = RCConfig.plist; sourceTree = "<group>"; };
 		043AD7E71E78FA00004A2529 /* RongIMLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RongIMLib.framework; sourceTree = "<group>"; };
@@ -1010,6 +1113,243 @@
 		3416114E1EBF2D83009F5F63 /* retransmission@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "retransmission@3x.png"; sourceTree = "<group>"; };
 		3416BC411ED97685007E6F9C /* RCDSearchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCDSearchView.h; sourceTree = "<group>"; };
 		3416BC421ED97685007E6F9C /* RCDSearchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCDSearchView.m; sourceTree = "<group>"; };
+		3416F4A41EFCEC870021934F /* RCChatSessionInputBarControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCChatSessionInputBarControl.h; sourceTree = "<group>"; };
+		3416F4A51EFCEC870021934F /* RCEmojiBoardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCEmojiBoardView.h; sourceTree = "<group>"; };
+		3416F4A61EFCEC870021934F /* RCEmoticonTabSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCEmoticonTabSource.h; sourceTree = "<group>"; };
+		3416F4A71EFCEC870021934F /* RCExtensionModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCExtensionModule.h; sourceTree = "<group>"; };
+		3416F4A81EFCEC870021934F /* RCExtensionPluginItemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCExtensionPluginItemInfo.h; sourceTree = "<group>"; };
+		3416F4A91EFCEC870021934F /* RCExtensionService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCExtensionService.h; sourceTree = "<group>"; };
+		3416F4AA1EFCEC870021934F /* RCExtensionUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCExtensionUtility.h; sourceTree = "<group>"; };
+		3416F4AB1EFCEC870021934F /* RCLocationPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCLocationPickerViewController.h; sourceTree = "<group>"; };
+		3416F4AC1EFCEC870021934F /* RCPluginBoardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPluginBoardView.h; sourceTree = "<group>"; };
+		3416F4AD1EFCEC870021934F /* RCTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTextView.h; sourceTree = "<group>"; };
+		3416F4AE1EFCEC870021934F /* RCVoiceRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCVoiceRecorder.h; sourceTree = "<group>"; };
+		3416F4AF1EFCEC870021934F /* RongExtensionKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RongExtensionKit.h; sourceTree = "<group>"; };
+		3416F4B01EFCEC870021934F /* libRongExtensionKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libRongExtensionKit.a; sourceTree = "<group>"; };
+		3416F4B21EFCEC870021934F /* Emoji.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Emoji.plist; sourceTree = "<group>"; };
+		3416F4B41EFCEC870021934F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/RongExtensionKit.strings; sourceTree = "<group>"; };
+		3416F4B51EFCEC870021934F /* RongExtensionKit.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = RongExtensionKit.bundle; sourceTree = "<group>"; };
+		3416F4B61EFCEC870021934F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/RongExtensionKit.strings"; sourceTree = "<group>"; };
+		3416F4BD1EFCEC870021934F /* RCKitCommonDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCKitCommonDefine.h; sourceTree = "<group>"; };
+		3416F4BE1EFCEC870021934F /* RCThemeDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCThemeDefine.h; sourceTree = "<group>"; };
+		3416F4C01EFCEC870021934F /* RCBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCBaseViewController.h; sourceTree = "<group>"; };
+		3416F4C11EFCEC870021934F /* RCBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCBaseViewController.m; sourceTree = "<group>"; };
+		3416F4C21EFCEC870021934F /* RCConversationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationListViewController.h; sourceTree = "<group>"; };
+		3416F4C31EFCEC870021934F /* RCConversationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationListViewController.m; sourceTree = "<group>"; };
+		3416F4C41EFCEC870021934F /* RCConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationViewController.h; sourceTree = "<group>"; };
+		3416F4C51EFCEC870021934F /* RCConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		3416F4C61EFCEC870021934F /* RCCSEvaluateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCSEvaluateView.h; sourceTree = "<group>"; };
+		3416F4C71EFCEC870021934F /* RCCSEvaluateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCSEvaluateView.m; sourceTree = "<group>"; };
+		3416F4C81EFCEC870021934F /* RCCSLeaveMessageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCSLeaveMessageController.h; sourceTree = "<group>"; };
+		3416F4C91EFCEC870021934F /* RCCSLeaveMessageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCSLeaveMessageController.m; sourceTree = "<group>"; };
+		3416F4CA1EFCEC870021934F /* RCCSLeaveMessagesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCSLeaveMessagesCell.h; sourceTree = "<group>"; };
+		3416F4CB1EFCEC870021934F /* RCCSLeaveMessagesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCSLeaveMessagesCell.m; sourceTree = "<group>"; };
+		3416F4CC1EFCEC870021934F /* RCCSSolveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCSSolveView.h; sourceTree = "<group>"; };
+		3416F4CD1EFCEC870021934F /* RCCSSolveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCSSolveView.m; sourceTree = "<group>"; };
+		3416F4CE1EFCEC870021934F /* RCCSStarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCSStarView.h; sourceTree = "<group>"; };
+		3416F4CF1EFCEC870021934F /* RCCSStarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCSStarView.m; sourceTree = "<group>"; };
+		3416F4D01EFCEC870021934F /* RCCustomerServiceGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCustomerServiceGroupCell.h; sourceTree = "<group>"; };
+		3416F4D11EFCEC870021934F /* RCCustomerServiceGroupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCustomerServiceGroupCell.m; sourceTree = "<group>"; };
+		3416F4D21EFCEC870021934F /* RCCustomerServiceGroupListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCustomerServiceGroupListController.h; sourceTree = "<group>"; };
+		3416F4D31EFCEC870021934F /* RCCustomerServiceGroupListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCustomerServiceGroupListController.m; sourceTree = "<group>"; };
+		3416F4D41EFCEC870021934F /* RCFilePreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCFilePreviewViewController.h; sourceTree = "<group>"; };
+		3416F4D51EFCEC870021934F /* RCFilePreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCFilePreviewViewController.m; sourceTree = "<group>"; };
+		3416F4D61EFCEC870021934F /* RCImagePreviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCImagePreviewController.h; sourceTree = "<group>"; };
+		3416F4D71EFCEC870021934F /* RCImagePreviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCImagePreviewController.m; sourceTree = "<group>"; };
+		3416F4D81EFCEC870021934F /* RCImageSlideController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCImageSlideController.h; sourceTree = "<group>"; };
+		3416F4D91EFCEC870021934F /* RCImageSlideController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCImageSlideController.m; sourceTree = "<group>"; };
+		3416F4DA1EFCEC870021934F /* RCLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCLocationViewController.h; sourceTree = "<group>"; };
+		3416F4DB1EFCEC870021934F /* RCLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCLocationViewController.m; sourceTree = "<group>"; };
+		3416F4DC1EFCEC870021934F /* RCSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCSettingViewController.h; sourceTree = "<group>"; };
+		3416F4DD1EFCEC870021934F /* RCSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCSettingViewController.m; sourceTree = "<group>"; };
+		3416F4DE1EFCEC870021934F /* UIView+RCCSStar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+RCCSStar.h"; sourceTree = "<group>"; };
+		3416F4DF1EFCEC870021934F /* UIView+RCCSStar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+RCCSStar.m"; sourceTree = "<group>"; };
+		3416F4E11EFCEC870021934F /* RCConversationBaseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationBaseCell.h; sourceTree = "<group>"; };
+		3416F4E21EFCEC870021934F /* RCConversationBaseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationBaseCell.m; sourceTree = "<group>"; };
+		3416F4E31EFCEC870021934F /* RCConversationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationCell.h; sourceTree = "<group>"; };
+		3416F4E41EFCEC870021934F /* RCConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationCell.m; sourceTree = "<group>"; };
+		3416F4E51EFCEC870021934F /* RCConversationDetailContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationDetailContentView.h; sourceTree = "<group>"; };
+		3416F4E61EFCEC870021934F /* RCConversationDetailContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationDetailContentView.m; sourceTree = "<group>"; };
+		3416F4E71EFCEC870021934F /* RCConversationHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationHeaderView.h; sourceTree = "<group>"; };
+		3416F4E81EFCEC870021934F /* RCConversationHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationHeaderView.m; sourceTree = "<group>"; };
+		3416F4E91EFCEC870021934F /* RCConversationStatusView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationStatusView.h; sourceTree = "<group>"; };
+		3416F4EA1EFCEC870021934F /* RCConversationStatusView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationStatusView.m; sourceTree = "<group>"; };
+		3416F4EB1EFCEC870021934F /* RCCSPullLeaveMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCSPullLeaveMessageCell.h; sourceTree = "<group>"; };
+		3416F4EC1EFCEC870021934F /* RCCSPullLeaveMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCSPullLeaveMessageCell.m; sourceTree = "<group>"; };
+		3416F4ED1EFCEC870021934F /* RCFileMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCFileMessageCell.h; sourceTree = "<group>"; };
+		3416F4EE1EFCEC870021934F /* RCFileMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCFileMessageCell.m; sourceTree = "<group>"; };
+		3416F4EF1EFCEC870021934F /* RCImageMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCImageMessageCell.h; sourceTree = "<group>"; };
+		3416F4F01EFCEC870021934F /* RCImageMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCImageMessageCell.m; sourceTree = "<group>"; };
+		3416F4F11EFCEC870021934F /* RCLocationMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCLocationMessageCell.h; sourceTree = "<group>"; };
+		3416F4F21EFCEC870021934F /* RCLocationMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCLocationMessageCell.m; sourceTree = "<group>"; };
+		3416F4F31EFCEC870021934F /* RCMessageBaseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCMessageBaseCell.h; sourceTree = "<group>"; };
+		3416F4F41EFCEC870021934F /* RCMessageBaseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCMessageBaseCell.m; sourceTree = "<group>"; };
+		3416F4F51EFCEC870021934F /* RCMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCMessageCell.h; sourceTree = "<group>"; };
+		3416F4F61EFCEC870021934F /* RCMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCMessageCell.m; sourceTree = "<group>"; };
+		3416F4F71EFCEC870021934F /* RCMessageCellDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCMessageCellDelegate.h; sourceTree = "<group>"; };
+		3416F4FA1EFCEC870021934F /* RCOldMessageNotificationMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCOldMessageNotificationMessage.h; sourceTree = "<group>"; };
+		3416F4FB1EFCEC870021934F /* RCOldMessageNotificationMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCOldMessageNotificationMessage.m; sourceTree = "<group>"; };
+		3416F4FC1EFCEC870021934F /* RCOldMessageNotificationMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCOldMessageNotificationMessageCell.h; sourceTree = "<group>"; };
+		3416F4FD1EFCEC870021934F /* RCOldMessageNotificationMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCOldMessageNotificationMessageCell.m; sourceTree = "<group>"; };
+		3416F4FE1EFCEC870021934F /* RCRichContentMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCRichContentMessageCell.h; sourceTree = "<group>"; };
+		3416F4FF1EFCEC870021934F /* RCRichContentMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCRichContentMessageCell.m; sourceTree = "<group>"; };
+		3416F5001EFCEC870021934F /* RCTextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTextMessageCell.h; sourceTree = "<group>"; };
+		3416F5011EFCEC870021934F /* RCTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTextMessageCell.m; sourceTree = "<group>"; };
+		3416F5021EFCEC870021934F /* RCTipMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTipMessageCell.h; sourceTree = "<group>"; };
+		3416F5031EFCEC870021934F /* RCTipMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTipMessageCell.m; sourceTree = "<group>"; };
+		3416F5041EFCEC870021934F /* RCUnknownMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUnknownMessageCell.h; sourceTree = "<group>"; };
+		3416F5051EFCEC870021934F /* RCUnknownMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUnknownMessageCell.m; sourceTree = "<group>"; };
+		3416F5061EFCEC870021934F /* RCVoiceMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCVoiceMessageCell.h; sourceTree = "<group>"; };
+		3416F5071EFCEC870021934F /* RCVoiceMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCVoiceMessageCell.m; sourceTree = "<group>"; };
+		3416F5091EFCEC870021934F /* RCLocalNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCLocalNotification.h; sourceTree = "<group>"; };
+		3416F50A1EFCEC870021934F /* RCLocalNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCLocalNotification.m; sourceTree = "<group>"; };
+		3416F50B1EFCEC870021934F /* RCSystemSoundPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCSystemSoundPlayer.h; sourceTree = "<group>"; };
+		3416F50C1EFCEC870021934F /* RCSystemSoundPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCSystemSoundPlayer.m; sourceTree = "<group>"; };
+		3416F50D1EFCEC870021934F /* RCVoicePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCVoicePlayer.h; sourceTree = "<group>"; };
+		3416F50E1EFCEC870021934F /* RCVoicePlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCVoicePlayer.m; sourceTree = "<group>"; };
+		3416F5121EFCEC870021934F /* RCCustomIOSAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCustomIOSAlertView.h; sourceTree = "<group>"; };
+		3416F5131EFCEC870021934F /* RCCustomIOSAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCustomIOSAlertView.m; sourceTree = "<group>"; };
+		3416F5141EFCEC870021934F /* RCAdminEvaluationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCAdminEvaluationView.h; sourceTree = "<group>"; };
+		3416F5151EFCEC870021934F /* RCAdminEvaluationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCAdminEvaluationView.m; sourceTree = "<group>"; };
+		3416F5161EFCEC870021934F /* RCCSAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCSAlertView.h; sourceTree = "<group>"; };
+		3416F5171EFCEC870021934F /* RCCSAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCSAlertView.m; sourceTree = "<group>"; };
+		3416F5181EFCEC870021934F /* RCRobotEvaluationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCRobotEvaluationView.h; sourceTree = "<group>"; };
+		3416F5191EFCEC870021934F /* RCRobotEvaluationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCRobotEvaluationView.m; sourceTree = "<group>"; };
+		3416F51B1EFCEC870021934F /* RCAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCAttributedLabel.h; sourceTree = "<group>"; };
+		3416F51C1EFCEC870021934F /* RCAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCAttributedLabel.m; sourceTree = "<group>"; };
+		3416F51D1EFCEC870021934F /* RCContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCContentView.h; sourceTree = "<group>"; };
+		3416F51E1EFCEC870021934F /* RCContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCContentView.m; sourceTree = "<group>"; };
+		3416F51F1EFCEC870021934F /* RCConversationCollectionViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationCollectionViewHeader.h; sourceTree = "<group>"; };
+		3416F5201EFCEC870021934F /* RCConversationCollectionViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationCollectionViewHeader.m; sourceTree = "<group>"; };
+		3416F5211EFCEC870021934F /* RCConversationSettingClearMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationSettingClearMessageCell.h; sourceTree = "<group>"; };
+		3416F5221EFCEC870021934F /* RCConversationSettingClearMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationSettingClearMessageCell.m; sourceTree = "<group>"; };
+		3416F5231EFCEC870021934F /* RCConversationSettingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationSettingTableViewCell.h; sourceTree = "<group>"; };
+		3416F5241EFCEC870021934F /* RCConversationSettingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationSettingTableViewCell.m; sourceTree = "<group>"; };
+		3416F5251EFCEC870021934F /* RCConversationSettingTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationSettingTableViewController.h; sourceTree = "<group>"; };
+		3416F5261EFCEC870021934F /* RCConversationSettingTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationSettingTableViewController.m; sourceTree = "<group>"; };
+		3416F5271EFCEC870021934F /* RCConversationSettingTableViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationSettingTableViewHeader.h; sourceTree = "<group>"; };
+		3416F5281EFCEC870021934F /* RCConversationSettingTableViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationSettingTableViewHeader.m; sourceTree = "<group>"; };
+		3416F5291EFCEC870021934F /* RCConversationSettingTableViewHeaderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationSettingTableViewHeaderItem.h; sourceTree = "<group>"; };
+		3416F52A1EFCEC870021934F /* RCConversationSettingTableViewHeaderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationSettingTableViewHeaderItem.m; sourceTree = "<group>"; };
+		3416F52B1EFCEC870021934F /* RCImageMessageProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCImageMessageProgressView.h; sourceTree = "<group>"; };
+		3416F52C1EFCEC870021934F /* RCImageMessageProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCImageMessageProgressView.m; sourceTree = "<group>"; };
+		3416F52D1EFCEC870021934F /* RCInputBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCInputBarView.h; sourceTree = "<group>"; };
+		3416F52E1EFCEC870021934F /* RCInputBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCInputBarView.m; sourceTree = "<group>"; };
+		3416F52F1EFCEC870021934F /* RCMessageBubbleTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCMessageBubbleTipView.h; sourceTree = "<group>"; };
+		3416F5301EFCEC870021934F /* RCMessageBubbleTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCMessageBubbleTipView.m; sourceTree = "<group>"; };
+		3416F5311EFCEC870021934F /* RCNetworkIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCNetworkIndicatorView.h; sourceTree = "<group>"; };
+		3416F5321EFCEC870021934F /* RCNetworkIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCNetworkIndicatorView.m; sourceTree = "<group>"; };
+		3416F5331EFCEC870021934F /* RCRecallMessageImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCRecallMessageImageView.h; sourceTree = "<group>"; };
+		3416F5341EFCEC870021934F /* RCRecallMessageImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCRecallMessageImageView.m; sourceTree = "<group>"; };
+		3416F5351EFCEC870021934F /* RCTipLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTipLabel.h; sourceTree = "<group>"; };
+		3416F5361EFCEC870021934F /* RCTipLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTipLabel.m; sourceTree = "<group>"; };
+		3416F5381EFCEC870021934F /* RCExtensionMessageCellInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCExtensionMessageCellInfo.h; sourceTree = "<group>"; };
+		3416F5391EFCEC870021934F /* RCExtensionMessageCellInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCExtensionMessageCellInfo.m; sourceTree = "<group>"; };
+		3416F53A1EFCEC870021934F /* RongIMKitExtensionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RongIMKitExtensionManager.h; sourceTree = "<group>"; };
+		3416F53B1EFCEC870021934F /* RongIMKitExtensionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RongIMKitExtensionManager.m; sourceTree = "<group>"; };
+		3416F53C1EFCEC870021934F /* RongIMKitExtensionModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RongIMKitExtensionModule.h; sourceTree = "<group>"; };
+		3416F53F1EFCEC870021934F /* RCCollectionCellAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCollectionCellAttributes.h; sourceTree = "<group>"; };
+		3416F5401EFCEC870021934F /* RCCollectionCellAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCollectionCellAttributes.m; sourceTree = "<group>"; };
+		3416F5411EFCEC870021934F /* RCMessageCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCMessageCollectionViewFlowLayout.h; sourceTree = "<group>"; };
+		3416F5421EFCEC870021934F /* RCMessageCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCMessageCollectionViewFlowLayout.m; sourceTree = "<group>"; };
+		3416F5431EFCEC870021934F /* RCMessageCollectionViewLayoutAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCMessageCollectionViewLayoutAttributes.h; sourceTree = "<group>"; };
+		3416F5441EFCEC870021934F /* RCMessageCollectionViewLayoutAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCMessageCollectionViewLayoutAttributes.m; sourceTree = "<group>"; };
+		3416F5461EFCEC870021934F /* RCConversationCellUpdateInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationCellUpdateInfo.h; sourceTree = "<group>"; };
+		3416F5471EFCEC870021934F /* RCConversationCellUpdateInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationCellUpdateInfo.m; sourceTree = "<group>"; };
+		3416F5481EFCEC870021934F /* RCConversationModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationModel.h; sourceTree = "<group>"; };
+		3416F5491EFCEC870021934F /* RCConversationModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationModel.m; sourceTree = "<group>"; };
+		3416F54A1EFCEC870021934F /* RCCustomerServiceMessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCustomerServiceMessageModel.h; sourceTree = "<group>"; };
+		3416F54B1EFCEC870021934F /* RCCustomerServiceMessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCustomerServiceMessageModel.m; sourceTree = "<group>"; };
+		3416F54C1EFCEC870021934F /* RCMessageCellNotificationModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCMessageCellNotificationModel.h; sourceTree = "<group>"; };
+		3416F54D1EFCEC870021934F /* RCMessageCellNotificationModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCMessageCellNotificationModel.m; sourceTree = "<group>"; };
+		3416F54E1EFCEC870021934F /* RCMessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCMessageModel.h; sourceTree = "<group>"; };
+		3416F54F1EFCEC870021934F /* RCMessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCMessageModel.m; sourceTree = "<group>"; };
+		3416F5531EFCEC870021934F /* RCPublicServiceImgTxtMsgCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceImgTxtMsgCell.h; sourceTree = "<group>"; };
+		3416F5541EFCEC870021934F /* RCPublicServiceImgTxtMsgCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceImgTxtMsgCell.m; sourceTree = "<group>"; };
+		3416F5551EFCEC870021934F /* RCPublicServiceListViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceListViewCell.h; sourceTree = "<group>"; };
+		3416F5561EFCEC870021934F /* RCPublicServiceListViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceListViewCell.m; sourceTree = "<group>"; };
+		3416F5571EFCEC870021934F /* RCPublicServiceMultiImgTxtCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceMultiImgTxtCell.h; sourceTree = "<group>"; };
+		3416F5581EFCEC870021934F /* RCPublicServiceMultiImgTxtCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceMultiImgTxtCell.m; sourceTree = "<group>"; };
+		3416F5591EFCEC870021934F /* RCPublicServiceMultiImgTxtCellContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceMultiImgTxtCellContentCell.h; sourceTree = "<group>"; };
+		3416F55A1EFCEC870021934F /* RCPublicServiceMultiImgTxtCellContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceMultiImgTxtCellContentCell.m; sourceTree = "<group>"; };
+		3416F55B1EFCEC870021934F /* RCPublicServiceMultiImgTxtCellHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceMultiImgTxtCellHeaderCell.h; sourceTree = "<group>"; };
+		3416F55C1EFCEC870021934F /* RCPublicServiceMultiImgTxtCellHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceMultiImgTxtCellHeaderCell.m; sourceTree = "<group>"; };
+		3416F55D1EFCEC870021934F /* RCPublicServiceProfileActionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceProfileActionCell.h; sourceTree = "<group>"; };
+		3416F55E1EFCEC870021934F /* RCPublicServiceProfileActionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceProfileActionCell.m; sourceTree = "<group>"; };
+		3416F55F1EFCEC870021934F /* RCPublicServiceProfileOwnerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceProfileOwnerCell.h; sourceTree = "<group>"; };
+		3416F5601EFCEC870021934F /* RCPublicServiceProfileOwnerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceProfileOwnerCell.m; sourceTree = "<group>"; };
+		3416F5611EFCEC870021934F /* RCPublicServiceProfilePlainCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceProfilePlainCell.h; sourceTree = "<group>"; };
+		3416F5621EFCEC870021934F /* RCPublicServiceProfilePlainCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceProfilePlainCell.m; sourceTree = "<group>"; };
+		3416F5631EFCEC870021934F /* RCPublicServiceProfileRcvdMsgCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceProfileRcvdMsgCell.h; sourceTree = "<group>"; };
+		3416F5641EFCEC870021934F /* RCPublicServiceProfileRcvdMsgCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceProfileRcvdMsgCell.m; sourceTree = "<group>"; };
+		3416F5651EFCEC870021934F /* RCPublicServiceProfileTelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceProfileTelCell.h; sourceTree = "<group>"; };
+		3416F5661EFCEC870021934F /* RCPublicServiceProfileTelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceProfileTelCell.m; sourceTree = "<group>"; };
+		3416F5671EFCEC870021934F /* RCPublicServiceProfileUrlCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceProfileUrlCell.h; sourceTree = "<group>"; };
+		3416F5681EFCEC870021934F /* RCPublicServiceProfileUrlCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceProfileUrlCell.m; sourceTree = "<group>"; };
+		3416F5691EFCEC870021934F /* RCPublicServiceSearchHintCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceSearchHintCell.h; sourceTree = "<group>"; };
+		3416F56A1EFCEC870021934F /* RCPublicServiceSearchHintCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceSearchHintCell.m; sourceTree = "<group>"; };
+		3416F56C1EFCEC870021934F /* RCPublicServiceViewConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceViewConstants.h; sourceTree = "<group>"; };
+		3416F56E1EFCEC870021934F /* RCPublicServiceChatListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceChatListViewController.h; sourceTree = "<group>"; };
+		3416F56F1EFCEC870021934F /* RCPublicServiceChatListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceChatListViewController.m; sourceTree = "<group>"; };
+		3416F5701EFCEC870021934F /* RCPublicServiceChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceChatViewController.h; sourceTree = "<group>"; };
+		3416F5711EFCEC870021934F /* RCPublicServiceChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceChatViewController.m; sourceTree = "<group>"; };
+		3416F5721EFCEC870021934F /* RCPublicServiceListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceListViewController.h; sourceTree = "<group>"; };
+		3416F5731EFCEC870021934F /* RCPublicServiceListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceListViewController.m; sourceTree = "<group>"; };
+		3416F5741EFCEC870021934F /* RCPublicServiceProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceProfileViewController.h; sourceTree = "<group>"; };
+		3416F5751EFCEC870021934F /* RCPublicServiceProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceProfileViewController.m; sourceTree = "<group>"; };
+		3416F5761EFCEC870021934F /* RCPublicServiceSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPublicServiceSearchViewController.h; sourceTree = "<group>"; };
+		3416F5771EFCEC870021934F /* RCPublicServiceSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPublicServiceSearchViewController.m; sourceTree = "<group>"; };
+		3416F5791EFCEC870021934F /* RCSearchItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCSearchItemView.h; sourceTree = "<group>"; };
+		3416F57A1EFCEC870021934F /* RCSearchItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCSearchItemView.m; sourceTree = "<group>"; };
+		3416F57B1EFCEC870021934F /* RCIM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCIM.h; sourceTree = "<group>"; };
+		3416F57C1EFCEC870021934F /* RCIM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCIM.m; sourceTree = "<group>"; };
+		3416F57F1EFCEC870021934F /* RCloudCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCloudCache.h; sourceTree = "<group>"; };
+		3416F5801EFCEC870021934F /* RCloudCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCloudCache.m; sourceTree = "<group>"; };
+		3416F5821EFCEC870021934F /* RCloudImageLoadConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCloudImageLoadConnection.h; sourceTree = "<group>"; };
+		3416F5831EFCEC870021934F /* RCloudImageLoadConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCloudImageLoadConnection.m; sourceTree = "<group>"; };
+		3416F5841EFCEC870021934F /* RCloudImageLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCloudImageLoader.h; sourceTree = "<group>"; };
+		3416F5851EFCEC870021934F /* RCloudImageLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCloudImageLoader.m; sourceTree = "<group>"; };
+		3416F5871EFCEC870021934F /* RCloudImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCloudImageView.h; sourceTree = "<group>"; };
+		3416F5881EFCEC870021934F /* RCloudImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCloudImageView.m; sourceTree = "<group>"; };
+		3416F58B1EFCEC870021934F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/RongCloudKit.strings; sourceTree = "<group>"; };
+		3416F58C1EFCEC870021934F /* RongCloud.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = RongCloud.bundle; sourceTree = "<group>"; };
+		3416F58D1EFCEC870021934F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/RongCloudKit.strings"; sourceTree = "<group>"; };
+		3416F58E1EFCEC870021934F /* RongIMKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RongIMKit.h; sourceTree = "<group>"; };
+		3416F5931EFCEC870021934F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3416F5941EFCEC870021934F /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		3416F5951EFCEC870021934F /* RCloudFMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCloudFMDatabase.h; sourceTree = "<group>"; };
+		3416F5961EFCEC870021934F /* RCloudFMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCloudFMDatabase.m; sourceTree = "<group>"; };
+		3416F5971EFCEC870021934F /* RCloudFMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCloudFMDatabaseAdditions.h; sourceTree = "<group>"; };
+		3416F5981EFCEC870021934F /* RCloudFMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCloudFMDatabaseAdditions.m; sourceTree = "<group>"; };
+		3416F5991EFCEC870021934F /* RCloudFMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCloudFMDatabasePool.h; sourceTree = "<group>"; };
+		3416F59A1EFCEC870021934F /* RCloudFMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCloudFMDatabasePool.m; sourceTree = "<group>"; };
+		3416F59B1EFCEC870021934F /* RCloudFMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCloudFMDatabaseQueue.h; sourceTree = "<group>"; };
+		3416F59C1EFCEC870021934F /* RCloudFMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCloudFMDatabaseQueue.m; sourceTree = "<group>"; };
+		3416F59D1EFCEC870021934F /* RCloudFMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCloudFMDB.h; sourceTree = "<group>"; };
+		3416F59E1EFCEC870021934F /* RCloudFMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCloudFMResultSet.h; sourceTree = "<group>"; };
+		3416F59F1EFCEC870021934F /* RCloudFMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCloudFMResultSet.m; sourceTree = "<group>"; };
+		3416F5A11EFCEC870021934F /* RCUserInfoUpdateMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUserInfoUpdateMessage.h; sourceTree = "<group>"; };
+		3416F5A21EFCEC870021934F /* RCUserInfoUpdateMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUserInfoUpdateMessage.m; sourceTree = "<group>"; };
+		3416F5A31EFCEC870021934F /* RCConversationInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationInfo.h; sourceTree = "<group>"; };
+		3416F5A41EFCEC870021934F /* RCConversationInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationInfo.m; sourceTree = "<group>"; };
+		3416F5A51EFCEC870021934F /* RCConversationInfoCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationInfoCache.h; sourceTree = "<group>"; };
+		3416F5A61EFCEC870021934F /* RCConversationInfoCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationInfoCache.m; sourceTree = "<group>"; };
+		3416F5A71EFCEC870021934F /* RCConversationUserInfoCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConversationUserInfoCache.h; sourceTree = "<group>"; };
+		3416F5A81EFCEC870021934F /* RCConversationUserInfoCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConversationUserInfoCache.m; sourceTree = "<group>"; };
+		3416F5A91EFCEC870021934F /* RCThreadSafeMutableDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCThreadSafeMutableDictionary.h; sourceTree = "<group>"; };
+		3416F5AA1EFCEC870021934F /* RCThreadSafeMutableDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCThreadSafeMutableDictionary.m; sourceTree = "<group>"; };
+		3416F5AB1EFCEC870021934F /* RCUserInfoCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUserInfoCache.h; sourceTree = "<group>"; };
+		3416F5AC1EFCEC870021934F /* RCUserInfoCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUserInfoCache.m; sourceTree = "<group>"; };
+		3416F5AD1EFCEC870021934F /* RCUserInfoCacheDBHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUserInfoCacheDBHelper.h; sourceTree = "<group>"; };
+		3416F5AE1EFCEC870021934F /* RCUserInfoCacheDBHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUserInfoCacheDBHelper.m; sourceTree = "<group>"; };
+		3416F5AF1EFCEC870021934F /* RCUserInfoCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUserInfoCacheManager.h; sourceTree = "<group>"; };
+		3416F5B01EFCEC870021934F /* RCUserInfoCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUserInfoCacheManager.m; sourceTree = "<group>"; };
+		3416F5B21EFCEC870021934F /* RCHandShakeMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCHandShakeMessage.h; sourceTree = "<group>"; };
+		3416F5B31EFCEC870021934F /* RCHandShakeMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCHandShakeMessage.m; sourceTree = "<group>"; };
+		3416F5B41EFCEC870021934F /* RCKitUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCKitUtility.h; sourceTree = "<group>"; };
+		3416F5B51EFCEC870021934F /* RCKitUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCKitUtility.m; sourceTree = "<group>"; };
+		3416F5B61EFCEC870021934F /* RCSuspendMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCSuspendMessage.h; sourceTree = "<group>"; };
+		3416F5B71EFCEC870021934F /* RCSuspendMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCSuspendMessage.m; sourceTree = "<group>"; };
 		3416FD751EBC64F300049514 /* scan_sb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scan_sb@2x.png"; sourceTree = "<group>"; };
 		3416FD761EBC64F300049514 /* scan_sb@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scan_sb@3x.png"; sourceTree = "<group>"; };
 		3416FD791EBC786E00049514 /* ripple.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ripple.mp3; sourceTree = "<group>"; };
@@ -1065,7 +1405,6 @@
 				04E107CA1B9ED67F00A5280B /* libzbar.a in Frameworks */,
 				043AD7F41E78FA00004A2529 /* RongIMLib.framework in Frameworks */,
 				04DC651D1B81ACF100F46825 /* libc++.dylib in Frameworks */,
-				043AD7F11E78FA00004A2529 /* RongIMKit.framework in Frameworks */,
 				04DC651B1B81ACE500F46825 /* libstdc++.dylib in Frameworks */,
 				043AD7F21E78FA00004A2529 /* libopencore-amrnb.a in Frameworks */,
 				04DC65161B81AAFC00F46825 /* libicucore.dylib in Frameworks */,
@@ -1074,6 +1413,7 @@
 				04D5EEBD1B2FDAB4004D8CD9 /* AudioToolbox.framework in Frameworks */,
 				04D5EEBB1B2FDAAC004D8CD9 /* AVFoundation.framework in Frameworks */,
 				04F82E911C2D2AF70098E54F /* libMobClickLibrary.a in Frameworks */,
+				3416F5BD1EFCEC880021934F /* libRongExtensionKit.a in Frameworks */,
 				043AD7EB1E78FA00004A2529 /* RongCallKit.framework in Frameworks */,
 				04D5EEB91B2FDA9B004D8CD9 /* CoreGraphics.framework in Frameworks */,
 				04D5EEB71B2FDA95004D8CD9 /* QuartzCore.framework in Frameworks */,
@@ -1092,9 +1432,9 @@
 		043AD7D71E78FA00004A2529 /* RongCloud_private */ = {
 			isa = PBXGroup;
 			children = (
+				3416F4A01EFCEC870021934F /* ios-rongimkit */,
 				043AD7D81E78FA00004A2529 /* RongCloud_iOS_CallKit_2.8.6_PrivateCloud_V1.4 */,
 				043AD7DA1E78FA00004A2529 /* RongCloud_iOS_CallLib_2.8.6_PrivateCloud_V1.4 */,
-				043AD7DD1E78FA00004A2529 /* RongCloud_iOS_IMKit_2.8.6_PrivateCloud_V1.4 */,
 				043AD7E41E78FA00004A2529 /* RongCloud_iOS_IMLib_2.8.6_PrivateCloud_V1.4 */,
 				043AD7E81E78FA00004A2529 /* RongCloudPTT.bundle */,
 				043AD7EA1E78FA00004A2529 /* RongPTTLib.framework */,
@@ -1117,17 +1457,6 @@
 				043AD7DC1E78FA00004A2529 /* RongCallLib.framework */,
 			);
 			path = RongCloud_iOS_CallLib_2.8.6_PrivateCloud_V1.4;
-			sourceTree = "<group>";
-		};
-		043AD7DD1E78FA00004A2529 /* RongCloud_iOS_IMKit_2.8.6_PrivateCloud_V1.4 */ = {
-			isa = PBXGroup;
-			children = (
-				043AD7DE1E78FA00004A2529 /* Emoji.plist */,
-				043AD7DF1E78FA00004A2529 /* RongCloudKit.strings */,
-				043AD7E11E78FA00004A2529 /* RongCloud.bundle */,
-				043AD7E21E78FA00004A2529 /* RongIMKit.framework */,
-			);
-			path = RongCloud_iOS_IMKit_2.8.6_PrivateCloud_V1.4;
 			sourceTree = "<group>";
 		};
 		043AD7E41E78FA00004A2529 /* RongCloud_iOS_IMLib_2.8.6_PrivateCloud_V1.4 */ = {
@@ -2128,6 +2457,480 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3416F4A01EFCEC870021934F /* ios-rongimkit */ = {
+			isa = PBXGroup;
+			children = (
+				3416F4A21EFCEC870021934F /* ExtensionKit */,
+				3416F4BB1EFCEC870021934F /* RongIMKit */,
+			);
+			path = "ios-rongimkit";
+			sourceTree = "<group>";
+		};
+		3416F4A21EFCEC870021934F /* ExtensionKit */ = {
+			isa = PBXGroup;
+			children = (
+				3416F4A31EFCEC870021934F /* include */,
+				3416F4B01EFCEC870021934F /* libRongExtensionKit.a */,
+				3416F4B11EFCEC870021934F /* Resource */,
+			);
+			path = ExtensionKit;
+			sourceTree = "<group>";
+		};
+		3416F4A31EFCEC870021934F /* include */ = {
+			isa = PBXGroup;
+			children = (
+				3416F4A41EFCEC870021934F /* RCChatSessionInputBarControl.h */,
+				3416F4A51EFCEC870021934F /* RCEmojiBoardView.h */,
+				3416F4A61EFCEC870021934F /* RCEmoticonTabSource.h */,
+				3416F4A71EFCEC870021934F /* RCExtensionModule.h */,
+				3416F4A81EFCEC870021934F /* RCExtensionPluginItemInfo.h */,
+				3416F4A91EFCEC870021934F /* RCExtensionService.h */,
+				3416F4AA1EFCEC870021934F /* RCExtensionUtility.h */,
+				3416F4AB1EFCEC870021934F /* RCLocationPickerViewController.h */,
+				3416F4AC1EFCEC870021934F /* RCPluginBoardView.h */,
+				3416F4AD1EFCEC870021934F /* RCTextView.h */,
+				3416F4AE1EFCEC870021934F /* RCVoiceRecorder.h */,
+				3416F4AF1EFCEC870021934F /* RongExtensionKit.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		3416F4B11EFCEC870021934F /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				3416F4B21EFCEC870021934F /* Emoji.plist */,
+				3416F4B31EFCEC870021934F /* RongExtensionKit.strings */,
+				3416F4B51EFCEC870021934F /* RongExtensionKit.bundle */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		3416F4BB1EFCEC870021934F /* RongIMKit */ = {
+			isa = PBXGroup;
+			children = (
+				3416F4BC1EFCEC870021934F /* Common */,
+				3416F4BF1EFCEC870021934F /* Controller */,
+				3416F4E01EFCEC870021934F /* CustomCell */,
+				3416F5081EFCEC870021934F /* CustomObjects */,
+				3416F50F1EFCEC870021934F /* CustomService */,
+				3416F51A1EFCEC870021934F /* CustomViews */,
+				3416F5371EFCEC870021934F /* ExtensionManager */,
+				3416F53E1EFCEC870021934F /* Layout */,
+				3416F5451EFCEC870021934F /* Models */,
+				3416F5511EFCEC870021934F /* PublicService */,
+				3416F57B1EFCEC870021934F /* RCIM.h */,
+				3416F57C1EFCEC870021934F /* RCIM.m */,
+				3416F57D1EFCEC870021934F /* RCloudImageLoading */,
+				3416F5891EFCEC870021934F /* Resource */,
+				3416F58E1EFCEC870021934F /* RongIMKit.h */,
+				3416F5911EFCEC870021934F /* UserInfoCache */,
+				3416F5B11EFCEC870021934F /* Utility */,
+			);
+			path = RongIMKit;
+			sourceTree = "<group>";
+		};
+		3416F4BC1EFCEC870021934F /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				3416F4BD1EFCEC870021934F /* RCKitCommonDefine.h */,
+				3416F4BE1EFCEC870021934F /* RCThemeDefine.h */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		3416F4BF1EFCEC870021934F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3416F4C01EFCEC870021934F /* RCBaseViewController.h */,
+				3416F4C11EFCEC870021934F /* RCBaseViewController.m */,
+				3416F4C21EFCEC870021934F /* RCConversationListViewController.h */,
+				3416F4C31EFCEC870021934F /* RCConversationListViewController.m */,
+				3416F4C41EFCEC870021934F /* RCConversationViewController.h */,
+				3416F4C51EFCEC870021934F /* RCConversationViewController.m */,
+				3416F4C61EFCEC870021934F /* RCCSEvaluateView.h */,
+				3416F4C71EFCEC870021934F /* RCCSEvaluateView.m */,
+				3416F4C81EFCEC870021934F /* RCCSLeaveMessageController.h */,
+				3416F4C91EFCEC870021934F /* RCCSLeaveMessageController.m */,
+				3416F4CA1EFCEC870021934F /* RCCSLeaveMessagesCell.h */,
+				3416F4CB1EFCEC870021934F /* RCCSLeaveMessagesCell.m */,
+				3416F4CC1EFCEC870021934F /* RCCSSolveView.h */,
+				3416F4CD1EFCEC870021934F /* RCCSSolveView.m */,
+				3416F4CE1EFCEC870021934F /* RCCSStarView.h */,
+				3416F4CF1EFCEC870021934F /* RCCSStarView.m */,
+				3416F4D01EFCEC870021934F /* RCCustomerServiceGroupCell.h */,
+				3416F4D11EFCEC870021934F /* RCCustomerServiceGroupCell.m */,
+				3416F4D21EFCEC870021934F /* RCCustomerServiceGroupListController.h */,
+				3416F4D31EFCEC870021934F /* RCCustomerServiceGroupListController.m */,
+				3416F4D41EFCEC870021934F /* RCFilePreviewViewController.h */,
+				3416F4D51EFCEC870021934F /* RCFilePreviewViewController.m */,
+				3416F4D61EFCEC870021934F /* RCImagePreviewController.h */,
+				3416F4D71EFCEC870021934F /* RCImagePreviewController.m */,
+				3416F4D81EFCEC870021934F /* RCImageSlideController.h */,
+				3416F4D91EFCEC870021934F /* RCImageSlideController.m */,
+				3416F4DA1EFCEC870021934F /* RCLocationViewController.h */,
+				3416F4DB1EFCEC870021934F /* RCLocationViewController.m */,
+				3416F4DC1EFCEC870021934F /* RCSettingViewController.h */,
+				3416F4DD1EFCEC870021934F /* RCSettingViewController.m */,
+				3416F4DE1EFCEC870021934F /* UIView+RCCSStar.h */,
+				3416F4DF1EFCEC870021934F /* UIView+RCCSStar.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		3416F4E01EFCEC870021934F /* CustomCell */ = {
+			isa = PBXGroup;
+			children = (
+				3416F4E11EFCEC870021934F /* RCConversationBaseCell.h */,
+				3416F4E21EFCEC870021934F /* RCConversationBaseCell.m */,
+				3416F4E31EFCEC870021934F /* RCConversationCell.h */,
+				3416F4E41EFCEC870021934F /* RCConversationCell.m */,
+				3416F4E51EFCEC870021934F /* RCConversationDetailContentView.h */,
+				3416F4E61EFCEC870021934F /* RCConversationDetailContentView.m */,
+				3416F4E71EFCEC870021934F /* RCConversationHeaderView.h */,
+				3416F4E81EFCEC870021934F /* RCConversationHeaderView.m */,
+				3416F4E91EFCEC870021934F /* RCConversationStatusView.h */,
+				3416F4EA1EFCEC870021934F /* RCConversationStatusView.m */,
+				3416F4EB1EFCEC870021934F /* RCCSPullLeaveMessageCell.h */,
+				3416F4EC1EFCEC870021934F /* RCCSPullLeaveMessageCell.m */,
+				3416F4ED1EFCEC870021934F /* RCFileMessageCell.h */,
+				3416F4EE1EFCEC870021934F /* RCFileMessageCell.m */,
+				3416F4EF1EFCEC870021934F /* RCImageMessageCell.h */,
+				3416F4F01EFCEC870021934F /* RCImageMessageCell.m */,
+				3416F4F11EFCEC870021934F /* RCLocationMessageCell.h */,
+				3416F4F21EFCEC870021934F /* RCLocationMessageCell.m */,
+				3416F4F31EFCEC870021934F /* RCMessageBaseCell.h */,
+				3416F4F41EFCEC870021934F /* RCMessageBaseCell.m */,
+				3416F4F51EFCEC870021934F /* RCMessageCell.h */,
+				3416F4F61EFCEC870021934F /* RCMessageCell.m */,
+				3416F4F71EFCEC870021934F /* RCMessageCellDelegate.h */,
+				3416F4FA1EFCEC870021934F /* RCOldMessageNotificationMessage.h */,
+				3416F4FB1EFCEC870021934F /* RCOldMessageNotificationMessage.m */,
+				3416F4FC1EFCEC870021934F /* RCOldMessageNotificationMessageCell.h */,
+				3416F4FD1EFCEC870021934F /* RCOldMessageNotificationMessageCell.m */,
+				3416F4FE1EFCEC870021934F /* RCRichContentMessageCell.h */,
+				3416F4FF1EFCEC870021934F /* RCRichContentMessageCell.m */,
+				3416F5001EFCEC870021934F /* RCTextMessageCell.h */,
+				3416F5011EFCEC870021934F /* RCTextMessageCell.m */,
+				3416F5021EFCEC870021934F /* RCTipMessageCell.h */,
+				3416F5031EFCEC870021934F /* RCTipMessageCell.m */,
+				3416F5041EFCEC870021934F /* RCUnknownMessageCell.h */,
+				3416F5051EFCEC870021934F /* RCUnknownMessageCell.m */,
+				3416F5061EFCEC870021934F /* RCVoiceMessageCell.h */,
+				3416F5071EFCEC870021934F /* RCVoiceMessageCell.m */,
+			);
+			path = CustomCell;
+			sourceTree = "<group>";
+		};
+		3416F5081EFCEC870021934F /* CustomObjects */ = {
+			isa = PBXGroup;
+			children = (
+				3416F5091EFCEC870021934F /* RCLocalNotification.h */,
+				3416F50A1EFCEC870021934F /* RCLocalNotification.m */,
+				3416F50B1EFCEC870021934F /* RCSystemSoundPlayer.h */,
+				3416F50C1EFCEC870021934F /* RCSystemSoundPlayer.m */,
+				3416F50D1EFCEC870021934F /* RCVoicePlayer.h */,
+				3416F50E1EFCEC870021934F /* RCVoicePlayer.m */,
+			);
+			path = CustomObjects;
+			sourceTree = "<group>";
+		};
+		3416F50F1EFCEC870021934F /* CustomService */ = {
+			isa = PBXGroup;
+			children = (
+				3416F5101EFCEC870021934F /* View */,
+			);
+			path = CustomService;
+			sourceTree = "<group>";
+		};
+		3416F5101EFCEC870021934F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3416F5111EFCEC870021934F /* CustomIOSAlertView */,
+				3416F5141EFCEC870021934F /* RCAdminEvaluationView.h */,
+				3416F5151EFCEC870021934F /* RCAdminEvaluationView.m */,
+				3416F5161EFCEC870021934F /* RCCSAlertView.h */,
+				3416F5171EFCEC870021934F /* RCCSAlertView.m */,
+				3416F5181EFCEC870021934F /* RCRobotEvaluationView.h */,
+				3416F5191EFCEC870021934F /* RCRobotEvaluationView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3416F5111EFCEC870021934F /* CustomIOSAlertView */ = {
+			isa = PBXGroup;
+			children = (
+				3416F5121EFCEC870021934F /* RCCustomIOSAlertView.h */,
+				3416F5131EFCEC870021934F /* RCCustomIOSAlertView.m */,
+			);
+			path = CustomIOSAlertView;
+			sourceTree = "<group>";
+		};
+		3416F51A1EFCEC870021934F /* CustomViews */ = {
+			isa = PBXGroup;
+			children = (
+				3416F51B1EFCEC870021934F /* RCAttributedLabel.h */,
+				3416F51C1EFCEC870021934F /* RCAttributedLabel.m */,
+				3416F51D1EFCEC870021934F /* RCContentView.h */,
+				3416F51E1EFCEC870021934F /* RCContentView.m */,
+				3416F51F1EFCEC870021934F /* RCConversationCollectionViewHeader.h */,
+				3416F5201EFCEC870021934F /* RCConversationCollectionViewHeader.m */,
+				3416F5211EFCEC870021934F /* RCConversationSettingClearMessageCell.h */,
+				3416F5221EFCEC870021934F /* RCConversationSettingClearMessageCell.m */,
+				3416F5231EFCEC870021934F /* RCConversationSettingTableViewCell.h */,
+				3416F5241EFCEC870021934F /* RCConversationSettingTableViewCell.m */,
+				3416F5251EFCEC870021934F /* RCConversationSettingTableViewController.h */,
+				3416F5261EFCEC870021934F /* RCConversationSettingTableViewController.m */,
+				3416F5271EFCEC870021934F /* RCConversationSettingTableViewHeader.h */,
+				3416F5281EFCEC870021934F /* RCConversationSettingTableViewHeader.m */,
+				3416F5291EFCEC870021934F /* RCConversationSettingTableViewHeaderItem.h */,
+				3416F52A1EFCEC870021934F /* RCConversationSettingTableViewHeaderItem.m */,
+				3416F52B1EFCEC870021934F /* RCImageMessageProgressView.h */,
+				3416F52C1EFCEC870021934F /* RCImageMessageProgressView.m */,
+				3416F52D1EFCEC870021934F /* RCInputBarView.h */,
+				3416F52E1EFCEC870021934F /* RCInputBarView.m */,
+				3416F52F1EFCEC870021934F /* RCMessageBubbleTipView.h */,
+				3416F5301EFCEC870021934F /* RCMessageBubbleTipView.m */,
+				3416F5311EFCEC870021934F /* RCNetworkIndicatorView.h */,
+				3416F5321EFCEC870021934F /* RCNetworkIndicatorView.m */,
+				3416F5331EFCEC870021934F /* RCRecallMessageImageView.h */,
+				3416F5341EFCEC870021934F /* RCRecallMessageImageView.m */,
+				3416F5351EFCEC870021934F /* RCTipLabel.h */,
+				3416F5361EFCEC870021934F /* RCTipLabel.m */,
+			);
+			path = CustomViews;
+			sourceTree = "<group>";
+		};
+		3416F5371EFCEC870021934F /* ExtensionManager */ = {
+			isa = PBXGroup;
+			children = (
+				3416F5381EFCEC870021934F /* RCExtensionMessageCellInfo.h */,
+				3416F5391EFCEC870021934F /* RCExtensionMessageCellInfo.m */,
+				3416F53A1EFCEC870021934F /* RongIMKitExtensionManager.h */,
+				3416F53B1EFCEC870021934F /* RongIMKitExtensionManager.m */,
+				3416F53C1EFCEC870021934F /* RongIMKitExtensionModule.h */,
+			);
+			path = ExtensionManager;
+			sourceTree = "<group>";
+		};
+		3416F53E1EFCEC870021934F /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				3416F53F1EFCEC870021934F /* RCCollectionCellAttributes.h */,
+				3416F5401EFCEC870021934F /* RCCollectionCellAttributes.m */,
+				3416F5411EFCEC870021934F /* RCMessageCollectionViewFlowLayout.h */,
+				3416F5421EFCEC870021934F /* RCMessageCollectionViewFlowLayout.m */,
+				3416F5431EFCEC870021934F /* RCMessageCollectionViewLayoutAttributes.h */,
+				3416F5441EFCEC870021934F /* RCMessageCollectionViewLayoutAttributes.m */,
+			);
+			path = Layout;
+			sourceTree = "<group>";
+		};
+		3416F5451EFCEC870021934F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3416F5461EFCEC870021934F /* RCConversationCellUpdateInfo.h */,
+				3416F5471EFCEC870021934F /* RCConversationCellUpdateInfo.m */,
+				3416F5481EFCEC870021934F /* RCConversationModel.h */,
+				3416F5491EFCEC870021934F /* RCConversationModel.m */,
+				3416F54A1EFCEC870021934F /* RCCustomerServiceMessageModel.h */,
+				3416F54B1EFCEC870021934F /* RCCustomerServiceMessageModel.m */,
+				3416F54C1EFCEC870021934F /* RCMessageCellNotificationModel.h */,
+				3416F54D1EFCEC870021934F /* RCMessageCellNotificationModel.m */,
+				3416F54E1EFCEC870021934F /* RCMessageModel.h */,
+				3416F54F1EFCEC870021934F /* RCMessageModel.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		3416F5511EFCEC870021934F /* PublicService */ = {
+			isa = PBXGroup;
+			children = (
+				3416F5521EFCEC870021934F /* Cell */,
+				3416F56B1EFCEC870021934F /* Common */,
+				3416F56D1EFCEC870021934F /* Controller */,
+				3416F5781EFCEC870021934F /* View */,
+			);
+			path = PublicService;
+			sourceTree = "<group>";
+		};
+		3416F5521EFCEC870021934F /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				3416F5531EFCEC870021934F /* RCPublicServiceImgTxtMsgCell.h */,
+				3416F5541EFCEC870021934F /* RCPublicServiceImgTxtMsgCell.m */,
+				3416F5551EFCEC870021934F /* RCPublicServiceListViewCell.h */,
+				3416F5561EFCEC870021934F /* RCPublicServiceListViewCell.m */,
+				3416F5571EFCEC870021934F /* RCPublicServiceMultiImgTxtCell.h */,
+				3416F5581EFCEC870021934F /* RCPublicServiceMultiImgTxtCell.m */,
+				3416F5591EFCEC870021934F /* RCPublicServiceMultiImgTxtCellContentCell.h */,
+				3416F55A1EFCEC870021934F /* RCPublicServiceMultiImgTxtCellContentCell.m */,
+				3416F55B1EFCEC870021934F /* RCPublicServiceMultiImgTxtCellHeaderCell.h */,
+				3416F55C1EFCEC870021934F /* RCPublicServiceMultiImgTxtCellHeaderCell.m */,
+				3416F55D1EFCEC870021934F /* RCPublicServiceProfileActionCell.h */,
+				3416F55E1EFCEC870021934F /* RCPublicServiceProfileActionCell.m */,
+				3416F55F1EFCEC870021934F /* RCPublicServiceProfileOwnerCell.h */,
+				3416F5601EFCEC870021934F /* RCPublicServiceProfileOwnerCell.m */,
+				3416F5611EFCEC870021934F /* RCPublicServiceProfilePlainCell.h */,
+				3416F5621EFCEC870021934F /* RCPublicServiceProfilePlainCell.m */,
+				3416F5631EFCEC870021934F /* RCPublicServiceProfileRcvdMsgCell.h */,
+				3416F5641EFCEC870021934F /* RCPublicServiceProfileRcvdMsgCell.m */,
+				3416F5651EFCEC870021934F /* RCPublicServiceProfileTelCell.h */,
+				3416F5661EFCEC870021934F /* RCPublicServiceProfileTelCell.m */,
+				3416F5671EFCEC870021934F /* RCPublicServiceProfileUrlCell.h */,
+				3416F5681EFCEC870021934F /* RCPublicServiceProfileUrlCell.m */,
+				3416F5691EFCEC870021934F /* RCPublicServiceSearchHintCell.h */,
+				3416F56A1EFCEC870021934F /* RCPublicServiceSearchHintCell.m */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		3416F56B1EFCEC870021934F /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				3416F56C1EFCEC870021934F /* RCPublicServiceViewConstants.h */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		3416F56D1EFCEC870021934F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3416F56E1EFCEC870021934F /* RCPublicServiceChatListViewController.h */,
+				3416F56F1EFCEC870021934F /* RCPublicServiceChatListViewController.m */,
+				3416F5701EFCEC870021934F /* RCPublicServiceChatViewController.h */,
+				3416F5711EFCEC870021934F /* RCPublicServiceChatViewController.m */,
+				3416F5721EFCEC870021934F /* RCPublicServiceListViewController.h */,
+				3416F5731EFCEC870021934F /* RCPublicServiceListViewController.m */,
+				3416F5741EFCEC870021934F /* RCPublicServiceProfileViewController.h */,
+				3416F5751EFCEC870021934F /* RCPublicServiceProfileViewController.m */,
+				3416F5761EFCEC870021934F /* RCPublicServiceSearchViewController.h */,
+				3416F5771EFCEC870021934F /* RCPublicServiceSearchViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		3416F5781EFCEC870021934F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3416F5791EFCEC870021934F /* RCSearchItemView.h */,
+				3416F57A1EFCEC870021934F /* RCSearchItemView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3416F57D1EFCEC870021934F /* RCloudImageLoading */ = {
+			isa = PBXGroup;
+			children = (
+				3416F57E1EFCEC870021934F /* EGOCache */,
+				3416F5811EFCEC870021934F /* EGOImageLoader */,
+				3416F5861EFCEC870021934F /* EGOImageView */,
+			);
+			path = RCloudImageLoading;
+			sourceTree = "<group>";
+		};
+		3416F57E1EFCEC870021934F /* EGOCache */ = {
+			isa = PBXGroup;
+			children = (
+				3416F57F1EFCEC870021934F /* RCloudCache.h */,
+				3416F5801EFCEC870021934F /* RCloudCache.m */,
+			);
+			path = EGOCache;
+			sourceTree = "<group>";
+		};
+		3416F5811EFCEC870021934F /* EGOImageLoader */ = {
+			isa = PBXGroup;
+			children = (
+				3416F5821EFCEC870021934F /* RCloudImageLoadConnection.h */,
+				3416F5831EFCEC870021934F /* RCloudImageLoadConnection.m */,
+				3416F5841EFCEC870021934F /* RCloudImageLoader.h */,
+				3416F5851EFCEC870021934F /* RCloudImageLoader.m */,
+			);
+			path = EGOImageLoader;
+			sourceTree = "<group>";
+		};
+		3416F5861EFCEC870021934F /* EGOImageView */ = {
+			isa = PBXGroup;
+			children = (
+				3416F5871EFCEC870021934F /* RCloudImageView.h */,
+				3416F5881EFCEC870021934F /* RCloudImageView.m */,
+			);
+			path = EGOImageView;
+			sourceTree = "<group>";
+		};
+		3416F5891EFCEC870021934F /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				3416F58A1EFCEC870021934F /* RongCloudKit.strings */,
+				3416F58C1EFCEC870021934F /* RongCloud.bundle */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		3416F5911EFCEC870021934F /* UserInfoCache */ = {
+			isa = PBXGroup;
+			children = (
+				3416F5921EFCEC870021934F /* Database */,
+				3416F5A01EFCEC870021934F /* Message */,
+				3416F5A31EFCEC870021934F /* RCConversationInfo.h */,
+				3416F5A41EFCEC870021934F /* RCConversationInfo.m */,
+				3416F5A51EFCEC870021934F /* RCConversationInfoCache.h */,
+				3416F5A61EFCEC870021934F /* RCConversationInfoCache.m */,
+				3416F5A71EFCEC870021934F /* RCConversationUserInfoCache.h */,
+				3416F5A81EFCEC870021934F /* RCConversationUserInfoCache.m */,
+				3416F5A91EFCEC870021934F /* RCThreadSafeMutableDictionary.h */,
+				3416F5AA1EFCEC870021934F /* RCThreadSafeMutableDictionary.m */,
+				3416F5AB1EFCEC870021934F /* RCUserInfoCache.h */,
+				3416F5AC1EFCEC870021934F /* RCUserInfoCache.m */,
+				3416F5AD1EFCEC870021934F /* RCUserInfoCacheDBHelper.h */,
+				3416F5AE1EFCEC870021934F /* RCUserInfoCacheDBHelper.m */,
+				3416F5AF1EFCEC870021934F /* RCUserInfoCacheManager.h */,
+				3416F5B01EFCEC870021934F /* RCUserInfoCacheManager.m */,
+			);
+			path = UserInfoCache;
+			sourceTree = "<group>";
+		};
+		3416F5921EFCEC870021934F /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				3416F5931EFCEC870021934F /* Info.plist */,
+				3416F5941EFCEC870021934F /* LICENSE.txt */,
+				3416F5951EFCEC870021934F /* RCloudFMDatabase.h */,
+				3416F5961EFCEC870021934F /* RCloudFMDatabase.m */,
+				3416F5971EFCEC870021934F /* RCloudFMDatabaseAdditions.h */,
+				3416F5981EFCEC870021934F /* RCloudFMDatabaseAdditions.m */,
+				3416F5991EFCEC870021934F /* RCloudFMDatabasePool.h */,
+				3416F59A1EFCEC870021934F /* RCloudFMDatabasePool.m */,
+				3416F59B1EFCEC870021934F /* RCloudFMDatabaseQueue.h */,
+				3416F59C1EFCEC870021934F /* RCloudFMDatabaseQueue.m */,
+				3416F59D1EFCEC870021934F /* RCloudFMDB.h */,
+				3416F59E1EFCEC870021934F /* RCloudFMResultSet.h */,
+				3416F59F1EFCEC870021934F /* RCloudFMResultSet.m */,
+			);
+			path = Database;
+			sourceTree = "<group>";
+		};
+		3416F5A01EFCEC870021934F /* Message */ = {
+			isa = PBXGroup;
+			children = (
+				3416F5A11EFCEC870021934F /* RCUserInfoUpdateMessage.h */,
+				3416F5A21EFCEC870021934F /* RCUserInfoUpdateMessage.m */,
+			);
+			path = Message;
+			sourceTree = "<group>";
+		};
+		3416F5B11EFCEC870021934F /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				3416F5B21EFCEC870021934F /* RCHandShakeMessage.h */,
+				3416F5B31EFCEC870021934F /* RCHandShakeMessage.m */,
+				3416F5B41EFCEC870021934F /* RCKitUtility.h */,
+				3416F5B51EFCEC870021934F /* RCKitUtility.m */,
+				3416F5B61EFCEC870021934F /* RCSuspendMessage.h */,
+				3416F5B71EFCEC870021934F /* RCSuspendMessage.m */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
 		34AB8CD61EC95A4000B342D4 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -2235,7 +3038,7 @@
 				04B489F51E63F1EE006F7C99 /* add_friend_btn@3x.png in Resources */,
 				04D766501D350EFE006471B2 /* Localizable.strings in Resources */,
 				04B48AA11E63F1EE006F7C99 /* iconfont_copy_down@2x.png in Resources */,
-				043AD7EE1E78FA00004A2529 /* Emoji.plist in Resources */,
+				3416F5C01EFCEC880021934F /* RongExtensionKit.bundle in Resources */,
 				04B48AC71E63F1EE006F7C99 /* obj_contact@3x.png in Resources */,
 				04B48ABD1E63F1EE006F7C99 /* navi_image@2x.png in Resources */,
 				04B48A1D1E63F1EE006F7C99 /* contact_reduce@3x.png in Resources */,
@@ -2288,6 +3091,7 @@
 				04B48A4B1E63F1EE006F7C99 /* gender_female@2x.png in Resources */,
 				04B48A231E63F1EE006F7C99 /* default_avatar@3x.png in Resources */,
 				04B48A611E63F1EE006F7C99 /* icon_back_white@2x.png in Resources */,
+				3416F61F1EFCEC880021934F /* RongCloud.bundle in Resources */,
 				04B489EC1E63F1EE006F7C99 /* access_arrow_gray_small@3x.png in Resources */,
 				04B48B191E63F1EE006F7C99 /* talk_voice_green-Connect@3x.png in Resources */,
 				04B48B0E1E63F1EE006F7C99 /* me_down@3x.png in Resources */,
@@ -2306,6 +3110,7 @@
 				04B48B141E63F1EE006F7C99 /* message_xinup@3x.png in Resources */,
 				04D7581D1C832A3700B62544 /* wsDB.sqlite in Resources */,
 				04B489F41E63F1EE006F7C99 /* add_friend_btn@2x.png in Resources */,
+				3416F5BF1EFCEC880021934F /* RongExtensionKit.strings in Resources */,
 				04B48A721E63F1EE006F7C99 /* icon_getpwd@3x.png in Resources */,
 				04B48A0B1E63F1EE006F7C99 /* call_chat_switch@3x.png in Resources */,
 				04B48A8D1E63F1EE006F7C99 /* icon_setting@3x.png in Resources */,
@@ -2321,7 +3126,6 @@
 				341B1BFD1ECBF85400128474 /* talk_emerg_pressing@2x.png in Resources */,
 				04B48A521E63F1EE006F7C99 /* global_button@3x.png in Resources */,
 				04B48B0C1E63F1EE006F7C99 /* explore_up@3x.png in Resources */,
-				043AD7F01E78FA00004A2529 /* RongCloud.bundle in Resources */,
 				04B48A761E63F1EE006F7C99 /* icon_location@3x.png in Resources */,
 				04B489ED1E63F1EE006F7C99 /* account_icon@2x.png in Resources */,
 				04B48A871E63F1EE006F7C99 /* icon_org@3x.png in Resources */,
@@ -2343,6 +3147,7 @@
 				341611461EBF23DF009F5F63 /* fileex_sound@3x.png in Resources */,
 				04B48A251E63F1EE006F7C99 /* delete_friend_btn@3x.png in Resources */,
 				04B48AAF1E63F1EE006F7C99 /* login_btn_down@3x.png in Resources */,
+				3416F5BE1EFCEC880021934F /* Emoji.plist in Resources */,
 				04B48B091E63F1EE006F7C99 /* explore_down@2x.png in Resources */,
 				04B48A281E63F1EE006F7C99 /* duihao_buok@2x.png in Resources */,
 				04B48B451E63F1EE006F7C99 /* yanzheng@2x.png in Resources */,
@@ -2357,7 +3162,9 @@
 				04B48B131E63F1EE006F7C99 /* message_xinup@2x.png in Resources */,
 				3416114F1EBF2D83009F5F63 /* delete_files@2x.png in Resources */,
 				04D6F5B01E657ECA00BE779B /* sharelocation_ring@2x.png in Resources */,
+				3416F61E1EFCEC880021934F /* RongCloudKit.strings in Resources */,
 				04B48A891E63F1EE006F7C99 /* icon_password2@3x.png in Resources */,
+				3416F6221EFCEC880021934F /* LICENSE.txt in Resources */,
 				04D5E9071B2FD354004D8CD9 /* Main.storyboard in Resources */,
 				04B48AD71E63F1EE006F7C99 /* gps@2x.png in Resources */,
 				04B48A551E63F1EE006F7C99 /* group_membs_pannel@2x.png in Resources */,
@@ -2374,6 +3181,7 @@
 				04B48A4D1E63F1EE006F7C99 /* gender_male@2x.png in Resources */,
 				04B48A7C1E63F1EE006F7C99 /* icon_mima@3x.png in Resources */,
 				04B48B071E63F1EE006F7C99 /* contacts_up@2x.png in Resources */,
+				3416F6211EFCEC880021934F /* Info.plist in Resources */,
 				04B48A131E63F1EE006F7C99 /* chat_switch@3x.png in Resources */,
 				04B48A101E63F1EE006F7C99 /* chat_group_memb_add@2x.png in Resources */,
 				04B48A751E63F1EE006F7C99 /* icon_location@2x.png in Resources */,
@@ -2446,7 +3254,6 @@
 				04B48AC91E63F1EE006F7C99 /* open_more@3x.png in Resources */,
 				04D5E9091B2FD354004D8CD9 /* Images.xcassets in Resources */,
 				04B48AC41E63F1EE006F7C99 /* normal_expand@2x.png in Resources */,
-				043AD7EF1E78FA00004A2529 /* RongCloudKit.strings in Resources */,
 				04B48B0A1E63F1EE006F7C99 /* explore_down@3x.png in Resources */,
 				04B48A561E63F1EE006F7C99 /* group_membs_pannel@3x.png in Resources */,
 				04E37B2C1E7518AD00595D3F /* file_selected_n@3x.png in Resources */,
@@ -2464,17 +3271,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3416F5EC1EFCEC880021934F /* RCCSAlertView.m in Sources */,
+				3416F5E71EFCEC880021934F /* RCLocalNotification.m in Sources */,
 				04861C251C649C840059135D /* SettingsViewController.m in Sources */,
 				04D41F331D040A99009F66C4 /* M80AttributedLabel.m in Sources */,
+				3416F5DD1EFCEC880021934F /* RCMessageBaseCell.m in Sources */,
+				3416F6161EFCEC880021934F /* RCPublicServiceProfileViewController.m in Sources */,
+				3416F5C71EFCEC880021934F /* RCCSEvaluateView.m in Sources */,
 				3448A68F1EFA4B93007B6148 /* User.m in Sources */,
 				34AB8CF11EC95A6300B342D4 /* RCPTTUtilities.m in Sources */,
 				04B48BE71E63F28C006F7C99 /* RCAnnotation.m in Sources */,
 				0443C62F1C58A2EC00EE25A1 /* DataSync.m in Sources */,
+				3416F5F61EFCEC880021934F /* RCImageMessageProgressView.m in Sources */,
+				3416F60E1EFCEC880021934F /* RCPublicServiceProfilePlainCell.m in Sources */,
+				3416F6271EFCEC880021934F /* RCloudFMResultSet.m in Sources */,
+				3416F6131EFCEC880021934F /* RCPublicServiceChatListViewController.m in Sources */,
 				04D5EC341B2FD6B8004D8CD9 /* MJRefreshFooterView.m in Sources */,
 				04B48BDF1E63F28C006F7C99 /* FMDatabaseAdditions.m in Sources */,
+				3416F5C91EFCEC880021934F /* RCCSLeaveMessagesCell.m in Sources */,
 				04B48BFC1E63F28C006F7C99 /* RCAnimatedImagesView.m in Sources */,
 				04B48BE51E63F28C006F7C99 /* RCDUserInfo.m in Sources */,
 				04B48BE01E63F28C006F7C99 /* FMDatabasePool.m in Sources */,
+				3416F6021EFCEC880021934F /* RCConversationCellUpdateInfo.m in Sources */,
+				3416F62C1EFCEC880021934F /* RCThreadSafeMutableDictionary.m in Sources */,
+				3416F5D11EFCEC880021934F /* RCLocationViewController.m in Sources */,
 				04D758151C8329D400B62544 /* WSUser.m in Sources */,
 				04D5EC471B2FD6B8004D8CD9 /* UIButton+WebCache.m in Sources */,
 				04B48B821E63F270006F7C99 /* WSGroup.m in Sources */,
@@ -2485,7 +3305,10 @@
 				3419516D1EACEE1C004D6BFF /* TFMsgSound.m in Sources */,
 				04D5EC451B2FD6B8004D8CD9 /* SDWebImageManager.m in Sources */,
 				04D5EC3A1B2FD6B8004D8CD9 /* SBJson4StreamTokeniser.m in Sources */,
+				3416F60A1EFCEC880021934F /* RCPublicServiceMultiImgTxtCellContentCell.m in Sources */,
+				3416F6101EFCEC880021934F /* RCPublicServiceProfileTelCell.m in Sources */,
 				04B48BF91E63F28C006F7C99 /* DefaultPortraitView.m in Sources */,
+				3416F5CD1EFCEC880021934F /* RCCustomerServiceGroupListController.m in Sources */,
 				04B48B791E63F23F006F7C99 /* SearchContactResultView.m in Sources */,
 				04B48B731E63F23F006F7C99 /* MyRecContactsViewController.m in Sources */,
 				34AB8CEA1EC95A4000B342D4 /* RCPTT.m in Sources */,
@@ -2493,41 +3316,67 @@
 				04D97ACC1C79751700DEC2CD /* ContactsViewController.m in Sources */,
 				34AB8CEC1EC95A4000B342D4 /* RCPTTHeadCollectionView.m in Sources */,
 				04D5EC631B2FD6B8004D8CD9 /* KeyboardBar.m in Sources */,
+				3416F6181EFCEC880021934F /* RCSearchItemView.m in Sources */,
 				04E107A51B9ED66600A5280B /* DataMatrix.mm in Sources */,
 				04D5EC431B2FD6B8004D8CD9 /* SDWebImageDownloader.m in Sources */,
+				3416F5ED1EFCEC880021934F /* RCRobotEvaluationView.m in Sources */,
 				04B48C001E63F28C006F7C99 /* RCDUIBarButtonItem.m in Sources */,
+				3416F5F91EFCEC880021934F /* RCNetworkIndicatorView.m in Sources */,
+				3416F5F81EFCEC880021934F /* RCMessageBubbleTipView.m in Sources */,
 				04B48BEC1E63F28C006F7C99 /* RealTimeLocationStartCell.m in Sources */,
 				04DC65191B81AB5B00F46825 /* RCJUser.m in Sources */,
 				04DC65041B8189BE00F46825 /* SigninViewController.m in Sources */,
+				3416F5D61EFCEC880021934F /* RCConversationDetailContentView.m in Sources */,
 				04D5EC351B2FD6B8004D8CD9 /* MJRefreshHeaderView.m in Sources */,
+				3416F5E91EFCEC880021934F /* RCVoicePlayer.m in Sources */,
+				3416F5D31EFCEC880021934F /* UIView+RCCSStar.m in Sources */,
 				04B48C051E63F28C006F7C99 /* UITextFiled+Shake.m in Sources */,
+				3416F5CF1EFCEC880021934F /* RCImagePreviewController.m in Sources */,
 				04D5EC641B2FD6B8004D8CD9 /* RRScrollView.m in Sources */,
 				04DBF2821C5F0C91004DCDAD /* ProgressView.m in Sources */,
+				3416F6001EFCEC880021934F /* RCMessageCollectionViewFlowLayout.m in Sources */,
 				3416113B1EBF1535009F5F63 /* ChatPhotosView.m in Sources */,
 				04D5EC411B2FD6B8004D8CD9 /* SDWebImageCompat.m in Sources */,
 				04B48B7B1E63F23F006F7C99 /* SetUInfoViewController.m in Sources */,
+				3416F6031EFCEC880021934F /* RCConversationModel.m in Sources */,
 				04D5EC6E1B2FD6B8004D8CD9 /* CMTabBarController.m in Sources */,
 				04D5EE9F1B2FD7D9004D8CD9 /* BaseViewController.m in Sources */,
+				3416F61A1EFCEC880021934F /* RCloudCache.m in Sources */,
+				3416F6151EFCEC880021934F /* RCPublicServiceListViewController.m in Sources */,
+				3416F5E41EFCEC880021934F /* RCTipMessageCell.m in Sources */,
+				3416F62A1EFCEC880021934F /* RCConversationInfoCache.m in Sources */,
+				3416F5D01EFCEC880021934F /* RCImageSlideController.m in Sources */,
 				04E3C5581C27ADB700B560CD /* EditPasswordViewController.m in Sources */,
 				04B48BE31E63F28C006F7C99 /* RCDataBaseManager.m in Sources */,
 				04D5EC6B1B2FD6B8004D8CD9 /* Utls.m in Sources */,
 				04B48B811E63F270006F7C99 /* TeamOrg.m in Sources */,
+				3416F6241EFCEC880021934F /* RCloudFMDatabaseAdditions.m in Sources */,
 				04D431291BF2FFB4005A0420 /* MyCodeViewController.mm in Sources */,
 				04D5EC5C1B2FD6B8004D8CD9 /* ZDProgressView.m in Sources */,
 				04E37B311E75236800595D3F /* ForwardContactViewController.m in Sources */,
+				3416F5EA1EFCEC880021934F /* RCCustomIOSAlertView.m in Sources */,
 				04D5EC331B2FD6B8004D8CD9 /* MJRefreshBaseView.m in Sources */,
 				04D6BAF61C1EAAE4001AD1B8 /* MenuView.m in Sources */,
 				04DBF2881C5F359A004DCDAD /* ResetPwdViewController.m in Sources */,
+				3416F60C1EFCEC880021934F /* RCPublicServiceProfileActionCell.m in Sources */,
+				3416F6011EFCEC880021934F /* RCMessageCollectionViewLayoutAttributes.m in Sources */,
 				04B48BE41E63F28C006F7C99 /* RCDGroupInfo.m in Sources */,
 				04413C101C16FC4900D09218 /* ChatViewController.m in Sources */,
+				3416F6111EFCEC880021934F /* RCPublicServiceProfileUrlCell.m in Sources */,
 				04B48B7A1E63F23F006F7C99 /* SearchContactViewController.mm in Sources */,
+				3416F5DC1EFCEC880021934F /* RCLocationMessageCell.m in Sources */,
 				04D5EC611B2FD6B8004D8CD9 /* CustomPickerView.m in Sources */,
+				3416F60B1EFCEC880021934F /* RCPublicServiceMultiImgTxtCellHeaderCell.m in Sources */,
 				3448A68D1EFA4B93007B6148 /* iHttpAdmin.m in Sources */,
 				04B48BFB1E63F28C006F7C99 /* pinyin.c in Sources */,
+				3416F6141EFCEC880021934F /* RCPublicServiceChatViewController.m in Sources */,
 				04D5EC161B2FD6B8004D8CD9 /* Base64.m in Sources */,
+				3416F5CE1EFCEC880021934F /* RCFilePreviewViewController.m in Sources */,
+				3416F5D91EFCEC880021934F /* RCCSPullLeaveMessageCell.m in Sources */,
 				04D5EC3F1B2FD6B8004D8CD9 /* NSData+GIF.m in Sources */,
 				04B48BFA1E63F28C006F7C99 /* MBProgressHUD.m in Sources */,
 				04D90E4C1D0ED50E006A82BC /* SSUser.m in Sources */,
+				3416F6051EFCEC880021934F /* RCMessageCellNotificationModel.m in Sources */,
 				04B48BFF1E63F28C006F7C99 /* RCDTextFieldValidate.m in Sources */,
 				34AB8CE81EC95A4000B342D4 /* RCPTTEndMessageCell.m in Sources */,
 				04D5EC491B2FD6B8004D8CD9 /* UIImageView+WebCache.m in Sources */,
@@ -2543,86 +3392,148 @@
 				04D5EC681B2FD6B8004D8CD9 /* UIImage+ImageEffects.m in Sources */,
 				3416BC431ED97685007E6F9C /* RCDSearchView.m in Sources */,
 				04D41F341D040A99009F66C4 /* M80AttributedLabelAttachment.m in Sources */,
+				3416F5EF1EFCEC880021934F /* RCContentView.m in Sources */,
+				3416F5FC1EFCEC880021934F /* RCExtensionMessageCellInfo.m in Sources */,
 				3448A6911EFA4BA0007B6148 /* UILabel+ContentSize.m in Sources */,
 				04B48BE91E63F28C006F7C99 /* RCLocationConvert.m in Sources */,
+				3416F61B1EFCEC880021934F /* RCloudImageLoadConnection.m in Sources */,
 				04D5EC3D1B2FD6B8004D8CD9 /* SBJson4Writer.m in Sources */,
+				3416F5D41EFCEC880021934F /* RCConversationBaseCell.m in Sources */,
 				04B48B751E63F23F006F7C99 /* PhotoAlbumViewController.m in Sources */,
 				340BB00A1EF7654300F70E10 /* ExploreViewController.m in Sources */,
+				3416F5E21EFCEC880021934F /* RCRichContentMessageCell.m in Sources */,
+				3416F5C61EFCEC880021934F /* RCConversationViewController.m in Sources */,
 				04A0EA491CC77CD000A5BC7D /* SHA1.m in Sources */,
+				3416F5F21EFCEC880021934F /* RCConversationSettingTableViewCell.m in Sources */,
 				04D7A2191D2A147300D67EC6 /* HttpFileGetter.m in Sources */,
 				34AB8CED1EC95A4000B342D4 /* RCPTTStatusView.m in Sources */,
 				04E107A81B9ED66600A5280B /* QREncoder.mm in Sources */,
+				3416F5D71EFCEC880021934F /* RCConversationHeaderView.m in Sources */,
 				04B48B771E63F23F006F7C99 /* RealTimeTalkView.m in Sources */,
+				3416F5E31EFCEC880021934F /* RCTextMessageCell.m in Sources */,
 				04D5EE971B2FD6B8004D8CD9 /* NetworkChecker.m in Sources */,
 				04E107A61B9ED66600A5280B /* QR_Encode.cpp in Sources */,
 				04B48BF41E63F28C006F7C99 /* RCDSearchMoreController.m in Sources */,
 				04DB97CC1D10F90400DB95D7 /* WaitDialog.m in Sources */,
+				3416F5DB1EFCEC880021934F /* RCImageMessageCell.m in Sources */,
 				34AB8CE71EC95A4000B342D4 /* RCPTTBeginMessageCell.m in Sources */,
+				3416F6081EFCEC880021934F /* RCPublicServiceListViewCell.m in Sources */,
 				3416113E1EBF1AEC009F5F63 /* ChatFilesView.m in Sources */,
 				341B1C011ECBF9B700128474 /* EmergCallView.m in Sources */,
+				3416F5F31EFCEC880021934F /* RCConversationSettingTableViewController.m in Sources */,
+				3416F5F11EFCEC880021934F /* RCConversationSettingClearMessageCell.m in Sources */,
 				34AB8CE91EC95A4000B342D4 /* RCPTTKitExtensionModule.m in Sources */,
 				0476BE161BA02C6600C75FB2 /* EditNameViewController.m in Sources */,
 				04B48C011E63F28C006F7C99 /* RCDUtilities.m in Sources */,
+				3416F60F1EFCEC880021934F /* RCPublicServiceProfileRcvdMsgCell.m in Sources */,
 				04D5EEA21B2FD834004D8CD9 /* MessagesViewController.m in Sources */,
+				3416F5D51EFCEC880021934F /* RCConversationCell.m in Sources */,
+				3416F62E1EFCEC880021934F /* RCUserInfoCacheDBHelper.m in Sources */,
 				04D5F8291B3281D400BDE010 /* MeViewController.m in Sources */,
 				04D5EC6D1B2FD6B8004D8CD9 /* CMNavigationController.m in Sources */,
+				3416F5CA1EFCEC880021934F /* RCCSSolveView.m in Sources */,
+				3416F5D81EFCEC880021934F /* RCConversationStatusView.m in Sources */,
+				3416F5C81EFCEC880021934F /* RCCSLeaveMessageController.m in Sources */,
+				3416F61D1EFCEC880021934F /* RCloudImageView.m in Sources */,
+				3416F6291EFCEC880021934F /* RCConversationInfo.m in Sources */,
+				3416F5F41EFCEC880021934F /* RCConversationSettingTableViewHeader.m in Sources */,
 				04B48B6D1E63F23F006F7C99 /* GlobalTouchButtonView.m in Sources */,
 				04D41F351D040A99009F66C4 /* M80AttributedLabelURL.m in Sources */,
 				04D5E9011B2FD354004D8CD9 /* AppDelegate.m in Sources */,
 				04B48B781E63F23F006F7C99 /* ResetPwdStep2ViewController.m in Sources */,
+				3416F5C51EFCEC880021934F /* RCConversationListViewController.m in Sources */,
+				3416F61C1EFCEC880021934F /* RCloudImageLoader.m in Sources */,
+				3416F6261EFCEC880021934F /* RCloudFMDatabaseQueue.m in Sources */,
 				04D5EE9A1B2FD6B8004D8CD9 /* GoGoDB.m in Sources */,
+				3416F6091EFCEC880021934F /* RCPublicServiceMultiImgTxtCell.m in Sources */,
+				3416F6171EFCEC880021934F /* RCPublicServiceSearchViewController.m in Sources */,
 				04B48BE21E63F28C006F7C99 /* FMResultSet.m in Sources */,
+				3416F6311EFCEC880021934F /* RCKitUtility.m in Sources */,
+				3416F6061EFCEC880021934F /* RCMessageModel.m in Sources */,
 				04B48BE81E63F28C006F7C99 /* RCAnnotationView.m in Sources */,
 				04B48B721E63F23F006F7C99 /* MyGroupsViewController.m in Sources */,
+				3416F5DA1EFCEC880021934F /* RCFileMessageCell.m in Sources */,
 				04B48BFD1E63F28C006F7C99 /* RCDNavigationBar.m in Sources */,
+				3416F5F01EFCEC880021934F /* RCConversationCollectionViewHeader.m in Sources */,
 				04B48C041E63F28C006F7C99 /* UIImage+RCImage.m in Sources */,
 				04B48BF51E63F28C006F7C99 /* RCDSearchMoreViewCell.m in Sources */,
+				3416F5E51EFCEC880021934F /* RCUnknownMessageCell.m in Sources */,
 				04B48B741E63F23F006F7C99 /* OrgGraphicViewController.m in Sources */,
+				3416F6041EFCEC880021934F /* RCCustomerServiceMessageModel.m in Sources */,
 				04B48BF71E63F28C006F7C99 /* RCDSearchResultViewCell.m in Sources */,
+				3416F5D21EFCEC880021934F /* RCSettingViewController.m in Sources */,
+				3416F6191EFCEC880021934F /* RCIM.m in Sources */,
 				04B48BE11E63F28C006F7C99 /* FMDatabaseQueue.m in Sources */,
 				34AB8CEB1EC95A4000B342D4 /* RCPTTAnimationView.m in Sources */,
+				3416F5FB1EFCEC880021934F /* RCTipLabel.m in Sources */,
+				3416F5E61EFCEC880021934F /* RCVoiceMessageCell.m in Sources */,
 				04B48B7C1E63F23F006F7C99 /* TeamMembersViewController.m in Sources */,
 				04B48B711E63F23F006F7C99 /* MsgSettingsViewController.m in Sources */,
+				3416F62B1EFCEC880021934F /* RCConversationUserInfoCache.m in Sources */,
 				04B48BF01E63F28C006F7C99 /* RCDLabel.m in Sources */,
 				04D827471E67E9CC00E94812 /* RCPTTCallAcionView.m in Sources */,
 				04D5EC3C1B2FD6B8004D8CD9 /* SBJson4StreamWriterState.m in Sources */,
 				04A269EC1D4F657B00024A06 /* FanCell.m in Sources */,
 				04D5EC371B2FD6B8004D8CD9 /* SBJson4Parser.m in Sources */,
+				3416F5C41EFCEC880021934F /* RCBaseViewController.m in Sources */,
 				04D5EC391B2FD6B8004D8CD9 /* SBJson4StreamParserState.m in Sources */,
+				3416F60D1EFCEC880021934F /* RCPublicServiceProfileOwnerCell.m in Sources */,
 				04B48B701E63F23F006F7C99 /* JPrivateChatInfoViewController.m in Sources */,
 				04D5EC421B2FD6B8004D8CD9 /* SDWebImageDecoder.m in Sources */,
 				04D5EC5E1B2FD6B8004D8CD9 /* CircleProgressView.m in Sources */,
 				04D41F361D040A99009F66C4 /* NSMutableAttributedString+M80.m in Sources */,
 				04B48BED1E63F28C006F7C99 /* RealTimeLocationStatusView.m in Sources */,
+				3416F62F1EFCEC880021934F /* RCUserInfoCacheManager.m in Sources */,
 				04D7CDDF1D36723C00AC2099 /* PhotoGetter.m in Sources */,
 				04E1076C1B9EC5B200A5280B /* ProfileViewController.m in Sources */,
 				04D7581C1C832A3700B62544 /* wsDB.m in Sources */,
+				3416F5FF1EFCEC880021934F /* RCCollectionCellAttributes.m in Sources */,
 				04D5E8FE1B2FD354004D8CD9 /* main.m in Sources */,
 				04B48BEB1E63F28C006F7C99 /* RealTimeLocationEndCell.m in Sources */,
 				04B48C031E63F28C006F7C99 /* UIColor+RCColor.m in Sources */,
+				3416F5FA1EFCEC880021934F /* RCRecallMessageImageView.m in Sources */,
 				04D5EC5F1B2FD6B8004D8CD9 /* ClassFactory.m in Sources */,
+				3416F5CB1EFCEC880021934F /* RCCSStarView.m in Sources */,
+				3416F5E01EFCEC880021934F /* RCOldMessageNotificationMessage.m in Sources */,
+				3416F5FD1EFCEC880021934F /* RongIMKitExtensionManager.m in Sources */,
 				04B48BF61E63F28C006F7C99 /* RCDSearchResultModel.m in Sources */,
+				3416F5EE1EFCEC880021934F /* RCAttributedLabel.m in Sources */,
 				04D5EC3B1B2FD6B8004D8CD9 /* SBJson4StreamWriter.m in Sources */,
 				0443C6381C58C27100EE25A1 /* NSDate-Helper.m in Sources */,
 				04D6BAEE1C1E71B0001AD1B8 /* ShootQRCode.m in Sources */,
 				04B48B6E1E63F23F006F7C99 /* GMembersViewController.m in Sources */,
 				04B48BEA1E63F28C006F7C99 /* RCLocationView.m in Sources */,
 				04D5EC651B2FD6B8004D8CD9 /* RRStyleLabel.m in Sources */,
+				3416F5CC1EFCEC880021934F /* RCCustomerServiceGroupCell.m in Sources */,
 				04B48BEF1E63F28C006F7C99 /* JRCDSearchView.m in Sources */,
 				04D5EC461B2FD6B8004D8CD9 /* SDWebImagePrefetcher.m in Sources */,
+				3416F6321EFCEC880021934F /* RCSuspendMessage.m in Sources */,
 				04B48BDE1E63F28C006F7C99 /* FMDatabase.m in Sources */,
 				04DBF2851C5F1144004DCDAD /* PhotoView.m in Sources */,
 				04D5EC3E1B2FD6B8004D8CD9 /* MKAnnotationView+WebCache.m in Sources */,
 				04B48C021E63F28C006F7C99 /* RCUnderlineTextField.m in Sources */,
 				04B48B6C1E63F23F006F7C99 /* ChooseManagerViewController.m in Sources */,
 				04D5EC661B2FD6B8004D8CD9 /* UIButton+Color.m in Sources */,
+				3416F6071EFCEC880021934F /* RCPublicServiceImgTxtMsgCell.m in Sources */,
 				04D575821C15790C0038A523 /* HTopicCell.m in Sources */,
+				3416F5E11EFCEC880021934F /* RCOldMessageNotificationMessageCell.m in Sources */,
+				3416F5F71EFCEC880021934F /* RCInputBarView.m in Sources */,
 				04D5EC621B2FD6B8004D8CD9 /* DashLine.m in Sources */,
 				044F8D3B1D28A9AF00D92773 /* CustomDatePickerView.m in Sources */,
+				3416F6301EFCEC880021934F /* RCHandShakeMessage.m in Sources */,
+				3416F6251EFCEC880021934F /* RCloudFMDatabasePool.m in Sources */,
 				04B48BEE1E63F28C006F7C99 /* RealTimeLocationViewController.m in Sources */,
 				3448A68E1EFA4B93007B6148 /* UserDefaultsKV.m in Sources */,
+				3416F5F51EFCEC880021934F /* RCConversationSettingTableViewHeaderItem.m in Sources */,
+				3416F5E81EFCEC880021934F /* RCSystemSoundPlayer.m in Sources */,
+				3416F62D1EFCEC880021934F /* RCUserInfoCache.m in Sources */,
 				04D5EC481B2FD6B8004D8CD9 /* UIImage+GIF.m in Sources */,
+				3416F5DE1EFCEC880021934F /* RCMessageCell.m in Sources */,
+				3416F5EB1EFCEC880021934F /* RCAdminEvaluationView.m in Sources */,
 				04D5EC5D1B2FD6B8004D8CD9 /* AudioPlayer.m in Sources */,
+				3416F6121EFCEC880021934F /* RCPublicServiceSearchHintCell.m in Sources */,
+				3416F6281EFCEC880021934F /* RCUserInfoUpdateMessage.m in Sources */,
+				3416F6231EFCEC880021934F /* RCloudFMDatabase.m in Sources */,
 				04B48BF11E63F28C006F7C99 /* RCDSearchBar.m in Sources */,
 				04B48B761E63F23F006F7C99 /* PhotosViewController.m in Sources */,
 				04B48BF31E63F28C006F7C99 /* RCDSearchHistoryMessageController.m in Sources */,
@@ -2633,15 +3544,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		043AD7DF1E78FA00004A2529 /* RongCloudKit.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				043AD7E01E78FA00004A2529 /* en */,
-				043AD7E31E78FA00004A2529 /* zh-Hans */,
-			);
-			name = RongCloudKit.strings;
-			sourceTree = "<group>";
-		};
 		04D5E9051B2FD354004D8CD9 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2665,6 +3567,24 @@
 				04D766511D350F08006471B2 /* English */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		3416F4B31EFCEC870021934F /* RongExtensionKit.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3416F4B41EFCEC870021934F /* en */,
+				3416F4B61EFCEC870021934F /* zh-Hans */,
+			);
+			name = RongExtensionKit.strings;
+			sourceTree = "<group>";
+		};
+		3416F58A1EFCEC870021934F /* RongCloudKit.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3416F58B1EFCEC870021934F /* en */,
+				3416F58D1EFCEC870021934F /* zh-Hans */,
+			);
+			name = RongCloudKit.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -2770,6 +3690,8 @@
 					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/RongCloud_iOS_IMKit_2.8.6_PrivateCloud_V1.4",
 					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/RongCloud_iOS_IMLib_2.8.6_PrivateCloud_V1.4",
 					"$(PROJECT_DIR)/SupportAddons/RongCloud_private",
+					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/ios-rongimkit/framework",
+					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/ios-rongimkit/RongIMKit/rongimlib",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Hint/Hint-Prefix.pch";
@@ -2782,6 +3704,8 @@
 					"$(PROJECT_DIR)/SupportAddons/UMAnalytics_Sdk_3.6.6",
 					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/RongCloud_iOS_IMLib_2.8.6_PrivateCloud_V1.4",
 					"$(PROJECT_DIR)/Common",
+					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/ios-rongimkit/ExtensionKit",
+					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/ios-rongimkit/framework",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = cn.rongcloud.livechat;
@@ -2806,6 +3730,8 @@
 					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/RongCloud_iOS_IMKit_2.8.6_PrivateCloud_V1.4",
 					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/RongCloud_iOS_IMLib_2.8.6_PrivateCloud_V1.4",
 					"$(PROJECT_DIR)/SupportAddons/RongCloud_private",
+					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/ios-rongimkit/framework",
+					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/ios-rongimkit/RongIMKit/rongimlib",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Hint/Hint-Prefix.pch";
@@ -2818,6 +3744,8 @@
 					"$(PROJECT_DIR)/SupportAddons/UMAnalytics_Sdk_3.6.6",
 					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/RongCloud_iOS_IMLib_2.8.6_PrivateCloud_V1.4",
 					"$(PROJECT_DIR)/Common",
+					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/ios-rongimkit/ExtensionKit",
+					"$(PROJECT_DIR)/SupportAddons/RongCloud_private/ios-rongimkit/framework",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = cn.rongcloud.livechat;

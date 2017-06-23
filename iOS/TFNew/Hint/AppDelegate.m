@@ -12,8 +12,8 @@
 #import "CMTabBarController.h"
 #import "UserDefaultsKV.h"
 
-#import <RongIMKit/RongIMKit.h>
-#import <RongIMKit/RCIM.h>
+#import "RongIMKit.h"
+#import "RCIM.h"
 //#import <RongIMLib/RongIMLib.h>
 #import "RCPTT.h"
 

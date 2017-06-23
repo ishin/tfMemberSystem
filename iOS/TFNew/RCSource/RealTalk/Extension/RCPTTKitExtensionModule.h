@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <RongIMKit/RongIMKit.h>
+#import "RongIMKit.h"
 
 /**
  extension核心类，删除的话会导致无法正常启动ptt功能

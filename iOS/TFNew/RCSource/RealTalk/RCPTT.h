@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <RongIMKit/RongIMKit.h>
+#import "RongIMKit.h"
 #import <RongPTTLib/RongPTTLib.h>
 
 /*

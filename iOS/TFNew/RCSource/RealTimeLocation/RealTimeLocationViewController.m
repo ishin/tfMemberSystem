@@ -15,7 +15,7 @@
 #import "RCLocationConvert.h"
 #import "RCLocationView.h"
 #import <MapKit/MapKit.h>
-#import <RongIMKit/RongIMKit.h>
+#import "RongIMKit.h"
 #import "UIColor+RCColor.h"
 #import "UserDefaultsKV.h"
 

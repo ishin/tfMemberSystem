@@ -7,7 +7,7 @@
 //
 
 #import "HTopicCell.h"
-#import <RongIMKit/RongIMKit.h>
+#import "RongIMKit.h"
 #import "UIImageView+WebCache.h"
 #import "UILabel+ContentSize.h"
 #import "GoGoDB.h"
