@@ -193,9 +193,12 @@ $(document).ready(function(){
             }
             sImgSrc=eTarget.attr('src');
             sType=eTarget.attr('data-type');
+            var base64Str = eTarget.attr('thumbnail')
             oCopy.fileUrl=sImgSrc;
             oCopy.imageUri=sImgSrc;
             oCopy.type=sType;
+            oCopy.base64Str = base64Str;
+            oCopy.content = base64Str;
             var sCopy=JSON.stringify(oCopy);
             window.localStorage.setItem('copy',sCopy);
         }else{
@@ -265,27 +268,19 @@ $(document).ready(function(){
                             sendByRongFile(sFile,targetId,targetType,'',nSendTime);
                         }
                     }else{//转发到个人
-                        sendAjax('friend!addFriend',{account:account,friend:converseACount[0]},function(data){
-                            var datas = JSON.parse(data);
-                            if(datas.code==1){
-
-                                if(sImgSrc){
-                                    var extra = "uploadFile";
-                                    sendByRongImg(oPast,targetId,targetType,nSendTime);
-                                }else if(sInfoContent){
-                                    var uniqueTime = new Date().getTime();
-                                    sendByRong(sInfoContent,targetId,targetType,extra,uniqueTime);
-                                }else if(sFile){
-                                    sFile.filepaste=1;
-                                    var extra = "uploadFile";
-                                    var fileInfo=JSON.stringify(sFile);
-                                    //sendMsg(fileInfo,targetId,targetType,extra,'',nSendTime);
-                                    sendByRongFile(sFile,targetId,targetType,'',nSendTime);
-                                }
-                            }else{
-                                alert('失败!'+datas.text);
-                            }
-                        })
+                        if(sImgSrc){
+                            var extra = "uploadFile";
+                            sendByRongImg(oPast,targetId,targetType,nSendTime);
+                        }else if(sInfoContent){
+                            var uniqueTime = new Date().getTime();
+                            sendByRong(sInfoContent,targetId,targetType,extra,uniqueTime);
+                        }else if(sFile){
+                            sFile.filepaste=1;
+                            var extra = "uploadFile";
+                            var fileInfo=JSON.stringify(sFile);
+                            //sendMsg(fileInfo,targetId,targetType,extra,'',nSendTime);
+                            sendByRongFile(sFile,targetId,targetType,'',nSendTime);
+                        }
                     }
                     $('.manageCancle').click();
 

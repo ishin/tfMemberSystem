@@ -178,8 +178,9 @@ function sendMsg(content,targetId,way,extra,callback,uniqueTime){
             }
         }else{//上传的是图片类型的文件
             var sImgSrc=sendMsg.fileUrl || globalVar.cssImgSrc+'imgLoading.gif';
+            var base64Str = sendMsg.base64Str;
             var sHTML = '<li class="mr-chatContentR clearfix" uniqueTime="'+nSendTime+'">'+
-                '<div class=" mr-ownImg"><img uniqueTime="'+uniqueTime+'" src="'+sImgSrc+'" class="uploadImg uploadImgFile" data-type="'+sendMsg.type+'">'+
+                '<div class=" mr-ownImg"><img thumbnail="'+base64Str+'"  uniqueTime="'+uniqueTime+'" src="'+sImgSrc+'" class="uploadImg uploadImgFile" data-type="'+sendMsg.type+'">'+
                 '<em class="infoLoading"  infoTime="'+nSendTime+'"></em></div></li>';
         }
     }else{//如果是普通消息
@@ -763,6 +764,7 @@ function sessionContent(sDoM,sTargetId,sContent,extra,sSentTime,targetType){
                 '</li>';
                 break;
             case "ImageMessage":
+                var thumbnail = sContent.content
                 var sImgUrl=sContent.imageUri;
                 var sImageType='';
                 if(sImgUrl){
@@ -788,7 +790,7 @@ function sessionContent(sDoM,sTargetId,sContent,extra,sSentTime,targetType){
                 }
                 sDoM += ' <li class="mr-chatContentL clearfix" data-t="'+sSentTime+'">'+
                 '<img class="headImg" src="'+sImg+'">'+
-                '<div class="mr-otherImg"><img src="'+sContent.imageUri+'" class="uploadImgLeft uploadImgFile" data-type="'+sImageType+'"></div>'+
+                '<div class="mr-otherImg"><img thumbnail="'+thumbnail+'" src="'+sContent.imageUri+'" class="uploadImgLeft uploadImgFile" data-type="'+sImageType+'"></div>'+
                 '<span class="sendSuccess"></span>'+
                 '</li>';
                 break;
@@ -888,6 +890,7 @@ function sessionContent(sDoM,sTargetId,sContent,extra,sSentTime,targetType){
                 break;
             case "ImageMessage":
                 var sImgUrl=sContent.imageUri;
+                var thumbnail = sContent.content
                 if(sImgUrl){
                     var sImgName=sImgUrl.split('attname=')[1];
                     var  sImgType=sImgName.split('.')[1];
@@ -904,7 +907,7 @@ function sessionContent(sDoM,sTargetId,sContent,extra,sSentTime,targetType){
                             break;
                     }
                     sDoM += ' <li class="mr-chatContentR clearfix" data-t="'+sSentTime+'">'+
-                    '<div class=" mr-ownImg"><img src="'+sContent.imageUri+'" class="uploadImg uploadImgFile" data-type="'+sImageType+'"></div>'+
+                    '<div class=" mr-ownImg"><img thumbnail="'+thumbnail+'" src="'+sContent.imageUri+'" class="uploadImg uploadImgFile" data-type="'+sImageType+'"></div>'+
                     '<span class="sendSuccess"></span>'+
                     '</li>';
                 }
