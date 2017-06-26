@@ -532,7 +532,105 @@
 }
 
 + (NSString *)getFileTypeIcon:(NSString *)fileType {
-  return [RCExtensionUtility getFileTypeIcon:fileType];
+  
+    
+
+        fileType = [fileType lowercaseString];
+        
+        if ([fileType isEqualToString:@"png"] ||
+            [fileType isEqualToString:@"jpg"] ||
+            [fileType isEqualToString:@"bmp"] ||
+            [fileType isEqualToString:@"cod"] ||
+            [fileType isEqualToString:@"jpg"] ||
+            [fileType isEqualToString:@"gif"] ||
+            [fileType isEqualToString:@"jpe"] ||
+            [fileType isEqualToString:@"jpeg"]||
+            [fileType isEqualToString:@"jfif"]||
+            [fileType isEqualToString:@"svg"] ||
+            [fileType isEqualToString:@"tif"] ||
+            [fileType isEqualToString:@"tiff"]||
+            [fileType isEqualToString:@"ras"] ||
+            [fileType isEqualToString:@"ico"] ||
+            [fileType isEqualToString:@"pbm"] ||
+            [fileType isEqualToString:@"pgm"] ||
+            [fileType isEqualToString:@"pnm"] ||
+            [fileType isEqualToString:@"ppm"] ||
+            [fileType isEqualToString:@"xbm"] ||
+            [fileType isEqualToString:@"xpm"] ||
+            [fileType isEqualToString:@"xwd"] ||
+            [fileType isEqualToString:@"rgb"]) {
+            return @"PictureFile";
+        } else if ([fileType isEqualToString:@"log"] ||
+                   [fileType isEqualToString:@"txt"] ||
+                   [fileType isEqualToString:@"html"]||
+                   [fileType isEqualToString:@"stm"] ||
+                   [fileType isEqualToString:@"uls"] ||
+                   [fileType isEqualToString:@"bas"] ||
+                   [fileType isEqualToString:@"c"]   ||
+                   [fileType isEqualToString:@"h"]   ||
+                   [fileType isEqualToString:@"rtf"] ||
+                   [fileType isEqualToString:@"sct"] ||
+                   [fileType isEqualToString:@"tsv"] ||
+                   [fileType isEqualToString:@"htt"] ||
+                   [fileType isEqualToString:@"htc"] ||
+                   [fileType isEqualToString:@"etx"] ||
+                   [fileType isEqualToString:@"vcf"]) {
+            return @"TextFile";
+        } else if ([fileType isEqualToString:@"mp3"] ||
+                   [fileType isEqualToString:@"au"]  ||
+                   [fileType isEqualToString:@"snd"] ||
+                   [fileType isEqualToString:@"mid"] ||
+                   [fileType isEqualToString:@"rmi"] ||
+                   [fileType isEqualToString:@"aif"] ||
+                   [fileType isEqualToString:@"aifc"]||
+                   [fileType isEqualToString:@"m3u"] ||
+                   [fileType isEqualToString:@"ra"]  ||
+                   [fileType isEqualToString:@"ram"] ||
+                   [fileType isEqualToString:@"wav"] ||
+                   [fileType isEqualToString:@"wma"]) {
+            return @"Mp3File";
+        } else if ([fileType isEqualToString:@"pdf"]) {
+            return @"PdfFile";
+        } else if ([fileType isEqualToString:@"doc"] ||
+                   [fileType isEqualToString:@"docx"]||
+                   [fileType isEqualToString:@"dot"]) {
+            return @"WordFile";
+        } else if ([fileType isEqualToString:@"xls"] ||
+                   [fileType isEqualToString:@"xlsx"]||
+                   [fileType isEqualToString:@"xlc"] ||
+                   [fileType isEqualToString:@"xlm"] ||
+                   [fileType isEqualToString:@"xla"] ||
+                   [fileType isEqualToString:@"xlt"] ||
+                   [fileType isEqualToString:@"xlw"]) {
+            return @"ExcelFile";
+        } else if ([fileType isEqualToString:@"mp4"] ||
+                   [fileType isEqualToString:@"mov"] ||
+                   [fileType isEqualToString:@"rmvb"]||
+                   [fileType isEqualToString:@"avi"] ||
+                   [fileType isEqualToString:@"mp2"] ||
+                   [fileType isEqualToString:@"xpa"] ||
+                   [fileType isEqualToString:@"xpe"] ||
+                   [fileType isEqualToString:@"mpeg"]||
+                   [fileType isEqualToString:@"mpg"] ||
+                   [fileType isEqualToString:@"mpv2"]||
+                   [fileType isEqualToString:@"qt"]  ||
+                   [fileType isEqualToString:@"lsf"] ||
+                   [fileType isEqualToString:@"lsx"] ||
+                   [fileType isEqualToString:@"asf"] ||
+                   [fileType isEqualToString:@"asr"] ||
+                   [fileType isEqualToString:@"asx"] ||
+                   [fileType isEqualToString:@"wmv"] ||
+                   [fileType isEqualToString:@"movie"]) {
+            return @"VideoFile";
+        }else if ([fileType isEqualToString:@"ppt"] ||
+                  [fileType isEqualToString:@"pptx"]){
+            return @"pptFile";
+        } else {
+            return @"OtherFile";
+        }
+    return @"OtherFile";
+    
+    //return [RCExtensionUtility getFileTypeIcon:fileType];
 }
 
 + (NSString *)getReadableStringForFileSize:(long long)byteSize {

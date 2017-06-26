@@ -186,7 +186,34 @@
   RCFileMessage *fileMessage = (RCFileMessage *)self.model.content;
   self.nameLabel.text = fileMessage.name;
   self.sizeLabel.text = [RCKitUtility getReadableStringForFileSize:fileMessage.size];
-  NSString *fileTypeIcon = [RCKitUtility getFileTypeIcon:fileMessage.type];
+    
+    NSString *ex = [fileMessage.type lowercaseString];
+    
+    NSRange range = [ex rangeOfString:@"application"];
+    if(range.location != NSNotFound)
+    {
+        range = [fileMessage.name rangeOfString:@"." options:NSBackwardsSearch];
+        if(range.location != NSNotFound)
+        {
+            ex = [fileMessage.name substringFromIndex:range.location+1];
+        }
+        
+        
+    }
+    else
+    {
+        range = [ex rangeOfString:@"/"];
+        if(range.location != NSNotFound)
+        {
+            ex = [ex substringFromIndex:range.location+1];
+        }
+    }
+
+    
+  NSString *fileTypeIcon = [RCKitUtility getFileTypeIcon:ex];
+    
+    //NSLog(@"%@ - %@",fileMessage.type,fileTypeIcon);
+    
   self.typeIconView.image =
   [RCKitUtility imageNamed:fileTypeIcon ofBundle:@"RongCloud.bundle"];
   [self setAutoLayout];
