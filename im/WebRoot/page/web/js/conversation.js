@@ -1931,8 +1931,9 @@ function reciveInBox(msg){
 
                 break;
             case "ImageMessage":
-                var content = msg.content;
+                var content =msg.content;
                 var fileURL = content.imageUri;
+                var thumbnail = content.content
                 if(fileURL){
                     var sImgName=fileURL.split('attname=')[1];
                     var sImgType=sImgName.split('.')[1];
@@ -1954,7 +1955,7 @@ function reciveInBox(msg){
                 var file = getFileUniqueName(fileURL);
                 var sHTML = ' <li class="mr-chatContentL clearfix" data-t="" sentTime="' + msg.sentTime + '">'+
                     '<img class="headImg" src="'+senderImg+'">'+
-                    '<div class="mr-otherImg"><img src="'+content.imageUri+'" class="uploadImgLeft uploadImgFile" data-type="'+sImageType+'"></div>'+
+                    '<div class="mr-otherImg"><img thumbnail="'+thumbnail+'" src="'+content.imageUri+'" class="uploadImgLeft uploadImgFile" data-type="'+sImageType+'"></div>'+
                     '<span class="sendSuccess"></span>'+
                     '</li>';
 
