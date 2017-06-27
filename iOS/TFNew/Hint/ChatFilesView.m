@@ -112,6 +112,62 @@
     return _selected;
 }
 
+- (BOOL) isWordFile:(NSString*)ext{
+    
+    if([ext isEqualToString:@"doc"]
+       ||[ext isEqualToString:@"docx"])
+    {
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL) isExcelFile:(NSString*)ext{
+    
+    if([ext isEqualToString:@"xls"]
+       ||[ext isEqualToString:@"xlsx"])
+    {
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL) isPPTFile:(NSString*)ext{
+    
+    if([ext isEqualToString:@"ppt"]
+       ||[ext isEqualToString:@"pptx"])
+    {
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL) isPDFFile:(NSString*)ext{
+    
+    if([ext isEqualToString:@"pdf"])
+    {
+        return YES;
+    }
+    return NO;
+}
+
+- (NSString *)fileExtIcon:(NSString*)ext{
+    
+    NSString *fileExt = @"rc_file_icon_file.png";
+    
+    if([self isWordFile:ext])
+        fileExt = @"rc_file_icon_word.png";
+    else if([self isExcelFile:ext])
+        fileExt = @"rc_file_icon_excel.png";
+    else if([self isPDFFile:ext])
+        fileExt = @"rc_file_icon_pdf.png";
+    else if([self isPPTFile:ext])
+        fileExt = @"rc_file_icon_ppt.png";
+    
+    
+    return fileExt;
+}
+
 - (void) loadImageMessages:(id)sender{
     
     /*
@@ -189,7 +245,7 @@
     id ct = msg.content;
     
     UIImageView *thumb = [[UIImageView alloc] initWithFrame:CGRectMake(40, 10, 60, 60)];
-    thumb.image = [UIImage imageNamed:@"fileex_unknow.png"];
+    thumb.image = [UIImage imageNamed:@"rc_file_icon_file.png"];
     [cell.contentView addSubview:thumb];
     
     UILabel *nameL = [[UILabel alloc] initWithFrame:CGRectMake(110, 10, SCREEN_WIDTH-120, 20)];
@@ -211,7 +267,11 @@
         RCFileMessage *fileMsg = (RCFileMessage*)msg.content;
         nameL.text = fileMsg.name;
         
-        if(fileMsg.type)
+        if(_isVideo)
+        {
+            thumb.image = [UIImage imageNamed:@"rc_file_icon_video.png"];
+        }
+        else if(fileMsg.type)
         {
             NSString *ex = [fileMsg.type lowercaseString];
             
@@ -226,10 +286,11 @@
             }
             
             if([ex isEqualToString:@"mp3"])
-                thumb.image = [UIImage imageNamed:@"fileex_sound.png"];
-            else if([_fileExs containsObject:ex])
+                thumb.image = [UIImage imageNamed:@"rc_file_icon_audio.png"];
+            else
             {
-                thumb.image = [UIImage imageNamed:@"fileex_script.png"];
+                NSString *extIcon = [self fileExtIcon:ex];
+                thumb.image = [UIImage imageNamed:extIcon];
             }
         }
         
@@ -255,6 +316,8 @@
         }
         
     }
+    
+    
     
     UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 79, SCREEN_WIDTH, 1)];
     line.backgroundColor = LINE_COLOR;

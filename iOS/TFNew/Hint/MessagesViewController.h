@@ -8,7 +8,7 @@
 
 #import "BaseViewController.h"
 
-#import <RongIMKit/RongIMKit.h>
+#import "RongIMKit.h"
 
 @interface MessagesViewController : BaseViewController
 

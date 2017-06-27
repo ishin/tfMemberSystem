@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <RongIMKit/RCIM.h>
+#import "RCIM.h"
 
 
 //typeof (void (^)(RCUserInfo *userInfo))

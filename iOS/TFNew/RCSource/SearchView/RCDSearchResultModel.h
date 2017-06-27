@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <RongIMKit/RongIMKit.h>
+#import "RongIMKit.h"
 #import "RCDSearchDataManager.h"
 @interface RCDSearchResultModel : NSObject
 

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <RongIMKit/RongIMKit.h>
+#import "RongIMKit.h"
 @interface RCDSearchHistoryMessageController : UITableViewController
 /*!
  当前会话的会话类型

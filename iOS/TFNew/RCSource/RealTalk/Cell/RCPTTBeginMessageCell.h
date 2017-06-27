@@ -6,7 +6,7 @@
 //  Copyright © 2017年 RongCloud. All rights reserved.
 //
 
-#import <RongIMKit/RongIMKit.h>
+#import "RongIMKit.h"
 #import <RongPTTLib/RongPTTLib.h>
 
 @interface RCPTTBeginMessageCell : RCMessageCell

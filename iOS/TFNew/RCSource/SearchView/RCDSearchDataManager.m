@@ -10,7 +10,7 @@
 #import "RCDataBaseManager.h"
 #import "RCDSearchResultModel.h"
 #import "RCDUtilities.h"
-#import <RongIMKit/RongIMKit.h>
+#import "RongIMKit.h"
 #import "GoGoDB.h"
 #import "WSUser.h"
 
