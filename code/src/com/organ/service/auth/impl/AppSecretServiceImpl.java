@@ -2,6 +2,8 @@ package com.organ.service.auth.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -62,18 +64,15 @@ public class AppSecretServiceImpl implements AppSecretService {
 							tokenTimeL = Long.parseLong(tokenTime);
 						}
 						long tokenValidTime = now + tokenTimeL;
+						//long mTime = TimeGenerator.getInstance().getUnixTimeMills();
 
-						appId += tokenValidTime;
-
+						//appId += tokenValidTime;
+						appId += UUID.randomUUID();
+						
 						String unAuthToken = makeCode(appId);
 
-						int id = as.getId();
-						UserValid uv = userValidDao.getUserValidByAsId(id);
-						
-						if (uv == null) {
-							uv = new UserValid();
-							uv.setAsid(as.getId());
-						} 
+						UserValid uv = new UserValid();
+						uv.setAsid(as.getId());
 						uv.setUnAuthToken(unAuthToken);
 						uv.setUnAuthTokenTime(tokenValidTime);
 						uv.setIsDel("1");
@@ -111,7 +110,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 				text = AuthTips.INVALUSER.getText();
 			} else {
 				String appIdCode = coverCode(unAuthToken);
-				String appIdc = appIdCode.substring(0, appIdCode.length() - 10);
+				String appIdc = appIdCode.substring(0, appIdCode.length() - 36);
 
 				if (!appId.equals(appIdc)) {
 					text = AuthTips.INVALTOKEN.getText();
@@ -321,7 +320,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 				text = AuthTips.INVALTOKEN.getText();
 			} else {
 				String appIdCode = coverCode(unAuthToken);
-				String appIdc = appIdCode.substring(0, appIdCode.length() - 10);
+				String appIdc = appIdCode.substring(0, appIdCode.length() - 36);
 
 				if (!appIdc.equals(appId)) {
 					text = AuthTips.INVALTOKEN.getText();
@@ -395,7 +394,7 @@ public class AppSecretServiceImpl implements AppSecretService {
 				text = AuthTips.INVALTOKEN.getText();
 			} else {
 				String appIdCode = coverCode(unAuthToken);
-				String appIdc = appIdCode.substring(0, appIdCode.length() - 10);
+				String appIdc = appIdCode.substring(0, appIdCode.length() - 36);
 
 				if (!appIdc.equals(appId)) {
 					text = AuthTips.INVALTOKEN.getText();

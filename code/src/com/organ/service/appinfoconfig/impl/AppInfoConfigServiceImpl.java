@@ -1,4 +1,4 @@
-package com.organ.service.appinfoconfig.impl;
+ rppackage com.organ.service.appinfoconfig.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 				logger.warn("appList is null");
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
-				jo.put("text", "û�в�ѯ��Ӧ��");
+				jo.put("text", "无应用");
 			} else {
 				for (int i = 0; i < appList.size(); i++) {
 					Object[] app = (Object[]) appList.get(i);
@@ -166,7 +166,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 				logger.warn("appinfos is null");
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
-				jo.put("text", "Ӧ�����Ϊ��");
+				jo.put("text", "无应用");
 			} else {
 				for (int i = 0; i < appinfos.size(); i++) {
 					Object[] appinfo = (Object[]) appinfos.get(i);
@@ -212,7 +212,7 @@ public class AppInfoConfigServiceImpl implements AppInfoConfigService {
 			if (names == null || "{ }".equals(names)) {
 				JSONObject jo = new JSONObject();
 				jo.put("code", 0);
-				jo.put("text", "Ӧ�����Ϊ��");
+				jo.put("text", "无应用");
 			} else {
 				for (int i = 0; i < names.size(); i++) {
 					Object[] name = (Object[]) names.get(i);

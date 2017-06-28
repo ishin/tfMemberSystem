@@ -87,11 +87,15 @@ public class OrgDaoImpl extends BaseDao<TOrgan, Integer> implements OrgDao {
 	@Override
 	public TOrgan getOrganByCode(String organCode) {
 		try {
+			//String sql = "from TOrgan where code='" + organCode + "'";
 			Criteria ctr = getCriteria();
 			ctr.add(Restrictions.eq("code", organCode));
 			
 			List<TOrgan> list = ctr.list();
-			
+			/*Query query = this.getSession().createQuery(sql);
+
+			List<TOrgan> list = query.list();
+			*/
 			if (list.size() > 0) {
 				return list.get(0);
 			}

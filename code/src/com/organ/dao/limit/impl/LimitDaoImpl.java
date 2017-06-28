@@ -151,7 +151,6 @@ public class LimitDaoImpl extends BaseDao<TPriv, Long> implements LimitDao {
 					.createSQLQuery(sql).list().get(0).toString());
 			return SearchCount;
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return 0;

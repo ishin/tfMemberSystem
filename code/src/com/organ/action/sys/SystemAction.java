@@ -76,12 +76,11 @@ public class SystemAction extends BaseAction {
 			return "text";
 		}
 		organCode = organCode.toUpperCase();
-		
 		TOrgan organ = orgService.getOrganByCode(organCode);
 
 		int organId = 0;
 		
-		if (organ == null || organId == -1) {
+		if (organ == null) {
 			result.put("code", 0);
 			result.put("text", Tips.NULLCODE.getText());
 			returnToClient(result.toString());

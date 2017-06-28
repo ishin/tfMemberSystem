@@ -71,14 +71,8 @@
 				<prop key="hibernate.jdbc.batch_size">20</prop>
 				<prop key="hibernate.jdbc.fetch_size">20</prop>
 				
-				<!--配置Ehcache二级缓存  -->
-				<!-- 
-					<prop key="hibernate.cache.use_second_level_cache">true</prop>
-					<prop key="hibernate.cache.use_query_cache">true</prop> 
-					<prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
-			 	-->
 				<!-- 配置调试参数 -->
-				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.format_sql">false</prop>
 				<prop key="hibernate.connection.release_mode">after_statement</prop>
 			</props>
