@@ -523,7 +523,7 @@ function fillGroupPage(targetID,targetType,groupName){
             // APP未开启消息漫游或处理异常
             // throw new ERROR ......
         }
-    });
+    },'',true);
 }
 
 function conversationGroup(targetID,targetType,groupName,callback){
