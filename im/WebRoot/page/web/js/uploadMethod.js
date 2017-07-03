@@ -305,6 +305,7 @@ function fropFile(e){
 }
 
 function uploadComplete(data,_this){
+    var thumbnail = data.thumbnail
     var className = _this._self.uniqueTime;
     var downloadLink = returnDLLink(data.filename,className);
     var filedetail = {};
@@ -347,6 +348,7 @@ function uploadComplete(data,_this){
         filedetail.imageUri = downloadLink+'';
         $('a[fileName='+className+']').attr('fileName',fileName);
         $('img[uniquetime="'+className+'"]').attr('src',downloadLink);
+        $('img[uniquetime="'+className+'"]').attr('thumbnail',thumbnail);
         $('img[uniquetime="'+className+'"]').on('load',function(){
             var eDom=document.querySelector('#chatBox .mr-chatview');
             eDom.scrollTop = eDom.scrollHeight;

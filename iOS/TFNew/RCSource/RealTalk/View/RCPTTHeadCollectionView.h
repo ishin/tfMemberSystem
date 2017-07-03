@@ -6,7 +6,7 @@
 //  Copyright © 2016年 Sin. All rights reserved.
 //
 
-#import <RongIMKit/RongIMKit.h>
+#import "RongIMKit.h"
 #import <UIKit/UIKit.h>
 
 #pragma mark delegate

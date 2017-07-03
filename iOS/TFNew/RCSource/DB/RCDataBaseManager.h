@@ -9,7 +9,7 @@
 #import "RCDGroupInfo.h"
 #import "RCDUserInfo.h"
 #import <Foundation/Foundation.h>
-#import <RongIMKit/RongIMKit.h>
+#import "RongIMKit.h"
 
 @interface RCDataBaseManager : NSObject
 

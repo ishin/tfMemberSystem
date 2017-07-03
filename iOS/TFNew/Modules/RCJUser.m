@@ -9,7 +9,7 @@
 #import "RCJUser.h"
 #import "WebClient.h"
 #import "SBJson4.h"
-#import <RongIMKit/RCIM.h>
+#import "RCIM.h"
 #import "GoGoDB.h"
 
 @interface RCJUser ()
