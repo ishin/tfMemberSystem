@@ -54,6 +54,7 @@ android {
         javaMaxHeapSize "4g"
     }
 }
+
 def releaseTime() {
     return new Date().time.hashCode()
 }
