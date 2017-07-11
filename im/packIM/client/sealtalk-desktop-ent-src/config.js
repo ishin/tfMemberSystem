@@ -51,7 +51,7 @@ var sealtalk_config = {
     APPICON: 'app.ico',
     //app.setAppUserModelId
     //参照 https://msdn.microsoft.com/en-us/library/windows/desktop/dd378459(v=vs.85).aspx
-    APP_USER_MODEL_ID: 'im.sealtalk.SealTalk.120IM',  
+    APP_USER_MODEL_ID: 'im.sealtalk.SealTalk.120ORGAN',  
     //  WINDOWS ONLY,TRAY BLINK ON
     //  new Tray,tray.setImage    
     TRAY: 'Windows_icon.png',  
@@ -65,8 +65,8 @@ var sealtalk_config = {
   },
   MAC: {
     APPICON: 'app.icns',
-    APP_BUNDLE_ID: 'im.rongcloud.120IM',
-    HELPER_BUNDLE_ID: '120IM',
+    APP_BUNDLE_ID: 'im.rongcloud.120ORGAN',
+    HELPER_BUNDLE_ID: '120ORGAN',
     //  new Tray
     TRAY: 'Mac_Template.png',
     //  tray.setPressedImage
