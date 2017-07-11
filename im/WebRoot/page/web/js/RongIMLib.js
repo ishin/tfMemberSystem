@@ -2277,9 +2277,8 @@ var RongIMLib;
          * @param  {ResultCallback<Message[]>} callback         [回调函数]
          * @param  {string}                    objectName       [objectName]
          */
-        RongIMClient.prototype.getHistoryMessages =
-            function (conversationType, targetId, timestamp, count, callback, objectName, direction) {
-            RongIMLib.CheckParam.getInstance().check(["number", "string", "number|null|global|object", "number", "object"], "getHistoryMessages");
+        RongIMClient.prototype.getHistoryMessages = function (conversationType, targetId, timestamp, count, callback, objectName, direction) {
+            RongIMLib.CheckParam.getInstance().check(["number", "string", "number|null|global|object", "number", "object", "undefined|object|null|global|string", "boolean|null|global|object]", "getHistoryMessages"]);
             if (count > 20) {
                 throw new Error("HistroyMessage count must be less than or equal to 20!");
             }

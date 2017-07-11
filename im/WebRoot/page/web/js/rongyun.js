@@ -1,4 +1,4 @@
-﻿﻿/**
+﻿/**
  * Created by zhu_jq on 2017/1/9.
  */
 $(function(){
@@ -6,6 +6,11 @@ $(function(){
 
     var userid = $('body').attr('userid');
     var token = $('body').attr('token');
+    connectTest(token,userid)
+
+})
+
+function connectTest(token,userid){
     sendAjax('member!getOneOfMember',{userid:userid},function(data){
         window.localStorage.datas=data;
         var datas = JSON.parse(data);
@@ -13,9 +18,9 @@ $(function(){
         changeFormatData.text = datas
         if(datas){
             window.localStorage.account=JSON.stringify(changeFormatData);
-			if(RongIMLib.VCDataProvider&&window.Electron){
+            if(RongIMLib.VCDataProvider&&window.Electron){
                 RongIMClient.init(globalVar.rongKey,new RongIMLib.VCDataProvider(window.Electron.addon),{navi:globalVar.navi});//私有云适用120
-               // RongIMClient.init(globalVar.rongKey,new RongIMLib.VCDataProvider(window.Electron.addon));			//公有云   适用本地或35
+                // RongIMClient.init(globalVar.rongKey,new RongIMLib.VCDataProvider(window.Electron.addon));			//公有云   适用本地或35
             }else{
                 RongIMClient.init(globalVar.rongKey,null,{navi:globalVar.navi});		//私有云适用120
                 //RongIMClient.init(globalVar.rongKey);			//公有云   适用本地或35
@@ -73,8 +78,8 @@ $(function(){
                             },1000);
 
 
-                           // RongIMClient.clearListeners();
-                           // RongIMClient._memoryStore.listenerList={};
+                            // RongIMClient.clearListeners();
+                            // RongIMClient._memoryStore.listenerList={};
                             console.log('断开连接');
                             break;
                         //其他设备登录
@@ -165,8 +170,8 @@ $(function(){
                             // do something...
                             break;
                         default:
-                        // 自定义消息
-                        // do something...
+                            // 自定义消息
+                            // do something...
                             break;
                     }
                 }
@@ -179,17 +184,24 @@ $(function(){
                     //RegistInfoMessage();
                 },
                 onTokenIncorrect: function() {
-                    new Window().alert({
-                        title   : '',
-                        content : 'token无效！',
-                        hasCloseBtn : false,
-                        hasImg : true,
-                        textForSureBtn : false,
-                        textForcancleBtn : false
-                        //,
-                        //autoHide:true
-                    });
-                    console.log('token无效');
+                    connectTest(token,userid)
+
+                    sendAjax('system!getNewToken','',function(data){
+                        var datas = JSON.parse(data);
+                        connectTest(datas.token,userid)
+
+                    })
+                    //new Window().alert({
+                    //    title   : '',
+                    //    content : 'token无效！',
+                    //    hasCloseBtn : false,
+                    //    hasImg : true,
+                    //    textForSureBtn : false,
+                    //    textForcancleBtn : false
+                    //    //,
+                    //    //autoHide:true
+                    //});
+                    //console.log('token无效');
                 },
                 onError:function(errorCode){
                     var info = '';
@@ -234,12 +246,7 @@ $(function(){
             RongIMLib.RongIMVoice.init();
         }
     })
-
-
-
-})
-
-
+}
 function playSound(message,userid){
     if(globalVar.SYSTEMSOUND){
         if(message.conversationType==3){

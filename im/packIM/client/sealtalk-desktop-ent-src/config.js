@@ -14,7 +14,7 @@ var sealtalk_config = {
   
   //82的IM
   //APP_ONLINE : 'http://42.62.4.82:8080/im/system!login',
-  
+	//APP_ONLINE : 'http://10.57.220.86:8080/im/system!login',
   //82的后台
   // APP_ONLINE : 'http://42.62.4.82:8080/organ/system!login', 
   
