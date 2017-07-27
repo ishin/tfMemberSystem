@@ -158,6 +158,7 @@ public class TianFangIMSApplication extends Application implements PTTStateListe
     @Override
     public void onCreate() {
         super.onCreate();
+
         instance = this;
         RongIM.setServerInfo("103.36.132.10:80", "up.qbox.me/");
         RongIM.init(this);
